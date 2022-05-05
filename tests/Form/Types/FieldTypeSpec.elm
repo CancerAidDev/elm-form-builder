@@ -8,7 +8,7 @@ import Test exposing (..)
 
 suite : Test
 suite =
-    describe "Types.Form.FieldType.decoder"
+    describe "Form.Types.FieldType.decoder"
         [ test "Text field type" <|
             \_ ->
                 let

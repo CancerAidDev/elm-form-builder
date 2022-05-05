@@ -8,7 +8,7 @@ import Test exposing (..)
 
 suite : Test
 suite =
-    describe "Types.Form.RadioBool.decoder"
+    describe "Form.Types.RadioBool.decoder"
         [ test "True RadioBool option" <|
             \_ ->
                 let
