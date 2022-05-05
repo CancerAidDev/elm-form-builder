@@ -91,6 +91,7 @@ updateRadioBoolField key value =
 
 updateEnabledByFields : Fields -> Fields
 updateEnabledByFields fields =
+    -- Fold through list sorted by order so that enabledBy field has to preceed the field
     Dict.toList fields
         |> List.sortBy (Tuple.mapSecond Field.getOrder)
         |> List.foldl
