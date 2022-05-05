@@ -93,7 +93,7 @@ updateEnabledByFields : Fields -> Fields
 updateEnabledByFields fields =
     -- Fold through list sorted by order so that enabledBy field has to preceed the field
     Dict.toList fields
-        |> List.sortBy (Tuple.mapSecond Field.getOrder)
+        |> List.sortBy (Tuple.second >> Field.getOrder)
         |> List.foldl
             (\( key, field ) acc ->
                 Dict.insert key (updateFieldRequired acc field) acc
