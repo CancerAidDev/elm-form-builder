@@ -89,13 +89,14 @@ updateRadioBoolField key value =
 
 updateRadioBoolFieldRequired : Dict.Dict String Field.Field -> String -> Field.Field -> Field.Field
 updateRadioBoolFieldRequired fields _ field =
-    case Field.hasEnabledBy field of
+    case Field.getEnabledBy field of
         Just parentKey ->
             case field of
                 Field.BoolField_ (Field.RadioBoolField properties) ->
                     let
                         enabled =
                             getEnabledParentValue parentKey fields
+                                |> Maybe.withDefault True
                     in
                     Field.BoolField_
                         (Field.RadioBoolField
@@ -140,24 +141,25 @@ hasCheckboxConsentField fields =
 
 isEnabled : Fields -> Field.Field -> Bool
 isEnabled fields field =
-    case Field.hasEnabledBy field of
+    case Field.getEnabledBy field of
         Just key ->
             getEnabledParentValue key fields
+                |> Maybe.withDefault True
 
         Nothing ->
             True
 
 
-getEnabledParentValue : String -> Fields -> Bool
+getEnabledParentValue : String -> Fields -> Maybe Bool
 getEnabledParentValue key fields =
     case Dict.get key fields of
         Just (Field.BoolField_ (Field.RadioBoolField { value })) ->
             case value of
                 Nothing ->
-                    False
+                    Just False
 
                 Just bool ->
-                    bool
+                    Just bool
 
         _ ->
-            True
+            Nothing

@@ -47,6 +47,7 @@ httpSelect key properties =
                 , options = options
                 , label = properties.label
                 , width = properties.width
+                , enabledBy = properties.enabledBy
                 , order = properties.order
                 }
         )

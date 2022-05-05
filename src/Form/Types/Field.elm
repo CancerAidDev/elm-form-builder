@@ -13,6 +13,7 @@ module Form.Types.Field exposing
     , encode
     , fromInt
     , getBoolProperties
+    , getEnabledBy
     , getLabel
     , getNumericValue
     , getOrder
@@ -25,7 +26,6 @@ module Form.Types.Field exposing
     , getType
     , getUrl
     , getWidth
-    , hasEnabledBy
     , hasTitle
     , isCheckbox
     , isColumn
@@ -87,6 +87,7 @@ type alias FieldProperties a =
         | required : Bool
         , label : String
         , width : Width.Width
+        , enabledBy : Maybe String
         , order : Int
     }
 
@@ -128,7 +129,7 @@ type alias MaybeEnumFieldProperties =
 
 
 type alias MaybeBoolFieldProperties =
-    FieldProperties { value : Maybe Bool, title : String, default : Maybe String, options : List Bool, enabledBy : Maybe String }
+    FieldProperties { value : Maybe Bool, title : String, default : Maybe String, options : List Bool }
 
 
 type alias NumericFieldProperties =
@@ -140,40 +141,45 @@ getProperties field =
     case field of
         StringField_ stringProperties ->
             let
-                { required, label, width, order } =
+                { required, label, width, enabledBy, order } =
                     getStringProperties stringProperties
             in
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             }
 
-        BoolField_ (CheckboxField { required, label, width, order }) ->
+        BoolField_ (CheckboxField { required, label, width, enabledBy, order }) ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             }
 
-        BoolField_ (RadioBoolField { required, label, width, order }) ->
+        BoolField_ (RadioBoolField { required, label, width, enabledBy, order }) ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             }
 
-        BoolField_ (RadioEnumField { required, label, width, order }) ->
+        BoolField_ (RadioEnumField { required, label, width, enabledBy, order }) ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             }
 
-        NumericField_ (NumericField { required, label, width, order }) ->
+        NumericField_ (NumericField { required, label, width, enabledBy, order }) ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             }
 
@@ -181,34 +187,38 @@ getProperties field =
 getStringProperties : StringField -> FieldProperties { value : String }
 getStringProperties field =
     case field of
-        HttpSelectField { required, label, width, order, value } ->
+        HttpSelectField { required, label, width, enabledBy, order, value } ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             , value = value
             }
 
-        SimpleField { required, label, width, order, value } ->
+        SimpleField { required, label, width, enabledBy, order, value } ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             , value = value
             }
 
-        SelectField { required, label, width, order, value } ->
+        SelectField { required, label, width, enabledBy, order, value } ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             , value = value
             }
 
-        RadioField { required, label, width, order, value } ->
+        RadioField { required, label, width, enabledBy, order, value } ->
             { required = required
             , label = label
             , width = width
+            , enabledBy = enabledBy
             , order = order
             , value = value
             }
@@ -355,6 +365,11 @@ getLabel =
     getProperties >> .label
 
 
+getEnabledBy : Field -> Maybe String
+getEnabledBy =
+    getProperties >> .enabledBy
+
+
 getStringValue_ : StringField -> String
 getStringValue_ field =
     case field of
@@ -423,16 +438,6 @@ hasTitle field =
 
         _ ->
             False
-
-
-hasEnabledBy : Field -> Maybe String
-hasEnabledBy field =
-    case field of
-        BoolField_ (RadioBoolField properties) ->
-            properties.enabledBy
-
-        _ ->
-            Nothing
 
 
 getTitle : Field -> String
