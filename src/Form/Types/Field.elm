@@ -34,6 +34,8 @@ module Form.Types.Field exposing
     , isRequired
     , maybeUpdateStringValue
     , metadataKey
+    , resetValueToDefault
+    , setRequired
     , updateBoolValue
     , updateCheckboxValue_
     , updateNumericValue
@@ -50,6 +52,7 @@ module Form.Types.Field exposing
 import Form.Types.Direction as Direction
 import Form.Types.FieldType as FieldType
 import Form.Types.Option as Option
+import Form.Types.RadioBool as RadioBool
 import Form.Types.RadioEnum as RadioEnum
 import Form.Types.Width as Width
 import Http.Detailed as HttpDetailed
@@ -257,6 +260,76 @@ getBoolProperties field =
 
         _ ->
             Nothing
+
+
+resetValueToDefault : Field -> Field
+resetValueToDefault field =
+    case field of
+        StringField_ stringField ->
+            StringField_ (resetStringFieldValueToDefault stringField)
+
+        BoolField_ (CheckboxField properties) ->
+            BoolField_ (CheckboxField { properties | value = False })
+
+        BoolField_ (RadioBoolField properties) ->
+            BoolField_ (RadioBoolField { properties | value = properties.default |> Maybe.andThen RadioBool.fromString })
+
+        BoolField_ (RadioEnumField properties) ->
+            BoolField_ (RadioEnumField { properties | value = properties.default })
+
+        NumericField_ (NumericField properties) ->
+            NumericField_ (NumericField { properties | value = Nothing })
+
+
+resetStringFieldValueToDefault : StringField -> StringField
+resetStringFieldValueToDefault field =
+    case field of
+        HttpSelectField properties ->
+            HttpSelectField { properties | value = properties.default |> Maybe.withDefault "" }
+
+        SimpleField properties ->
+            SimpleField { properties | value = "" }
+
+        SelectField properties ->
+            SelectField { properties | value = properties.default |> Maybe.withDefault "" }
+
+        RadioField properties ->
+            RadioField { properties | value = properties.default |> Maybe.withDefault "" }
+
+
+setRequired : Bool -> Field -> Field
+setRequired bool field =
+    case field of
+        StringField_ stringField ->
+            StringField_ (setRequiredStringField bool stringField)
+
+        BoolField_ (CheckboxField properties) ->
+            BoolField_ (CheckboxField { properties | required = bool })
+
+        BoolField_ (RadioBoolField properties) ->
+            BoolField_ (RadioBoolField { properties | required = bool })
+
+        BoolField_ (RadioEnumField properties) ->
+            BoolField_ (RadioEnumField { properties | required = bool })
+
+        NumericField_ (NumericField properties) ->
+            NumericField_ (NumericField { properties | required = bool })
+
+
+setRequiredStringField : Bool -> StringField -> StringField
+setRequiredStringField bool field =
+    case field of
+        HttpSelectField properties ->
+            HttpSelectField { properties | required = bool }
+
+        SimpleField properties ->
+            SimpleField { properties | required = bool }
+
+        SelectField properties ->
+            SelectField { properties | required = bool }
+
+        RadioField properties ->
+            RadioField { properties | required = bool }
 
 
 updateBoolValue : Bool -> Field -> Field

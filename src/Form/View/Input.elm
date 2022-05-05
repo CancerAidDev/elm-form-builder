@@ -1,6 +1,5 @@
 module Form.View.Input exposing (view)
 
-import Form.Model as Model
 import Form.Msg as Msg
 import Form.Types.Direction as Direction
 import Form.Types.Field as Field
@@ -22,11 +21,11 @@ import Result.Extra as ResultExtra
 import Time
 
 
-view : Model.Model a -> String -> Field.Field -> Html.Html Msg.Msg
-view model key field =
+view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
+view time submitted locale fields key field =
     let
         disabled =
-            not (Fields.isEnabled model.fields field)
+            not (Fields.isEnabled fields field)
     in
     if Field.hasTitle field then
         Html.div
@@ -44,8 +43,8 @@ view model key field =
                 ]
                 [ label field disabled
                 , Html.div [ HtmlAttributes.class "p-0 is-half column" ]
-                    [ control model.time key field
-                    , error model field
+                    [ control time key field
+                    , error submitted locale fields field
                     ]
                 ]
             ]
@@ -57,8 +56,8 @@ view model key field =
             , HtmlAttributes.id key
             ]
             [ label field disabled
-            , control model.time key field
-            , error model field
+            , control time key field
+            , error submitted locale fields field
             ]
 
 
@@ -331,8 +330,8 @@ checkbox key field =
         ]
 
 
-error : Model.Model a -> Field.Field -> Html.Html Msg.Msg
-error { submitted, locale, fields } field =
+error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
+error submitted locale fields field =
     case field of
         Field.NumericField_ (Field.NumericField properties) ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
