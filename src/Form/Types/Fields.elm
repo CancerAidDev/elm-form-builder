@@ -5,7 +5,6 @@ module Form.Types.Fields exposing
     , hasCheckboxConsentField
     , isEnabled
     , updateBoolField
-    , updateEnabledByFields
     , updateFieldRemoteOptions
     , updateNumericField
     , updateOptionField

@@ -18,7 +18,6 @@ module Form.Types.Field exposing
     , getNumericValue
     , getOrder
     , getProperties
-    , getStringProperties
     , getStringType
     , getStringValue
     , getStringValue_
@@ -29,7 +28,6 @@ module Form.Types.Field exposing
     , hasTitle
     , isCheckbox
     , isColumn
-    , isNotMetadataField
     , isNumericField
     , isRequired
     , maybeUpdateStringValue
@@ -58,7 +56,6 @@ import Form.Types.Width as Width
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
-import Maybe.Extra as MaybeExtra
 import RemoteData
 
 
@@ -644,8 +641,3 @@ metadataKey string =
 
         _ ->
             Nothing
-
-
-isNotMetadataField : String -> Bool
-isNotMetadataField =
-    MaybeExtra.isNothing << metadataKey
