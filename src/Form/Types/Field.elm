@@ -2,7 +2,7 @@ module Form.Types.Field exposing
     ( Field(..), StringField(..), BoolField(..), NumericField(..)
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
     , hasTitle, isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -28,7 +28,7 @@ module Form.Types.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
 
 
 # Predicates
