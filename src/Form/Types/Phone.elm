@@ -1,4 +1,13 @@
-module Form.Types.Phone exposing (formatForDisplay, formatForSubmission, mobileRegex, regex)
+module Form.Types.Phone exposing (regex, mobileRegex, formatForSubmission, formatForDisplay)
+
+{-| Phone number helpers
+
+
+# Phone
+
+@docs regex, mobileRegex, formatForSubmission, formatForDisplay
+
+-}
 
 import Form.Types.CountryCode as CountryCode
 import List.Extra as ListExtra
@@ -6,6 +15,7 @@ import Regex
 import String.Extra as StringExtra
 
 
+{-| -}
 phonePrefix : CountryCode.CountryCode -> String
 phonePrefix code =
     case code of
@@ -13,6 +23,7 @@ phonePrefix code =
             "+61"
 
 
+{-| -}
 regex : CountryCode.CountryCode -> Regex.Regex
 regex code =
     case code of
@@ -22,6 +33,7 @@ regex code =
                 |> Maybe.withDefault Regex.never
 
 
+{-| -}
 mobileRegex : CountryCode.CountryCode -> Regex.Regex
 mobileRegex code =
     case code of
@@ -31,6 +43,7 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
 
+{-| -}
 formatForSubmission : CountryCode.CountryCode -> String -> String
 formatForSubmission code =
     String.words
@@ -38,6 +51,7 @@ formatForSubmission code =
         >> (\phone -> phonePrefix code ++ phone)
 
 
+{-| -}
 formatForDisplay : CountryCode.CountryCode -> String -> String
 formatForDisplay code =
     StringExtra.rightOf (phonePrefix code)

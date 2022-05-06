@@ -1,22 +1,38 @@
 module Form.Types.Fields exposing
     ( Fields
-    , decoder
-    , encode
-    , hasCheckboxConsentField
-    , isEnabled
-    , updateBoolField
-    , updateFieldRemoteOptions
-    , updateNumericField
-    , updateOptionField
-    , updateRadioBoolField
-    , updateRadioEnumField
-    , updateStringField
+    , decoder, encode
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+    , hasCheckboxConsentField, isEnabled
     )
+
+{-| Fields.
+
+
+# Fields
+
+@docs Fields
+
+
+# Json
+
+@docs decoder, encode
+
+
+# Update helpers
+
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+
+
+# Predicates
+
+@docs hasCheckboxConsentField, isEnabled
+
+-}
 
 import Dict
 import Form.Types.Field as Field
+import Form.Types.Field.Json as FieldJson
 import Form.Types.FieldType as FieldType
-import Form.Types.Json as Json
 import Form.Types.Option as Option
 import Form.Types.RadioEnum as RadioEnum
 import Http.Detailed as HttpDetailed
@@ -27,16 +43,19 @@ import RemoteData
 import Time
 
 
+{-| -}
 type alias Fields =
     Dict.Dict String Field.Field
 
 
+{-| -}
 decoder : Time.Posix -> Decode.Decoder (Dict.Dict String Field.Field)
 decoder time =
-    DecodeExtra.indexedList (Json.decoder time)
+    DecodeExtra.indexedList (FieldJson.decoder time)
         |> Decode.map Dict.fromList
 
 
+{-| -}
 encode : Fields -> Dict.Dict String Encode.Value
 encode =
     Dict.foldl
@@ -58,36 +77,42 @@ encode =
            )
 
 
+{-| -}
 updateStringField : String -> String -> Fields -> Fields
 updateStringField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value))
         >> updateEnabledByFields
 
 
+{-| -}
 updateOptionField : String -> Option.Option -> Fields -> Fields
 updateOptionField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value.value))
         >> updateEnabledByFields
 
 
+{-| -}
 updateBoolField : String -> Bool -> Fields -> Fields
 updateBoolField key value =
     Dict.update key (Maybe.map (Field.updateBoolValue value))
         >> updateEnabledByFields
 
 
+{-| -}
 updateRadioEnumField : String -> RadioEnum.Value -> Fields -> Fields
 updateRadioEnumField key value =
     Dict.update key (Maybe.map (Field.updateRadioEnumValue (Just value)))
         >> updateEnabledByFields
 
 
+{-| -}
 updateRadioBoolField : String -> Bool -> Fields -> Fields
 updateRadioBoolField key value =
     Dict.update key (Maybe.map (Field.updateRadioBoolValue (Just value)))
         >> updateEnabledByFields
 
 
+{-| -}
 updateEnabledByFields : Fields -> Fields
 updateEnabledByFields fields =
     -- Fold through list sorted by order so that enabledBy field has to preceed the field
@@ -100,6 +125,7 @@ updateEnabledByFields fields =
             Dict.empty
 
 
+{-| -}
 updateFieldRequired : Fields -> Field.Field -> Field.Field
 updateFieldRequired fields field =
     case Field.getEnabledBy field of
@@ -122,22 +148,26 @@ updateFieldRequired fields field =
             field
 
 
+{-| -}
 updateNumericField : String -> String -> Fields -> Fields
 updateNumericField key value =
     Dict.update key (Maybe.map (Field.updateNumericValue value))
 
 
+{-| -}
 updateFieldRemoteOptions : String -> RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option) -> Fields -> Fields
 updateFieldRemoteOptions key options =
     Dict.update key (Maybe.map (Field.updateRemoteOptions options))
 
 
+{-| -}
 hasCheckboxConsentField : Fields -> Bool
 hasCheckboxConsentField fields =
     Dict.values fields
         |> List.any (Field.getType >> (==) (FieldType.BoolType (FieldType.CheckboxType FieldType.CheckboxConsent)))
 
 
+{-| -}
 isEnabled : Fields -> Field.Field -> Bool
 isEnabled fields field =
     case Field.getEnabledBy field of
@@ -149,6 +179,7 @@ isEnabled fields field =
             True
 
 
+{-| -}
 getEnabledByValue : String -> Fields -> Maybe Bool
 getEnabledByValue key fields =
     case Dict.get key fields of

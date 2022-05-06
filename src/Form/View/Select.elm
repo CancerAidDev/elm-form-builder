@@ -1,4 +1,13 @@
-module Form.View.Select exposing (httpSelect, select)
+module Form.View.Select exposing (select, httpSelect)
+
+{-| View Select Fields
+
+
+# Select
+
+@docs select, httpSelect
+
+-}
 
 import Form.Msg as Msg
 import Form.Types.Field as Field
@@ -10,6 +19,7 @@ import Html.Extra as HtmlExtra
 import RemoteData
 
 
+{-| -}
 select : String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
 select key { value, required, options } =
     Html.select
@@ -36,6 +46,7 @@ viewOption selectedValue option =
         [ Html.text (option.label |> Maybe.withDefault option.value) ]
 
 
+{-| -}
 httpSelect : String -> Field.HttpSelectFieldProperties -> Html.Html Msg.Msg
 httpSelect key properties =
     RemoteData.map

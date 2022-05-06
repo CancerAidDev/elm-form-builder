@@ -1,15 +1,26 @@
-module Form.Types.RadioEnum exposing (Value(..), decoder, fromString, toBool, toString)
+module Form.Types.RadioEnum exposing (Value(..), toBool, toString, fromString, decoder)
+
+{-| RadioEnum data type.
+
+
+# RadioEnum
+
+@docs Value, toBool, toString, fromString, decoder
+
+-}
 
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 
 
+{-| -}
 type Value
     = Yes
     | No
     | NA
 
 
+{-| -}
 toBool : Maybe Value -> Maybe Bool
 toBool value =
     case value of
@@ -23,6 +34,7 @@ toBool value =
             Nothing
 
 
+{-| -}
 toString : Value -> String
 toString value =
     case value of
@@ -36,6 +48,7 @@ toString value =
             "N/A"
 
 
+{-| -}
 fromString : String -> Maybe Value
 fromString str =
     case str of
@@ -52,6 +65,7 @@ fromString str =
             Nothing
 
 
+{-| -}
 decoder : Decode.Decoder Value
 decoder =
     Decode.string

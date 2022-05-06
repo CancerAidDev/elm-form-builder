@@ -1,51 +1,51 @@
 module Form.Types.Field exposing
-    ( BoolField(..)
-    , BoolFieldProperties
-    , CheckboxFieldProperties
-    , Field(..)
-    , HttpSelectFieldProperties
-    , MaybeBoolFieldProperties
-    , MaybeEnumFieldProperties
-    , NumericField(..)
-    , SelectFieldProperties
-    , SimpleFieldProperties
-    , StringField(..)
+    ( Field(..), StringField(..), BoolField(..), NumericField(..)
+    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
+    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_
+    , hasTitle, isCheckbox, isColumn, isNumericField, isRequired
     , encode
-    , fromInt
-    , getBoolProperties
-    , getEnabledBy
-    , getLabel
-    , getNumericValue
-    , getOrder
-    , getProperties
-    , getStringType
-    , getStringValue
-    , getStringValue_
-    , getTitle
-    , getType
-    , getUrl
-    , getWidth
-    , hasTitle
-    , isCheckbox
-    , isColumn
-    , isNumericField
-    , isRequired
-    , maybeUpdateStringValue
     , metadataKey
-    , resetValueToDefault
-    , setRequired
-    , updateBoolValue
-    , updateCheckboxValue_
-    , updateNumericValue
-    , updateNumericValue_
-    , updateRadioBoolValue
-    , updateRadioBoolValue_
-    , updateRadioEnumValue
-    , updateRadioEnumValue_
-    , updateRemoteOptions
-    , updateStringValue
-    , updateStringValue_
     )
+
+{-| Field type and helper functions
+
+
+# Field
+
+@docs Field, StringField, BoolField, NumericField
+
+
+# Properties
+
+@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
+
+
+# Getters
+
+@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
+
+
+# Setters
+
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_
+
+
+# Predicates
+
+@docs hasTitle, isCheckbox, isColumn, isNumericField, isRequired
+
+
+# Encode
+
+@docs encode
+
+
+# Metadata
+
+@docs metadataKey
+
+-}
 
 import Form.Types.Direction as Direction
 import Form.Types.FieldType as FieldType
@@ -59,12 +59,14 @@ import Json.Encode.Extra as EncodeExtra
 import RemoteData
 
 
+{-| -}
 type Field
     = StringField_ StringField
     | BoolField_ BoolField
     | NumericField_ NumericField
 
 
+{-| -}
 type StringField
     = SimpleField SimpleFieldProperties
     | SelectField SelectFieldProperties
@@ -72,16 +74,19 @@ type StringField
     | RadioField RadioFieldProperties
 
 
+{-| -}
 type BoolField
     = CheckboxField CheckboxFieldProperties
     | RadioBoolField MaybeBoolFieldProperties
     | RadioEnumField MaybeEnumFieldProperties
 
 
+{-| -}
 type NumericField
     = NumericField NumericFieldProperties
 
 
+{-| -}
 type alias FieldProperties a =
     { a
         | required : Bool
@@ -92,18 +97,22 @@ type alias FieldProperties a =
     }
 
 
+{-| -}
 type alias StringFieldProperties a =
     FieldProperties { a | value : String }
 
 
+{-| -}
 type alias SimpleFieldProperties =
     StringFieldProperties { tipe : FieldType.SimpleFieldType }
 
 
+{-| -}
 type alias SelectFieldProperties =
     StringFieldProperties { default : Maybe String, options : List Option.Option }
 
 
+{-| -}
 type alias HttpSelectFieldProperties =
     StringFieldProperties
         { url : String
@@ -112,30 +121,37 @@ type alias HttpSelectFieldProperties =
         }
 
 
+{-| -}
 type alias RadioFieldProperties =
     StringFieldProperties { default : Maybe String, options : List Option.Option, title : String, direction : Direction.Direction }
 
 
+{-| -}
 type alias CheckboxFieldProperties =
     FieldProperties { tipe : FieldType.CheckboxFieldType, value : Bool }
 
 
+{-| -}
 type alias BoolFieldProperties a =
     FieldProperties { a | value : Bool }
 
 
+{-| -}
 type alias MaybeEnumFieldProperties =
     FieldProperties { value : Maybe RadioEnum.Value, title : String, default : Maybe RadioEnum.Value, options : List RadioEnum.Value }
 
 
+{-| -}
 type alias MaybeBoolFieldProperties =
     FieldProperties { value : Maybe Bool, title : String, default : Maybe String, options : List Bool }
 
 
+{-| -}
 type alias NumericFieldProperties =
     FieldProperties { value : Maybe Int, title : String, tipe : FieldType.NumericFieldType }
 
 
+{-| -}
 getProperties : Field -> FieldProperties {}
 getProperties field =
     case field of
@@ -224,6 +240,7 @@ getStringProperties field =
             }
 
 
+{-| -}
 updateStringValue : String -> Field -> Field
 updateStringValue value field =
     case field of
@@ -234,6 +251,7 @@ updateStringValue value field =
             field
 
 
+{-| -}
 maybeUpdateStringValue : Maybe String -> Field -> Field
 maybeUpdateStringValue maybeValue field =
     -- Keep existing field if the value is Nothing
@@ -241,6 +259,7 @@ maybeUpdateStringValue maybeValue field =
         |> Maybe.withDefault field
 
 
+{-| -}
 getBoolProperties : Field -> Maybe Bool
 getBoolProperties field =
     case field of
@@ -259,6 +278,7 @@ getBoolProperties field =
             Nothing
 
 
+{-| -}
 resetValueToDefault : Field -> Field
 resetValueToDefault field =
     case field of
@@ -294,6 +314,7 @@ resetStringFieldValueToDefault field =
             RadioField { properties | value = properties.default |> Maybe.withDefault "" }
 
 
+{-| -}
 setRequired : Bool -> Field -> Field
 setRequired bool field =
     case field of
@@ -313,6 +334,7 @@ setRequired bool field =
             NumericField_ (NumericField { properties | required = bool })
 
 
+{-| -}
 setRequiredStringField : Bool -> StringField -> StringField
 setRequiredStringField bool field =
     case field of
@@ -329,6 +351,7 @@ setRequiredStringField bool field =
             RadioField { properties | required = bool }
 
 
+{-| -}
 updateBoolValue : Bool -> Field -> Field
 updateBoolValue value field =
     case field of
@@ -339,6 +362,7 @@ updateBoolValue value field =
             field
 
 
+{-| -}
 updateRadioEnumValue : Maybe RadioEnum.Value -> Field -> Field
 updateRadioEnumValue value field =
     case field of
@@ -349,6 +373,7 @@ updateRadioEnumValue value field =
             field
 
 
+{-| -}
 updateRadioBoolValue : Maybe Bool -> Field -> Field
 updateRadioBoolValue value field =
     case field of
@@ -359,6 +384,7 @@ updateRadioBoolValue value field =
             field
 
 
+{-| -}
 updateNumericValue : String -> Field -> Field
 updateNumericValue value field =
     case field of
@@ -369,6 +395,7 @@ updateNumericValue value field =
             field
 
 
+{-| -}
 updateStringValue_ : String -> StringField -> StringField
 updateStringValue_ value field =
     case field of
@@ -385,6 +412,7 @@ updateStringValue_ value field =
             RadioField { properties | value = value }
 
 
+{-| -}
 updateCheckboxValue_ : Bool -> BoolField -> BoolField
 updateCheckboxValue_ value field =
     case field of
@@ -395,6 +423,7 @@ updateCheckboxValue_ value field =
             field
 
 
+{-| -}
 updateRadioBoolValue_ : Maybe Bool -> BoolField -> BoolField
 updateRadioBoolValue_ value field =
     case field of
@@ -405,6 +434,7 @@ updateRadioBoolValue_ value field =
             field
 
 
+{-| -}
 updateRadioEnumValue_ : Maybe RadioEnum.Value -> BoolField -> BoolField
 updateRadioEnumValue_ value field =
     case field of
@@ -415,11 +445,13 @@ updateRadioEnumValue_ value field =
             field
 
 
+{-| -}
 updateNumericValue_ : Maybe Int -> NumericField -> NumericField
 updateNumericValue_ value (NumericField properties) =
     NumericField { properties | value = value }
 
 
+{-| -}
 updateRemoteOptions : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option) -> Field -> Field
 updateRemoteOptions options field =
     case field of
@@ -430,16 +462,19 @@ updateRemoteOptions options field =
             field
 
 
+{-| -}
 getLabel : Field -> String
 getLabel =
     getProperties >> .label
 
 
+{-| -}
 getEnabledBy : Field -> Maybe String
 getEnabledBy =
     getProperties >> .enabledBy
 
 
+{-| -}
 getStringValue_ : StringField -> String
 getStringValue_ field =
     case field of
@@ -456,6 +491,7 @@ getStringValue_ field =
             properties.value
 
 
+{-| -}
 getStringValue : Field -> Maybe String
 getStringValue field =
     case field of
@@ -466,6 +502,7 @@ getStringValue field =
             Nothing
 
 
+{-| -}
 getNumericValue : Field -> Maybe Int
 getNumericValue field =
     case field of
@@ -476,11 +513,13 @@ getNumericValue field =
             Nothing
 
 
+{-| -}
 isRequired : Field -> Bool
 isRequired =
     getProperties >> .required
 
 
+{-| -}
 isCheckbox : Field -> Bool
 isCheckbox field =
     case field of
@@ -491,6 +530,7 @@ isCheckbox field =
             False
 
 
+{-| -}
 hasTitle : Field -> Bool
 hasTitle field =
     case field of
@@ -510,6 +550,7 @@ hasTitle field =
             False
 
 
+{-| -}
 getTitle : Field -> String
 getTitle field =
     case field of
@@ -529,6 +570,7 @@ getTitle field =
             ""
 
 
+{-| -}
 getType : Field -> FieldType.FieldType
 getType field =
     case field of
@@ -548,6 +590,7 @@ getType field =
             FieldType.NumericType tipe
 
 
+{-| -}
 isNumericField : Field -> Bool
 isNumericField field =
     case field of
@@ -558,6 +601,7 @@ isNumericField field =
             False
 
 
+{-| -}
 isColumn : Field -> Bool
 isColumn field =
     case field of
@@ -568,6 +612,7 @@ isColumn field =
             True
 
 
+{-| -}
 getStringType : StringField -> FieldType.StringFieldType
 getStringType field =
     case field of
@@ -584,16 +629,19 @@ getStringType field =
             FieldType.Radio
 
 
+{-| -}
 getOrder : Field -> Int
 getOrder =
     getProperties >> .order
 
 
+{-| -}
 getWidth : Field -> Width.Width
 getWidth =
     getProperties >> .width
 
 
+{-| -}
 getUrl : Field -> Maybe String
 getUrl field =
     case field of
@@ -604,16 +652,7 @@ getUrl field =
             Nothing
 
 
-fromInt : Maybe Int -> String
-fromInt int =
-    case int of
-        Nothing ->
-            ""
-
-        Just num ->
-            String.fromInt num
-
-
+{-| -}
 encode : Field -> Encode.Value
 encode field =
     case field of
@@ -633,6 +672,7 @@ encode field =
             EncodeExtra.maybe Encode.int value
 
 
+{-| -}
 metadataKey : String -> Maybe String
 metadataKey string =
     case String.split "." string of

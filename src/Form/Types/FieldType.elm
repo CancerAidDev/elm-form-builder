@@ -1,20 +1,27 @@
 module Form.Types.FieldType exposing
-    ( BoolFieldType(..)
-    , CheckboxFieldType(..)
-    , Date(..)
-    , FieldType(..)
-    , NumericFieldType(..)
-    , SimpleFieldType(..)
-    , StringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), DateFieldType(..)
     , decoder
-    , defaultValue
-    , toClass
-    , toMax
-    , toMaxLength
-    , toMin
-    , toPlaceholder
-    , toType
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
     )
+
+{-| Field Type
+
+
+# FieldType
+
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, DateFieldType
+
+
+# Decoder
+
+@docs decoder
+
+
+# Helpers
+
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
+
+-}
 
 import Form.Lib.Time as LibTime
 import Json.Decode as Decode
@@ -23,12 +30,14 @@ import Time
 import Time.Extra as TimeExtra
 
 
+{-| -}
 type FieldType
     = StringType StringFieldType
     | BoolType BoolFieldType
     | NumericType NumericFieldType
 
 
+{-| -}
 type StringFieldType
     = SimpleType SimpleFieldType
     | Select
@@ -36,34 +45,40 @@ type StringFieldType
     | Radio
 
 
+{-| -}
 type BoolFieldType
     = CheckboxType CheckboxFieldType
     | RadioBool
     | RadioEnum
 
 
+{-| -}
 type CheckboxFieldType
     = Checkbox
     | CheckboxConsent
 
 
+{-| -}
 type SimpleFieldType
     = Text
     | Email
-    | Date Date
+    | Date DateFieldType
     | Phone
     | TextArea
 
 
+{-| -}
 type NumericFieldType
     = Age
 
 
-type Date
+{-| -}
+type DateFieldType
     = DatePast
     | DateOfBirth
 
 
+{-| -}
 fromString : String -> Maybe FieldType
 fromString str =
     case str of
@@ -113,6 +128,7 @@ fromString str =
             Nothing
 
 
+{-| -}
 toType : SimpleFieldType -> String
 toType fieldType =
     case fieldType of
@@ -132,6 +148,7 @@ toType fieldType =
             "textarea"
 
 
+{-| -}
 toPlaceholder : SimpleFieldType -> String
 toPlaceholder fieldType =
     case fieldType of
@@ -145,6 +162,7 @@ toPlaceholder fieldType =
             ""
 
 
+{-| -}
 toMaxLength : SimpleFieldType -> Maybe Int
 toMaxLength fieldType =
     case fieldType of
@@ -155,6 +173,7 @@ toMaxLength fieldType =
             Nothing
 
 
+{-| -}
 toMin : Time.Posix -> FieldType -> Maybe String
 toMin time fieldType =
     case fieldType of
@@ -172,6 +191,7 @@ toMin time fieldType =
             Nothing
 
 
+{-| -}
 toMax : Time.Posix -> FieldType -> Maybe String
 toMax time fieldType =
     case fieldType of
@@ -185,6 +205,7 @@ toMax time fieldType =
             Nothing
 
 
+{-| -}
 defaultValue : Time.Posix -> SimpleFieldType -> Maybe String
 defaultValue time fieldType =
     case fieldType of
@@ -199,6 +220,7 @@ defaultValue time fieldType =
             Nothing
 
 
+{-| -}
 toClass : SimpleFieldType -> String
 toClass fieldType =
     case fieldType of
@@ -218,6 +240,7 @@ toClass fieldType =
             "textarea"
 
 
+{-| -}
 decoder : Decode.Decoder FieldType
 decoder =
     Decode.string

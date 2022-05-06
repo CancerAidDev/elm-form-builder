@@ -1,4 +1,13 @@
-module Form.Types.Json exposing (decoder)
+module Form.Types.Field.Json exposing (decoder)
+
+{-| Decode Field from Json
+
+
+# Json
+
+@docs decoder
+
+-}
 
 import Form.Types.Direction as Direction
 import Form.Types.Field as Field
@@ -114,6 +123,7 @@ type alias JsonNumericFieldProperties =
     }
 
 
+{-| -}
 decoder : Time.Posix -> Int -> Decode.Decoder ( String, Field.Field )
 decoder time order =
     Decode.field "type" FieldType.decoder

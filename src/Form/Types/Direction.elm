@@ -1,14 +1,25 @@
 module Form.Types.Direction exposing (Direction(..), decoder, fromString, toString)
 
+{-| Form grid layout direction.
+
+
+# Direction
+
+@docs Direction, decoder, fromString, toString
+
+-}
+
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 
 
+{-| -}
 type Direction
     = Row
     | Column
 
 
+{-| -}
 toString : Direction -> String
 toString value =
     case value of
@@ -19,6 +30,7 @@ toString value =
             "column"
 
 
+{-| -}
 fromString : String -> Maybe Direction
 fromString str =
     case String.toLower str of
@@ -32,6 +44,7 @@ fromString str =
             Nothing
 
 
+{-| -}
 decoder : Decode.Decoder Direction
 decoder =
     Decode.string

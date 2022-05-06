@@ -1,11 +1,11 @@
-module Form.Types.JsonSpec exposing (..)
+module Form.Types.Field.JsonSpec exposing (..)
 
 import Dict
 import Expect
 import Form.Types.Field as Field
+import Form.Types.Field.Json as Json
 import Form.Types.FieldType as FieldType
 import Form.Types.Fields as Fields
-import Form.Types.Json as Json
 import Form.Types.RadioBool exposing (decoder)
 import Form.Types.Width as Width
 import Json.Decode as Decode

@@ -1,9 +1,19 @@
 module Form.Msg exposing (Msg(..))
 
+{-| Form.Msg
+
+
+# Msg
+
+@docs Msg
+
+-}
+
 import Form.Types.Option as Option
 import Form.Types.RadioEnum as RadioEnum
 
 
+{-| -}
 type Msg
     = UpdateStringField String String
     | UpdateRadioStringField String Option.Option

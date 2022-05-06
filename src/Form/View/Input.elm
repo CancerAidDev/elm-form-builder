@@ -1,5 +1,15 @@
 module Form.View.Input exposing (view)
 
+{-| View Input.
+
+
+# Input
+
+@docs view
+
+-}
+
+import Form.Lib.String as LibString
 import Form.Msg as Msg
 import Form.Types.Direction as Direction
 import Form.Types.Field as Field
@@ -21,6 +31,7 @@ import Result.Extra as ResultExtra
 import Time
 
 
+{-| -}
 view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
 view time submitted locale fields key field =
     let
@@ -191,7 +202,7 @@ input time key field =
                 [ HtmlAttributes.name key
                 , HtmlAttributes.class "input column is-narrow"
                 , HtmlAttributes.type_ "number"
-                , HtmlAttributes.value (Field.fromInt properties.value)
+                , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
                 , HtmlAttributes.required properties.required
                 , HtmlEvents.onInput <| Msg.UpdateNumericField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min

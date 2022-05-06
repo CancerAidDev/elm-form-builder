@@ -1,12 +1,30 @@
 module Form.Validate exposing
-    ( errorToMessage
-    , isValid
-    , isValidAgeInput
-    , validate
-    , validateField
+    ( validate, validateField
+    , isValid, isValidAgeInput
+    , errorToMessage
     )
 
+{-| Form.Validate
+
+
+# Validate
+
+@docs validate, validateField
+
+
+# Predicates
+
+@docs isValid, isValidAgeInput
+
+
+# Errors
+
+@docs errorToMessage
+
+-}
+
 import Dict
+import Form.Lib.String as LibString
 import Form.Types.Field as Field
 import Form.Types.FieldType as FieldType
 import Form.Types.Fields as Fields
@@ -18,6 +36,7 @@ import Maybe.Extra as MaybeExtra
 import Regex
 
 
+{-| -}
 validateField : Locale.Locale -> Fields.Fields -> Field.Field -> Result Error Field.Field
 validateField locale fields field =
     case field of
@@ -132,7 +151,7 @@ validateNumericField (Field.NumericField properties) =
                             |> Regex.fromString
                             |> Maybe.withDefault Regex.never
                 in
-                if Regex.contains regex (Field.fromInt properties.value) then
+                if Regex.contains regex (LibString.fromMaybeInt properties.value) then
                     Ok properties.value
 
                 else
@@ -142,6 +161,7 @@ validateNumericField (Field.NumericField properties) =
         Ok properties.value
 
 
+{-| -}
 isValidAgeInput : Maybe Int -> Bool
 isValidAgeInput age =
     let
@@ -150,13 +170,14 @@ isValidAgeInput age =
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
     in
-    if Regex.contains regex (Field.fromInt age) then
+    if Regex.contains regex (LibString.fromMaybeInt age) then
         True
 
     else
         False
 
 
+{-| -}
 validate : Locale.Locale -> Fields.Fields -> Maybe Fields.Fields
 validate locale fields =
     fields
@@ -168,6 +189,7 @@ validate locale fields =
             (Just Dict.empty)
 
 
+{-| -}
 isValid : Locale.Locale -> Fields.Fields -> Bool
 isValid locale =
     validate locale >> MaybeExtra.isJust
@@ -196,6 +218,7 @@ type Error
     | NumericError_ NumericError
 
 
+{-| -}
 errorToMessage : Field.Field -> Error -> String
 errorToMessage field error =
     case error of

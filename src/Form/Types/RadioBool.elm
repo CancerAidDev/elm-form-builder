@@ -1,9 +1,19 @@
-module Form.Types.RadioBool exposing (decoder, fromString, toString)
+module Form.Types.RadioBool exposing (fromString, toString, decoder)
+
+{-| RadioBool helpers.
+
+
+# RadioBool
+
+@docs fromString, toString, decoder
+
+-}
 
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 
 
+{-| -}
 fromString : String -> Maybe Bool
 fromString str =
     case str of
@@ -17,6 +27,7 @@ fromString str =
             Nothing
 
 
+{-| -}
 toString : Bool -> String
 toString bool =
     if bool then
@@ -26,6 +37,7 @@ toString bool =
         "No"
 
 
+{-| -}
 decoder : Decode.Decoder Bool
 decoder =
     Decode.string

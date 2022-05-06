@@ -1,6 +1,16 @@
 module Form.Types.CountryCode exposing (CountryCode(..), fromString, toString)
 
+{-| Limited [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166) support. Currently limited to AU.
 
+
+# CountryCode
+
+@docs CountryCode, fromString, toString
+
+-}
+
+
+{-| -}
 type CountryCode
     = AD
     | AE
@@ -253,6 +263,7 @@ type CountryCode
     | ZW
 
 
+{-| -}
 fromString : String -> Maybe CountryCode
 fromString str =
     case str of
@@ -1007,6 +1018,7 @@ fromString str =
             Nothing
 
 
+{-| -}
 toString : CountryCode -> String
 toString code =
     case code of

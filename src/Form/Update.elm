@@ -1,46 +1,41 @@
 module Form.Update exposing (update)
 
-import Form.Model as Model
+{-| Form.Update
+
+
+# Update
+
+@docs update
+
+-}
+
 import Form.Msg as Msg
 import Form.Types.Fields as Fields
 import Form.Validate as Validate
 
 
-update : Msg.Msg -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
-update msg model =
+{-| -}
+update : Msg.Msg -> Fields.Fields -> ( Fields.Fields, Cmd Msg.Msg )
+update msg fields =
     case msg of
         Msg.UpdateStringField key value ->
-            ( Fields.updateStringField key value model
-            , Cmd.none
-            )
+            ( Fields.updateStringField key value fields, Cmd.none )
 
         Msg.UpdateBoolField key value ->
-            ( Fields.updateBoolField key value model
-            , Cmd.none
-            )
+            ( Fields.updateBoolField key value fields, Cmd.none )
 
         Msg.UpdateRadioStringField key value ->
-            ( Fields.updateOptionField key value model
-            , Cmd.none
-            )
+            ( Fields.updateOptionField key value fields, Cmd.none )
 
         Msg.UpdateRadioBoolField key value ->
-            ( Fields.updateRadioBoolField key value model
-            , Cmd.none
-            )
+            ( Fields.updateRadioBoolField key value fields, Cmd.none )
 
         Msg.UpdateRadioEnumField key value ->
-            ( Fields.updateRadioEnumField key value model
-            , Cmd.none
-            )
+            ( Fields.updateRadioEnumField key value fields, Cmd.none )
 
         Msg.UpdateNumericField key value ->
             if Validate.isValidAgeInput (String.toInt value) then
-                ( Fields.updateNumericField key value model
-                , Cmd.none
-                )
+                ( Fields.updateNumericField key value fields, Cmd.none )
 
             else
-                ( model
-                , Cmd.none
-                )
+                ( fields, Cmd.none )
