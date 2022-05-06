@@ -57,6 +57,7 @@ type LanguageCode
     | VI
     | ZA
     | ZH
+    | ZU
 
 
 {-| -}
@@ -197,6 +198,9 @@ fromString str =
 
         "zh" ->
             Just ZH
+
+        "zu" ->
+            Just ZU
 
         _ ->
             Nothing
@@ -340,3 +344,6 @@ toString code =
 
         ZH ->
             "zh"
+
+        ZU ->
+            "zu"
