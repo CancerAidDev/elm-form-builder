@@ -1,6 +1,6 @@
 # elm-form-builder
 
-Form widgets and validation.
+Form widgets and validation used for internal projects.
 
 HTML elements are styled using [Bulma](https://bulma.io).
 

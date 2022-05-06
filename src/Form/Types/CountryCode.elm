@@ -45,7 +45,6 @@ type CountryCode
     | BR
     | BS
     | BT
-    | BV
     | BW
     | BY
     | BZ
@@ -101,7 +100,6 @@ type CountryCode
     | GP
     | GQ
     | GR
-    | GS
     | GT
     | GU
     | GW
@@ -109,7 +107,6 @@ type CountryCode
     | HK
     | HM
     | HN
-    | HR
     | HT
     | HU
     | ID
@@ -192,7 +189,6 @@ type CountryCode
     | PK
     | PL
     | PM
-    | PN
     | PR
     | PS
     | PT
@@ -227,7 +223,6 @@ type CountryCode
     | SZ
     | TC
     | TD
-    | TF
     | TG
     | TH
     | TJ
@@ -243,7 +238,6 @@ type CountryCode
     | TZ
     | UA
     | UG
-    | UM
     | US
     | UY
     | UZ
@@ -365,9 +359,6 @@ fromString str =
 
         "BT" ->
             Just BT
-
-        "BV" ->
-            Just BV
 
         "BW" ->
             Just BW
@@ -534,9 +525,6 @@ fromString str =
         "GR" ->
             Just GR
 
-        "GS" ->
-            Just GS
-
         "GT" ->
             Just GT
 
@@ -557,9 +545,6 @@ fromString str =
 
         "HN" ->
             Just HN
-
-        "HR" ->
-            Just HR
 
         "HT" ->
             Just HT
@@ -807,9 +792,6 @@ fromString str =
         "PM" ->
             Just PM
 
-        "PN" ->
-            Just PN
-
         "PR" ->
             Just PR
 
@@ -912,9 +894,6 @@ fromString str =
         "TD" ->
             Just TD
 
-        "TF" ->
-            Just TF
-
         "TG" ->
             Just TG
 
@@ -959,9 +938,6 @@ fromString str =
 
         "UG" ->
             Just UG
-
-        "UM" ->
-            Just UM
 
         "US" ->
             Just US
@@ -1120,9 +1096,6 @@ toString code =
 
         BT ->
             "BT"
-
-        BV ->
-            "BV"
 
         BW ->
             "BW"
@@ -1289,9 +1262,6 @@ toString code =
         GR ->
             "GR"
 
-        GS ->
-            "GS"
-
         GT ->
             "GT"
 
@@ -1312,9 +1282,6 @@ toString code =
 
         HN ->
             "HN"
-
-        HR ->
-            "HR"
 
         HT ->
             "HT"
@@ -1562,9 +1529,6 @@ toString code =
         PM ->
             "PM"
 
-        PN ->
-            "PN"
-
         PR ->
             "PR"
 
@@ -1667,9 +1631,6 @@ toString code =
         TD ->
             "TD"
 
-        TF ->
-            "TF"
-
         TG ->
             "TG"
 
@@ -1714,9 +1675,6 @@ toString code =
 
         UG ->
             "UG"
-
-        UM ->
-            "UM"
 
         US ->
             "US"
