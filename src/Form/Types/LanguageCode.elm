@@ -29,10 +29,16 @@ type LanguageCode
     | EL
     | EN
     | ES
+    | FR
     | GD
     | GL
     | HI
     | HY
+    | JV
+    | KO
+    | MR
+    | MS
+    | NO
     | PA
     | PL
     | PS
@@ -44,6 +50,12 @@ type LanguageCode
     | RU
     | SQ
     | SR
+    | SV
+    | TA
+    | TH
+    | TR
+    | VI
+    | ZA
     | ZH
 
 
@@ -99,6 +111,9 @@ fromString str =
         "en" ->
             Just EN
 
+        "fr" ->
+            Just FR
+
         "es" ->
             Just ES
 
@@ -113,6 +128,21 @@ fromString str =
 
         "hy" ->
             Just HY
+
+        "jv" ->
+            Just JV
+
+        "ko" ->
+            Just KO
+
+        "mr" ->
+            Just MR
+
+        "ms" ->
+            Just MS
+
+        "no" ->
+            Just NO
 
         "pa" ->
             Just PA
@@ -146,6 +176,24 @@ fromString str =
 
         "sr" ->
             Just SR
+
+        "sv" ->
+            Just SV
+
+        "ta" ->
+            Just TA
+
+        "th" ->
+            Just TH
+
+        "tr" ->
+            Just TR
+
+        "vi" ->
+            Just VI
+
+        "za" ->
+            Just ZA
 
         "zh" ->
             Just ZH
@@ -209,6 +257,9 @@ toString code =
         ES ->
             "es"
 
+        FR ->
+            "fr"
+
         GD ->
             "gd"
 
@@ -220,6 +271,33 @@ toString code =
 
         HY ->
             "hy"
+
+        JV ->
+            "jv"
+
+        KO ->
+            "ko"
+
+        MR ->
+            "mr"
+
+        MS ->
+            "ms"
+
+        NO ->
+            "no"
+
+        SV ->
+            "sv"
+
+        TA ->
+            "ta"
+
+        TH ->
+            "th"
+
+        TR ->
+            "tr"
 
         PA ->
             "pa"
@@ -253,6 +331,12 @@ toString code =
 
         SR ->
             "sr"
+
+        VI ->
+            "vi"
+
+        ZA ->
+            "za"
 
         ZH ->
             "zh"
