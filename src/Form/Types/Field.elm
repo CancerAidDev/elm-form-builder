@@ -251,10 +251,10 @@ updateStringValue value field =
             field
 
 
-{-| -}
+{-| Keep existing field if the value is Nothing
+-}
 maybeUpdateStringValue : Maybe String -> Field -> Field
 maybeUpdateStringValue maybeValue field =
-    -- Keep existing field if the value is Nothing
     Maybe.map (\str -> updateStringValue str field) maybeValue
         |> Maybe.withDefault field
 
