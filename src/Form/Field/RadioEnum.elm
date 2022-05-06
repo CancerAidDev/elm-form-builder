@@ -1,4 +1,4 @@
-module Form.Types.RadioEnum exposing (Value(..), toBool, toString, fromString, decoder)
+module Form.Field.RadioEnum exposing (Value(..), toBool, toString, fromString, decoder)
 
 {-| RadioEnum data type.
 

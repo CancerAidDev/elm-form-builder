@@ -9,9 +9,9 @@ module Form.View.Select exposing (select, httpSelect)
 
 -}
 
+import Form.Field as Field
+import Form.Field.Option as Select
 import Form.Msg as Msg
-import Form.Types.Field as Field
-import Form.Types.Option as Select
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents

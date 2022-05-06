@@ -9,8 +9,8 @@ module Form.Update exposing (update)
 
 -}
 
+import Form.Fields as Fields
 import Form.Msg as Msg
-import Form.Types.Fields as Fields
 import Form.Validate as Validate
 
 

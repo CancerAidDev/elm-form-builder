@@ -1,4 +1,4 @@
-module Form.Types.Fields exposing
+module Form.Fields exposing
     ( Fields
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
@@ -30,11 +30,11 @@ module Form.Types.Fields exposing
 -}
 
 import Dict
-import Form.Types.Field as Field
-import Form.Types.Field.Json as FieldJson
-import Form.Types.FieldType as FieldType
-import Form.Types.Option as Option
-import Form.Types.RadioEnum as RadioEnum
+import Form.Field as Field
+import Form.Field.FieldType as FieldType
+import Form.Field.Json as FieldJson
+import Form.Field.Option as Option
+import Form.Field.RadioEnum as RadioEnum
 import Http.Detailed as HttpDetailed
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra

@@ -1,4 +1,4 @@
-module Form.Types.Field.Json exposing (decoder)
+module Form.Field.Json exposing (decoder)
 
 {-| Decode Field from Json
 
@@ -9,13 +9,13 @@ module Form.Types.Field.Json exposing (decoder)
 
 -}
 
-import Form.Types.Direction as Direction
-import Form.Types.Field as Field
-import Form.Types.FieldType as FieldType
-import Form.Types.Option as Option
-import Form.Types.RadioBool as RadioBool
-import Form.Types.RadioEnum as RadioEnum
-import Form.Types.Width as Width
+import Form.Field as Field
+import Form.Field.Direction as Direction
+import Form.Field.FieldType as FieldType
+import Form.Field.Option as Option
+import Form.Field.RadioBool as RadioBool
+import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Width as Width
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData

@@ -1,4 +1,4 @@
-module Form.Types.Option exposing (Option, decoder, remoteOptionDecoder)
+module Form.Field.Option exposing (Option, decoder, remoteOptionDecoder)
 
 {-| Field option tyope
 

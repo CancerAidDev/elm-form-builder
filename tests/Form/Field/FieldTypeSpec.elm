@@ -1,7 +1,7 @@
-module Form.Types.FieldTypeSpec exposing (..)
+module Form.Field.FieldTypeSpec exposing (..)
 
 import Expect
-import Form.Types.FieldType as FieldType
+import Form.Field.FieldType as FieldType
 import Json.Decode as Decode
 import Test exposing (..)
 

@@ -1,4 +1,4 @@
-module Form.Types.Width exposing (Width(..), decoder, toStyle)
+module Form.Field.Width exposing (Width(..), decoder, toStyle)
 
 {-| Form element width
 

@@ -1,4 +1,4 @@
-module Form.Types.Phone exposing (regex, mobileRegex, formatForSubmission, formatForDisplay)
+module Form.Locale.Phone exposing (regex, mobileRegex, formatForSubmission, formatForDisplay)
 
 {-| Phone number helpers
 
@@ -9,7 +9,7 @@ module Form.Types.Phone exposing (regex, mobileRegex, formatForSubmission, forma
 
 -}
 
-import Form.Types.CountryCode as CountryCode
+import Form.Locale.CountryCode as CountryCode
 import List.Extra as ListExtra
 import Regex
 import String.Extra as StringExtra

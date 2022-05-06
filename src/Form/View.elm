@@ -10,10 +10,10 @@ module Form.View exposing (view)
 -}
 
 import Dict
+import Form.Field as Field
+import Form.Fields as Fields
+import Form.Locale as Locale
 import Form.Msg as Msg
-import Form.Types.Field as Field
-import Form.Types.Fields as Fields
-import Form.Types.Locale as Locale
 import Form.View.Input as Input
 import Html
 import Html.Attributes as HtmlAttributes

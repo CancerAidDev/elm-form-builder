@@ -1,4 +1,4 @@
-module Form.Types.FieldType exposing
+module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), DateFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType

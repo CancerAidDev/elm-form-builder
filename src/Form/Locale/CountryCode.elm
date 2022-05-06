@@ -1,4 +1,4 @@
-module Form.Types.CountryCode exposing (CountryCode(..), fromString, toString)
+module Form.Locale.CountryCode exposing (CountryCode(..), fromString, toString)
 
 {-| Best effort at supporting [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166).
 

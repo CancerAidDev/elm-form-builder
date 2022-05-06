@@ -1,7 +1,7 @@
-module Form.Types.WidthSpec exposing (..)
+module Form.Field.WidthSpec exposing (..)
 
 import Expect
-import Form.Types.Width as Width
+import Form.Field.Width as Width
 import Json.Decode as Decode
 import Test exposing (..)
 

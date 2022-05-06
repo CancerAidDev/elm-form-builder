@@ -1,7 +1,7 @@
-module Form.Types.RadioBoolSpec exposing (..)
+module Form.Field.RadioBoolSpec exposing (..)
 
 import Expect
-import Form.Types.RadioBool as RadioBool
+import Form.Field.RadioBool as RadioBool
 import Json.Decode as Decode
 import Test exposing (..)
 

@@ -24,13 +24,13 @@ module Form.Validate exposing
 -}
 
 import Dict
+import Form.Field as Field
+import Form.Field.FieldType as FieldType
+import Form.Field.RadioEnum as RadioEnum
+import Form.Fields as Fields
 import Form.Lib.String as LibString
-import Form.Types.Field as Field
-import Form.Types.FieldType as FieldType
-import Form.Types.Fields as Fields
-import Form.Types.Locale as Locale
-import Form.Types.Phone as Phone
-import Form.Types.RadioEnum as RadioEnum
+import Form.Locale as Locale
+import Form.Locale.Phone as Phone
 import Iso8601
 import Maybe.Extra as MaybeExtra
 import Regex

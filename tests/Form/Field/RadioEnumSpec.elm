@@ -1,7 +1,7 @@
-module Form.Types.RadioEnumSpec exposing (..)
+module Form.Field.RadioEnumSpec exposing (..)
 
 import Expect
-import Form.Types.RadioEnum as RadioEnum
+import Form.Field.RadioEnum as RadioEnum
 import Json.Decode as Decode
 import Test exposing (..)
 

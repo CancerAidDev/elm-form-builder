@@ -1,4 +1,4 @@
-module Form.Types.Locale exposing
+module Form.Locale exposing
     ( Locale(..)
     , toString, urlParser
     , enAU
@@ -23,8 +23,8 @@ module Form.Types.Locale exposing
 
 -}
 
-import Form.Types.CountryCode as CountryCode
-import Form.Types.LanguageCode as LanguageCode
+import Form.Locale.CountryCode as CountryCode
+import Form.Locale.LanguageCode as LanguageCode
 import Url.Parser as UrlParser
 
 

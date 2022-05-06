@@ -1,7 +1,7 @@
-module Form.Types.OptionSpec exposing (..)
+module Form.Field.OptionSpec exposing (..)
 
 import Expect
-import Form.Types.Option as Option
+import Form.Field.Option as Option
 import Json.Decode as Decode
 import Test exposing (..)
 

@@ -1,4 +1,4 @@
-module Form.Types.Field exposing
+module Form.Field exposing
     ( Field(..), StringField(..), BoolField(..), NumericField(..)
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
@@ -47,12 +47,12 @@ module Form.Types.Field exposing
 
 -}
 
-import Form.Types.Direction as Direction
-import Form.Types.FieldType as FieldType
-import Form.Types.Option as Option
-import Form.Types.RadioBool as RadioBool
-import Form.Types.RadioEnum as RadioEnum
-import Form.Types.Width as Width
+import Form.Field.Direction as Direction
+import Form.Field.FieldType as FieldType
+import Form.Field.Option as Option
+import Form.Field.RadioBool as RadioBool
+import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Width as Width
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra

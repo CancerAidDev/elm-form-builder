@@ -1,4 +1,4 @@
-module Form.Types.RadioBool exposing (fromString, toString, decoder)
+module Form.Field.RadioBool exposing (fromString, toString, decoder)
 
 {-| RadioBool helpers.
 

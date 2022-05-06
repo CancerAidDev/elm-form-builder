@@ -9,17 +9,17 @@ module Form.View.Input exposing (view)
 
 -}
 
+import Form.Field as Field
+import Form.Field.Direction as Direction
+import Form.Field.FieldType as FieldType
+import Form.Field.Option as Option
+import Form.Field.RadioBool as RadioBool
+import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Width as Width
+import Form.Fields as Fields
 import Form.Lib.String as LibString
+import Form.Locale as Locale
 import Form.Msg as Msg
-import Form.Types.Direction as Direction
-import Form.Types.Field as Field
-import Form.Types.FieldType as FieldType
-import Form.Types.Fields as Fields
-import Form.Types.Locale as Locale
-import Form.Types.Option as Option
-import Form.Types.RadioBool as RadioBool
-import Form.Types.RadioEnum as RadioEnum
-import Form.Types.Width as Width
 import Form.Validate as Validate
 import Form.View.Select as Select
 import Html

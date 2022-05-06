@@ -9,8 +9,8 @@ module Form.Msg exposing (Msg(..))
 
 -}
 
-import Form.Types.Option as Option
-import Form.Types.RadioEnum as RadioEnum
+import Form.Field.Option as Option
+import Form.Field.RadioEnum as RadioEnum
 
 
 {-| -}

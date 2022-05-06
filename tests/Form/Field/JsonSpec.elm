@@ -1,13 +1,13 @@
-module Form.Types.Field.JsonSpec exposing (..)
+module Form.Field.JsonSpec exposing (..)
 
 import Dict
 import Expect
-import Form.Types.Field as Field
-import Form.Types.Field.Json as Json
-import Form.Types.FieldType as FieldType
-import Form.Types.Fields as Fields
-import Form.Types.RadioBool exposing (decoder)
-import Form.Types.Width as Width
+import Form.Field as Field
+import Form.Field.FieldType as FieldType
+import Form.Field.Json as Json
+import Form.Field.RadioBool exposing (decoder)
+import Form.Field.Width as Width
+import Form.Fields as Fields
 import Json.Decode as Decode
 import Json.Encode as Encode
 import RemoteData

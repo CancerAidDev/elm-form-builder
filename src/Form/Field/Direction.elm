@@ -1,4 +1,4 @@
-module Form.Types.Direction exposing (Direction(..), decoder, fromString, toString)
+module Form.Field.Direction exposing (Direction(..), decoder, fromString, toString)
 
 {-| Form grid layout direction.
 
