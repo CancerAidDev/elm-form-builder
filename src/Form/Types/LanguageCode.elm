@@ -1,6 +1,6 @@
 module Form.Types.LanguageCode exposing (LanguageCode(..), fromString, toString)
 
-{-| Limited [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) support. Currently limited to "en".
+{-| Limited [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) support.
 
 
 # LanguageCode
