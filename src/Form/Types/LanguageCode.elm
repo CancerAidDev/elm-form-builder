@@ -200,35 +200,48 @@ fromString str =
 
         "ug" ->
             Just UG
+
         "uk" ->
             Just UK
+
         "ur" ->
             Just UR
+
         "uz" ->
             Just UZ
+
         "ve" ->
             Just VE
+
         "vi" ->
             Just VI
+
         "vo" ->
             Just VO
+
         "wa" ->
             Just WA
+
         "wo" ->
             Just WO
+
         "xh" ->
             Just XH
+
         "yi" ->
             Just YI
+
         "yo" ->
             Just YO
+
         "za" ->
             Just ZA
+
         "zh" ->
             Just ZH
+
         "zu" ->
             Just ZU
-
 
         _ ->
             Nothing
@@ -321,61 +334,90 @@ toString code =
 
         PA ->
             "pa"
+
         PL ->
             "pl"
+
         PS ->
             "ps"
+
         PT ->
             "pt"
+
         QU ->
             "qu"
+
         RM ->
             "rm"
+
         RN ->
             "rn"
+
         RO ->
             "ro"
+
         RU ->
             "ru"
+
         SQ ->
             "sq"
+
         SR ->
             "sr"
+
         SV ->
             "sv"
+
         TA ->
             "ta"
+
         TH ->
             "th"
+
         TR ->
             "tr"
+
         UG ->
             "ug"
+
         UK ->
             "uk"
+
         UR ->
             "ur"
+
         UZ ->
             "uz"
+
         VE ->
             "ve"
+
         VI ->
             "vi"
+
         VO ->
             "vo"
+
         WA ->
             "wa"
+
         WO ->
             "wo"
+
         XH ->
             "xh"
+
         YI ->
             "yi"
+
         YO ->
             "yo"
+
         ZA ->
             "za"
+
         ZH ->
             "zh"
+
         ZU ->
             "zu"
