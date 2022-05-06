@@ -36,12 +36,12 @@ jobs:
 
       - run: yarn install
 
+      - name: Build package
+        run: yarn elm make
+
       - name: elm-format
         run: yarn elm-format --validate src tests
 
       - run: yarn elm-review
 
       - run: yarn elm-test
-
-      - name: Build package
-        run: yarn elm make
