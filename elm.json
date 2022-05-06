@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "canceraiddev/elm-form-builder",
-    "summary": "Form widgets and validation we use at CancerAid",
+    "summary": "Form widgets and validation",
     "license": "Apache-2.0",
     "version": "1.0.0",
     "exposed-modules": [
