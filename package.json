@@ -1,7 +1,7 @@
 {
-  "name": "canceraid-forms",
+  "name": "elm-form-builder",
   "version": "1.0.0",
-  "repository": "git@github.com:CancerAidDev/canceraid-forms.git",
+  "repository": "git@github.com:CancerAidDev/elm-form-builder.git",
   "author": "CancerAidDev",
   "license": "Apache-2.0",
   "scripts": {},

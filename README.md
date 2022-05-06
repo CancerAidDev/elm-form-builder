@@ -1,6 +1,6 @@
-# canceraid-forms
+# elm-form-builder
 
-Form widgets and validation we use.
+Form widgets and validation we use at CancerAid.
 
 Html elements are styled using [Bulma](https://bulma.io).
 

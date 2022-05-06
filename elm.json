@@ -1,6 +1,6 @@
 {
     "type": "package",
-    "name": "canceraiddev/canceraid-forms",
+    "name": "canceraiddev/elm-form-builder",
     "summary": "Elm forms for CancerAid.",
     "license": "Apache-2.0",
     "version": "1.0.0",
