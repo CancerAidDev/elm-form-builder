@@ -4,6 +4,17 @@ Form widgets and validation used for internal projects.
 
 HTML elements are styled using [Bulma](https://bulma.io).
 
+Currently supports the following form elements:
+
+- Age
+- Checkbox
+- Date
+- Email
+- Phone
+- Radio
+- Select
+- Text
+
 ## Setup
 
 ```
