@@ -260,7 +260,7 @@ type CountryCode
 {-| -}
 fromString : String -> Maybe CountryCode
 fromString str =
-    case str of
+    case String.toUpper str of
         "AD" ->
             Just AD
 
