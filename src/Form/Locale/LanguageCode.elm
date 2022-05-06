@@ -192,6 +192,9 @@ fromString str =
         "sv" ->
             Just SV
 
+        "tr" ->
+            Just TR
+
         "ta" ->
             Just TA
 
