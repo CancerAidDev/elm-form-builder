@@ -8,7 +8,7 @@ import Test exposing (..)
 
 suite : Test
 suite =
-    describe "Form.Types.Width.decoder"
+    describe "Form.Field.Width.decoder"
         [ test "Half Sized Width field" <|
             \_ ->
                 let

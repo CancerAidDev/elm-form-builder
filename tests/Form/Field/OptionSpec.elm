@@ -8,7 +8,7 @@ import Test exposing (..)
 
 suite : Test
 suite =
-    describe "Form.Types.Option"
+    describe "Form.Field.Option"
         [ describe "decoder"
             [ test "Valid Select options" <|
                 \_ ->

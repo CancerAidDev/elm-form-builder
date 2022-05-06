@@ -30,7 +30,7 @@ suite =
         encode =
             Encode.dict identity identity << Fields.encode
     in
-    describe "Form.Types.Field"
+    describe "Form.Field.Json"
         [ describe "Decoding Fields"
             [ test "Simple field decoder" <|
                 \_ ->
