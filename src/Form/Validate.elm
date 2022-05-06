@@ -226,13 +226,13 @@ errorToMessage field error =
             Field.getLabel field ++ " is required"
 
         StringError_ InvalidMobilePhoneNumber ->
-            Field.getLabel field ++ " should start with a 4"
+            Field.getLabel field ++ " is not a valid mobile number"
 
         StringError_ InvalidPhoneNumber ->
-            Field.getLabel field ++ " is not a valid phone format"
+            Field.getLabel field ++ " is not a valid phone number"
 
         StringError_ InvalidEmail ->
-            Field.getLabel field ++ " is not a valid email"
+            Field.getLabel field ++ " is not a valid email address"
 
         StringError_ InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
