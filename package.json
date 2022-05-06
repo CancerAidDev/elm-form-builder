@@ -1,6 +1,7 @@
 {
   "name": "elm-form-builder",
   "version": "1.0.0",
+  "description": "Form widgets and validation.",
   "repository": "git@github.com:CancerAidDev/elm-form-builder.git",
   "author": "CancerAidDev",
   "license": "Apache-2.0",
