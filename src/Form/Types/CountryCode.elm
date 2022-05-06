@@ -1,6 +1,6 @@
 module Form.Types.CountryCode exposing (CountryCode(..), fromString, toString)
 
-{-| Limited [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166) support. Currently limited to AU.
+{-| Best effort at supporting [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166).
 
 
 # CountryCode
