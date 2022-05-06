@@ -1,6 +1,6 @@
 module Form.Locale exposing
     ( Locale(..)
-    , toString, urlParser
+    , fromString, toString, urlParser
     , enAU
     )
 
@@ -14,7 +14,7 @@ module Form.Locale exposing
 
 # Helpers
 
-@docs toString, urlParser
+@docs fromString, toString, urlParser
 
 
 # Locales
