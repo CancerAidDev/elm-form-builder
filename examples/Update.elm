@@ -2,7 +2,9 @@ module Update exposing (..)
 
 import Dialog
 import Form.Lib.Update as LibUpdate
+import Form.Locale as Locale
 import Form.Update as FormUpdate
+import Form.Validate as Validate
 import Model
 import Msg
 
@@ -18,5 +20,15 @@ update msg model =
             FormUpdate.update subMsg model.form
                 |> LibUpdate.updateWith (\updatedForm -> { model | form = updatedForm }) Msg.FormMsg
 
-        Msg.SubmitForm ->
-            Debug.todo ""
+        Msg.SubmitForm button ->
+            let
+                newDialog =
+                    Dialog.info
+                        { title = "Info"
+                        , message = Msg.buttonToString button
+                        }
+            in
+            model.form
+                |> Validate.validate Locale.enAU
+                |> Maybe.map (\fields -> ( { model | dialog = Just newDialog, form = fields }, Cmd.none ))
+                |> Maybe.withDefault ( { model | submitted = True }, Cmd.none )

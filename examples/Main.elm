@@ -25,7 +25,7 @@ init =
     ( { startTime =
             TimeExtra.partsToPosix Time.utc <|
                 TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
-      , dialog = Debug.todo ""
+      , dialog = Nothing
       , form = Fields.fields
       , submitted = False
       }
