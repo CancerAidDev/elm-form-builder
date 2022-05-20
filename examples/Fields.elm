@@ -34,4 +34,17 @@ fields =
                     , value = ""
                     }
           )
+        , ( "age"
+          , FormField.NumericField_ <|
+                FormField.NumericField
+                    { required = True
+                    , label = "Age"
+                    , title = "Age"
+                    , width = Width.FullSize
+                    , enabledBy = Nothing
+                    , order = 3
+                    , tipe = FieldType.Age
+                    , value = Nothing
+                    }
+          )
         ]
