@@ -24,7 +24,7 @@ update msg model =
                 newDialog =
                     Dialog.info
                         { title = "Info"
-                        , message = "Submission success"
+                        , message = "Create success"
                         }
             in
             model.form

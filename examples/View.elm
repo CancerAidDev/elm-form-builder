@@ -21,7 +21,7 @@ view model =
         , Html.div
             [ HtmlAttributes.class "box p-5 has-background-white" ]
             [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted FormLocale.enAU model.form)
-            , Html.div [ HtmlAttributes.class "is-flex is-justify-content-space-between px-3" ]
+            , Html.div [ HtmlAttributes.class "is-flex is-justify-content-center pt-4" ]
                 [ Html.button
                     [ HtmlAttributes.class "button is-link "
                     , HtmlEvents.onClick Msg.SubmitForm
