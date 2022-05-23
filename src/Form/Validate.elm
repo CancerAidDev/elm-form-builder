@@ -34,6 +34,7 @@ import Form.Locale.Phone as Phone
 import Iso8601
 import Maybe.Extra as MaybeExtra
 import Regex
+import Url
 
 
 {-| -}
@@ -280,17 +281,12 @@ emailValidator value =
 
 urlValidator : StringValidator
 urlValidator value =
-    let
-        regex =
-            "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    if Regex.contains regex value then
-        Ok value
+    case Url.fromString value of
+        Just _ ->
+            Ok value
 
-    else
-        Err InvalidUrl
+        Nothing ->
+            Err InvalidUrl
 
 
 dateValidator : StringValidator

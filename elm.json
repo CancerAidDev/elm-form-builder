@@ -3,7 +3,7 @@
     "name": "canceraiddev/elm-form-builder",
     "summary": "Form widgets and validation used for internal projects.",
     "license": "Apache-2.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "exposed-modules": [
         "Form.Field.Direction",
         "Form.Field.FieldType",
@@ -47,7 +47,7 @@
         "rtfeldman/elm-iso8601-date-strings": "1.1.4 <= v < 2.0.0"
     },
     "test-dependencies": {
-        "elm-explorations/test": "1.2.2 <= v < 2.0.0",
-        "elm/random": "1.0.0 <= v < 2.0.0"
+        "elm/random": "1.0.0 <= v < 2.0.0",
+        "elm-explorations/test": "1.2.2 <= v < 2.0.0"
     }
 }

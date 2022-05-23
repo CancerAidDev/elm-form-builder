@@ -1,5 +1,5 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radio, radioBool, radioEnum, select, httpSelect, age
+    ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
@@ -13,7 +13,7 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radio, radioBool, radioEnum, select, httpSelect, radio, age
+@docs Field, StringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
 
 
 # Properties
@@ -53,13 +53,13 @@ import Form.Field.Option as Option
 import Form.Field.RadioBool as RadioBool
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
-import Html exposing (a)
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
 import RemoteData
 
 
+{-| -}
 text : StringFieldProperties a -> Field
 text { required, label, width, enabledBy, order, value } =
     StringField_ <|
@@ -74,6 +74,7 @@ text { required, label, width, enabledBy, order, value } =
             }
 
 
+{-| -}
 email : StringFieldProperties a -> Field
 email { required, label, width, enabledBy, order, value } =
     StringField_ <|
