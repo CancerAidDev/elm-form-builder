@@ -51,7 +51,7 @@ label field disabled =
     HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
         Html.label [ HtmlAttributes.class "label" ]
             [ Html.text (Field.getLabel field)
-            , HtmlExtra.viewIf (not (Field.isRequired field)) <|
+            , HtmlExtra.viewIf (not (Field.isRequired field) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
             ]
 

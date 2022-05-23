@@ -24,8 +24,7 @@ import Html.Events as HtmlEvents
 {-| -}
 radio : String -> Field.RadioFieldProperties -> Html.Html Msg.Msg
 radio key properties =
-    Html.div
-        [ HtmlAttributes.class "control" ]
+    Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline" ]
         (List.map (viewOption key properties) properties.options)
 
 
@@ -62,14 +61,21 @@ radioEnum key properties =
 
 
 viewOption : String -> Field.RadioFieldProperties -> Option.Option -> Html.Html Msg.Msg
-viewOption key { default, value } option =
+viewOption key { default, direction, value } option =
     let
         checked =
             (value == "" && default == Just option.value) || (value == option.value)
     in
-    Html.label [ HtmlAttributes.class "radio" ]
+    Html.label
+        [ HtmlAttributes.class "radio my-2"
+        , HtmlAttributes.classList
+            [ ( "column", True )
+            , ( "is-12", direction == Direction.Row )
+            , ( "is-4", direction == Direction.Column )
+            ]
+        ]
         [ Html.input
-            [ HtmlAttributes.class "mx-1 mt-2"
+            [ HtmlAttributes.class "mx-2"
             , HtmlAttributes.type_ "radio"
             , HtmlAttributes.id (key ++ "_" ++ option.value)
             , HtmlAttributes.name key
