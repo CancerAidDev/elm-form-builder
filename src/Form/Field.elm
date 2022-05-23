@@ -1,6 +1,6 @@
 module Form.Field exposing
     ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
-    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
+    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
@@ -18,7 +18,7 @@ module Form.Field exposing
 
 # Properties
 
-@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
+@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
 
 
 # Getters
@@ -180,13 +180,13 @@ checkbox { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-radioBool : MaybeBoolFieldProperties -> Field
+radioBool : RadioBoolFieldProperties -> Field
 radioBool =
     BoolField_ << RadioBoolField
 
 
 {-| -}
-radioEnum : MaybeEnumFieldProperties -> Field
+radioEnum : RadioEnumFieldProperties -> Field
 radioEnum =
     BoolField_ << RadioEnumField
 
@@ -233,8 +233,8 @@ type StringField
 {-| -}
 type BoolField
     = CheckboxField CheckboxFieldProperties
-    | RadioBoolField MaybeBoolFieldProperties
-    | RadioEnumField MaybeEnumFieldProperties
+    | RadioBoolField RadioBoolFieldProperties
+    | RadioEnumField RadioEnumFieldProperties
 
 
 {-| -}
@@ -293,12 +293,12 @@ type alias CheckboxFieldProperties =
 
 
 {-| -}
-type alias MaybeEnumFieldProperties =
+type alias RadioEnumFieldProperties =
     FieldProperties { value : Maybe RadioEnum.Value, default : Maybe RadioEnum.Value, options : List RadioEnum.Value }
 
 
 {-| -}
-type alias MaybeBoolFieldProperties =
+type alias RadioBoolFieldProperties =
     FieldProperties { value : Maybe Bool, default : Maybe String, options : List Bool }
 
 

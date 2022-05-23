@@ -85,7 +85,7 @@ fields =
                     , { label = Nothing, value = "No" }
                     , { label = Nothing, value = "Unsure" }
                     ]
-                , direction = Direction.Column
+                , direction = Direction.Row
                 }
           )
         , ( "newsletter"

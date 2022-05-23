@@ -10,17 +10,14 @@ module Form.View.Input exposing (view)
 -}
 
 import Form.Field as Field
-import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
-import Form.Field.Option as Option
-import Form.Field.RadioBool as RadioBool
-import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
 import Form.Fields as Fields
 import Form.Lib.String as LibString
 import Form.Locale as Locale
 import Form.Msg as Msg
 import Form.Validate as Validate
+import Form.View.Radio as Radio
 import Form.View.Select as Select
 import Html
 import Html.Attributes as HtmlAttributes
@@ -97,10 +94,8 @@ control time key field =
                 ]
 
         Field.StringField_ (Field.RadioField properties) ->
-            Html.div [ HtmlAttributes.class "field column" ]
-                [ Html.div [ HtmlAttributes.class "columns is-mobile control" ]
-                    (radio [ radioViewExtraDiv properties.direction ] key field)
-                ]
+            Html.div [ HtmlAttributes.class "field" ]
+                [ Radio.radio key properties ]
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             Html.div [ HtmlAttributes.class "field" ]
@@ -108,17 +103,14 @@ control time key field =
                     [ checkbox key properties ]
                 ]
 
-        Field.BoolField_ (Field.RadioBoolField _) ->
-            Html.div [ HtmlAttributes.class "field column" ]
-                [ Html.div [ HtmlAttributes.class "columns is-mobile control" ]
-                    (radio [ radioViewExtraDiv Direction.Column ] key field)
+        Field.BoolField_ (Field.RadioBoolField properties) ->
+            Html.div [ HtmlAttributes.class "field" ]
+                [ Radio.radioBool key properties
                 ]
 
-        Field.BoolField_ (Field.RadioEnumField _) ->
-            Html.div [ HtmlAttributes.class "field column" ]
-                [ Html.div [ HtmlAttributes.class "columns is-mobile control" ]
-                    (radio [ radioViewExtraDiv Direction.Column ] key field)
-                ]
+        Field.BoolField_ (Field.RadioEnumField properties) ->
+            Html.div [ HtmlAttributes.class "field" ]
+                [ Radio.radioEnum key properties ]
 
         Field.NumericField_ (Field.AgeField _) ->
             Html.div [ HtmlAttributes.class "field" ]
@@ -183,96 +175,6 @@ textarea key field =
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
-
-
-radioView : Direction.Direction -> Msg.Msg -> Maybe Bool -> Option.Option -> String -> Html.Html Msg.Msg
-radioView direction onClick showOrChecked option name =
-    let
-        attributes =
-            case direction of
-                Direction.Row ->
-                    []
-
-                Direction.Column ->
-                    [ ( "is-one-third-desktop", True ), ( "is-3-mobile", True ) ]
-
-        radioState =
-            case showOrChecked of
-                Nothing ->
-                    []
-
-                Just x ->
-                    [ HtmlAttributes.checked x ]
-    in
-    Html.label [ HtmlAttributes.classList ([ ( "p-0", True ), ( "column", True ) ] ++ attributes) ]
-        [ Html.input
-            ([ HtmlAttributes.class "mx-1 mt-2"
-             , HtmlAttributes.type_ "radio"
-             , HtmlAttributes.id (name ++ "_" ++ option.value)
-             , HtmlAttributes.name name
-             , HtmlEvents.onClick <| onClick
-             ]
-                ++ radioState
-            )
-            []
-        , Html.text (Maybe.withDefault option.value option.label)
-        ]
-
-
-radioViewExtraDiv : Direction.Direction -> Html.Html Msg.Msg
-radioViewExtraDiv direction =
-    case direction of
-        Direction.Row ->
-            HtmlExtra.nothing
-
-        Direction.Column ->
-            Html.div [ HtmlAttributes.class "column is-one-third-desktop is-1" ] []
-
-
-radio : List (Html.Html Msg.Msg) -> String -> Field.Field -> List (Html.Html Msg.Msg)
-radio extra key field =
-    case field of
-        Field.StringField_ (Field.RadioField properties) ->
-            let
-                value option =
-                    Just ((properties.value == "" && properties.default == Just option) || (properties.value == option))
-            in
-            extra
-                ++ (properties.options
-                        |> List.map
-                            (\option -> radioView properties.direction (Msg.UpdateRadioStringField key option) (value option.value) option key)
-                   )
-
-        Field.BoolField_ (Field.RadioBoolField properties) ->
-            let
-                text option =
-                    { value = RadioBool.toString option, label = Nothing }
-
-                value option =
-                    Maybe.map2 (==) properties.value (RadioBool.fromString (text option).value)
-            in
-            extra
-                ++ (properties.options
-                        |> List.map
-                            (\option -> radioView Direction.Column (Msg.UpdateRadioBoolField key option) (value option) (text option) key)
-                   )
-
-        Field.BoolField_ (Field.RadioEnumField properties) ->
-            let
-                text option =
-                    { value = RadioEnum.toString option, label = Nothing }
-
-                value option =
-                    Maybe.map2 (==) properties.value (RadioEnum.fromString (text option).value)
-            in
-            extra
-                ++ (properties.options
-                        |> List.map
-                            (\option -> radioView Direction.Column (Msg.UpdateRadioEnumField key option) (value option) (text option) key)
-                   )
-
-        _ ->
-            [ HtmlExtra.nothing ]
 
 
 checkbox : String -> Field.BoolFieldProperties a -> Html.Html Msg.Msg

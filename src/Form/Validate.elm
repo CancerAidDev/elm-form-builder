@@ -113,7 +113,7 @@ validateBoolField properties =
         Err ConsentIsRequired
 
 
-validateRadioBoolField : Fields.Fields -> Field.Field -> Field.MaybeBoolFieldProperties -> Result BoolError (Maybe Bool)
+validateRadioBoolField : Fields.Fields -> Field.Field -> Field.RadioBoolFieldProperties -> Result BoolError (Maybe Bool)
 validateRadioBoolField fields field properties =
     if Fields.isEnabled fields field && properties.required then
         case properties.value of
@@ -127,7 +127,7 @@ validateRadioBoolField fields field properties =
         Ok properties.value
 
 
-validateRadioEnumField : Field.MaybeEnumFieldProperties -> Result BoolError (Maybe RadioEnum.Value)
+validateRadioEnumField : Field.RadioEnumFieldProperties -> Result BoolError (Maybe RadioEnum.Value)
 validateRadioEnumField properties =
     if properties.required then
         case properties.value of

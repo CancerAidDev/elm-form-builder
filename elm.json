@@ -24,6 +24,7 @@
         "Form.Validate",
         "Form.View.Input",
         "Form.View.Select",
+        "Form.View.Radio",
         "Form.View"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
