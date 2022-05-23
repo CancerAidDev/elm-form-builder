@@ -5,7 +5,6 @@ import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Json as Json
-import Form.Field.RadioBool exposing (decoder)
 import Form.Field.Width as Width
 import Form.Fields as Fields
 import Json.Decode as Decode

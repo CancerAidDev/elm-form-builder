@@ -2,7 +2,6 @@ module Form.Field.RadioBoolSpec exposing (..)
 
 import Expect
 import Form.Field.RadioBool as RadioBool
-import Json.Decode as Decode
 import Test exposing (..)
 
 
@@ -11,38 +10,14 @@ suite =
     describe "Form.Field.RadioBool.decoder"
         [ test "True RadioBool option" <|
             \_ ->
-                let
-                    json =
-                        """
-                          "Yes"
-                        """
-                in
-                Decode.decodeString RadioBool.decoder json
-                    |> Expect.equal
-                        (Ok
-                            True
-                        )
+                RadioBool.fromString "Yes"
+                    |> Expect.equal (Just True)
         , test "False RadioBool option" <|
             \_ ->
-                let
-                    json =
-                        """
-                          "No"
-                        """
-                in
-                Decode.decodeString RadioBool.decoder json
-                    |> Expect.equal
-                        (Ok
-                            False
-                        )
+                RadioBool.fromString "No"
+                    |> Expect.equal (Just False)
         , test "Incorrect RadioBool option" <|
             \_ ->
-                let
-                    json =
-                        """
-                          "N/A"
-                        """
-                in
-                Decode.decodeString RadioBool.decoder json
-                    |> Expect.err
+                RadioBool.fromString "N/A"
+                    |> Expect.equal Nothing
         ]
