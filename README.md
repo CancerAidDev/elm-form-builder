@@ -15,6 +15,20 @@ Currently supports the following form elements:
 - Select
 - Text
 
+## Examples
+
+We recommend checking out the [examples] ([code]) to get a feel for how it works.
+
+[examples]: https://canceraiddev.github.io/elm-dialog/
+[code]: https://github.com/canceraiddev/elm-dialog/tree/main/examples
+
+Run the following commands to test out the examples locally:
+
+```
+yarn install
+yarn start
+```
+
 ## Setup
 
 ```
