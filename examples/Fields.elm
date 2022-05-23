@@ -96,8 +96,6 @@ fields =
                 , enabledBy = Nothing
                 , order = 7
                 , value = Nothing
-                , default = Nothing
-                , options = [ True, False ]
                 }
           )
         ]

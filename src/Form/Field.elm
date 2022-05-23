@@ -50,7 +50,6 @@ module Form.Field exposing
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
-import Form.Field.RadioBool as RadioBool
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
 import Http.Detailed as HttpDetailed
@@ -299,7 +298,7 @@ type alias RadioEnumFieldProperties =
 
 {-| -}
 type alias RadioBoolFieldProperties =
-    FieldProperties { value : Maybe Bool, default : Maybe String, options : List Bool }
+    FieldProperties { value : Maybe Bool }
 
 
 {-| -}
@@ -445,7 +444,7 @@ resetValueToDefault field =
             BoolField_ (CheckboxField { properties | value = False })
 
         BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | value = properties.default |> Maybe.andThen RadioBool.fromString })
+            BoolField_ (RadioBoolField { properties | value = Nothing })
 
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = properties.default })

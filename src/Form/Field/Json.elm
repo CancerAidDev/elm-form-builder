@@ -13,7 +13,6 @@ import Form.Field as Field
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
-import Form.Field.RadioBool as RadioBool
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
 import Json.Decode as Decode
@@ -93,8 +92,6 @@ type alias JsonRadioBoolFieldProperties =
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , default : Maybe String
-    , options : List Bool
     }
 
 
@@ -258,18 +255,16 @@ toField time order field =
                     }
             )
 
-        JsonRadioBoolField { required, key, label, width, default, options, enabledBy } ->
+        JsonRadioBoolField { required, key, label, width, enabledBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioBoolField
                     { required = required
                     , label = label
                     , width = width
-                    , order = order
-                    , default = default
-                    , options = options
-                    , value = default |> Maybe.andThen RadioBool.fromString
                     , enabledBy = enabledBy
+                    , order = order
+                    , value = Nothing
                     }
             )
 
@@ -341,8 +336,6 @@ decoderRadioBoolJson =
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
-        |> DecodePipeline.required "options" (Decode.list RadioBool.decoder)
 
 
 decoderRadioEnumJson : Decode.Decoder JsonRadioEnumFieldProperties
