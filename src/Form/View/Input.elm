@@ -38,67 +38,25 @@ view time submitted locale fields key field =
         disabled =
             not (Fields.isEnabled fields field)
     in
-    if Field.hasTitle field then
-        Html.div
-            [ HtmlAttributes.class "column mb-5"
-            , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
-            , HtmlAttributes.id key
-            ]
-            [ Html.fieldset
-                [ HtmlAttributes.classList
-                    [ ( "is-mobile", Field.isNumericField field )
-                    , ( "has-text-grey-lighter", disabled )
-                    , ( "columns", Field.isColumn field )
-                    ]
-                , HtmlAttributes.disabled disabled
-                ]
-                [ label field disabled
-                , Html.div [ HtmlAttributes.class "p-0 is-half column" ]
-                    [ control time key field
-                    , error submitted locale fields field
-                    ]
-                ]
-            ]
-
-    else
-        Html.div
-            [ HtmlAttributes.class "column"
-            , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
-            , HtmlAttributes.id key
-            ]
-            [ label field disabled
-            , control time key field
-            , error submitted locale fields field
-            ]
+    Html.div
+        [ HtmlAttributes.class "column"
+        , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+        , HtmlAttributes.id key
+        ]
+        [ label field disabled
+        , control time key field
+        , error submitted locale fields field
+        ]
 
 
 label : Field.Field -> Bool -> Html.Html Msg.Msg
 label field disabled =
-    let
-        isColumn =
-            Field.isColumn field
-    in
-    if Field.hasTitle field then
-        Html.label
-            [ HtmlAttributes.class "label p-0"
-            , HtmlAttributes.classList
-                [ ( "has-text-grey-lighter", disabled )
-                , ( "column", isColumn )
-                , ( "is-half", isColumn )
-                ]
-            ]
-            [ Html.text (Field.getTitle field)
-            , HtmlExtra.viewIf (not (Field.isRequired field) && not disabled) <|
+    HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
+        Html.label [ HtmlAttributes.class "label" ]
+            [ Html.text (Field.getLabel field)
+            , HtmlExtra.viewIf (not (Field.isRequired field)) <|
                 Html.em [] [ Html.text " - optional" ]
             ]
-
-    else
-        HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
-            Html.label [ HtmlAttributes.class "label" ]
-                [ Html.text (Field.getLabel field)
-                , HtmlExtra.viewIf (not (Field.isRequired field)) <|
-                    Html.em [] [ Html.text " - optional" ]
-                ]
 
 
 control : Time.Posix -> String -> Field.Field -> Html.Html Msg.Msg
@@ -163,11 +121,9 @@ control time key field =
                 ]
 
         Field.NumericField_ (Field.AgeField _) ->
-            Html.div [ HtmlAttributes.class "field column is-narrow" ]
-                [ Html.div [ HtmlAttributes.class "columns is-mobile control" ]
-                    [ Html.div [ HtmlAttributes.class "column is-one-third-desktop" ] []
-                    , input time key field
-                    ]
+            Html.div [ HtmlAttributes.class "field" ]
+                [ Html.div [ HtmlAttributes.class "control" ]
+                    [ input time key field ]
                 ]
 
 
@@ -200,7 +156,7 @@ input time key field =
         Field.NumericField_ (Field.AgeField properties) ->
             Html.input
                 [ HtmlAttributes.name key
-                , HtmlAttributes.class "input column is-narrow"
+                , HtmlAttributes.class "input"
                 , HtmlAttributes.type_ "number"
                 , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
                 , HtmlAttributes.required properties.required

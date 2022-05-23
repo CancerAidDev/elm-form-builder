@@ -83,7 +83,6 @@ type alias JsonRadioFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe String
     , options : List Option.Option
-    , title : String
     , direction : Direction.Direction
     }
 
@@ -96,7 +95,6 @@ type alias JsonRadioBoolFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe String
     , options : List Bool
-    , title : String
     }
 
 
@@ -108,7 +106,6 @@ type alias JsonRadioEnumFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe RadioEnum.Value
     , options : List RadioEnum.Value
-    , title : String
     }
 
 
@@ -118,7 +115,6 @@ type alias JsonAgeFieldProperties =
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , title : String
     }
 
 
@@ -218,7 +214,7 @@ toField time order field =
                     }
             )
 
-        JsonRadioField { required, key, label, width, default, enabledBy, options, title, direction } ->
+        JsonRadioField { required, key, label, width, default, enabledBy, options, direction } ->
             ( key
             , Field.StringField_ <|
                 Field.RadioField
@@ -230,12 +226,11 @@ toField time order field =
                     , default = default
                     , options = options
                     , value = Maybe.withDefault "" default
-                    , title = title
                     , direction = direction
                     }
             )
 
-        JsonAgeField { required, key, label, width, title, enabledBy } ->
+        JsonAgeField { required, key, label, width, enabledBy } ->
             ( key
             , Field.NumericField_ <|
                 Field.AgeField
@@ -245,11 +240,10 @@ toField time order field =
                     , enabledBy = enabledBy
                     , order = order
                     , value = Nothing
-                    , title = title
                     }
             )
 
-        JsonRadioEnumField { required, key, label, width, default, enabledBy, options, title } ->
+        JsonRadioEnumField { required, key, label, width, default, enabledBy, options } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioEnumField
@@ -261,11 +255,10 @@ toField time order field =
                     , default = default
                     , options = options
                     , value = default
-                    , title = title
                     }
             )
 
-        JsonRadioBoolField { required, key, label, width, default, options, title, enabledBy } ->
+        JsonRadioBoolField { required, key, label, width, default, options, enabledBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioBoolField
@@ -276,7 +269,6 @@ toField time order field =
                     , default = default
                     , options = options
                     , value = default |> Maybe.andThen RadioBool.fromString
-                    , title = title
                     , enabledBy = enabledBy
                     }
             )
@@ -338,7 +330,6 @@ decoderRadioJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
-        |> DecodePipeline.required "title" Decode.string
         |> DecodePipeline.optional "direction" Direction.decoder Direction.Column
 
 
@@ -352,7 +343,6 @@ decoderRadioBoolJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "options" (Decode.list RadioBool.decoder)
-        |> DecodePipeline.required "title" Decode.string
 
 
 decoderRadioEnumJson : Decode.Decoder JsonRadioEnumFieldProperties
@@ -365,7 +355,6 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe RadioEnum.decoder) Nothing
         |> DecodePipeline.required "options" (Decode.list RadioEnum.decoder)
-        |> DecodePipeline.required "title" Decode.string
 
 
 decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
@@ -376,4 +365,3 @@ decoderAgeJson =
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.required "title" Decode.string

@@ -1,9 +1,9 @@
 module Form.Field exposing
     ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
-    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
+    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
-    , hasTitle, isCheckbox, isColumn, isNumericField, isRequired
+    , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
     )
@@ -23,7 +23,7 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
 
 
 # Setters
@@ -33,7 +33,7 @@ module Form.Field exposing
 
 # Predicates
 
-@docs hasTitle, isCheckbox, isColumn, isNumericField, isRequired
+@docs isCheckbox, isColumn, isNumericField, isRequired
 
 
 # Encode
@@ -279,7 +279,7 @@ type alias HttpSelectFieldProperties =
 
 {-| -}
 type alias RadioFieldProperties =
-    StringFieldProperties { default : Maybe String, options : List Option.Option, title : String, direction : Direction.Direction }
+    StringFieldProperties { default : Maybe String, options : List Option.Option, direction : Direction.Direction }
 
 
 {-| -}
@@ -294,17 +294,17 @@ type alias CheckboxFieldProperties =
 
 {-| -}
 type alias MaybeEnumFieldProperties =
-    FieldProperties { value : Maybe RadioEnum.Value, title : String, default : Maybe RadioEnum.Value, options : List RadioEnum.Value }
+    FieldProperties { value : Maybe RadioEnum.Value, default : Maybe RadioEnum.Value, options : List RadioEnum.Value }
 
 
 {-| -}
 type alias MaybeBoolFieldProperties =
-    FieldProperties { value : Maybe Bool, title : String, default : Maybe String, options : List Bool }
+    FieldProperties { value : Maybe Bool, default : Maybe String, options : List Bool }
 
 
 {-| -}
 type alias AgeFieldProperties =
-    FieldProperties { value : Maybe Int, title : String }
+    FieldProperties { value : Maybe Int }
 
 
 {-| -}
@@ -684,46 +684,6 @@ isCheckbox field =
 
         _ ->
             False
-
-
-{-| -}
-hasTitle : Field -> Bool
-hasTitle field =
-    case field of
-        BoolField_ (RadioBoolField _) ->
-            True
-
-        BoolField_ (RadioEnumField _) ->
-            True
-
-        NumericField_ _ ->
-            True
-
-        StringField_ (RadioField _) ->
-            True
-
-        _ ->
-            False
-
-
-{-| -}
-getTitle : Field -> String
-getTitle field =
-    case field of
-        BoolField_ (RadioBoolField properties) ->
-            properties.title
-
-        BoolField_ (RadioEnumField properties) ->
-            properties.title
-
-        NumericField_ (AgeField properties) ->
-            properties.title
-
-        StringField_ (RadioField properties) ->
-            properties.title
-
-        _ ->
-            ""
 
 
 {-| -}
