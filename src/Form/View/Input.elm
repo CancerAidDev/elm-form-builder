@@ -162,7 +162,7 @@ control time key field =
                     (radio [ radioViewExtraDiv Direction.Column ] key field)
                 ]
 
-        Field.NumericField_ (Field.NumericField _) ->
+        Field.NumericField_ (Field.AgeField _) ->
             Html.div [ HtmlAttributes.class "field column is-narrow" ]
                 [ Html.div [ HtmlAttributes.class "columns is-mobile control" ]
                     [ Html.div [ HtmlAttributes.class "column is-one-third-desktop" ] []
@@ -197,7 +197,7 @@ input time key field =
                 ]
                 []
 
-        Field.NumericField_ (Field.NumericField properties) ->
+        Field.NumericField_ (Field.AgeField properties) ->
             Html.input
                 [ HtmlAttributes.name key
                 , HtmlAttributes.class "input column is-narrow"
@@ -206,13 +206,9 @@ input time key field =
                 , HtmlAttributes.required properties.required
                 , HtmlEvents.onInput <| Msg.UpdateNumericField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time
-                        (FieldType.NumericType properties.tipe)
-                    )
+                    (FieldType.toMin time (FieldType.NumericType FieldType.Age))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time
-                        (FieldType.NumericType properties.tipe)
-                    )
+                    (FieldType.toMax time (FieldType.NumericType FieldType.Age))
                 ]
                 []
 
@@ -344,7 +340,7 @@ checkbox key field =
 error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
 error submitted locale fields field =
     case field of
-        Field.NumericField_ (Field.NumericField properties) ->
+        Field.NumericField_ (Field.AgeField properties) ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
                 [ if submitted then
                     validateForm locale fields field

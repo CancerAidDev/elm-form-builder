@@ -141,21 +141,19 @@ validateRadioEnumField properties =
 
 
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
-validateNumericField (Field.NumericField properties) =
+validateNumericField (Field.AgeField properties) =
     if properties.required then
-        case properties.tipe of
-            FieldType.Age ->
-                let
-                    regex =
-                        "^(1[89]|[2-9][0-9])$"
-                            |> Regex.fromString
-                            |> Maybe.withDefault Regex.never
-                in
-                if Regex.contains regex (LibString.fromMaybeInt properties.value) then
-                    Ok properties.value
+        let
+            regex =
+                "^(1[89]|[2-9][0-9])$"
+                    |> Regex.fromString
+                    |> Maybe.withDefault Regex.never
+        in
+        if Regex.contains regex (LibString.fromMaybeInt properties.value) then
+            Ok properties.value
 
-                else
-                    Err InvalidAge
+        else
+            Err InvalidAge
 
     else
         Ok properties.value
@@ -201,6 +199,7 @@ type StringError
     | InvalidPhoneNumber
     | InvalidEmail
     | InvalidDate
+    | InvalidUrl
 
 
 type BoolError
@@ -237,6 +236,9 @@ errorToMessage field error =
         StringError_ InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
             Field.getLabel field ++ " format should be YYYY-MM-DD"
+
+        StringError_ InvalidUrl ->
+            Field.getLabel field ++ " is not a valid url"
 
         BoolError_ ConsentIsRequired ->
             "Consent is required"
@@ -276,6 +278,21 @@ emailValidator value =
         Err InvalidEmail
 
 
+urlValidator : StringValidator
+urlValidator value =
+    let
+        regex =
+            "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+    in
+    if Regex.contains regex value then
+        Ok value
+
+    else
+        Err InvalidUrl
+
+
 dateValidator : StringValidator
 dateValidator value =
     Iso8601.toTime value
@@ -310,6 +327,9 @@ stringValidator locale fieldType =
 
         FieldType.SimpleType FieldType.Phone ->
             phoneValidator locale
+
+        FieldType.SimpleType FieldType.Url ->
+            urlValidator
 
         _ ->
             Ok

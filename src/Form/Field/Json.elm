@@ -30,7 +30,7 @@ type JsonField
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
-    | JsonNumericField JsonNumericFieldProperties
+    | JsonAgeField JsonAgeFieldProperties
 
 
 type alias JsonSimpleFieldProperties =
@@ -112,14 +112,13 @@ type alias JsonRadioEnumFieldProperties =
     }
 
 
-type alias JsonNumericFieldProperties =
+type alias JsonAgeFieldProperties =
     { required : Bool
     , key : String
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
     , title : String
-    , tipe : FieldType.NumericFieldType
     }
 
 
@@ -151,8 +150,8 @@ decoder time order =
                     FieldType.BoolType FieldType.RadioEnum ->
                         Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-                    FieldType.NumericType numericFieldType ->
-                        Decode.map JsonNumericField (decoderNumericJson numericFieldType)
+                    FieldType.NumericType FieldType.Age ->
+                        Decode.map JsonAgeField decoderAgeJson
             )
         |> Decode.map (toField time order)
 
@@ -236,16 +235,15 @@ toField time order field =
                     }
             )
 
-        JsonNumericField { tipe, required, key, label, width, title, enabledBy } ->
+        JsonAgeField { required, key, label, width, title, enabledBy } ->
             ( key
             , Field.NumericField_ <|
-                Field.NumericField
+                Field.AgeField
                     { required = required
                     , label = label
                     , width = width
                     , enabledBy = enabledBy
                     , order = order
-                    , tipe = tipe
                     , value = Nothing
                     , title = title
                     }
@@ -370,13 +368,12 @@ decoderRadioEnumJson =
         |> DecodePipeline.required "title" Decode.string
 
 
-decoderNumericJson : FieldType.NumericFieldType -> Decode.Decoder JsonNumericFieldProperties
-decoderNumericJson tipe =
-    Decode.succeed JsonNumericFieldProperties
+decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
+decoderAgeJson =
+    Decode.succeed JsonAgeFieldProperties
         |> DecodePipeline.required "required" Decode.bool
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.required "title" Decode.string
-        |> DecodePipeline.hardcoded tipe

@@ -64,6 +64,7 @@ type SimpleFieldType
     | Email
     | Date DateFieldType
     | Phone
+    | Url
     | TextArea
 
 
@@ -96,6 +97,9 @@ fromString str =
 
         "phone" ->
             Just (StringType (SimpleType Phone))
+
+        "url" ->
+            Just (StringType (SimpleType Url))
 
         "textarea" ->
             Just (StringType (SimpleType TextArea))
@@ -143,6 +147,9 @@ toType fieldType =
 
         Phone ->
             "tel"
+
+        Url ->
+            "url"
 
         TextArea ->
             "textarea"
@@ -234,6 +241,9 @@ toClass fieldType =
             "input"
 
         Phone ->
+            "input"
+
+        Url ->
             "input"
 
         TextArea ->

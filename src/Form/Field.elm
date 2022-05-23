@@ -1,5 +1,5 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), BoolField(..), NumericField(..)
+    ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radio, radioBool, radioEnum, select, httpSelect, age
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, BoolFieldProperties, CheckboxFieldProperties, MaybeBoolFieldProperties, MaybeEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getTitle, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
@@ -13,7 +13,7 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, BoolField, NumericField
+@docs Field, StringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radio, radioBool, radioEnum, select, httpSelect, radio, age
 
 
 # Properties
@@ -53,10 +53,165 @@ import Form.Field.Option as Option
 import Form.Field.RadioBool as RadioBool
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
+import Html exposing (a)
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
 import RemoteData
+
+
+text : StringFieldProperties a -> Field
+text { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Text
+            , value = value
+            }
+
+
+email : StringFieldProperties a -> Field
+email { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Email
+            , value = value
+            }
+
+
+{-| -}
+dateOfBirth : StringFieldProperties a -> Field
+dateOfBirth { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Date FieldType.DateOfBirth
+            , value = value
+            }
+
+
+{-| -}
+datePast : StringFieldProperties a -> Field
+datePast { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Date FieldType.DatePast
+            , value = value
+            }
+
+
+{-| -}
+phone : StringFieldProperties a -> Field
+phone { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Phone
+            , value = value
+            }
+
+
+{-| -}
+url : StringFieldProperties a -> Field
+url { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Url
+            , value = value
+            }
+
+
+{-| -}
+textarea : StringFieldProperties a -> Field
+textarea { required, label, width, enabledBy, order, value } =
+    StringField_ <|
+        SimpleField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.TextArea
+            , value = value
+            }
+
+
+{-| -}
+checkbox : BoolFieldProperties a -> Field
+checkbox { required, label, width, enabledBy, order, value } =
+    BoolField_ <|
+        CheckboxField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.Checkbox
+            , value = value
+            }
+
+
+{-| -}
+radioBool : MaybeBoolFieldProperties -> Field
+radioBool =
+    BoolField_ << RadioBoolField
+
+
+{-| -}
+radioEnum : MaybeEnumFieldProperties -> Field
+radioEnum =
+    BoolField_ << RadioEnumField
+
+
+{-| -}
+select : SelectFieldProperties -> Field
+select =
+    StringField_ << SelectField
+
+
+{-| -}
+httpSelect : HttpSelectFieldProperties -> Field
+httpSelect =
+    StringField_ << HttpSelectField
+
+
+{-| -}
+radio : RadioFieldProperties -> Field
+radio =
+    StringField_ << RadioField
+
+
+{-| -}
+age : AgeFieldProperties -> Field
+age =
+    NumericField_ << AgeField
 
 
 {-| -}
@@ -83,7 +238,7 @@ type BoolField
 
 {-| -}
 type NumericField
-    = NumericField NumericFieldProperties
+    = AgeField AgeFieldProperties
 
 
 {-| -}
@@ -127,13 +282,13 @@ type alias RadioFieldProperties =
 
 
 {-| -}
-type alias CheckboxFieldProperties =
-    FieldProperties { tipe : FieldType.CheckboxFieldType, value : Bool }
+type alias BoolFieldProperties a =
+    FieldProperties { a | value : Bool }
 
 
 {-| -}
-type alias BoolFieldProperties a =
-    FieldProperties { a | value : Bool }
+type alias CheckboxFieldProperties =
+    BoolFieldProperties { tipe : FieldType.CheckboxFieldType }
 
 
 {-| -}
@@ -147,8 +302,8 @@ type alias MaybeBoolFieldProperties =
 
 
 {-| -}
-type alias NumericFieldProperties =
-    FieldProperties { value : Maybe Int, title : String, tipe : FieldType.NumericFieldType }
+type alias AgeFieldProperties =
+    FieldProperties { value : Maybe Int, title : String }
 
 
 {-| -}
@@ -191,7 +346,7 @@ getProperties field =
             , order = order
             }
 
-        NumericField_ (NumericField { required, label, width, enabledBy, order }) ->
+        NumericField_ (AgeField { required, label, width, enabledBy, order }) ->
             { required = required
             , label = label
             , width = width
@@ -294,8 +449,8 @@ resetValueToDefault field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = properties.default })
 
-        NumericField_ (NumericField properties) ->
-            NumericField_ (NumericField { properties | value = Nothing })
+        NumericField_ (AgeField properties) ->
+            NumericField_ (AgeField { properties | value = Nothing })
 
 
 resetStringFieldValueToDefault : StringField -> StringField
@@ -330,8 +485,8 @@ setRequired bool field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | required = bool })
 
-        NumericField_ (NumericField properties) ->
-            NumericField_ (NumericField { properties | required = bool })
+        NumericField_ (AgeField properties) ->
+            NumericField_ (AgeField { properties | required = bool })
 
 
 {-| -}
@@ -447,8 +602,8 @@ updateRadioEnumValue_ value field =
 
 {-| -}
 updateNumericValue_ : Maybe Int -> NumericField -> NumericField
-updateNumericValue_ value (NumericField properties) =
-    NumericField { properties | value = value }
+updateNumericValue_ value (AgeField properties) =
+    AgeField { properties | value = value }
 
 
 {-| -}
@@ -506,7 +661,7 @@ getStringValue field =
 getNumericValue : Field -> Maybe Int
 getNumericValue field =
     case field of
-        NumericField_ (NumericField { value }) ->
+        NumericField_ (AgeField { value }) ->
             value
 
         _ ->
@@ -560,7 +715,7 @@ getTitle field =
         BoolField_ (RadioEnumField properties) ->
             properties.title
 
-        NumericField_ (NumericField properties) ->
+        NumericField_ (AgeField properties) ->
             properties.title
 
         StringField_ (RadioField properties) ->
@@ -586,8 +741,8 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        NumericField_ (NumericField { tipe }) ->
-            FieldType.NumericType tipe
+        NumericField_ (AgeField _) ->
+            FieldType.NumericType FieldType.Age
 
 
 {-| -}
@@ -668,7 +823,7 @@ encode field =
         BoolField_ (RadioBoolField { value }) ->
             EncodeExtra.maybe Encode.bool value
 
-        NumericField_ (NumericField { value }) ->
+        NumericField_ (AgeField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 
