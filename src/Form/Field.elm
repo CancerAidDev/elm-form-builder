@@ -2,7 +2,7 @@ module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, maybeUpdateStringValue
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, updateShowDropdown, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, maybeUpdateStringValue
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, updateShowDropdown, maybeUpdateStringValue
 
 
 # Predicates
@@ -641,6 +641,20 @@ updateNumericValue value field =
     case field of
         NumericField_ numericField ->
             NumericField_ <| updateNumericValue_ (String.toInt value) numericField
+
+        _ ->
+            field
+
+
+{-| -}
+updateShowDropdown : Bool -> Field -> Field
+updateShowDropdown showDropdown field =
+    case field of
+        MultiStringField_ (MultiSelectField properties) ->
+            MultiStringField_ (MultiSelectField { properties | showDropdown = showDropdown })
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            MultiStringField_ (MultiHttpSelectField { properties | showDropdown = showDropdown })
 
         _ ->
             field

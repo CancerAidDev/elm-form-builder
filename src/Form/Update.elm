@@ -46,5 +46,5 @@ update msg fields =
         Msg.ResetField key ->
             ( Fields.resetValueToDefault key fields, Cmd.none )
 
-        Msg.ShowDropdown key _ ->
-            ( fields, Cmd.none )
+        Msg.UpdateShowDropdown key showDropdown ->
+            ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )

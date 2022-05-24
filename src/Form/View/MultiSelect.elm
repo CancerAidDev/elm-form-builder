@@ -25,8 +25,8 @@ multiSelect key ({ options, placeholder, value, showDropdown } as properties) =
         , Html.div [ HtmlAttributes.class "dropdown-trigger" ]
             [ Html.button
                 [ HtmlAttributes.class "button"
-                , HtmlEvents.onClick <| Msg.ShowDropdown key True
-                , Key.onKeyDown [ Key.escape <| Msg.ShowDropdown key False ]
+                , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
+                , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
                 , Aria.hasMenuPopUp
                 , Aria.controls [ "dropdown-menu" ]
                 ]

@@ -23,4 +23,4 @@ type Msg
     | UpdateRadioEnumField String RadioEnum.Value
     | UpdateNumericField String String
     | ResetField String
-    | ShowDropdown String Bool
+    | UpdateShowDropdown String Bool

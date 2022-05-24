@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, resetValueToDefault
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, updateShowDropdown, resetValueToDefault
     , hasCheckboxConsentField, isEnabled
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, resetValueToDefault
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, updateShowDropdown, resetValueToDefault
 
 
 # Predicates
@@ -172,6 +172,13 @@ updateNumericField key value =
 updateFieldRemoteOptions : String -> RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option) -> Fields -> Fields
 updateFieldRemoteOptions key options =
     Dict.update key (Maybe.map (Field.updateRemoteOptions options))
+
+
+{-| -}
+updateShowDropdown : String -> Bool -> Fields -> Fields
+updateShowDropdown key showDropdown =
+    Dict.update key (Maybe.map (Field.updateShowDropdown showDropdown))
+        >> updateEnabledByFields
 
 
 {-| -}
