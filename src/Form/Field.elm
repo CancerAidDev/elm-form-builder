@@ -1,6 +1,6 @@
 module Form.Field exposing
     ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
-    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
+    , FieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
@@ -18,7 +18,7 @@ module Form.Field exposing
 
 # Properties
 
-@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
+@docs FieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
 
 
 # Getters
@@ -253,6 +253,11 @@ type alias FieldProperties a =
 
 
 {-| -}
+type alias CommonFieldProperties =
+    FieldProperties {}
+
+
+{-| -}
 type alias StringFieldProperties a =
     FieldProperties { a | value : String }
 
@@ -307,92 +312,42 @@ type alias AgeFieldProperties =
 
 
 {-| -}
-getProperties : Field -> FieldProperties {}
+getProperties : Field -> CommonFieldProperties
 getProperties field =
+    let
+        getCommonProperties : FieldProperties a -> CommonFieldProperties
+        getCommonProperties { required, label, width, enabledBy, order } =
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            }
+    in
     case field of
-        StringField_ stringProperties ->
-            let
-                { required, label, width, enabledBy, order } =
-                    getStringProperties stringProperties
-            in
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        StringField_ (SimpleField properties) ->
+            getCommonProperties properties
 
-        BoolField_ (CheckboxField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        StringField_ (HttpSelectField properties) ->
+            getCommonProperties properties
 
-        BoolField_ (RadioBoolField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        StringField_ (SelectField properties) ->
+            getCommonProperties properties
 
-        BoolField_ (RadioEnumField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        StringField_ (RadioField properties) ->
+            getCommonProperties properties
 
-        NumericField_ (AgeField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        BoolField_ (CheckboxField properties) ->
+            getCommonProperties properties
 
+        BoolField_ (RadioBoolField properties) ->
+            getCommonProperties properties
 
-getStringProperties : StringField -> FieldProperties { value : String }
-getStringProperties field =
-    case field of
-        HttpSelectField { required, label, width, enabledBy, order, value } ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , value = value
-            }
+        BoolField_ (RadioEnumField properties) ->
+            getCommonProperties properties
 
-        SimpleField { required, label, width, enabledBy, order, value } ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , value = value
-            }
-
-        SelectField { required, label, width, enabledBy, order, value } ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , value = value
-            }
-
-        RadioField { required, label, width, enabledBy, order, value } ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , value = value
-            }
+        NumericField_ (AgeField properties) ->
+            getCommonProperties properties
 
 
 {-| -}
@@ -473,8 +428,17 @@ resetStringFieldValueToDefault field =
 setRequired : Bool -> Field -> Field
 setRequired bool field =
     case field of
-        StringField_ stringField ->
-            StringField_ (setRequiredStringField bool stringField)
+        StringField_ (SimpleField properties) ->
+            StringField_ (SimpleField { properties | required = bool })
+
+        StringField_ (SelectField properties) ->
+            StringField_ (SelectField { properties | required = bool })
+
+        StringField_ (HttpSelectField properties) ->
+            StringField_ (HttpSelectField { properties | required = bool })
+
+        StringField_ (RadioField properties) ->
+            StringField_ (RadioField { properties | required = bool })
 
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = bool })
@@ -487,23 +451,6 @@ setRequired bool field =
 
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | required = bool })
-
-
-{-| -}
-setRequiredStringField : Bool -> StringField -> StringField
-setRequiredStringField bool field =
-    case field of
-        HttpSelectField properties ->
-            HttpSelectField { properties | required = bool }
-
-        SimpleField properties ->
-            SimpleField { properties | required = bool }
-
-        SelectField properties ->
-            SelectField { properties | required = bool }
-
-        RadioField properties ->
-            RadioField { properties | required = bool }
 
 
 {-| -}
