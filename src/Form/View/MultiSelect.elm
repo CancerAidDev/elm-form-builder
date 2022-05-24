@@ -118,7 +118,6 @@ multiHttpSelect key properties =
             multiSelect key
                 { value = properties.value
                 , required = properties.required
-                , default = properties.default
                 , options = options
                 , placeholder = properties.placeholder
                 , showDropdown = properties.showDropdown

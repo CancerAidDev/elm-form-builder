@@ -108,7 +108,6 @@ fields =
                 , enabledBy = Nothing
                 , order = 7
                 , value = Set.empty
-                , default = Nothing
                 , showDropdown = False
                 , options =
                     [ { label = Nothing, value = "Car" }

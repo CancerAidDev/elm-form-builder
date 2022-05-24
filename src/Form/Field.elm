@@ -303,7 +303,7 @@ type alias HttpSelectFieldProperties =
 
 {-| -}
 type alias MultiStringFieldProperties a =
-    FieldProperties { a | value : Set.Set String, default : Maybe (Set.Set String) }
+    FieldProperties { a | value : Set.Set String }
 
 
 {-| -}
@@ -545,10 +545,10 @@ resetMultiStringFieldValueToDefault : MultiStringField -> MultiStringField
 resetMultiStringFieldValueToDefault field =
     case field of
         MultiHttpSelectField properties ->
-            MultiHttpSelectField { properties | value = properties.default |> Maybe.withDefault Set.empty }
+            MultiHttpSelectField { properties | value = Set.empty }
 
         MultiSelectField properties ->
-            MultiSelectField { properties | value = properties.default |> Maybe.withDefault Set.empty }
+            MultiSelectField { properties | value = Set.empty }
 
 
 {-| -}
