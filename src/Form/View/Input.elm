@@ -18,6 +18,7 @@ import Form.Locale as Locale
 import Form.Locale.Phone as Phone
 import Form.Msg as Msg
 import Form.Validate as Validate
+import Form.View.MultiSelect as MultiSelect
 import Form.View.Radio as Radio
 import Form.View.Select as Select
 import Html
@@ -79,6 +80,12 @@ control time locale key field =
 
         Field.StringField_ (Field.RadioField properties) ->
             Radio.radio key properties
+
+        Field.MultiStringField_ (Field.MultiSelectField properties) ->
+            MultiSelect.multiSelect key properties
+
+        Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
+            MultiSelect.multiHttpSelect key properties
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties

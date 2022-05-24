@@ -1,6 +1,6 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
-    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
+    , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
@@ -13,12 +13,12 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
 
 
 # Properties
 
-@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
+@docs SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
 
 
 # Getters
@@ -52,6 +52,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
+import Html.Attributes exposing (value)
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
@@ -217,6 +218,7 @@ age =
 {-| -}
 type Field
     = StringField_ StringField
+    | MultiStringField_ MultiStringField
     | BoolField_ BoolField
     | NumericField_ NumericField
 
@@ -242,6 +244,12 @@ type NumericField
 
 
 {-| -}
+type MultiStringField
+    = MultiSelectField MultiSelectFieldProperties
+    | MultiHttpSelectField MultiHttpSelectFieldProperties
+
+
+{-| -}
 type alias FieldProperties a =
     { a
         | required : Bool
@@ -250,6 +258,10 @@ type alias FieldProperties a =
         , enabledBy : Maybe String
         , order : Int
     }
+
+
+type alias CommonFieldProperties =
+    FieldProperties {}
 
 
 {-| -}
@@ -272,6 +284,24 @@ type alias HttpSelectFieldProperties =
     StringFieldProperties
         { url : String
         , default : Maybe String
+        , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        }
+
+
+{-| -}
+type alias MultiStringFieldProperties a =
+    FieldProperties { a | value : List String, default : Maybe (List String) }
+
+
+{-| -}
+type alias MultiSelectFieldProperties =
+    MultiStringFieldProperties { options : List Option.Option }
+
+
+{-| -}
+type alias MultiHttpSelectFieldProperties =
+    MultiStringFieldProperties
+        { url : String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         }
 
@@ -307,52 +337,38 @@ type alias AgeFieldProperties =
 
 
 {-| -}
-getProperties : Field -> FieldProperties {}
+getProperties : Field -> CommonFieldProperties
 getProperties field =
     case field of
         StringField_ stringProperties ->
-            let
-                { required, label, width, enabledBy, order } =
-                    getStringProperties stringProperties
-            in
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+            getStringProperties stringProperties
+                |> getCommonProperties
 
-        BoolField_ (CheckboxField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        MultiStringField_ multiStringProperties ->
+            getMultiStringProperties multiStringProperties
+                |> getCommonProperties
 
-        BoolField_ (RadioBoolField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        BoolField_ (CheckboxField properties) ->
+            getCommonProperties properties
 
-        BoolField_ (RadioEnumField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        BoolField_ (RadioBoolField properties) ->
+            getCommonProperties properties
 
-        NumericField_ (AgeField { required, label, width, enabledBy, order }) ->
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            }
+        BoolField_ (RadioEnumField properties) ->
+            getCommonProperties properties
+
+        NumericField_ (AgeField properties) ->
+            getCommonProperties properties
+
+
+getCommonProperties : FieldProperties a -> CommonFieldProperties
+getCommonProperties { required, label, width, enabledBy, order } =
+    { required = required
+    , label = label
+    , width = width
+    , enabledBy = enabledBy
+    , order = order
+    }
 
 
 getStringProperties : StringField -> FieldProperties { value : String }
@@ -386,6 +402,29 @@ getStringProperties field =
             }
 
         RadioField { required, label, width, enabledBy, order, value } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            }
+
+
+{-| -}
+getMultiStringProperties : MultiStringField -> FieldProperties { value : List String }
+getMultiStringProperties field =
+    case field of
+        MultiHttpSelectField { required, label, width, enabledBy, order, value } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            }
+
+        MultiSelectField { required, label, width, enabledBy, order, value } ->
             { required = required
             , label = label
             , width = width
@@ -440,6 +479,9 @@ resetValueToDefault field =
         StringField_ stringField ->
             StringField_ (resetStringFieldValueToDefault stringField)
 
+        MultiStringField_ multiStringField ->
+            MultiStringField_ (resetMultiStringFieldValueToDefault multiStringField)
+
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | value = False })
 
@@ -469,12 +511,25 @@ resetStringFieldValueToDefault field =
             RadioField { properties | value = properties.default |> Maybe.withDefault "" }
 
 
+resetMultiStringFieldValueToDefault : MultiStringField -> MultiStringField
+resetMultiStringFieldValueToDefault field =
+    case field of
+        MultiHttpSelectField properties ->
+            MultiHttpSelectField { properties | value = properties.default |> Maybe.withDefault [] }
+
+        MultiSelectField properties ->
+            MultiSelectField { properties | value = properties.default |> Maybe.withDefault [] }
+
+
 {-| -}
 setRequired : Bool -> Field -> Field
 setRequired bool field =
     case field of
         StringField_ stringField ->
             StringField_ (setRequiredStringField bool stringField)
+
+        MultiStringField_ multiStringField ->
+            MultiStringField_ (setRequiredMultiStringField bool multiStringField)
 
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = bool })
@@ -504,6 +559,17 @@ setRequiredStringField bool field =
 
         RadioField properties ->
             RadioField { properties | required = bool }
+
+
+{-| -}
+setRequiredMultiStringField : Bool -> MultiStringField -> MultiStringField
+setRequiredMultiStringField bool field =
+    case field of
+        MultiHttpSelectField properties ->
+            MultiHttpSelectField { properties | required = bool }
+
+        MultiSelectField properties ->
+            MultiSelectField { properties | required = bool }
 
 
 {-| -}
@@ -631,19 +697,8 @@ getEnabledBy =
 
 {-| -}
 getStringValue_ : StringField -> String
-getStringValue_ field =
-    case field of
-        SimpleField properties ->
-            properties.value
-
-        SelectField properties ->
-            properties.value
-
-        HttpSelectField properties ->
-            properties.value
-
-        RadioField properties ->
-            properties.value
+getStringValue_ =
+    getStringProperties >> .value
 
 
 {-| -}
@@ -691,6 +746,9 @@ getType field =
     case field of
         StringField_ stringField ->
             FieldType.StringType <| getStringType stringField
+
+        MultiStringField_ multiStringField ->
+            FieldType.MultiStringType <| getMultiStringType multiStringField
 
         BoolField_ (CheckboxField { tipe }) ->
             FieldType.BoolType (FieldType.CheckboxType tipe)
@@ -745,6 +803,17 @@ getStringType field =
 
 
 {-| -}
+getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType
+getMultiStringType field =
+    case field of
+        MultiSelectField _ ->
+            FieldType.MultiSelect
+
+        MultiHttpSelectField _ ->
+            FieldType.MultiHttpSelect
+
+
+{-| -}
 getOrder : Field -> Int
 getOrder =
     getProperties >> .order
@@ -773,6 +842,11 @@ encode field =
     case field of
         StringField_ stringField ->
             Encode.string <| getStringValue_ stringField
+
+        MultiStringField_ multiStringField ->
+            multiStringField
+                |> (getMultiStringProperties >> .value)
+                |> Encode.list Encode.string
 
         BoolField_ (CheckboxField { value }) ->
             Encode.bool value

@@ -49,6 +49,9 @@ validateField locale fields field =
                     )
                 |> Result.mapError StringError_
 
+        Field.MultiStringField_ _ ->
+            Debug.todo ""
+
         Field.BoolField_ (Field.CheckboxField properties) ->
             validateBoolField properties
                 |> Result.map

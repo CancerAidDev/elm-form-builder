@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), DateFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
     )
@@ -9,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, DateFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, MultiStringFieldType, DateFieldType
 
 
 # Decoder
@@ -33,6 +33,7 @@ import Time.Extra as TimeExtra
 {-| -}
 type FieldType
     = StringType StringFieldType
+    | MultiStringType MultiStringFieldType
     | BoolType BoolFieldType
     | NumericType NumericFieldType
 
@@ -71,6 +72,12 @@ type SimpleFieldType
 {-| -}
 type NumericFieldType
     = Age
+
+
+{-| -}
+type MultiStringFieldType
+    = MultiSelect
+    | MultiHttpSelect
 
 
 {-| -}
@@ -121,6 +128,15 @@ fromString str =
 
         "httpSelect" ->
             Just (StringType HttpSelect)
+
+        "http_select" ->
+            Just (StringType HttpSelect)
+
+        "multi_select" ->
+            Just (MultiStringType MultiSelect)
+
+        "mutli_http_select" ->
+            Just (MultiStringType MultiHttpSelect)
 
         "radio" ->
             Just (StringType Radio)

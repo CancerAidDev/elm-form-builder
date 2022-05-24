@@ -25,6 +25,8 @@ type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
+    | JsonMultiSelectField JsonMultiSelectFieldProperties
+    | JsonMultiHttpSelectField JsonMultiHttpSelectFieldProperties
     | JsonRadioField JsonRadioFieldProperties
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
@@ -54,6 +56,28 @@ type alias JsonSelectFieldProperties =
 
 
 type alias JsonHttpSelectFieldProperties =
+    { required : Bool
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , default : Maybe String
+    , url : String
+    }
+
+
+type alias JsonMultiSelectFieldProperties =
+    { required : Bool
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , default : Maybe String
+    , options : List Option.Option
+    }
+
+
+type alias JsonMultiHttpSelectFieldProperties =
     { required : Bool
     , key : String
     , label : String
@@ -119,34 +143,42 @@ type alias JsonAgeFieldProperties =
 decoder : Time.Posix -> Int -> Decode.Decoder ( String, Field.Field )
 decoder time order =
     Decode.field "type" FieldType.decoder
-        |> Decode.andThen
-            (\tipe ->
-                case tipe of
-                    FieldType.StringType (FieldType.SimpleType simpleType) ->
-                        Decode.map JsonSimpleField (decoderSimpleJson simpleType)
-
-                    FieldType.StringType FieldType.Select ->
-                        Decode.map JsonSelectField decoderSelectJson
-
-                    FieldType.StringType FieldType.HttpSelect ->
-                        Decode.map JsonHttpSelectField decoderHttpSelectJson
-
-                    FieldType.StringType FieldType.Radio ->
-                        Decode.map JsonRadioField decoderRadioJson
-
-                    FieldType.BoolType (FieldType.CheckboxType checkboxFieldType) ->
-                        Decode.map JsonCheckboxField (decoderCheckboxJson checkboxFieldType)
-
-                    FieldType.BoolType FieldType.RadioBool ->
-                        Decode.map JsonRadioBoolField decoderRadioBoolJson
-
-                    FieldType.BoolType FieldType.RadioEnum ->
-                        Decode.map JsonRadioEnumField decoderRadioEnumJson
-
-                    FieldType.NumericType FieldType.Age ->
-                        Decode.map JsonAgeField decoderAgeJson
-            )
+        |> Decode.andThen decoderForType
         |> Decode.map (toField time order)
+
+
+decoderForType : FieldType.FieldType -> Decode.Decoder JsonField
+decoderForType fieldType =
+    case fieldType of
+        FieldType.StringType (FieldType.SimpleType simpleType) ->
+            Decode.map JsonSimpleField (decoderSimpleJson simpleType)
+
+        FieldType.StringType FieldType.Select ->
+            Decode.map JsonSelectField decoderSelectJson
+
+        FieldType.StringType FieldType.HttpSelect ->
+            Decode.map JsonHttpSelectField decoderHttpSelectJson
+
+        FieldType.MultiStringType FieldType.MultiSelect ->
+            Decode.map JsonMultiSelectField decoderSelectJson
+
+        FieldType.MultiStringType FieldType.MultiHttpSelect ->
+            Decode.map JsonMultiHttpSelectField decoderHttpSelectJson
+
+        FieldType.StringType FieldType.Radio ->
+            Decode.map JsonRadioField decoderRadioJson
+
+        FieldType.BoolType (FieldType.CheckboxType checkboxFieldType) ->
+            Decode.map JsonCheckboxField (decoderCheckboxJson checkboxFieldType)
+
+        FieldType.BoolType FieldType.RadioBool ->
+            Decode.map JsonRadioBoolField decoderRadioBoolJson
+
+        FieldType.BoolType FieldType.RadioEnum ->
+            Decode.map JsonRadioEnumField decoderRadioEnumJson
+
+        FieldType.NumericType FieldType.Age ->
+            Decode.map JsonAgeField decoderAgeJson
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -265,6 +297,37 @@ toField time order field =
                     , enabledBy = enabledBy
                     , order = order
                     , value = Nothing
+                    }
+            )
+
+        JsonMultiSelectField { required, key, label, width, default, enabledBy, options } ->
+            ( key
+            , Field.StringField_ <|
+                Field.SelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , default = default
+                    , options = options
+                    , value = Maybe.withDefault "" default
+                    }
+            )
+
+        JsonMultiHttpSelectField { required, key, label, width, default, enabledBy, url } ->
+            ( key
+            , Field.StringField_ <|
+                Field.HttpSelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , url = url
+                    , default = default
+                    , options = RemoteData.NotAsked
+                    , value = Maybe.withDefault "" default
                     }
             )
 
