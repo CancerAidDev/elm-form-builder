@@ -103,7 +103,7 @@ fields =
           , FormField.multiSelect
                 { required = True
                 , label = "What modes of transport do you use?"
-                , placeholder = "Transport"
+                , placeholder = "Mode"
                 , width = Width.FullSize
                 , enabledBy = Nothing
                 , order = 7
