@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, resetValueToDefault
     , hasCheckboxConsentField, isEnabled
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringField, resetValueToDefault
 
 
 # Predicates
@@ -78,9 +78,23 @@ encode =
 
 
 {-| -}
+resetValueToDefault : String -> Fields -> Fields
+resetValueToDefault key =
+    Dict.update key (Maybe.map Field.resetValueToDefault)
+        >> updateEnabledByFields
+
+
+{-| -}
 updateStringField : String -> String -> Fields -> Fields
 updateStringField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value))
+        >> updateEnabledByFields
+
+
+{-| -}
+updateMultiStringField : String -> Option.Option -> Bool -> Fields -> Fields
+updateMultiStringField key option checked =
+    Dict.update key (Maybe.map (Field.updateMultiStringValue option checked))
         >> updateEnabledByFields
 
 

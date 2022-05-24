@@ -1,8 +1,8 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
     , SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -13,7 +13,7 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, radio, age
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
 
 
 # Properties
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringValue_, maybeUpdateStringValue
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, maybeUpdateStringValue
 
 
 # Predicates
@@ -57,6 +57,7 @@ import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
 import RemoteData
+import Set
 
 
 {-| -}
@@ -204,6 +205,18 @@ httpSelect =
 
 
 {-| -}
+multiSelect : MultiSelectFieldProperties -> Field
+multiSelect =
+    MultiStringField_ << MultiSelectField
+
+
+{-| -}
+multiHttpSelect : MultiHttpSelectFieldProperties -> Field
+multiHttpSelect =
+    MultiStringField_ << MultiHttpSelectField
+
+
+{-| -}
 radio : RadioFieldProperties -> Field
 radio =
     StringField_ << RadioField
@@ -290,18 +303,24 @@ type alias HttpSelectFieldProperties =
 
 {-| -}
 type alias MultiStringFieldProperties a =
-    FieldProperties { a | value : List String, default : Maybe (List String) }
+    FieldProperties { a | value : Set.Set String, default : Maybe (Set.Set String) }
 
 
 {-| -}
 type alias MultiSelectFieldProperties =
-    MultiStringFieldProperties { options : List Option.Option }
+    MultiStringFieldProperties
+        { placeholder : String
+        , showDropdown : Bool
+        , options : List Option.Option
+        }
 
 
 {-| -}
 type alias MultiHttpSelectFieldProperties =
     MultiStringFieldProperties
-        { url : String
+        { placeholder : String
+        , showDropdown : Bool
+        , url : String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         }
 
@@ -412,7 +431,7 @@ getStringProperties field =
 
 
 {-| -}
-getMultiStringProperties : MultiStringField -> FieldProperties { value : List String }
+getMultiStringProperties : MultiStringField -> FieldProperties { value : Set.Set String }
 getMultiStringProperties field =
     case field of
         MultiHttpSelectField { required, label, width, enabledBy, order, value } ->
@@ -440,6 +459,17 @@ updateStringValue value field =
     case field of
         StringField_ stringField ->
             StringField_ <| updateStringValue_ value stringField
+
+        _ ->
+            field
+
+
+{-| -}
+updateMultiStringValue : Option.Option -> Bool -> Field -> Field
+updateMultiStringValue option checked field =
+    case field of
+        MultiStringField_ multiStringField ->
+            MultiStringField_ <| updateMultiStringValue_ option checked multiStringField
 
         _ ->
             field
@@ -515,10 +545,10 @@ resetMultiStringFieldValueToDefault : MultiStringField -> MultiStringField
 resetMultiStringFieldValueToDefault field =
     case field of
         MultiHttpSelectField properties ->
-            MultiHttpSelectField { properties | value = properties.default |> Maybe.withDefault [] }
+            MultiHttpSelectField { properties | value = properties.default |> Maybe.withDefault Set.empty }
 
         MultiSelectField properties ->
-            MultiSelectField { properties | value = properties.default |> Maybe.withDefault [] }
+            MultiSelectField { properties | value = properties.default |> Maybe.withDefault Set.empty }
 
 
 {-| -}
@@ -631,6 +661,28 @@ updateStringValue_ value field =
 
         RadioField properties ->
             RadioField { properties | value = value }
+
+
+{-| -}
+updateMultiStringValue_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
+updateMultiStringValue_ option checked field =
+    let
+        update properties =
+            { properties
+                | value =
+                    if checked then
+                        Set.insert option.value properties.value
+
+                    else
+                        Set.remove option.value properties.value
+            }
+    in
+    case field of
+        MultiSelectField properties ->
+            MultiSelectField (update properties)
+
+        MultiHttpSelectField properties ->
+            MultiHttpSelectField (update properties)
 
 
 {-| -}
@@ -846,6 +898,7 @@ encode field =
         MultiStringField_ multiStringField ->
             multiStringField
                 |> (getMultiStringProperties >> .value)
+                |> Set.toList
                 |> Encode.list Encode.string
 
         BoolField_ (CheckboxField { value }) ->

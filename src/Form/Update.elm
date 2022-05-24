@@ -21,6 +21,9 @@ update msg fields =
         Msg.UpdateStringField key value ->
             ( Fields.updateStringField key value fields, Cmd.none )
 
+        Msg.UpdateMultiStringField key value checked ->
+            ( Fields.updateMultiStringField key value checked fields, Cmd.none )
+
         Msg.UpdateBoolField key value ->
             ( Fields.updateBoolField key value fields, Cmd.none )
 
@@ -39,3 +42,9 @@ update msg fields =
 
             else
                 ( fields, Cmd.none )
+
+        Msg.ResetField key ->
+            ( Fields.resetValueToDefault key fields, Cmd.none )
+
+        Msg.ShowDropdown key _ ->
+            ( fields, Cmd.none )

@@ -5,6 +5,7 @@ import Form.Field as FormField
 import Form.Field.Direction as Direction
 import Form.Field.Width as Width
 import Form.Fields as FormFields
+import Set
 
 
 fields : FormFields.Fields
@@ -96,6 +97,26 @@ fields =
                 , enabledBy = Nothing
                 , order = 7
                 , value = Nothing
+                }
+          )
+        , ( "modes"
+          , FormField.multiSelect
+                { required = True
+                , label = "What modes of transport do you use?"
+                , placeholder = "Transport"
+                , width = Width.FullSize
+                , enabledBy = Nothing
+                , order = 7
+                , value = Set.empty
+                , default = Nothing
+                , showDropdown = False
+                , options =
+                    [ { label = Nothing, value = "Car" }
+                    , { label = Nothing, value = "Tram" }
+                    , { label = Nothing, value = "Bus" }
+                    , { label = Nothing, value = "Train" }
+                    , { label = Nothing, value = "Cycle" }
+                    ]
                 }
           )
         ]
