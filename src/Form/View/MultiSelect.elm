@@ -59,7 +59,7 @@ dropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                ([ Html.div
+                [ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                     [ Html.div [] [ Html.text <| String.fromInt (Set.size properties.value) ++ " Selected" ]
                     , Html.button
@@ -68,10 +68,10 @@ dropdownMenu key properties =
                         ]
                         [ Html.text "Reset" ]
                     ]
-                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                 ]
-                    ++ List.map (\option -> viewCheckbox key properties option) properties.options
-                )
+                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ]
+                    (List.map (\option -> viewCheckbox key properties option) properties.options)
+                ]
             ]
         ]
 
