@@ -19,48 +19,75 @@ import Set
 
 {-| -}
 multiSelect : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
-multiSelect key ({ options, placeholder, value, showDropdown } as properties) =
+multiSelect key properties =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
         [ Icon.css
-        , Html.div [ HtmlAttributes.class "dropdown-trigger" ]
-            [ Html.button
-                [ HtmlAttributes.class "button"
-                , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
-                , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
-                , Aria.hasMenuPopUp
-                , Aria.controls [ "dropdown-menu" ]
-                ]
-                [ Html.span [] [ Html.text placeholder ]
-                , Html.span
-                    [ HtmlAttributes.class "tag is-link ml-4"
-                    , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
-                    ]
-                    [ Html.text <| String.fromInt (Set.size value) ]
-                , Html.span [ HtmlAttributes.class "icon" ] [ Icon.viewIcon Icon.angleDown ]
-                ]
-            ]
-        , HtmlExtra.viewIf showDropdown <|
-            Html.div
-                [ HtmlAttributes.class "dropdown-menu"
-                , HtmlAttributes.id "dropdown-menu"
-                , Aria.roleDescription "menu"
-                ]
-                [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                    ([ Html.div
-                        [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
-                        [ Html.div [] [ Html.text <| String.fromInt (Set.size value) ++ " Selected" ]
-                        , Html.button
-                            [ HtmlAttributes.class "button is-small"
-                            , HtmlEvents.onClick <| Msg.ResetField key
-                            ]
-                            [ Html.text "Reset" ]
-                        ]
-                     , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                     ]
-                        ++ List.map (\option -> viewCheckbox key properties option) options
-                    )
-                ]
+        , dropdownTrigger key properties
+        , HtmlExtra.viewIf properties.showDropdown <| dropdownMenu key properties
         ]
+
+
+dropdownTrigger : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+dropdownTrigger key { placeholder, value, showDropdown } =
+    Html.div [ HtmlAttributes.class "dropdown-trigger" ]
+        [ Html.button
+            [ HtmlAttributes.class "button"
+            , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , Aria.hasMenuPopUp
+            , Aria.controls [ "dropdown-menu" ]
+            ]
+            [ Html.span [] [ Html.text placeholder ]
+            , Html.span
+                [ HtmlAttributes.class "tag is-link ml-4"
+                , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
+                ]
+                [ Html.text <| String.fromInt (Set.size value) ]
+            , Html.span [ HtmlAttributes.class "icon" ] [ Icon.viewIcon Icon.angleDown ]
+            ]
+        ]
+
+
+dropdownMenu : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+dropdownMenu key properties =
+    Html.div []
+        [ overlay key
+        , Html.div
+            [ HtmlAttributes.class "dropdown-menu"
+            , HtmlAttributes.id "dropdown-menu"
+            , Aria.roleDescription "menu"
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            ]
+            [ Html.div [ HtmlAttributes.class "dropdown-content" ]
+                ([ Html.div
+                    [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
+                    [ Html.div [] [ Html.text <| String.fromInt (Set.size properties.value) ++ " Selected" ]
+                    , Html.button
+                        [ HtmlAttributes.class "button is-small"
+                        , HtmlEvents.onClick <| Msg.ResetField key
+                        ]
+                        [ Html.text "Reset" ]
+                    ]
+                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                 ]
+                    ++ List.map (\option -> viewCheckbox key properties option) properties.options
+                )
+            ]
+        ]
+
+
+overlay : String -> Html.Html Msg.Msg
+overlay key =
+    Html.div
+        [ HtmlAttributes.style "position" "fixed"
+        , HtmlAttributes.style "width" "100%"
+        , HtmlAttributes.style "height" "100%"
+        , HtmlAttributes.style "left" "0"
+        , HtmlAttributes.style "top" "0"
+        , HtmlAttributes.style "z-index" "1"
+        , HtmlEvents.onClick <| Msg.UpdateShowDropdown key False
+        ]
+        []
 
 
 viewCheckbox : String -> Field.MultiSelectFieldProperties -> Option.Option -> Html.Html Msg.Msg
