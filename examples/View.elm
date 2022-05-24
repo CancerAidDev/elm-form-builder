@@ -14,16 +14,15 @@ import Msg
 view : Model.Model -> Html.Html Msg.Msg
 view model =
     Html.div
-        [ HtmlAttributes.class "container my-6" ]
+        [ HtmlAttributes.class "container p-5" ]
         [ Html.h1
-            [ HtmlAttributes.class "is-size-3 has-text-weight-bold pb-4" ]
+            [ HtmlAttributes.class "is-size-3 has-text-weight-bold" ]
             [ Html.text "Add Person" ]
-        , Html.div
-            [ HtmlAttributes.class "box p-5 has-background-white" ]
+        , Html.div []
             [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted FormLocale.enAU model.form)
             , Html.div [ HtmlAttributes.class "is-flex is-justify-content-center pt-4" ]
                 [ Html.button
-                    [ HtmlAttributes.class "button is-link "
+                    [ HtmlAttributes.class "button is-link"
                     , HtmlEvents.onClick Msg.SubmitForm
                     ]
                     [ Html.text "Create" ]

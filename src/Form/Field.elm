@@ -278,6 +278,11 @@ type alias CommonFieldProperties =
 
 
 {-| -}
+type alias CommonFieldProperties =
+    FieldProperties {}
+
+
+{-| -}
 type alias StringFieldProperties a =
     FieldProperties { a | value : String }
 
@@ -555,11 +560,23 @@ resetMultiStringFieldValueToDefault field =
 setRequired : Bool -> Field -> Field
 setRequired bool field =
     case field of
-        StringField_ stringField ->
-            StringField_ (setRequiredStringField bool stringField)
+        StringField_ (SimpleField properties) ->
+            StringField_ (SimpleField { properties | required = bool })
 
-        MultiStringField_ multiStringField ->
-            MultiStringField_ (setRequiredMultiStringField bool multiStringField)
+        StringField_ (SelectField properties) ->
+            StringField_ (SelectField { properties | required = bool })
+
+        StringField_ (HttpSelectField properties) ->
+            StringField_ (HttpSelectField { properties | required = bool })
+
+        StringField_ (RadioField properties) ->
+            StringField_ (RadioField { properties | required = bool })
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            MultiStringField_ (MultiHttpSelectField { properties | required = bool })
+
+        MultiStringField_ (MultiSelectField properties) ->
+            MultiStringField_ (MultiSelectField { properties | required = bool })
 
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = bool })
@@ -572,34 +589,6 @@ setRequired bool field =
 
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | required = bool })
-
-
-{-| -}
-setRequiredStringField : Bool -> StringField -> StringField
-setRequiredStringField bool field =
-    case field of
-        HttpSelectField properties ->
-            HttpSelectField { properties | required = bool }
-
-        SimpleField properties ->
-            SimpleField { properties | required = bool }
-
-        SelectField properties ->
-            SelectField { properties | required = bool }
-
-        RadioField properties ->
-            RadioField { properties | required = bool }
-
-
-{-| -}
-setRequiredMultiStringField : Bool -> MultiStringField -> MultiStringField
-setRequiredMultiStringField bool field =
-    case field of
-        MultiHttpSelectField properties ->
-            MultiHttpSelectField { properties | required = bool }
-
-        MultiSelectField properties ->
-            MultiSelectField { properties | required = bool }
 
 
 {-| -}
