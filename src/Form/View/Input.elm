@@ -135,6 +135,7 @@ input time key field =
                 , HtmlAttributes.class "input"
                 , HtmlAttributes.type_ "number"
                 , HtmlAttributes.pattern "\\d*"
+                , HtmlAttributes.style "width" "6em"
                 , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
                 , HtmlAttributes.required properties.required
                 , HtmlEvents.onInput <| Msg.UpdateNumericField key
