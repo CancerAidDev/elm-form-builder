@@ -13,7 +13,6 @@ import Form.Field as Field
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
-import Form.Field.RadioBool as RadioBool
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
 import Json.Decode as Decode
@@ -30,7 +29,7 @@ type JsonField
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
-    | JsonNumericField JsonNumericFieldProperties
+    | JsonAgeField JsonAgeFieldProperties
 
 
 type alias JsonSimpleFieldProperties =
@@ -83,7 +82,6 @@ type alias JsonRadioFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe String
     , options : List Option.Option
-    , title : String
     , direction : Direction.Direction
     }
 
@@ -94,9 +92,6 @@ type alias JsonRadioBoolFieldProperties =
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , default : Maybe String
-    , options : List Bool
-    , title : String
     }
 
 
@@ -108,18 +103,15 @@ type alias JsonRadioEnumFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe RadioEnum.Value
     , options : List RadioEnum.Value
-    , title : String
     }
 
 
-type alias JsonNumericFieldProperties =
+type alias JsonAgeFieldProperties =
     { required : Bool
     , key : String
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , title : String
-    , tipe : FieldType.NumericFieldType
     }
 
 
@@ -151,8 +143,8 @@ decoder time order =
                     FieldType.BoolType FieldType.RadioEnum ->
                         Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-                    FieldType.NumericType numericFieldType ->
-                        Decode.map JsonNumericField (decoderNumericJson numericFieldType)
+                    FieldType.NumericType FieldType.Age ->
+                        Decode.map JsonAgeField decoderAgeJson
             )
         |> Decode.map (toField time order)
 
@@ -219,7 +211,7 @@ toField time order field =
                     }
             )
 
-        JsonRadioField { required, key, label, width, default, enabledBy, options, title, direction } ->
+        JsonRadioField { required, key, label, width, default, enabledBy, options, direction } ->
             ( key
             , Field.StringField_ <|
                 Field.RadioField
@@ -231,27 +223,24 @@ toField time order field =
                     , default = default
                     , options = options
                     , value = Maybe.withDefault "" default
-                    , title = title
                     , direction = direction
                     }
             )
 
-        JsonNumericField { tipe, required, key, label, width, title, enabledBy } ->
+        JsonAgeField { required, key, label, width, enabledBy } ->
             ( key
             , Field.NumericField_ <|
-                Field.NumericField
+                Field.AgeField
                     { required = required
                     , label = label
                     , width = width
                     , enabledBy = enabledBy
                     , order = order
-                    , tipe = tipe
                     , value = Nothing
-                    , title = title
                     }
             )
 
-        JsonRadioEnumField { required, key, label, width, default, enabledBy, options, title } ->
+        JsonRadioEnumField { required, key, label, width, default, enabledBy, options } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioEnumField
@@ -263,23 +252,19 @@ toField time order field =
                     , default = default
                     , options = options
                     , value = default
-                    , title = title
                     }
             )
 
-        JsonRadioBoolField { required, key, label, width, default, options, title, enabledBy } ->
+        JsonRadioBoolField { required, key, label, width, enabledBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioBoolField
                     { required = required
                     , label = label
                     , width = width
-                    , order = order
-                    , default = default
-                    , options = options
-                    , value = default |> Maybe.andThen RadioBool.fromString
-                    , title = title
                     , enabledBy = enabledBy
+                    , order = order
+                    , value = Nothing
                     }
             )
 
@@ -340,7 +325,6 @@ decoderRadioJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
-        |> DecodePipeline.required "title" Decode.string
         |> DecodePipeline.optional "direction" Direction.decoder Direction.Column
 
 
@@ -352,9 +336,6 @@ decoderRadioBoolJson =
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
-        |> DecodePipeline.required "options" (Decode.list RadioBool.decoder)
-        |> DecodePipeline.required "title" Decode.string
 
 
 decoderRadioEnumJson : Decode.Decoder JsonRadioEnumFieldProperties
@@ -367,16 +348,13 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe RadioEnum.decoder) Nothing
         |> DecodePipeline.required "options" (Decode.list RadioEnum.decoder)
-        |> DecodePipeline.required "title" Decode.string
 
 
-decoderNumericJson : FieldType.NumericFieldType -> Decode.Decoder JsonNumericFieldProperties
-decoderNumericJson tipe =
-    Decode.succeed JsonNumericFieldProperties
+decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
+decoderAgeJson =
+    Decode.succeed JsonAgeFieldProperties
         |> DecodePipeline.required "required" Decode.bool
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.required "title" Decode.string
-        |> DecodePipeline.hardcoded tipe

@@ -34,6 +34,7 @@ import Form.Locale.Phone as Phone
 import Iso8601
 import Maybe.Extra as MaybeExtra
 import Regex
+import Url
 
 
 {-| -}
@@ -112,7 +113,7 @@ validateBoolField properties =
         Err ConsentIsRequired
 
 
-validateRadioBoolField : Fields.Fields -> Field.Field -> Field.MaybeBoolFieldProperties -> Result BoolError (Maybe Bool)
+validateRadioBoolField : Fields.Fields -> Field.Field -> Field.RadioBoolFieldProperties -> Result BoolError (Maybe Bool)
 validateRadioBoolField fields field properties =
     if Fields.isEnabled fields field && properties.required then
         case properties.value of
@@ -126,7 +127,7 @@ validateRadioBoolField fields field properties =
         Ok properties.value
 
 
-validateRadioEnumField : Field.MaybeEnumFieldProperties -> Result BoolError (Maybe RadioEnum.Value)
+validateRadioEnumField : Field.RadioEnumFieldProperties -> Result BoolError (Maybe RadioEnum.Value)
 validateRadioEnumField properties =
     if properties.required then
         case properties.value of
@@ -141,21 +142,19 @@ validateRadioEnumField properties =
 
 
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
-validateNumericField (Field.NumericField properties) =
+validateNumericField (Field.AgeField properties) =
     if properties.required then
-        case properties.tipe of
-            FieldType.Age ->
-                let
-                    regex =
-                        "^(1[89]|[2-9][0-9])$"
-                            |> Regex.fromString
-                            |> Maybe.withDefault Regex.never
-                in
-                if Regex.contains regex (LibString.fromMaybeInt properties.value) then
-                    Ok properties.value
+        let
+            regex =
+                "^(1[89]|[2-9][0-9])$"
+                    |> Regex.fromString
+                    |> Maybe.withDefault Regex.never
+        in
+        if Regex.contains regex (LibString.fromMaybeInt properties.value) then
+            Ok properties.value
 
-                else
-                    Err InvalidAge
+        else
+            Err InvalidAge
 
     else
         Ok properties.value
@@ -201,6 +200,7 @@ type StringError
     | InvalidPhoneNumber
     | InvalidEmail
     | InvalidDate
+    | InvalidUrl
 
 
 type BoolError
@@ -237,6 +237,9 @@ errorToMessage field error =
         StringError_ InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
             Field.getLabel field ++ " format should be YYYY-MM-DD"
+
+        StringError_ InvalidUrl ->
+            Field.getLabel field ++ " is not a valid url"
 
         BoolError_ ConsentIsRequired ->
             "Consent is required"
@@ -276,6 +279,16 @@ emailValidator value =
         Err InvalidEmail
 
 
+urlValidator : StringValidator
+urlValidator value =
+    case Url.fromString value of
+        Just _ ->
+            Ok value
+
+        Nothing ->
+            Err InvalidUrl
+
+
 dateValidator : StringValidator
 dateValidator value =
     Iso8601.toTime value
@@ -310,6 +323,9 @@ stringValidator locale fieldType =
 
         FieldType.SimpleType FieldType.Phone ->
             phoneValidator locale
+
+        FieldType.SimpleType FieldType.Url ->
+            urlValidator
 
         _ ->
             Ok

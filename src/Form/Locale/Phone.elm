@@ -1,11 +1,11 @@
-module Form.Locale.Phone exposing (regex, mobileRegex, formatForSubmission, formatForDisplay)
+module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay)
 
 {-| Phone number helpers
 
 
 # Phone
 
-@docs regex, mobileRegex, formatForSubmission, formatForDisplay
+@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay
 
 -}
 
