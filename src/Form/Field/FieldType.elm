@@ -135,7 +135,7 @@ fromString str =
         "multi_select" ->
             Just (MultiStringType MultiSelect)
 
-        "mutli_http_select" ->
+        "multi_http_select" ->
             Just (MultiStringType MultiHttpSelect)
 
         "radio" ->
