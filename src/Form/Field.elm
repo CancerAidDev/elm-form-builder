@@ -1,8 +1,8 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
     , CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties
-    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, updateShowDropdown, maybeUpdateStringValue
+    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -23,12 +23,12 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringValue, updateStringValue_, updateShowDropdown, maybeUpdateStringValue
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
 
 
 # Predicates
@@ -466,11 +466,11 @@ updateStringValue value field =
 
 
 {-| -}
-updateMultiStringValue : Option.Option -> Bool -> Field -> Field
-updateMultiStringValue option checked field =
+updateMultiStringOption : Option.Option -> Bool -> Field -> Field
+updateMultiStringOption option checked field =
     case field of
         MultiStringField_ multiStringField ->
-            MultiStringField_ <| updateMultiStringValue_ option checked multiStringField
+            MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
 
         _ ->
             field
@@ -662,9 +662,8 @@ updateStringValue_ value field =
             RadioField { properties | value = value }
 
 
-{-| -}
-updateMultiStringValue_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
-updateMultiStringValue_ option checked field =
+updateMultiStringOption_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
+updateMultiStringOption_ option checked field =
     let
         update properties =
             { properties
@@ -682,6 +681,17 @@ updateMultiStringValue_ option checked field =
 
         MultiHttpSelectField properties ->
             MultiHttpSelectField (update properties)
+
+
+{-| -}
+updateMultiStringValue_ : Set.Set String -> MultiStringField -> MultiStringField
+updateMultiStringValue_ value field =
+    case field of
+        MultiSelectField properties ->
+            MultiSelectField { properties | value = value }
+
+        MultiHttpSelectField properties ->
+            MultiHttpSelectField { properties | value = value }
 
 
 {-| -}
@@ -750,6 +760,12 @@ getEnabledBy =
 getStringValue_ : StringField -> String
 getStringValue_ =
     getStringProperties >> .value
+
+
+{-| -}
+getMultiStringValue_ : MultiStringField -> Set.Set String
+getMultiStringValue_ =
+    getMultiStringProperties >> .value
 
 
 {-| -}

@@ -22,7 +22,7 @@ update msg fields =
             ( Fields.updateStringField key value fields, Cmd.none )
 
         Msg.UpdateMultiStringField key value checked ->
-            ( Fields.updateMultiStringField key value checked fields, Cmd.none )
+            ( Fields.updateMultiStringOptionField key value checked fields, Cmd.none )
 
         Msg.UpdateBoolField key value ->
             ( Fields.updateBoolField key value fields, Cmd.none )
