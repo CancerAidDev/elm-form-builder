@@ -36,14 +36,17 @@ view time submitted locale fields key field =
         disabled =
             not (Fields.isEnabled fields field)
     in
-    Html.div
+    Html.fieldset
         [ HtmlAttributes.class "column"
         , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+        , HtmlAttributes.disabled disabled
         , HtmlAttributes.id key
         ]
         [ label field disabled
-        , control time locale key field
-        , error submitted locale fields field
+        , Html.div []
+            [ control time locale key field
+            , error submitted locale fields field
+            ]
         ]
 
 
