@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault
     , hasCheckboxConsentField, isEnabled
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault
 
 
 # Predicates
@@ -78,9 +78,23 @@ encode =
 
 
 {-| -}
+resetValueToDefault : String -> Fields -> Fields
+resetValueToDefault key =
+    Dict.update key (Maybe.map Field.resetValueToDefault)
+        >> updateEnabledByFields
+
+
+{-| -}
 updateStringField : String -> String -> Fields -> Fields
 updateStringField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value))
+        >> updateEnabledByFields
+
+
+{-| -}
+updateMultiStringOptionField : String -> Option.Option -> Bool -> Fields -> Fields
+updateMultiStringOptionField key option checked =
+    Dict.update key (Maybe.map (Field.updateMultiStringOption option checked))
         >> updateEnabledByFields
 
 
@@ -158,6 +172,13 @@ updateNumericField key value =
 updateFieldRemoteOptions : String -> RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option) -> Fields -> Fields
 updateFieldRemoteOptions key options =
     Dict.update key (Maybe.map (Field.updateRemoteOptions options))
+
+
+{-| -}
+updateShowDropdown : String -> Bool -> Fields -> Fields
+updateShowDropdown key showDropdown =
+    Dict.update key (Maybe.map (Field.updateShowDropdown showDropdown))
+        >> updateEnabledByFields
 
 
 {-| -}

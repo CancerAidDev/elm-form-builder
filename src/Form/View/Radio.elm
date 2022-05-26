@@ -101,10 +101,8 @@ viewRadioEnumOption key { default, value } option =
 
 radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
 radioContainer children =
-    Html.div [ HtmlAttributes.class "field" ]
-        [ Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline" ]
-            children
-        ]
+    Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline m-0" ]
+        children
 
 
 optionLabel : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg

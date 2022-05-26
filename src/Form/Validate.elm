@@ -34,6 +34,7 @@ import Form.Locale.Phone as Phone
 import Iso8601
 import Maybe.Extra as MaybeExtra
 import Regex
+import Set
 import Url
 
 
@@ -48,6 +49,14 @@ validateField locale fields field =
                         Field.StringField_ (Field.updateStringValue_ updatedValue stringField)
                     )
                 |> Result.mapError StringError_
+
+        Field.MultiStringField_ multiStringField ->
+            validateMultiStringField multiStringField
+                |> Result.map
+                    (\updatedValue ->
+                        Field.MultiStringField_ (Field.updateMultiStringValue_ updatedValue multiStringField)
+                    )
+                |> Result.mapError MultiStringError_
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             validateBoolField properties
@@ -99,6 +108,15 @@ validateStringField locale field =
     String.trim (Field.getStringValue_ field)
         |> emptyValidator (Field.isRequired (Field.StringField_ field))
         |> Result.andThen (stringValidator locale (Field.getStringType field))
+
+
+validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
+validateMultiStringField field =
+    if Set.isEmpty (Field.getMultiStringValue_ field) then
+        Err NoneSelectedError
+
+    else
+        Ok (Field.getMultiStringValue_ field)
 
 
 validateBoolField : Field.CheckboxFieldProperties -> Result BoolError Bool
@@ -203,6 +221,10 @@ type StringError
     | InvalidUrl
 
 
+type MultiStringError
+    = NoneSelectedError
+
+
 type BoolError
     = ConsentIsRequired
     | EmptyBoolError
@@ -214,41 +236,45 @@ type NumericError
 
 type Error
     = StringError_ StringError
+    | MultiStringError_ MultiStringError
     | BoolError_ BoolError
     | NumericError_ NumericError
 
 
 {-| -}
-errorToMessage : Field.Field -> Error -> String
-errorToMessage field error =
+errorToMessage : Error -> String
+errorToMessage error =
     case error of
         StringError_ EmptyError ->
-            Field.getLabel field ++ " is required"
+            "Field is required"
 
         StringError_ InvalidMobilePhoneNumber ->
-            Field.getLabel field ++ " is not a valid mobile number"
+            "Invalid mobile number"
 
         StringError_ InvalidPhoneNumber ->
-            Field.getLabel field ++ " is not a valid phone number"
+            "Invalid phone number"
 
         StringError_ InvalidEmail ->
-            Field.getLabel field ++ " is not a valid email address"
+            "Invalid email address"
 
         StringError_ InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
-            Field.getLabel field ++ " format should be YYYY-MM-DD"
+            "Date format should be YYYY-MM-DD"
+
+        MultiStringError_ NoneSelectedError ->
+            "At least one selection is required"
 
         StringError_ InvalidUrl ->
-            Field.getLabel field ++ " is not a valid url"
+            "Invalid url"
 
         BoolError_ ConsentIsRequired ->
             "Consent is required"
 
         BoolError_ EmptyBoolError ->
-            Field.getLabel field ++ " is required"
+            "Field is required"
 
         NumericError_ InvalidAge ->
-            Field.getLabel field ++ " must be 18-99"
+            "Age must be 18-99"
 
 
 type alias StringValidator =

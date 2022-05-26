@@ -18,6 +18,7 @@ import Form.Locale as Locale
 import Form.Locale.Phone as Phone
 import Form.Msg as Msg
 import Form.Validate as Validate
+import Form.View.MultiSelect as MultiSelect
 import Form.View.Radio as Radio
 import Form.View.Select as Select
 import Html
@@ -36,14 +37,17 @@ view time submitted locale fields key field =
         disabled =
             not (Fields.isEnabled fields field)
     in
-    Html.div
+    Html.fieldset
         [ HtmlAttributes.class "column"
         , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+        , HtmlAttributes.disabled disabled
         , HtmlAttributes.id key
         ]
-        [ label field disabled
-        , control time locale key field
-        , error submitted locale fields field
+        [ Html.div [ HtmlAttributes.class "field" ]
+            [ label field disabled
+            , control time locale key field
+            , error submitted locale fields field
+            ]
         ]
 
 
@@ -80,6 +84,12 @@ control time locale key field =
         Field.StringField_ (Field.RadioField properties) ->
             Radio.radio key properties
 
+        Field.MultiStringField_ (Field.MultiSelectField properties) ->
+            MultiSelect.multiSelect key properties
+
+        Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
+            MultiSelect.multiHttpSelect key properties
+
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties
 
@@ -97,47 +107,44 @@ input : Time.Posix -> String -> Field.Field -> Html.Html Msg.Msg
 input time key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
-            Html.div [ HtmlAttributes.class "field" ]
-                [ Html.input
-                    [ HtmlAttributes.name key
-                    , HtmlAttributes.class (FieldType.toClass properties.tipe)
-                    , HtmlAttributes.type_ (FieldType.toType properties.tipe)
-                    , HtmlAttributes.value properties.value
-                    , HtmlAttributes.required properties.required
-                    , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe)
-                    , HtmlEvents.onInput <| Msg.UpdateStringField key
-                    , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                        (FieldType.toMin
-                            time
-                            (FieldType.StringType (FieldType.SimpleType properties.tipe))
-                        )
-                    , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                        (FieldType.toMax
-                            time
-                            (FieldType.StringType (FieldType.SimpleType properties.tipe))
-                        )
-                    , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength properties.tipe)
-                    ]
-                    []
+            Html.input
+                [ HtmlAttributes.name key
+                , HtmlAttributes.class (FieldType.toClass properties.tipe)
+                , HtmlAttributes.type_ (FieldType.toType properties.tipe)
+                , HtmlAttributes.value properties.value
+                , HtmlAttributes.required properties.required
+                , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe)
+                , HtmlEvents.onInput <| Msg.UpdateStringField key
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
+                    (FieldType.toMin
+                        time
+                        (FieldType.StringType (FieldType.SimpleType properties.tipe))
+                    )
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
+                    (FieldType.toMax
+                        time
+                        (FieldType.StringType (FieldType.SimpleType properties.tipe))
+                    )
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength properties.tipe)
                 ]
+                []
 
         Field.NumericField_ (Field.AgeField properties) ->
-            Html.div [ HtmlAttributes.class "field" ]
-                [ Html.input
-                    [ HtmlAttributes.name key
-                    , HtmlAttributes.class "input"
-                    , HtmlAttributes.type_ "number"
-                    , HtmlAttributes.pattern "\\d*"
-                    , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
-                    , HtmlAttributes.required properties.required
-                    , HtmlEvents.onInput <| Msg.UpdateNumericField key
-                    , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                        (FieldType.toMin time (FieldType.NumericType FieldType.Age))
-                    , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                        (FieldType.toMax time (FieldType.NumericType FieldType.Age))
-                    ]
-                    []
+            Html.input
+                [ HtmlAttributes.name key
+                , HtmlAttributes.class "input"
+                , HtmlAttributes.type_ "number"
+                , HtmlAttributes.pattern "\\d*"
+                , HtmlAttributes.style "width" "6em"
+                , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
+                , HtmlAttributes.required properties.required
+                , HtmlEvents.onInput <| Msg.UpdateNumericField key
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
+                    (FieldType.toMin time (FieldType.NumericType FieldType.Age))
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
+                    (FieldType.toMax time (FieldType.NumericType FieldType.Age))
                 ]
+                []
 
         _ ->
             HtmlExtra.nothing
@@ -145,22 +152,20 @@ input time key field =
 
 textarea : String -> Field.SimpleFieldProperties -> Html.Html Msg.Msg
 textarea key field =
-    Html.div [ HtmlAttributes.class "field" ]
-        [ Html.textarea
-            [ HtmlAttributes.name key
-            , HtmlAttributes.class "textarea"
-            , HtmlAttributes.value field.value
-            , HtmlAttributes.required field.required
-            , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe)
-            , HtmlEvents.onInput <| Msg.UpdateStringField key
-            ]
-            []
+    Html.textarea
+        [ HtmlAttributes.name key
+        , HtmlAttributes.class "textarea"
+        , HtmlAttributes.value field.value
+        , HtmlAttributes.required field.required
+        , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe)
+        , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
+        []
 
 
 phone : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
 phone time (Locale.Locale _ countryCode) key field =
-    Html.div [ HtmlAttributes.class "field has-addons" ]
+    Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
             [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix countryCode) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
@@ -174,18 +179,16 @@ checkbox key field =
         toggledValue =
             not field.value
     in
-    Html.div [ HtmlAttributes.class "field" ]
-        [ Html.div [ HtmlAttributes.class "control" ]
-            [ Html.label [ HtmlAttributes.class "checkbox" ]
-                [ Html.input
-                    [ HtmlAttributes.class "mr-3"
-                    , HtmlAttributes.type_ "checkbox"
-                    , HtmlAttributes.checked field.value
-                    , HtmlEvents.onClick <| Msg.UpdateBoolField key toggledValue
-                    ]
-                    []
-                , Html.text field.label
+    Html.div [ HtmlAttributes.class "control" ]
+        [ Html.label [ HtmlAttributes.class "checkbox" ]
+            [ Html.input
+                [ HtmlAttributes.class "mr-3"
+                , HtmlAttributes.type_ "checkbox"
+                , HtmlAttributes.checked field.value
+                , HtmlEvents.onClick <| Msg.UpdateBoolField key toggledValue
                 ]
+                []
+            , Html.text field.label
             ]
         ]
 
@@ -221,5 +224,5 @@ validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Ms
 validateForm locale fields field =
     Validate.validateField locale fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage field)
+            (Html.text << Validate.errorToMessage)
             (always HtmlExtra.nothing)

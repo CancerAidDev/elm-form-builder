@@ -22,15 +22,13 @@ import RemoteData
 {-| -}
 select : String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
 select key { value, required, options } =
-    Html.div [ HtmlAttributes.class "field" ]
-        [ Html.div [ HtmlAttributes.class "select is-fullwidth" ]
-            [ Html.select
-                [ HtmlAttributes.name key
-                , HtmlAttributes.required required
-                , HtmlEvents.onInput <| Msg.UpdateStringField key
-                ]
-                (emptyOption :: List.map (viewOption value) options)
+    Html.div [ HtmlAttributes.class "select is-fullwidth" ]
+        [ Html.select
+            [ HtmlAttributes.name key
+            , HtmlAttributes.required required
+            , HtmlEvents.onInput <| Msg.UpdateStringField key
             ]
+            (emptyOption :: List.map (viewOption value) options)
         ]
 
 

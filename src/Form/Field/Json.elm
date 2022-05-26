@@ -18,6 +18,7 @@ import Form.Field.Width as Width
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData
+import Set
 import Time
 
 
@@ -25,6 +26,8 @@ type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
+    | JsonMultiSelectField JsonMultiSelectFieldProperties
+    | JsonMultiHttpSelectField JsonMultiHttpSelectFieldProperties
     | JsonRadioField JsonRadioFieldProperties
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
@@ -61,6 +64,30 @@ type alias JsonHttpSelectFieldProperties =
     , enabledBy : Maybe String
     , default : Maybe String
     , url : String
+    }
+
+
+type alias JsonMultiSelectFieldProperties =
+    { required : Bool
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , placeholder : String
+    , options : List Option.Option
+    , showDropdown : Bool
+    }
+
+
+type alias JsonMultiHttpSelectFieldProperties =
+    { required : Bool
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , placeholder : String
+    , url : String
+    , showDropdown : Bool
     }
 
 
@@ -119,34 +146,42 @@ type alias JsonAgeFieldProperties =
 decoder : Time.Posix -> Int -> Decode.Decoder ( String, Field.Field )
 decoder time order =
     Decode.field "type" FieldType.decoder
-        |> Decode.andThen
-            (\tipe ->
-                case tipe of
-                    FieldType.StringType (FieldType.SimpleType simpleType) ->
-                        Decode.map JsonSimpleField (decoderSimpleJson simpleType)
-
-                    FieldType.StringType FieldType.Select ->
-                        Decode.map JsonSelectField decoderSelectJson
-
-                    FieldType.StringType FieldType.HttpSelect ->
-                        Decode.map JsonHttpSelectField decoderHttpSelectJson
-
-                    FieldType.StringType FieldType.Radio ->
-                        Decode.map JsonRadioField decoderRadioJson
-
-                    FieldType.BoolType (FieldType.CheckboxType checkboxFieldType) ->
-                        Decode.map JsonCheckboxField (decoderCheckboxJson checkboxFieldType)
-
-                    FieldType.BoolType FieldType.RadioBool ->
-                        Decode.map JsonRadioBoolField decoderRadioBoolJson
-
-                    FieldType.BoolType FieldType.RadioEnum ->
-                        Decode.map JsonRadioEnumField decoderRadioEnumJson
-
-                    FieldType.NumericType FieldType.Age ->
-                        Decode.map JsonAgeField decoderAgeJson
-            )
+        |> Decode.andThen decoderForType
         |> Decode.map (toField time order)
+
+
+decoderForType : FieldType.FieldType -> Decode.Decoder JsonField
+decoderForType fieldType =
+    case fieldType of
+        FieldType.StringType (FieldType.SimpleType simpleType) ->
+            Decode.map JsonSimpleField (decoderSimpleJson simpleType)
+
+        FieldType.StringType FieldType.Select ->
+            Decode.map JsonSelectField decoderSelectJson
+
+        FieldType.StringType FieldType.HttpSelect ->
+            Decode.map JsonHttpSelectField decoderHttpSelectJson
+
+        FieldType.MultiStringType FieldType.MultiSelect ->
+            Decode.map JsonMultiSelectField decoderMultiSelectJson
+
+        FieldType.MultiStringType FieldType.MultiHttpSelect ->
+            Decode.map JsonMultiHttpSelectField decoderMultiHttpSelectJson
+
+        FieldType.StringType FieldType.Radio ->
+            Decode.map JsonRadioField decoderRadioJson
+
+        FieldType.BoolType (FieldType.CheckboxType checkboxFieldType) ->
+            Decode.map JsonCheckboxField (decoderCheckboxJson checkboxFieldType)
+
+        FieldType.BoolType FieldType.RadioBool ->
+            Decode.map JsonRadioBoolField decoderRadioBoolJson
+
+        FieldType.BoolType FieldType.RadioEnum ->
+            Decode.map JsonRadioEnumField decoderRadioEnumJson
+
+        FieldType.NumericType FieldType.Age ->
+            Decode.map JsonAgeField decoderAgeJson
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -268,6 +303,39 @@ toField time order field =
                     }
             )
 
+        JsonMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options } ->
+            ( key
+            , Field.MultiStringField_ <|
+                Field.MultiSelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , placeholder = placeholder
+                    , showDropdown = showDropdown
+                    , options = options
+                    , value = Set.empty
+                    }
+            )
+
+        JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url } ->
+            ( key
+            , Field.MultiStringField_ <|
+                Field.MultiHttpSelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , url = url
+                    , placeholder = placeholder
+                    , showDropdown = showDropdown
+                    , options = RemoteData.NotAsked
+                    , value = Set.empty
+                    }
+            )
+
 
 decoderSimpleJson : FieldType.SimpleFieldType -> Decode.Decoder JsonSimpleFieldProperties
 decoderSimpleJson tipe =
@@ -313,6 +381,32 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "url" Decode.string
+
+
+decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties
+decoderMultiSelectJson =
+    Decode.succeed JsonMultiSelectFieldProperties
+        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "placeholder" Decode.string
+        |> DecodePipeline.required "options" (Decode.list Option.decoder)
+        |> DecodePipeline.hardcoded False
+
+
+decoderMultiHttpSelectJson : Decode.Decoder JsonMultiHttpSelectFieldProperties
+decoderMultiHttpSelectJson =
+    Decode.succeed JsonMultiHttpSelectFieldProperties
+        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "placeholder" Decode.string
+        |> DecodePipeline.required "url" Decode.string
+        |> DecodePipeline.hardcoded False
 
 
 decoderRadioJson : Decode.Decoder JsonRadioFieldProperties

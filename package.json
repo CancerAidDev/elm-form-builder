@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "parcel examples/index.html",
-    "build:pages": "rm -rf docs && parcel build examples/index.html --dist-dir docs --public-url /elm-dialog"
+    "build:pages": "rm -rf docs && parcel build examples/index.html --dist-dir docs --public-url /elm-form-builder"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.5.0",
