@@ -13,48 +13,105 @@ suite : Test
 suite =
     describe "Form.Validate.StringField"
         [ describe "validate"
-            [ describe "email"
-                [ describe "required"
-                    [ test "empty string error" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = True, value = "" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.equal (Err StringField.EmptyError)
-                    , test "invalid email error" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = True, value = "asdf" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.equal (Err StringField.InvalidEmail)
-                    , test "valid email ok" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = True, value = "test@canceraid.com" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.ok
+            [ simpleFieldTest FieldType.Text
+                { valid = "asdf"
+                , invalid = []
+                }
+            , simpleFieldTest FieldType.Email
+                { valid = "test@canceraid.com"
+                , invalid = [ { value = "asdf", error = StringField.InvalidEmail } ]
+                }
+            , simpleFieldTest (FieldType.Date FieldType.DatePast)
+                { valid = "2022-05-30"
+                , invalid = [ { value = "asdf", error = StringField.InvalidDate } ]
+                }
+            , simpleFieldTest (FieldType.Date FieldType.DateOfBirth)
+                { valid = "2022-05-30"
+                , invalid = [ { value = "asdf", error = StringField.InvalidDate } ]
+                }
+            , simpleFieldTest FieldType.Phone
+                { valid = "432432432"
+                , invalid =
+                    [ { value = "123456789", error = StringField.InvalidMobilePhoneNumber }
+                    , { value = "asdf", error = StringField.InvalidPhoneNumber }
                     ]
-                , describe "optional"
-                    [ test "empty string ok" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = False, value = "" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.ok
-                    , test "invalid email error" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = False, value = "asdf" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.equal (Err StringField.InvalidEmail)
-                    , test "valid email ok" <|
-                        \_ ->
-                            simpleField { tipe = FieldType.Email, required = False, value = "test@canceraid.com" }
-                                |> StringField.validate Locale.enAU
-                                |> Expect.ok
-                    ]
-                ]
+                }
+            , simpleFieldTest FieldType.Url
+                { valid = "https://canceraid.com"
+                , invalid = [ { value = "asdf", error = StringField.InvalidUrl } ]
+                }
+            , simpleFieldTest FieldType.TextArea
+                { valid = "asdf"
+                , invalid = []
+                }
             ]
         ]
 
 
-simpleField : { tipe : FieldType.SimpleFieldType, required : Bool, value : String } -> Field.StringField
-simpleField { tipe, required, value } =
+simpleFieldTest : FieldType.SimpleFieldType -> { valid : String, invalid : List { value : String, error : StringField.StringError } } -> Test
+simpleFieldTest tipe { valid, invalid } =
+    let
+        field =
+            simpleField tipe
+
+        validTest { required } =
+            test "valid" <|
+                \_ ->
+                    field { required = required, value = valid }
+                        |> StringField.validate Locale.enAU
+                        |> Expect.ok
+
+        invalidTest { required } =
+            List.map
+                (\{ value, error } ->
+                    test ("invalid " ++ Debug.toString error) <|
+                        \_ ->
+                            field { required = required, value = value }
+                                |> StringField.validate Locale.enAU
+                                |> Expect.equal (Err error)
+                )
+                invalid
+
+        nonemptyTest config =
+            describe "non-empty"
+                (validTest config :: invalidTest config)
+
+        requiredFieldTest =
+            let
+                required =
+                    True
+            in
+            describe "required"
+                [ test "empty" <|
+                    \_ ->
+                        field { required = required, value = "" }
+                            |> StringField.validate Locale.enAU
+                            |> Expect.equal (Err StringField.EmptyError)
+                , nonemptyTest { required = required }
+                ]
+
+        optionalFieldTest =
+            let
+                required =
+                    False
+            in
+            describe "optional"
+                [ test "empty" <|
+                    \_ ->
+                        field { required = required, value = "" }
+                            |> StringField.validate Locale.enAU
+                            |> Expect.ok
+                , nonemptyTest { required = required }
+                ]
+    in
+    describe (Debug.toString tipe)
+        [ requiredFieldTest
+        , optionalFieldTest
+        ]
+
+
+simpleField : FieldType.SimpleFieldType -> { required : Bool, value : String } -> Field.StringField
+simpleField tipe { required, value } =
     Field.SimpleField
         { required = required
         , label = "Field"
