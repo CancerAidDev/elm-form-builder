@@ -1,4 +1,4 @@
-module Form.Field.JsonSpec exposing (..)
+module Form.Field.JsonSpec exposing (suite)
 
 import Dict
 import Expect
@@ -10,11 +10,11 @@ import Form.Fields as Fields
 import Json.Decode as Decode
 import Json.Encode as Encode
 import RemoteData
-import Test exposing (..)
+import Test
 import Time
 
 
-suite : Test
+suite : Test.Test
 suite =
     let
         time =
@@ -29,9 +29,9 @@ suite =
         encode =
             Encode.dict identity identity << Fields.encode
     in
-    describe "Form.Field.Json"
-        [ describe "Decoding Fields"
-            [ test "Simple field decoder" <|
+    Test.describe "Form.Field.Json"
+        [ Test.describe "Decoding Fields"
+            [ Test.test "Simple field decoder" <|
                 \_ ->
                     let
                         json =
@@ -59,7 +59,7 @@ suite =
                                         }
                                 )
                             )
-            , test "Simple field decoder with select type" <|
+            , Test.test "Simple field decoder with select type" <|
                 \_ ->
                     let
                         json =
@@ -73,7 +73,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Simple field decoder with incorrect simple type" <|
+            , Test.test "Simple field decoder with incorrect simple type" <|
                 \_ ->
                     let
                         json =
@@ -87,7 +87,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Simple field decoder with missing field" <|
+            , Test.test "Simple field decoder with missing field" <|
                 \_ ->
                     let
                         json =
@@ -100,7 +100,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Simple field decoder with incorrect field" <|
+            , Test.test "Simple field decoder with incorrect field" <|
                 \_ ->
                     let
                         json =
@@ -114,7 +114,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Select field decoder" <|
+            , Test.test "Select field decoder" <|
                 \_ ->
                     let
                         json =
@@ -160,7 +160,7 @@ suite =
                                     )
                                 )
                             )
-            , test "Select field decoder with http select type" <|
+            , Test.test "Select field decoder with http select type" <|
                 \_ ->
                     let
                         json =
@@ -179,7 +179,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Select field decoder with missing field" <|
+            , Test.test "Select field decoder with missing field" <|
                 \_ ->
                     let
                         json =
@@ -197,7 +197,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Http Select field decoder" <|
+            , Test.test "Http Select field decoder" <|
                 \_ ->
                     let
                         json =
@@ -229,7 +229,7 @@ suite =
                                     )
                                 )
                             )
-            , test "Http Select field decoder with select type" <|
+            , Test.test "Http Select field decoder with select type" <|
                 \_ ->
                     let
                         json =
@@ -244,7 +244,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Http Select field decoder with missing field" <|
+            , Test.test "Http Select field decoder with missing field" <|
                 \_ ->
                     let
                         json =
@@ -258,7 +258,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Checkbox field decoder" <|
+            , Test.test "Checkbox field decoder" <|
                 \_ ->
                     let
                         json =
@@ -287,7 +287,7 @@ suite =
                                     )
                                 )
                             )
-            , test "Checkbox field decoder with missing field" <|
+            , Test.test "Checkbox field decoder with missing field" <|
                 \_ ->
                     let
                         json =
@@ -300,7 +300,7 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
-            , test "Checkbox consent field decoder" <|
+            , Test.test "Checkbox consent field decoder" <|
                 \_ ->
                     let
                         json =
@@ -329,7 +329,7 @@ suite =
                                     )
                                 )
                             )
-            , test "Checkbox consent field decoder with missing field" <|
+            , Test.test "Checkbox consent field decoder with missing field" <|
                 \_ ->
                     let
                         json =
@@ -343,8 +343,8 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.err
             ]
-        , describe "Encoding Fields"
-            [ test "Metadata encoding without metadata form elements" <|
+        , Test.describe "Encoding Fields"
+            [ Test.test "Metadata encoding without metadata form elements" <|
                 \_ ->
                     let
                         testDict =
@@ -366,7 +366,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":"Foo Bar"}"""
-            , test "Metadata encoding with a metadata simple form element" <|
+            , Test.test "Metadata encoding with a metadata simple form element" <|
                 \_ ->
                     let
                         testDict =
@@ -388,7 +388,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"tag":"bar"}}"""
-            , test "Metadata encoding with a metadata select form element" <|
+            , Test.test "Metadata encoding with a metadata select form element" <|
                 \_ ->
                     let
                         testDict =
@@ -421,7 +421,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"pet":"Dog"}}"""
-            , test "Metadata encoding with a metadata httpSelect form element" <|
+            , Test.test "Metadata encoding with a metadata httpSelect form element" <|
                 \_ ->
                     let
                         testDict =
@@ -445,7 +445,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"tag":"foo"}}"""
-            , test "Metadata encoding with multiple metadata form element" <|
+            , Test.test "Metadata encoding with multiple metadata form element" <|
                 \_ ->
                     let
                         testDict =

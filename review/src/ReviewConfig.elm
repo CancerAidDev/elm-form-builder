@@ -11,20 +11,47 @@ when inside the directory containing this file.
 
 -}
 
+import NoDeprecated
+import NoExposingEverything
+import NoImportingEverything
+import NoMissingTypeAnnotation
+import NoMissingTypeExpose
+import NoPrematureLetComputation
+import NoUnused.CustomTypeConstructorArgs
 import NoUnused.CustomTypeConstructors
 import NoUnused.Dependencies
 import NoUnused.Exports
 import NoUnused.Modules
+import NoUnused.Parameters
+import NoUnused.Patterns
 import NoUnused.Variables
 import Review.Rule
 
 
 config : List Review.Rule.Rule
 config =
-    [ NoUnused.CustomTypeConstructors.rule []
-    , NoUnused.Dependencies.rule
-    , NoUnused.Exports.rule
-    , NoUnused.Modules.rule
-    , NoUnused.Variables.rule
-    ]
+    let
+        noUnused =
+            [ NoUnused.CustomTypeConstructors.rule []
+            , NoUnused.CustomTypeConstructorArgs.rule
+            , NoUnused.Dependencies.rule
+            , NoUnused.Exports.rule
+            , NoUnused.Modules.rule
+            , NoUnused.Parameters.rule
+            , NoUnused.Patterns.rule
+            , NoUnused.Variables.rule
+            ]
 
+        noCommon =
+            [ NoExposingEverything.rule
+            , NoDeprecated.rule NoDeprecated.defaults
+            , NoImportingEverything.rule []
+            , NoMissingTypeAnnotation.rule
+
+            -- TODO
+            --, NoMissingTypeAnnotationInLetIn.rule
+            , NoMissingTypeExpose.rule
+            , NoPrematureLetComputation.rule
+            ]
+    in
+    noUnused ++ noCommon

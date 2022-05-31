@@ -1,15 +1,15 @@
-module Form.Field.RadioEnumSpec exposing (..)
+module Form.Field.RadioEnumSpec exposing (suite)
 
 import Expect
 import Form.Field.RadioEnum as RadioEnum
 import Json.Decode as Decode
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Form.Field.RadioEnum.decoder"
-        [ test "True RadioEnum option" <|
+    Test.describe "Form.Field.RadioEnum.decoder"
+        [ Test.test "True RadioEnum option" <|
             \_ ->
                 let
                     json =
@@ -22,7 +22,7 @@ suite =
                         (Ok
                             RadioEnum.Yes
                         )
-        , test "False RadioEnum option" <|
+        , Test.test "False RadioEnum option" <|
             \_ ->
                 let
                     json =
@@ -35,7 +35,7 @@ suite =
                         (Ok
                             RadioEnum.No
                         )
-        , test "N/A RadioEnum option" <|
+        , Test.test "N/A RadioEnum option" <|
             \_ ->
                 let
                     json =
@@ -48,7 +48,7 @@ suite =
                         (Ok
                             RadioEnum.NA
                         )
-        , test "Incorrect RadioEnum option" <|
+        , Test.test "Incorrect RadioEnum option" <|
             \_ ->
                 let
                     json =

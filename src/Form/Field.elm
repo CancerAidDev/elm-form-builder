@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , AgeFieldProperties, StringFieldProperties
     )
 
 {-| Field type and helper functions
@@ -52,7 +53,6 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Width as Width
-import Html.Attributes exposing (value)
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra

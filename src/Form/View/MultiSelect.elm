@@ -2,7 +2,6 @@ module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect)
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
-import FontAwesome.Attributes as Icon
 import FontAwesome.Icon as Icon
 import FontAwesome.Solid as Icon
 import FontAwesome.Styles as Icon

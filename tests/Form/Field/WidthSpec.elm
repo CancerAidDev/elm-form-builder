@@ -1,15 +1,15 @@
-module Form.Field.WidthSpec exposing (..)
+module Form.Field.WidthSpec exposing (suite)
 
 import Expect
 import Form.Field.Width as Width
 import Json.Decode as Decode
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Form.Field.Width.decoder"
-        [ test "Half Sized Width field" <|
+    Test.describe "Form.Field.Width.decoder"
+        [ Test.test "Half Sized Width field" <|
             \_ ->
                 let
                     json =
@@ -22,7 +22,7 @@ suite =
                         (Ok
                             Width.HalfSize
                         )
-        , test "Full Sized Width field" <|
+        , Test.test "Full Sized Width field" <|
             \_ ->
                 let
                     json =
@@ -35,7 +35,7 @@ suite =
                         (Ok
                             Width.FullSize
                         )
-        , test "Invalid Width field" <|
+        , Test.test "Invalid Width field" <|
             \_ ->
                 let
                     json =

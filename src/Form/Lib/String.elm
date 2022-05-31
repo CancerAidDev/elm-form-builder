@@ -1,4 +1,4 @@
-module Form.Lib.String exposing (..)
+module Form.Lib.String exposing (fromMaybeInt)
 
 
 fromMaybeInt : Maybe Int -> String
