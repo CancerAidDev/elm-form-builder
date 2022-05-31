@@ -1,7 +1,6 @@
 module Update exposing (..)
 
 import Dialog
-import Form.Locale as Locale
 import Form.Update as FormUpdate
 import Form.Validate as Validate
 import Model
@@ -28,7 +27,7 @@ update msg model =
                         }
             in
             model.form
-                |> Validate.validate Locale.enAU
+                |> Validate.validate model.locale
                 |> Maybe.map (\fields -> ( { model | dialog = Just newDialog, form = fields }, Cmd.none ))
                 |> Maybe.withDefault ( { model | submitted = True }, Cmd.none )
 

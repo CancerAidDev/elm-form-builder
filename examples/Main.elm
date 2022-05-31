@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Fields
+import Form.Locale as Locale
 import Model
 import Msg
 import Time
@@ -26,6 +27,7 @@ init =
             TimeExtra.partsToPosix Time.utc <|
                 TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
       , dialog = Nothing
+      , locale = Locale.enAU
       , form = Fields.fields
       , submitted = False
       }
