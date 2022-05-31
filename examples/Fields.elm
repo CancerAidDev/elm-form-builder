@@ -33,6 +33,17 @@ fields =
             }
         )
     , \order ->
+        ( "secondaryEmail"
+        , FormField.email
+            { required = False
+            , label = "Secondary Email Address"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            }
+        )
+    , \order ->
         ( "age"
         , FormField.age
             { required = True

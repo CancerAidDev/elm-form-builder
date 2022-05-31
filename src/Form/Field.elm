@@ -61,7 +61,7 @@ import Set
 
 
 {-| -}
-text : StringFieldProperties a -> Field
+text : StringFieldProperties {} -> Field
 text { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -76,7 +76,7 @@ text { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-email : StringFieldProperties a -> Field
+email : StringFieldProperties {} -> Field
 email { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -91,7 +91,7 @@ email { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-dateOfBirth : StringFieldProperties a -> Field
+dateOfBirth : StringFieldProperties {} -> Field
 dateOfBirth { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -106,7 +106,7 @@ dateOfBirth { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-datePast : StringFieldProperties a -> Field
+datePast : StringFieldProperties {} -> Field
 datePast { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -121,7 +121,7 @@ datePast { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-phone : StringFieldProperties a -> Field
+phone : StringFieldProperties {} -> Field
 phone { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -136,7 +136,7 @@ phone { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-url : StringFieldProperties a -> Field
+url : StringFieldProperties {} -> Field
 url { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -151,7 +151,7 @@ url { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-textarea : StringFieldProperties a -> Field
+textarea : StringFieldProperties {} -> Field
 textarea { required, label, width, enabledBy, order, value } =
     StringField_ <|
         SimpleField
@@ -166,7 +166,7 @@ textarea { required, label, width, enabledBy, order, value } =
 
 
 {-| -}
-checkbox : BoolFieldProperties a -> Field
+checkbox : BoolFieldProperties {} -> Field
 checkbox { required, label, width, enabledBy, order, value } =
     BoolField_ <|
         CheckboxField

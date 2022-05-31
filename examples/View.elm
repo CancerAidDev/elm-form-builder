@@ -3,6 +3,7 @@ module View exposing (..)
 import Dialog
 import Dialog.Bulma as DialogBulma
 import Form.Locale as FormLocale
+import Form.Validate as FormValidate
 import Form.View as FormView
 import Html
 import Html.Attributes as HtmlAttributes
@@ -19,10 +20,11 @@ view model =
             [ HtmlAttributes.class "is-size-3 has-text-weight-bold" ]
             [ Html.text "Add Person" ]
         , Html.div []
-            [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted FormLocale.enAU model.form)
+            [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted model.locale model.form)
             , Html.div [ HtmlAttributes.class "is-flex is-justify-content-center pt-4" ]
                 [ Html.button
                     [ HtmlAttributes.class "button is-link"
+                    , HtmlAttributes.disabled (model.submitted && not (FormValidate.isValid model.locale model.form))
                     , HtmlEvents.onClick Msg.SubmitForm
                     ]
                     [ Html.text "Create" ]

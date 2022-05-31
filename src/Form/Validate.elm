@@ -30,12 +30,10 @@ import Form.Field.RadioEnum as RadioEnum
 import Form.Fields as Fields
 import Form.Lib.String as LibString
 import Form.Locale as Locale
-import Form.Locale.Phone as Phone
-import Iso8601
+import Form.Validate.StringField as ValidateStringField
 import Maybe.Extra as MaybeExtra
 import Regex
 import Set
-import Url
 
 
 {-| -}
@@ -43,7 +41,7 @@ validateField : Locale.Locale -> Fields.Fields -> Field.Field -> Result Error Fi
 validateField locale fields field =
     case field of
         Field.StringField_ stringField ->
-            validateStringField locale stringField
+            ValidateStringField.validate locale stringField
                 |> Result.map
                     (\updatedValue ->
                         Field.StringField_ (Field.updateStringValue_ updatedValue stringField)
@@ -103,16 +101,9 @@ validateField locale fields field =
                 |> Result.mapError NumericError_
 
 
-validateStringField : Locale.Locale -> Field.StringField -> Result StringError String
-validateStringField locale field =
-    String.trim (Field.getStringValue_ field)
-        |> emptyValidator (Field.isRequired (Field.StringField_ field))
-        |> Result.andThen (stringValidator locale (Field.getStringType field))
-
-
 validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
 validateMultiStringField field =
-    if Set.isEmpty (Field.getMultiStringValue_ field) then
+    if Set.isEmpty (Field.getMultiStringValue_ field) && Field.isRequired (Field.MultiStringField_ field) then
         Err NoneSelectedError
 
     else
@@ -212,15 +203,6 @@ isValid locale =
     validate locale >> MaybeExtra.isJust
 
 
-type StringError
-    = EmptyError
-    | InvalidMobilePhoneNumber
-    | InvalidPhoneNumber
-    | InvalidEmail
-    | InvalidDate
-    | InvalidUrl
-
-
 type MultiStringError
     = NoneSelectedError
 
@@ -235,7 +217,7 @@ type NumericError
 
 
 type Error
-    = StringError_ StringError
+    = StringError_ ValidateStringField.StringError
     | MultiStringError_ MultiStringError
     | BoolError_ BoolError
     | NumericError_ NumericError
@@ -245,27 +227,11 @@ type Error
 errorToMessage : Error -> String
 errorToMessage error =
     case error of
-        StringError_ EmptyError ->
-            "Field is required"
-
-        StringError_ InvalidMobilePhoneNumber ->
-            "Invalid mobile number"
-
-        StringError_ InvalidPhoneNumber ->
-            "Invalid phone number"
-
-        StringError_ InvalidEmail ->
-            "Invalid email address"
-
-        StringError_ InvalidDate ->
-            -- Only old browsers without a date picker should trigger this error
-            "Date format should be YYYY-MM-DD"
+        StringError_ err ->
+            ValidateStringField.errorToMessage err
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"
-
-        StringError_ InvalidUrl ->
-            "Invalid url"
 
         BoolError_ ConsentIsRequired ->
             "Consent is required"
@@ -275,83 +241,3 @@ errorToMessage error =
 
         NumericError_ InvalidAge ->
             "Age must be 18-99"
-
-
-type alias StringValidator =
-    String -> Result StringError String
-
-
-emptyValidator : Bool -> StringValidator
-emptyValidator required value =
-    if String.isEmpty value && required then
-        Err EmptyError
-
-    else
-        Ok value
-
-
-emailValidator : StringValidator
-emailValidator value =
-    let
-        regex =
-            "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    if Regex.contains regex value then
-        Ok value
-
-    else
-        Err InvalidEmail
-
-
-urlValidator : StringValidator
-urlValidator value =
-    case Url.fromString value of
-        Just _ ->
-            Ok value
-
-        Nothing ->
-            Err InvalidUrl
-
-
-dateValidator : StringValidator
-dateValidator value =
-    Iso8601.toTime value
-        |> Result.map Iso8601.fromTime
-        |> Result.mapError (always InvalidDate)
-
-
-phoneValidator : Locale.Locale -> StringValidator
-phoneValidator (Locale.Locale _ code) value =
-    let
-        normalisedValue =
-            value |> String.words |> String.concat
-    in
-    if Regex.contains (Phone.mobileRegex code) normalisedValue then
-        Ok (Phone.formatForSubmission code normalisedValue)
-
-    else if Regex.contains (Phone.regex code) normalisedValue then
-        Err InvalidMobilePhoneNumber
-
-    else
-        Err InvalidPhoneNumber
-
-
-stringValidator : Locale.Locale -> FieldType.StringFieldType -> StringValidator
-stringValidator locale fieldType =
-    case fieldType of
-        FieldType.SimpleType FieldType.Email ->
-            emailValidator
-
-        FieldType.SimpleType (FieldType.Date _) ->
-            dateValidator
-
-        FieldType.SimpleType FieldType.Phone ->
-            phoneValidator locale
-
-        FieldType.SimpleType FieldType.Url ->
-            urlValidator
-
-        _ ->
-            Ok
