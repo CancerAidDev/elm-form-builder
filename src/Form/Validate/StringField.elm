@@ -1,4 +1,4 @@
-module Form.Validate.StringField exposing (StringError, errorToMessage, validate)
+module Form.Validate.StringField exposing (StringError(..), errorToMessage, validate)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
