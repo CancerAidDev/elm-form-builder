@@ -1,15 +1,15 @@
-module Form.Field.FieldTypeSpec exposing (..)
+module Form.Field.FieldTypeSpec exposing (suite)
 
 import Expect
 import Form.Field.FieldType as FieldType
 import Json.Decode as Decode
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Form.Field.FieldType.decoder"
-        [ test "Text field type" <|
+    Test.describe "Form.Field.FieldType.decoder"
+        [ Test.test "Text field type" <|
             \_ ->
                 let
                     json =
@@ -20,7 +20,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Text)))
-        , test "Email field type" <|
+        , Test.test "Email field type" <|
             \_ ->
                 let
                     json =
@@ -31,7 +31,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Email)))
-        , test "Date field type" <|
+        , Test.test "Date field type" <|
             \_ ->
                 let
                     json =
@@ -42,7 +42,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType (FieldType.Date FieldType.DateOfBirth))))
-        , test "Date past field type" <|
+        , Test.test "Date past field type" <|
             \_ ->
                 let
                     json =
@@ -53,7 +53,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType (FieldType.Date FieldType.DatePast))))
-        , test "Phone field type" <|
+        , Test.test "Phone field type" <|
             \_ ->
                 let
                     json =
@@ -64,7 +64,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Phone)))
-        , test "TextArea field type" <|
+        , Test.test "TextArea field type" <|
             \_ ->
                 let
                     json =
@@ -75,7 +75,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.TextArea)))
-        , test "Select field type" <|
+        , Test.test "Select field type" <|
             \_ ->
                 let
                     json =
@@ -86,7 +86,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType FieldType.Select))
-        , test "Http select field type" <|
+        , Test.test "Http select field type" <|
             \_ ->
                 let
                     json =
@@ -97,7 +97,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType FieldType.HttpSelect))
-        , test "Checkbox field type" <|
+        , Test.test "Checkbox field type" <|
             \_ ->
                 let
                     json =
@@ -108,7 +108,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.BoolType (FieldType.CheckboxType FieldType.Checkbox)))
-        , test "Checkbox consent field type" <|
+        , Test.test "Checkbox consent field type" <|
             \_ ->
                 let
                     json =
@@ -119,7 +119,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.BoolType (FieldType.CheckboxType FieldType.CheckboxConsent)))
-        , test "Radio string field type" <|
+        , Test.test "Radio string field type" <|
             \_ ->
                 let
                     json =
@@ -130,7 +130,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType FieldType.Radio))
-        , test "Radio bool field type" <|
+        , Test.test "Radio bool field type" <|
             \_ ->
                 let
                     json =
@@ -141,7 +141,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.BoolType FieldType.RadioBool))
-        , test "Radio enum field type" <|
+        , Test.test "Radio enum field type" <|
             \_ ->
                 let
                     json =
@@ -152,7 +152,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.BoolType FieldType.RadioEnum))
-        , test "Numeric field type" <|
+        , Test.test "Numeric field type" <|
             \_ ->
                 let
                     json =
@@ -163,7 +163,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.NumericType FieldType.Age))
-        , test "Non-existing field type" <|
+        , Test.test "Non-existing field type" <|
             \_ ->
                 let
                     json =

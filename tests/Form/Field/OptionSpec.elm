@@ -1,16 +1,16 @@
-module Form.Field.OptionSpec exposing (..)
+module Form.Field.OptionSpec exposing (suite)
 
 import Expect
 import Form.Field.Option as Option
 import Json.Decode as Decode
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Form.Field.Option"
-        [ describe "decoder"
-            [ test "Valid Select options" <|
+    Test.describe "Form.Field.Option"
+        [ Test.describe "decoder"
+            [ Test.test "Valid Select options" <|
                 \_ ->
                     let
                         json =
@@ -26,7 +26,7 @@ suite =
                                 , value = "value"
                                 }
                             )
-            , test "Missing label field" <|
+            , Test.test "Missing label field" <|
                 \_ ->
                     let
                         json =
@@ -41,7 +41,7 @@ suite =
                                 , value = "value"
                                 }
                             )
-            , test "Missing value field" <|
+            , Test.test "Missing value field" <|
                 \_ ->
                     let
                         json =
@@ -51,7 +51,7 @@ suite =
                     in
                     Decode.decodeString Option.decoder json
                         |> Expect.err
-            , test "Incorrect Select field" <|
+            , Test.test "Incorrect Select field" <|
                 \_ ->
                     let
                         json =
@@ -63,8 +63,8 @@ suite =
                     Decode.decodeString Option.decoder json
                         |> Expect.err
             ]
-        , describe "remoteOptionDecoderr"
-            [ test "Valid Http Select options" <|
+        , Test.describe "remoteOptionDecoderr"
+            [ Test.test "Valid Http Select options" <|
                 \_ ->
                     let
                         json =
@@ -82,7 +82,7 @@ suite =
                                 , value = "qE9cRJ"
                                 }
                             )
-            , test "Missing id field" <|
+            , Test.test "Missing id field" <|
                 \_ ->
                     let
                         json =
@@ -94,7 +94,7 @@ suite =
                     in
                     Decode.decodeString Option.remoteOptionDecoder json
                         |> Expect.err
-            , test "Incorrect field" <|
+            , Test.test "Incorrect field" <|
                 \_ ->
                     let
                         json =

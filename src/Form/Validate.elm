@@ -2,6 +2,7 @@ module Form.Validate exposing
     ( validate, validateField
     , isValid, isValidAgeInput
     , errorToMessage
+    , Error
     )
 
 {-| Form.Validate

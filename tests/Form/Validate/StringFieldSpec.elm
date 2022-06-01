@@ -1,4 +1,4 @@
-module Form.Validate.StringFieldSpec exposing (..)
+module Form.Validate.StringFieldSpec exposing (suite)
 
 import Expect
 import Form.Field as Field
@@ -6,13 +6,13 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Width as Width
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Form.Validate.StringField"
-        [ describe "validate"
+    Test.describe "Form.Validate.StringField"
+        [ Test.describe "validate"
             [ simpleFieldTest FieldType.Text
                 { valid = "asdf"
                 , invalid = []
@@ -48,23 +48,26 @@ suite =
         ]
 
 
-simpleFieldTest : FieldType.SimpleFieldType -> { valid : String, invalid : List { value : String, error : StringField.StringError } } -> Test
+simpleFieldTest : FieldType.SimpleFieldType -> { valid : String, invalid : List { value : String, error : StringField.StringError } } -> Test.Test
 simpleFieldTest tipe { valid, invalid } =
     let
+        field : { required : Bool, value : String } -> Field.StringField
         field =
             simpleField tipe
 
+        validTest : { required : Bool } -> Test.Test
         validTest { required } =
-            test "valid" <|
+            Test.test "valid" <|
                 \_ ->
                     field { required = required, value = valid }
                         |> StringField.validate Locale.enAU
                         |> Expect.ok
 
+        invalidTest : { required : Bool } -> List Test.Test
         invalidTest { required } =
             List.map
                 (\{ value, error } ->
-                    test ("invalid " ++ Debug.toString error) <|
+                    Test.test ("invalid " ++ Debug.toString error) <|
                         \_ ->
                             field { required = required, value = value }
                                 |> StringField.validate Locale.enAU
@@ -72,17 +75,20 @@ simpleFieldTest tipe { valid, invalid } =
                 )
                 invalid
 
+        nonemptyTest : { required : Bool } -> Test.Test
         nonemptyTest config =
-            describe "non-empty"
+            Test.describe "non-empty"
                 (validTest config :: invalidTest config)
 
+        requiredFieldTest : Test.Test
         requiredFieldTest =
             let
+                required : Bool
                 required =
                     True
             in
-            describe "required"
-                [ test "empty" <|
+            Test.describe "required"
+                [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
                             |> StringField.validate Locale.enAU
@@ -90,13 +96,15 @@ simpleFieldTest tipe { valid, invalid } =
                 , nonemptyTest { required = required }
                 ]
 
+        optionalFieldTest : Test.Test
         optionalFieldTest =
             let
+                required : Bool
                 required =
                     False
             in
-            describe "optional"
-                [ test "empty" <|
+            Test.describe "optional"
+                [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
                             |> StringField.validate Locale.enAU
@@ -104,7 +112,7 @@ simpleFieldTest tipe { valid, invalid } =
                 , nonemptyTest { required = required }
                 ]
     in
-    describe (Debug.toString tipe)
+    Test.describe (Debug.toString tipe)
         [ requiredFieldTest
         , optionalFieldTest
         ]

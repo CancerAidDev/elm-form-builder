@@ -1,17 +1,17 @@
-module Form.LocaleSpec exposing (..)
+module Form.LocaleSpec exposing (suite)
 
 import Expect
 import Form.Locale as Locale
-import Test exposing (..)
+import Test
 
 
-suite : Test
+suite : Test.Test
 suite =
-    describe "Forms.Locale round trip"
+    Test.describe "Forms.Locale round trip"
         (locales
             |> List.map
                 (\locale ->
-                    test (Locale.toString locale) <|
+                    Test.test (Locale.toString locale) <|
                         \_ ->
                             Locale.toString locale
                                 |> Locale.fromString
