@@ -1,8 +1,7 @@
 module Form.Validate exposing
-    ( validate, validateField
+    ( validate, validateField, Error
     , isValid, isValidAgeInput
     , errorToMessage
-    , Error
     )
 
 {-| Form.Validate
@@ -10,7 +9,7 @@ module Form.Validate exposing
 
 # Validate
 
-@docs validate, validateField
+@docs validate, validateField, Error
 
 
 # Predicates
@@ -217,6 +216,7 @@ type NumericError
     = InvalidAge
 
 
+{-| -}
 type Error
     = StringError_ ValidateStringField.StringError
     | MultiStringError_ MultiStringError
