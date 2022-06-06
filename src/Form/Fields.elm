@@ -191,13 +191,20 @@ hasCheckboxConsentField fields =
 {-| -}
 isEnabled : Fields -> Field.Field -> Bool
 isEnabled fields field =
-    case Field.getEnabledBy field of
-        Just key ->
-            getEnabledByValue key fields
-                |> Maybe.withDefault True
+    let
+        isDisabledField =
+            (Field.getProperties field).disabled
 
-        Nothing ->
-            True
+        byFieldIsEnabled =
+            case Field.getEnabledBy field of
+                Just key ->
+                    getEnabledByValue key fields
+                        |> Maybe.withDefault True
+
+                Nothing ->
+                    True
+    in
+    not isDisabledField && byFieldIsEnabled
 
 
 {-| -}
