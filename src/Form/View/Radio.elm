@@ -28,7 +28,7 @@ radio key properties =
 
 
 viewRadioOption : String -> Field.RadioFieldProperties -> Option.Option -> Html.Html Msg.Msg
-viewRadioOption key { default, direction, value } option =
+viewRadioOption key { default, direction, value, disabled } option =
     let
         checked =
             (value == "" && default == Just option.value) || (value == option.value)
@@ -37,6 +37,7 @@ viewRadioOption key { default, direction, value } option =
         [ Html.input
             [ HtmlAttributes.class "mx-2"
             , HtmlAttributes.type_ "radio"
+            , HtmlAttributes.disabled disabled
             , HtmlAttributes.id (key ++ "_" ++ option.value)
             , HtmlAttributes.name key
             , HtmlEvents.onClick <| Msg.UpdateRadioStringField key option
@@ -54,7 +55,7 @@ radioBool key properties =
 
 
 viewRadioBoolOption : String -> Field.RadioBoolFieldProperties -> Bool -> Html.Html Msg.Msg
-viewRadioBoolOption key { value } option =
+viewRadioBoolOption key { value, disabled } option =
     let
         checked =
             value == Just option
@@ -63,6 +64,7 @@ viewRadioBoolOption key { value } option =
         [ Html.input
             [ HtmlAttributes.class "mx-2"
             , HtmlAttributes.type_ "radio"
+            , HtmlAttributes.disabled disabled
             , HtmlAttributes.id (key ++ "_" ++ RadioBool.toString option)
             , HtmlAttributes.name key
             , HtmlEvents.onClick <| Msg.UpdateRadioBoolField key option
@@ -80,7 +82,7 @@ radioEnum key properties =
 
 
 viewRadioEnumOption : String -> Field.RadioEnumFieldProperties -> RadioEnum.Value -> Html.Html Msg.Msg
-viewRadioEnumOption key { default, value } option =
+viewRadioEnumOption key { default, value, disabled } option =
     let
         checked =
             (value == Nothing && default == Just option) || (value == Just option)
@@ -89,6 +91,7 @@ viewRadioEnumOption key { default, value } option =
         [ Html.input
             [ HtmlAttributes.class "mx-2"
             , HtmlAttributes.type_ "radio"
+            , HtmlAttributes.disabled disabled
             , HtmlAttributes.id (key ++ "_" ++ RadioEnum.toString option)
             , HtmlAttributes.name key
             , HtmlEvents.onClick <| Msg.UpdateRadioEnumField key option

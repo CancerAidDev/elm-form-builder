@@ -56,6 +56,7 @@ suite =
                                         , enabledBy = Nothing
                                         , order = order
                                         , value = ""
+                                        , disabled = False
                                         }
                                 )
                             )
@@ -156,6 +157,7 @@ suite =
                                             ]
                                         , value = "Dog"
                                         , order = order
+                                        , disabled = False
                                         }
                                     )
                                 )
@@ -225,6 +227,7 @@ suite =
                                         , options = RemoteData.NotAsked
                                         , value = ""
                                         , order = order
+                                        , disabled = False
                                         }
                                     )
                                 )
@@ -283,6 +286,7 @@ suite =
                                         , tipe = FieldType.Checkbox
                                         , order = order
                                         , value = False
+                                        , disabled = False
                                         }
                                     )
                                 )
@@ -325,6 +329,7 @@ suite =
                                         , label = "I agree"
                                         , order = order
                                         , value = False
+                                        , disabled = False
                                         }
                                     )
                                 )
@@ -359,6 +364,7 @@ suite =
                                             , tipe = FieldType.Text
                                             , order = order
                                             , value = "Foo Bar"
+                                            , disabled = False
                                             }
                                   )
                                 ]
@@ -381,6 +387,7 @@ suite =
                                             , tipe = FieldType.Text
                                             , order = order
                                             , value = "bar"
+                                            , disabled = False
                                             }
                                   )
                                 ]
@@ -414,6 +421,7 @@ suite =
                                                   , value = "Parrot"
                                                   }
                                                 ]
+                                            , disabled = False
                                             }
                                   )
                                 ]
@@ -438,6 +446,7 @@ suite =
                                             , default = Nothing
                                             , options = RemoteData.NotAsked
                                             , url = "tags"
+                                            , disabled = False
                                             }
                                   )
                                 ]
@@ -460,6 +469,7 @@ suite =
                                             , tipe = FieldType.Date FieldType.DatePast
                                             , order = 1
                                             , value = "2022-01-01"
+                                            , disabled = False
                                             }
                                   )
                                 , ( "metadata.email"
@@ -472,6 +482,7 @@ suite =
                                             , tipe = FieldType.Email
                                             , order = order
                                             , value = "foo@example.com"
+                                            , disabled = False
                                             }
                                   )
                                 , ( "metadata.name"
@@ -484,6 +495,7 @@ suite =
                                             , tipe = FieldType.Text
                                             , order = 2
                                             , value = "Foo Bar"
+                                            , disabled = False
                                             }
                                   )
                                 ]

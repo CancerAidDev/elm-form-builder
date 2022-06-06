@@ -100,6 +100,7 @@ viewCheckbox key properties option =
             [ Html.input
                 [ HtmlAttributes.class "mr-2"
                 , HtmlAttributes.type_ "checkbox"
+                , HtmlAttributes.disabled properties.disabled
                 , HtmlAttributes.checked checked
                 , HtmlEvents.onCheck <| Msg.UpdateMultiStringField key option
                 ]
@@ -124,6 +125,7 @@ multiHttpSelect key properties =
                 , width = properties.width
                 , enabledBy = properties.enabledBy
                 , order = properties.order
+                , disabled = properties.disabled
                 }
         )
         properties.options

@@ -7,7 +7,7 @@ import Test
 
 suite : Test.Test
 suite =
-    Test.describe "Forms.Locale round trip"
+    Test.describe "Form.Locale round trip"
         (locales
             |> List.map
                 (\locale ->
