@@ -11,6 +11,30 @@ import Set
 fields : FormFields.Fields
 fields =
     [ \order ->
+        ( "Uneditable field"
+        , FormField.text
+            { required = True
+            , label = "Uneditable Field"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = True
+            }
+        )
+    , \order ->
+        ( "not a valid email field"
+        , FormField.email
+            { required = True
+            , label = "Not relevant Email Address"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = True
+            }
+        )
+    , \order ->
         ( "name"
         , FormField.text
             { required = True
@@ -19,6 +43,7 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , disabled = False
             }
         )
     , \order ->
@@ -30,6 +55,7 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , disabled = False
             }
         )
     , \order ->
@@ -41,6 +67,7 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , disabled = False
             }
         )
     , \order ->
@@ -52,6 +79,7 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = Nothing
+            , disabled = False
             }
         )
     , \order ->
@@ -63,6 +91,24 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , disabled = False
+            }
+        )
+    , \order ->
+        ( "something"
+        , FormField.select
+            { required = True
+            , label = "Something"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , default = Nothing
+            , options =
+                [ { label = Nothing, value = "One" }
+                , { label = Nothing, value = "Two" }
+                ]
+            , disabled = True
             }
         )
     , \order ->
@@ -85,6 +131,7 @@ fields =
                 , { label = Nothing, value = "Victorian" }
                 , { label = Nothing, value = "Western Australia" }
                 ]
+            , disabled = False
             }
         )
     , \order ->
@@ -105,6 +152,7 @@ fields =
                 , { label = Nothing, value = "Train" }
                 , { label = Nothing, value = "Cycle" }
                 ]
+            , disabled = False
             }
         )
     , \order ->
@@ -123,6 +171,7 @@ fields =
                 , { label = Nothing, value = "Unsure" }
                 ]
             , direction = Direction.Row
+            , disabled = False
             }
         )
     , \order ->
@@ -134,6 +183,7 @@ fields =
             , enabledBy = Nothing
             , order = order
             , value = Nothing
+            , disabled = False
             }
         )
     ]

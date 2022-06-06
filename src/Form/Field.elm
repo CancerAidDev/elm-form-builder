@@ -62,7 +62,7 @@ import Set
 
 {-| -}
 text : StringFieldProperties {} -> Field
-text { required, label, width, enabledBy, order, value } =
+text { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -72,12 +72,13 @@ text { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Text
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 email : StringFieldProperties {} -> Field
-email { required, label, width, enabledBy, order, value } =
+email { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -87,12 +88,13 @@ email { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Email
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value } =
+dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -102,12 +104,13 @@ dateOfBirth { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Date FieldType.DateOfBirth
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value } =
+datePast { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -117,12 +120,13 @@ datePast { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Date FieldType.DatePast
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 phone : StringFieldProperties {} -> Field
-phone { required, label, width, enabledBy, order, value } =
+phone { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -132,12 +136,13 @@ phone { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Phone
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 url : StringFieldProperties {} -> Field
-url { required, label, width, enabledBy, order, value } =
+url { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -147,12 +152,13 @@ url { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Url
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 textarea : StringFieldProperties {} -> Field
-textarea { required, label, width, enabledBy, order, value } =
+textarea { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -162,12 +168,13 @@ textarea { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.TextArea
             , value = value
+            , disabled = disabled
             }
 
 
 {-| -}
 checkbox : BoolFieldProperties {} -> Field
-checkbox { required, label, width, enabledBy, order, value } =
+checkbox { required, label, width, enabledBy, order, value, disabled } =
     BoolField_ <|
         CheckboxField
             { required = required
@@ -177,6 +184,7 @@ checkbox { required, label, width, enabledBy, order, value } =
             , order = order
             , tipe = FieldType.Checkbox
             , value = value
+            , disabled = disabled
             }
 
 
@@ -270,6 +278,7 @@ type alias FieldProperties a =
         , width : Width.Width
         , enabledBy : Maybe String
         , order : Int
+        , disabled : Bool
     }
 
 
@@ -382,52 +391,57 @@ getProperties field =
 
 
 getCommonProperties : FieldProperties a -> CommonFieldProperties
-getCommonProperties { required, label, width, enabledBy, order } =
+getCommonProperties { required, label, width, enabledBy, order, disabled } =
     { required = required
     , label = label
     , width = width
     , enabledBy = enabledBy
     , order = order
+    , disabled = disabled
     }
 
 
 getStringProperties : StringField -> FieldProperties { value : String }
 getStringProperties field =
     case field of
-        HttpSelectField { required, label, width, enabledBy, order, value } ->
+        HttpSelectField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
-        SimpleField { required, label, width, enabledBy, order, value } ->
+        SimpleField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
-        SelectField { required, label, width, enabledBy, order, value } ->
+        SelectField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
-        RadioField { required, label, width, enabledBy, order, value } ->
+        RadioField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
 
@@ -435,22 +449,24 @@ getStringProperties field =
 getMultiStringProperties : MultiStringField -> FieldProperties { value : Set.Set String }
 getMultiStringProperties field =
     case field of
-        MultiHttpSelectField { required, label, width, enabledBy, order, value } ->
+        MultiHttpSelectField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
-        MultiSelectField { required, label, width, enabledBy, order, value } ->
+        MultiSelectField { required, label, width, enabledBy, order, value, disabled } ->
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , disabled = disabled
             }
 
 

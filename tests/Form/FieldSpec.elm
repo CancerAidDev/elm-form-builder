@@ -1,4 +1,4 @@
-module Form.FieldSpec exposing (..)
+module Form.FieldSpec exposing (suite)
 
 import Expect
 import Form.Field as Field
@@ -15,7 +15,7 @@ suite =
             \initialString updateString ->
                 let
                     fieldValues =
-                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString }
+                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False }
 
                     field =
                         Field.text fieldValues
@@ -27,7 +27,7 @@ suite =
             \option1 option2 ->
                 let
                     radioFieldValues =
-                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ] }
+                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False }
 
                     field =
                         Field.radio radioFieldValues
@@ -39,7 +39,7 @@ suite =
             \option1 option2 ->
                 let
                     radioFieldValues =
-                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ] }
+                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False }
 
                     field =
                         Field.radio radioFieldValues

@@ -128,4 +128,5 @@ simpleField tipe { required, value } =
         , order = 1
         , value = value
         , tipe = tipe
+        , disabled = False
         }

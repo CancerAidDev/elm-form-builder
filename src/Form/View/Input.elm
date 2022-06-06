@@ -34,8 +34,11 @@ import Time
 view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
 view time submitted locale fields key field =
     let
+        overrideWithDisbaled =
+            (Field.getProperties field).disabled
+
         disabled =
-            not (Fields.isEnabled fields field)
+            not (Fields.isEnabled fields field) || overrideWithDisbaled
     in
     Html.fieldset
         [ HtmlAttributes.class "column"
