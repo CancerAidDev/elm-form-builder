@@ -2,7 +2,7 @@ module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
     , AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
 
 
 # Predicates
@@ -469,12 +469,41 @@ getMultiStringProperties field =
             }
 
 
+{-| Keep existing field if the value is Nothing
+-}
+maybeUpdateStringValue : Maybe String -> Field -> Field
+maybeUpdateStringValue maybeValue field =
+    Maybe.map (\str -> updateStringValue str field) maybeValue
+        |> Maybe.withDefault field
+
+
 {-| -}
 updateStringValue : String -> Field -> Field
 updateStringValue value field =
     case field of
+        StringField_ _ ->
+            genericUpdateStringField updateStringValue_ value field
+
+        _ ->
+            field
+
+
+{-| -}
+updateStringDisabled : Bool -> Field -> Field
+updateStringDisabled value field =
+    case field of
+        StringField_ _ ->
+            genericUpdateStringField updateStringDisabled_ value field
+
+        _ ->
+            field
+
+
+genericUpdateStringField : (a -> StringField -> StringField) -> a -> Field -> Field
+genericUpdateStringField f value field =
+    case field of
         StringField_ stringField ->
-            StringField_ <| updateStringValue_ value stringField
+            StringField_ <| f value stringField
 
         _ ->
             field
@@ -489,14 +518,6 @@ updateMultiStringOption option checked field =
 
         _ ->
             field
-
-
-{-| Keep existing field if the value is Nothing
--}
-maybeUpdateStringValue : Maybe String -> Field -> Field
-maybeUpdateStringValue maybeValue field =
-    Maybe.map (\str -> updateStringValue str field) maybeValue
-        |> Maybe.withDefault field
 
 
 {-| -}
@@ -675,6 +696,23 @@ updateStringValue_ value field =
 
         RadioField properties ->
             RadioField { properties | value = value }
+
+
+{-| -}
+updateStringDisabled_ : Bool -> StringField -> StringField
+updateStringDisabled_ value field =
+    case field of
+        SimpleField properties ->
+            SimpleField { properties | disabled = value }
+
+        SelectField properties ->
+            SelectField { properties | disabled = value }
+
+        HttpSelectField properties ->
+            HttpSelectField { properties | disabled = value }
+
+        RadioField properties ->
+            RadioField { properties | disabled = value }
 
 
 updateMultiStringOption_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
