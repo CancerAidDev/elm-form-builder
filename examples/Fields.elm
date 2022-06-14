@@ -13,25 +13,27 @@ fields =
     [ \order ->
         ( "Uneditable field"
         , FormField.text
-            { required = True
+            { required = False
             , label = "Uneditable Field"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = True
+            , nullable = False
             }
         )
     , \order ->
         ( "not a valid email field"
         , FormField.email
-            { required = True
+            { required = False
             , label = "Not relevant Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = True
+            , nullable = False
             }
         )
     , \order ->
@@ -44,6 +46,7 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , nullable = True
             }
         )
     , \order ->
@@ -56,6 +59,7 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , nullable = False
             }
         )
     , \order ->
@@ -68,12 +72,13 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , nullable = False
             }
         )
     , \order ->
         ( "age"
         , FormField.age
-            { required = True
+            { required = False
             , label = "Age"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -85,19 +90,20 @@ fields =
     , \order ->
         ( "dateOfBirth"
         , FormField.dateOfBirth
-            { required = True
+            { required = False
             , label = "Date of Birth"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = False
+            , nullable = True
             }
         )
     , \order ->
         ( "something"
         , FormField.select
-            { required = True
+            { required = False
             , label = "Something"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -109,12 +115,13 @@ fields =
                 , { label = Nothing, value = "Two" }
                 ]
             , disabled = True
+            , nullable = False
             }
         )
     , \order ->
         ( "state"
         , FormField.select
-            { required = True
+            { required = False
             , label = "State"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -132,12 +139,13 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
             , disabled = False
+            , nullable = True
             }
         )
     , \order ->
         ( "modes"
         , FormField.multiSelect
-            { required = True
+            { required = False
             , label = "What modes of transport do you use?"
             , placeholder = "Mode"
             , width = Width.FullSize
@@ -158,7 +166,7 @@ fields =
     , \order ->
         ( "updates"
         , FormField.radio
-            { required = True
+            { required = False
             , label = "Are you up to date with your updates?"
             , width = Width.FullSize
             , enabledBy = Nothing

@@ -40,7 +40,8 @@ suite =
                                 "key": "name",
                                 "label": "Full Name",
                                 "type": "text",
-                                "width": "50%"
+                                "width": "50%",
+                                "nullable": true
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -57,6 +58,7 @@ suite =
                                         , order = order
                                         , value = ""
                                         , disabled = False
+                                        , nullable = True
                                         }
                                 )
                             )
@@ -126,6 +128,7 @@ suite =
                             "type": "select",
                             "width": "50%",
                             "default": "Dog",
+                            "nullable": true,
                             "options": [
                                 { "value": "Dog" },
                                 { "value": "Cat" },
@@ -158,6 +161,7 @@ suite =
                                         , value = "Dog"
                                         , order = order
                                         , disabled = False
+                                        , nullable = True
                                         }
                                     )
                                 )
@@ -209,7 +213,8 @@ suite =
                             "label": "Tag",
                             "type": "httpSelect",
                             "width": "50%",
-                            "url": "tags"
+                            "url": "tags",
+                            "nullable": true
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -228,6 +233,7 @@ suite =
                                         , value = ""
                                         , order = order
                                         , disabled = False
+                                        , nullable = True
                                         }
                                     )
                                 )
@@ -365,6 +371,7 @@ suite =
                                             , order = order
                                             , value = "Foo Bar"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -388,6 +395,7 @@ suite =
                                             , order = order
                                             , value = "bar"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -422,6 +430,7 @@ suite =
                                                   }
                                                 ]
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -447,6 +456,7 @@ suite =
                                             , options = RemoteData.NotAsked
                                             , url = "tags"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -470,6 +480,7 @@ suite =
                                             , order = 1
                                             , value = "2022-01-01"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 , ( "metadata.email"
@@ -483,6 +494,7 @@ suite =
                                             , order = order
                                             , value = "foo@example.com"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 , ( "metadata.name"
@@ -496,6 +508,7 @@ suite =
                                             , order = 2
                                             , value = "Foo Bar"
                                             , disabled = False
+                                            , nullable = False
                                             }
                                   )
                                 ]

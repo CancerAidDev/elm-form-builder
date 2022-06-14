@@ -1,8 +1,10 @@
 module Update exposing (..)
 
 import Dialog
+import Form.Fields as Fields
 import Form.Update as FormUpdate
 import Form.Validate as Validate
+import Json.Encode as Encode
 import Model
 import Msg
 
@@ -23,7 +25,7 @@ update msg model =
                 newDialog =
                     Dialog.info
                         { title = "Info"
-                        , message = "Create success"
+                        , message = "Success. Encoded form: " ++ (Encode.encode 1 <| Encode.dict identity identity (Fields.encode model.form))
                         }
             in
             model.form

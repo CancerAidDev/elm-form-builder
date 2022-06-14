@@ -118,7 +118,10 @@ validate locale field =
             String.trim (Field.getStringValue_ field)
     in
     if String.isEmpty trimmed then
-        if Field.isRequired (Field.StringField_ field) then
+        if Field.isNullable field then
+            Ok trimmed
+
+        else if Field.isRequired (Field.StringField_ field) then
             Err EmptyError
 
         else

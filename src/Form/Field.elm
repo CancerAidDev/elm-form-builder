@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , isNullable
     )
 
 {-| Field type and helper functions
@@ -60,8 +61,8 @@ import Set
 
 
 {-| -}
-text : StringFieldProperties {} -> Field
-text { required, label, width, enabledBy, order, value, disabled } =
+text : StringFieldProperties { nullable : Bool } -> Field
+text { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -72,12 +73,13 @@ text { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Text
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-email : StringFieldProperties {} -> Field
-email { required, label, width, enabledBy, order, value, disabled } =
+email : StringFieldProperties { nullable : Bool } -> Field
+email { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -88,12 +90,13 @@ email { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Email
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
+dateOfBirth : StringFieldProperties { nullable : Bool } -> Field
+dateOfBirth { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -104,12 +107,13 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Date FieldType.DateOfBirth
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value, disabled } =
+datePast : StringFieldProperties { nullable : Bool } -> Field
+datePast { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -120,12 +124,13 @@ datePast { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Date FieldType.DatePast
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-phone : StringFieldProperties {} -> Field
-phone { required, label, width, enabledBy, order, value, disabled } =
+phone : StringFieldProperties { nullable : Bool } -> Field
+phone { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -136,12 +141,13 @@ phone { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Phone
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-url : StringFieldProperties {} -> Field
-url { required, label, width, enabledBy, order, value, disabled } =
+url : StringFieldProperties { nullable : Bool } -> Field
+url { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -152,12 +158,13 @@ url { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Url
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
 {-| -}
-textarea : StringFieldProperties {} -> Field
-textarea { required, label, width, enabledBy, order, value, disabled } =
+textarea : StringFieldProperties { nullable : Bool } -> Field
+textarea { required, label, width, enabledBy, order, value, disabled, nullable } =
     StringField_ <|
         SimpleField
             { required = required
@@ -168,6 +175,7 @@ textarea { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.TextArea
             , value = value
             , disabled = disabled
+            , nullable = nullable
             }
 
 
@@ -288,17 +296,27 @@ type alias CommonFieldProperties =
 
 {-| -}
 type alias StringFieldProperties a =
-    FieldProperties { a | value : String }
+    FieldProperties
+        { a
+            | value : String
+        }
 
 
 {-| -}
 type alias SimpleFieldProperties =
-    StringFieldProperties { tipe : FieldType.SimpleFieldType }
+    StringFieldProperties
+        { tipe : FieldType.SimpleFieldType
+        , nullable : Bool
+        }
 
 
 {-| -}
 type alias SelectFieldProperties =
-    StringFieldProperties { default : Maybe String, options : List Option.Option }
+    StringFieldProperties
+        { default : Maybe String
+        , options : List Option.Option
+        , nullable : Bool
+        }
 
 
 {-| -}
@@ -307,6 +325,7 @@ type alias HttpSelectFieldProperties =
         { url : String
         , default : Maybe String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        , nullable : Bool
         }
 
 
@@ -923,6 +942,23 @@ getStringType field =
 
 
 {-| -}
+isNullable : StringField -> Bool
+isNullable field =
+    case field of
+        SimpleField properties ->
+            properties.nullable
+
+        SelectField properties ->
+            properties.nullable
+
+        HttpSelectField properties ->
+            properties.nullable
+
+        RadioField _ ->
+            False
+
+
+{-| -}
 getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType
 getMultiStringType field =
     case field of
@@ -961,7 +997,15 @@ encode : Field -> Encode.Value
 encode field =
     case field of
         StringField_ stringField ->
-            Encode.string <| getStringValue_ stringField
+            let
+                trimmed =
+                    String.trim (getStringValue_ stringField)
+            in
+            if String.isEmpty trimmed && isNullable stringField then
+                Encode.null
+
+            else
+                Encode.string <| getStringValue_ stringField
 
         MultiStringField_ multiStringField ->
             multiStringField

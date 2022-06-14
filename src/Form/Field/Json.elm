@@ -43,6 +43,7 @@ type alias JsonSimpleFieldProperties =
     , enabledBy : Maybe String
     , tipe : FieldType.SimpleFieldType
     , disabled : Maybe Bool
+    , nullable : Maybe Bool
     }
 
 
@@ -55,6 +56,7 @@ type alias JsonSelectFieldProperties =
     , default : Maybe String
     , options : List Option.Option
     , disabled : Maybe Bool
+    , nullable : Maybe Bool
     }
 
 
@@ -67,6 +69,7 @@ type alias JsonHttpSelectFieldProperties =
     , default : Maybe String
     , url : String
     , disabled : Maybe Bool
+    , nullable : Maybe Bool
     }
 
 
@@ -197,7 +200,7 @@ decoderForType fieldType =
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
 toField time order field =
     case field of
-        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled } ->
+        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, nullable } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -209,6 +212,7 @@ toField time order field =
                     , order = order
                     , value = FieldType.defaultValue time tipe |> Maybe.withDefault ""
                     , disabled = Maybe.withDefault False disabled
+                    , nullable = Maybe.withDefault False nullable
                     }
             )
 
@@ -227,7 +231,7 @@ toField time order field =
                     }
             )
 
-        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled } ->
+        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, nullable } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -240,10 +244,11 @@ toField time order field =
                     , options = options
                     , value = Maybe.withDefault "" default
                     , disabled = Maybe.withDefault False disabled
+                    , nullable = Maybe.withDefault False nullable
                     }
             )
 
-        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled } ->
+        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, nullable } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -257,6 +262,7 @@ toField time order field =
                     , options = RemoteData.NotAsked
                     , value = Maybe.withDefault "" default
                     , disabled = Maybe.withDefault False disabled
+                    , nullable = Maybe.withDefault False nullable
                     }
             )
 
@@ -367,6 +373,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "nullable" (Decode.map Just Decode.bool) Nothing
 
 
 decoderCheckboxJson : FieldType.CheckboxFieldType -> Decode.Decoder JsonCheckboxFieldProperties
@@ -392,6 +399,7 @@ decoderSelectJson =
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "nullable" (Decode.map Just Decode.bool) Nothing
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
@@ -405,6 +413,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "url" Decode.string
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "nullable" (Decode.map Just Decode.bool) Nothing
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties

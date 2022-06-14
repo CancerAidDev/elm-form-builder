@@ -15,7 +15,7 @@ suite =
             \initialString updateString ->
                 let
                     fieldValues =
-                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False }
+                        { required = False, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, nullable = False }
 
                     field =
                         Field.text fieldValues

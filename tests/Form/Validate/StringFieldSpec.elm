@@ -129,4 +129,5 @@ simpleField tipe { required, value } =
         , value = value
         , tipe = tipe
         , disabled = False
+        , nullable = False
         }
