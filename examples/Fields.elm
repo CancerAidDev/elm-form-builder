@@ -138,7 +138,7 @@ fields =
     , \order ->
         ( "modes"
         , FormField.multiSelect
-            { required = IsRequired.No
+            { required = IsRequired.Yes
             , label = "What modes of transport do you use?"
             , placeholder = "Mode"
             , width = Width.FullSize
@@ -159,7 +159,7 @@ fields =
     , \order ->
         ( "updates"
         , FormField.radio
-            { required = IsRequired.No
+            { required = IsRequired.Yes
             , label = "Are you up to date with your updates?"
             , width = Width.FullSize
             , enabledBy = Nothing
