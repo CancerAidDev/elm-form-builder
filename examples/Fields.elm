@@ -74,7 +74,7 @@ fields =
     , \order ->
         ( "age"
         , FormField.age
-            { required = IsRequired.Yes
+            { required = IsRequired.Nullable
             , label = "Age"
             , width = Width.FullSize
             , enabledBy = Nothing
