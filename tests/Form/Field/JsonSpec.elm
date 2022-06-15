@@ -5,6 +5,7 @@ import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Json as Json
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
 import Json.Decode as Decode
@@ -52,13 +53,12 @@ suite =
                                     Field.SimpleField
                                         { tipe = FieldType.Text
                                         , label = "Full Name"
-                                        , required = True
+                                        , required = Required.Yes
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , order = order
                                         , value = ""
                                         , disabled = False
-                                        , nullable = True
                                         }
                                 )
                             )
@@ -142,7 +142,7 @@ suite =
                                 ( "metadata.pet"
                                 , Field.StringField_
                                     (Field.SelectField
-                                        { required = True
+                                        { required = Required.Yes
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , label = "Pet"
@@ -161,7 +161,6 @@ suite =
                                         , value = "Dog"
                                         , order = order
                                         , disabled = False
-                                        , nullable = True
                                         }
                                     )
                                 )
@@ -223,7 +222,7 @@ suite =
                                 ( "metadata.tag"
                                 , Field.StringField_
                                     (Field.HttpSelectField
-                                        { required = True
+                                        { required = Required.Yes
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , default = Nothing
@@ -233,7 +232,6 @@ suite =
                                         , value = ""
                                         , order = order
                                         , disabled = False
-                                        , nullable = True
                                         }
                                     )
                                 )
@@ -285,7 +283,7 @@ suite =
                                 ( "isFoo"
                                 , Field.BoolField_
                                     (Field.CheckboxField
-                                        { required = False
+                                        { required = Required.No
                                         , width = Width.FullSize
                                         , enabledBy = Nothing
                                         , label = "Foo?"
@@ -329,7 +327,7 @@ suite =
                                 , Field.BoolField_
                                     (Field.CheckboxField
                                         { tipe = FieldType.CheckboxConsent
-                                        , required = True
+                                        , required = Required.Yes
                                         , width = Width.FullSize
                                         , enabledBy = Nothing
                                         , label = "I agree"
@@ -363,7 +361,7 @@ suite =
                                 [ ( "name"
                                   , Field.StringField_ <|
                                         Field.SimpleField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Full Name"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -371,7 +369,6 @@ suite =
                                             , order = order
                                             , value = "Foo Bar"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -387,7 +384,7 @@ suite =
                                 [ ( "metadata.tag"
                                   , Field.StringField_ <|
                                         Field.SimpleField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Tag"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -395,7 +392,6 @@ suite =
                                             , order = order
                                             , value = "bar"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -411,7 +407,7 @@ suite =
                                 [ ( "metadata.pet"
                                   , Field.StringField_ <|
                                         Field.SelectField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Pet"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -430,7 +426,6 @@ suite =
                                                   }
                                                 ]
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -446,7 +441,7 @@ suite =
                                 [ ( "metadata.tag"
                                   , Field.StringField_ <|
                                         Field.HttpSelectField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Tag"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -456,7 +451,6 @@ suite =
                                             , options = RemoteData.NotAsked
                                             , url = "tags"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 ]
@@ -472,7 +466,7 @@ suite =
                                 [ ( "metadata.date"
                                   , Field.StringField_ <|
                                         Field.SimpleField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Date"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -480,13 +474,12 @@ suite =
                                             , order = 1
                                             , value = "2022-01-01"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 , ( "metadata.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Email"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -494,13 +487,12 @@ suite =
                                             , order = order
                                             , value = "foo@example.com"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 , ( "metadata.name"
                                   , Field.StringField_ <|
                                         Field.SimpleField
-                                            { required = True
+                                            { required = Required.Yes
                                             , label = "Name"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -508,7 +500,6 @@ suite =
                                             , order = 2
                                             , value = "Foo Bar"
                                             , disabled = False
-                                            , nullable = False
                                             }
                                   )
                                 ]

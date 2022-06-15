@@ -6,7 +6,6 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , isNullable
     )
 
 {-| Field type and helper functions
@@ -52,6 +51,7 @@ import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
@@ -61,8 +61,8 @@ import Set
 
 
 {-| -}
-text : StringFieldProperties { nullable : Bool } -> Field
-text { required, label, width, enabledBy, order, value, disabled, nullable } =
+text : StringFieldProperties {} -> Field
+text { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -73,13 +73,12 @@ text { required, label, width, enabledBy, order, value, disabled, nullable } =
             , tipe = FieldType.Text
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-email : StringFieldProperties { nullable : Bool } -> Field
-email { required, label, width, enabledBy, order, value, disabled, nullable } =
+email : StringFieldProperties {} -> Field
+email { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -90,13 +89,12 @@ email { required, label, width, enabledBy, order, value, disabled, nullable } =
             , tipe = FieldType.Email
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-dateOfBirth : StringFieldProperties { nullable : Bool } -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled, nullable } =
+dateOfBirth : StringFieldProperties {} -> Field
+dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -107,13 +105,12 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled, nullabl
             , tipe = FieldType.Date FieldType.DateOfBirth
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-datePast : StringFieldProperties { nullable : Bool } -> Field
-datePast { required, label, width, enabledBy, order, value, disabled, nullable } =
+datePast : StringFieldProperties {} -> Field
+datePast { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -124,13 +121,12 @@ datePast { required, label, width, enabledBy, order, value, disabled, nullable }
             , tipe = FieldType.Date FieldType.DatePast
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-phone : StringFieldProperties { nullable : Bool } -> Field
-phone { required, label, width, enabledBy, order, value, disabled, nullable } =
+phone : StringFieldProperties {} -> Field
+phone { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -141,13 +137,12 @@ phone { required, label, width, enabledBy, order, value, disabled, nullable } =
             , tipe = FieldType.Phone
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-url : StringFieldProperties { nullable : Bool } -> Field
-url { required, label, width, enabledBy, order, value, disabled, nullable } =
+url : StringFieldProperties {} -> Field
+url { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -158,13 +153,12 @@ url { required, label, width, enabledBy, order, value, disabled, nullable } =
             , tipe = FieldType.Url
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
 {-| -}
-textarea : StringFieldProperties { nullable : Bool } -> Field
-textarea { required, label, width, enabledBy, order, value, disabled, nullable } =
+textarea : StringFieldProperties {} -> Field
+textarea { required, label, width, enabledBy, order, value, disabled } =
     StringField_ <|
         SimpleField
             { required = required
@@ -175,7 +169,6 @@ textarea { required, label, width, enabledBy, order, value, disabled, nullable }
             , tipe = FieldType.TextArea
             , value = value
             , disabled = disabled
-            , nullable = nullable
             }
 
 
@@ -280,7 +273,7 @@ type MultiStringField
 {-| -}
 type alias FieldProperties a =
     { a
-        | required : Bool
+        | required : Required.IsRequired
         , label : String
         , width : Width.Width
         , enabledBy : Maybe String
@@ -306,7 +299,6 @@ type alias StringFieldProperties a =
 type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
-        , nullable : Bool
         }
 
 
@@ -315,7 +307,6 @@ type alias SelectFieldProperties =
     StringFieldProperties
         { default : Maybe String
         , options : List Option.Option
-        , nullable : Bool
         }
 
 
@@ -325,7 +316,6 @@ type alias HttpSelectFieldProperties =
         { url : String
         , default : Maybe String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
-        , nullable : Bool
         }
 
 
@@ -608,38 +598,38 @@ resetMultiStringFieldValueToDefault field =
 
 
 {-| -}
-setRequired : Bool -> Field -> Field
-setRequired bool field =
+setRequired : Required.IsRequired -> Field -> Field
+setRequired required field =
     case field of
         StringField_ (SimpleField properties) ->
-            StringField_ (SimpleField { properties | required = bool })
+            StringField_ (SimpleField { properties | required = required })
 
         StringField_ (SelectField properties) ->
-            StringField_ (SelectField { properties | required = bool })
+            StringField_ (SelectField { properties | required = required })
 
         StringField_ (HttpSelectField properties) ->
-            StringField_ (HttpSelectField { properties | required = bool })
+            StringField_ (HttpSelectField { properties | required = required })
 
         StringField_ (RadioField properties) ->
-            StringField_ (RadioField { properties | required = bool })
+            StringField_ (RadioField { properties | required = required })
 
         MultiStringField_ (MultiHttpSelectField properties) ->
-            MultiStringField_ (MultiHttpSelectField { properties | required = bool })
+            MultiStringField_ (MultiHttpSelectField { properties | required = required })
 
         MultiStringField_ (MultiSelectField properties) ->
-            MultiStringField_ (MultiSelectField { properties | required = bool })
+            MultiStringField_ (MultiSelectField { properties | required = required })
 
         BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | required = bool })
+            BoolField_ (CheckboxField { properties | required = required })
 
         BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | required = bool })
+            BoolField_ (RadioBoolField { properties | required = required })
 
         BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | required = bool })
+            BoolField_ (RadioEnumField { properties | required = required })
 
         NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | required = bool })
+            NumericField_ (AgeField { properties | required = required })
 
 
 {-| -}
@@ -863,7 +853,7 @@ getNumericValue field =
 
 
 {-| -}
-isRequired : Field -> Bool
+isRequired : Field -> Required.IsRequired
 isRequired =
     getProperties >> .required
 
@@ -942,23 +932,6 @@ getStringType field =
 
 
 {-| -}
-isNullable : StringField -> Bool
-isNullable field =
-    case field of
-        SimpleField properties ->
-            properties.nullable
-
-        SelectField properties ->
-            properties.nullable
-
-        HttpSelectField properties ->
-            properties.nullable
-
-        RadioField _ ->
-            False
-
-
-{-| -}
 getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType
 getMultiStringType field =
     case field of
@@ -1001,7 +974,7 @@ encode field =
                 trimmed =
                     String.trim (getStringValue_ stringField)
             in
-            if String.isEmpty trimmed && isNullable stringField then
+            if String.isEmpty trimmed && isRequired field == Required.Nullable then
                 Encode.null
 
             else
