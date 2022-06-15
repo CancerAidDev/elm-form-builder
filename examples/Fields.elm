@@ -14,7 +14,7 @@ fields =
     [ \order ->
         ( "Uneditable field"
         , FormField.text
-            { required = IsRequired.Yes
+            { required = IsRequired.No
             , label = "Uneditable Field"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -26,7 +26,7 @@ fields =
     , \order ->
         ( "not a valid email field"
         , FormField.email
-            { required = IsRequired.Yes
+            { required = IsRequired.No
             , label = "Not relevant Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -38,7 +38,7 @@ fields =
     , \order ->
         ( "name"
         , FormField.text
-            { required = IsRequired.Nullable
+            { required = IsRequired.Yes
             , label = "Name"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -62,7 +62,7 @@ fields =
     , \order ->
         ( "secondaryEmail"
         , FormField.email
-            { required = IsRequired.No
+            { required = IsRequired.Nullable
             , label = "Secondary Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -98,7 +98,7 @@ fields =
     , \order ->
         ( "something"
         , FormField.select
-            { required = IsRequired.Yes
+            { required = IsRequired.No
             , label = "Something"
             , width = Width.FullSize
             , enabledBy = Nothing
