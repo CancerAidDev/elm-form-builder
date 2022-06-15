@@ -11,6 +11,7 @@
         "Form.Field.Option",
         "Form.Field.RadioBool",
         "Form.Field.RadioEnum",
+        "Form.Field.Required",
         "Form.Field.Width",
         "Form.Field",
         "Form.Fields",

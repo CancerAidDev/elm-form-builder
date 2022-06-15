@@ -51,6 +51,7 @@ import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
@@ -272,7 +273,7 @@ type MultiStringField
 {-| -}
 type alias FieldProperties a =
     { a
-        | required : Bool
+        | required : Required.IsRequired
         , label : String
         , width : Width.Width
         , enabledBy : Maybe String
@@ -288,17 +289,25 @@ type alias CommonFieldProperties =
 
 {-| -}
 type alias StringFieldProperties a =
-    FieldProperties { a | value : String }
+    FieldProperties
+        { a
+            | value : String
+        }
 
 
 {-| -}
 type alias SimpleFieldProperties =
-    StringFieldProperties { tipe : FieldType.SimpleFieldType }
+    StringFieldProperties
+        { tipe : FieldType.SimpleFieldType
+        }
 
 
 {-| -}
 type alias SelectFieldProperties =
-    StringFieldProperties { default : Maybe String, options : List Option.Option }
+    StringFieldProperties
+        { default : Maybe String
+        , options : List Option.Option
+        }
 
 
 {-| -}
@@ -589,38 +598,38 @@ resetMultiStringFieldValueToDefault field =
 
 
 {-| -}
-setRequired : Bool -> Field -> Field
-setRequired bool field =
+setRequired : Required.IsRequired -> Field -> Field
+setRequired required field =
     case field of
         StringField_ (SimpleField properties) ->
-            StringField_ (SimpleField { properties | required = bool })
+            StringField_ (SimpleField { properties | required = required })
 
         StringField_ (SelectField properties) ->
-            StringField_ (SelectField { properties | required = bool })
+            StringField_ (SelectField { properties | required = required })
 
         StringField_ (HttpSelectField properties) ->
-            StringField_ (HttpSelectField { properties | required = bool })
+            StringField_ (HttpSelectField { properties | required = required })
 
         StringField_ (RadioField properties) ->
-            StringField_ (RadioField { properties | required = bool })
+            StringField_ (RadioField { properties | required = required })
 
         MultiStringField_ (MultiHttpSelectField properties) ->
-            MultiStringField_ (MultiHttpSelectField { properties | required = bool })
+            MultiStringField_ (MultiHttpSelectField { properties | required = required })
 
         MultiStringField_ (MultiSelectField properties) ->
-            MultiStringField_ (MultiSelectField { properties | required = bool })
+            MultiStringField_ (MultiSelectField { properties | required = required })
 
         BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | required = bool })
+            BoolField_ (CheckboxField { properties | required = required })
 
         BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | required = bool })
+            BoolField_ (RadioBoolField { properties | required = required })
 
         BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | required = bool })
+            BoolField_ (RadioEnumField { properties | required = required })
 
         NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | required = bool })
+            NumericField_ (AgeField { properties | required = required })
 
 
 {-| -}
@@ -844,7 +853,7 @@ getNumericValue field =
 
 
 {-| -}
-isRequired : Field -> Bool
+isRequired : Field -> Required.IsRequired
 isRequired =
     getProperties >> .required
 
@@ -961,7 +970,15 @@ encode : Field -> Encode.Value
 encode field =
     case field of
         StringField_ stringField ->
-            Encode.string <| getStringValue_ stringField
+            let
+                trimmed =
+                    String.trim (getStringValue_ stringField)
+            in
+            if String.isEmpty trimmed && isRequired field == Required.Nullable then
+                Encode.null
+
+            else
+                Encode.string <| getStringValue_ stringField
 
         MultiStringField_ multiStringField ->
             multiStringField

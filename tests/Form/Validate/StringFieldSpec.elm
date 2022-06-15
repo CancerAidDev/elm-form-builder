@@ -3,6 +3,7 @@ module Form.Validate.StringFieldSpec exposing (suite)
 import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
@@ -51,11 +52,11 @@ suite =
 simpleFieldTest : FieldType.SimpleFieldType -> { valid : String, invalid : List { value : String, error : StringField.StringError } } -> Test.Test
 simpleFieldTest tipe { valid, invalid } =
     let
-        field : { required : Bool, value : String } -> Field.StringField
+        field : { required : Required.IsRequired, value : String } -> Field.StringField
         field =
             simpleField tipe
 
-        validTest : { required : Bool } -> Test.Test
+        validTest : { required : Required.IsRequired } -> Test.Test
         validTest { required } =
             Test.test "valid" <|
                 \_ ->
@@ -63,7 +64,7 @@ simpleFieldTest tipe { valid, invalid } =
                         |> StringField.validate Locale.enAU
                         |> Expect.ok
 
-        invalidTest : { required : Bool } -> List Test.Test
+        invalidTest : { required : Required.IsRequired } -> List Test.Test
         invalidTest { required } =
             List.map
                 (\{ value, error } ->
@@ -75,7 +76,7 @@ simpleFieldTest tipe { valid, invalid } =
                 )
                 invalid
 
-        nonemptyTest : { required : Bool } -> Test.Test
+        nonemptyTest : { required : Required.IsRequired } -> Test.Test
         nonemptyTest config =
             Test.describe "non-empty"
                 (validTest config :: invalidTest config)
@@ -83,9 +84,9 @@ simpleFieldTest tipe { valid, invalid } =
         requiredFieldTest : Test.Test
         requiredFieldTest =
             let
-                required : Bool
+                required : Required.IsRequired
                 required =
-                    True
+                    Required.Yes
             in
             Test.describe "required"
                 [ Test.test "empty" <|
@@ -99,9 +100,9 @@ simpleFieldTest tipe { valid, invalid } =
         optionalFieldTest : Test.Test
         optionalFieldTest =
             let
-                required : Bool
+                required : Required.IsRequired
                 required =
-                    False
+                    Required.No
             in
             Test.describe "optional"
                 [ Test.test "empty" <|
@@ -118,7 +119,7 @@ simpleFieldTest tipe { valid, invalid } =
         ]
 
 
-simpleField : FieldType.SimpleFieldType -> { required : Bool, value : String } -> Field.StringField
+simpleField : FieldType.SimpleFieldType -> { required : Required.IsRequired, value : String } -> Field.StringField
 simpleField tipe { required, value } =
     Field.SimpleField
         { required = required

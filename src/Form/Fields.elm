@@ -129,7 +129,7 @@ updateRadioBoolField key value =
 {-| -}
 updateEnabledByFields : Fields -> Fields
 updateEnabledByFields fields =
-    -- Fold through list sorted by order so that enabledBy field has to preceed the field
+    -- Fold through list sorted by order so that enabledBy field has to precede the field
     Dict.toList fields
         |> List.sortBy (Tuple.second >> Field.getOrder)
         |> List.foldl
@@ -148,15 +148,12 @@ updateFieldRequired fields field =
                 enabled =
                     getEnabledByValue enabledBy fields
                         |> Maybe.withDefault True
-
-                updatedField =
-                    Field.setRequired enabled field
             in
-            if enabled then
-                updatedField
+            if not enabled then
+                Field.resetValueToDefault field
 
             else
-                Field.resetValueToDefault updatedField
+                field
 
         Nothing ->
             field

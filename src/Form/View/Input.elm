@@ -11,6 +11,7 @@ module Form.View.Input exposing (view)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
 import Form.Lib.String as LibString
@@ -56,7 +57,7 @@ label field disabled =
     HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
         Html.label [ HtmlAttributes.class "label" ]
             [ Html.text (Field.getLabel field)
-            , HtmlExtra.viewIf (not (Field.isRequired field) && not disabled) <|
+            , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
             ]
 
@@ -112,7 +113,7 @@ input time key field =
                 , HtmlAttributes.class (FieldType.toClass properties.tipe)
                 , HtmlAttributes.type_ (FieldType.toType properties.tipe)
                 , HtmlAttributes.value properties.value
-                , HtmlAttributes.required properties.required
+                , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
@@ -137,7 +138,7 @@ input time key field =
                 , HtmlAttributes.pattern "\\d*"
                 , HtmlAttributes.style "width" "6em"
                 , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
-                , HtmlAttributes.required properties.required
+                , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateNumericField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
                     (FieldType.toMin time (FieldType.NumericType FieldType.Age))
@@ -156,7 +157,7 @@ textarea key field =
         [ HtmlAttributes.name key
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
-        , HtmlAttributes.required field.required
+        , HtmlAttributes.required (field.required == Required.Yes)
         , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]

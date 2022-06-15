@@ -14,6 +14,7 @@ import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
@@ -36,7 +37,7 @@ type JsonField
 
 
 type alias JsonSimpleFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -47,7 +48,7 @@ type alias JsonSimpleFieldProperties =
 
 
 type alias JsonSelectFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -59,7 +60,7 @@ type alias JsonSelectFieldProperties =
 
 
 type alias JsonHttpSelectFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -71,7 +72,7 @@ type alias JsonHttpSelectFieldProperties =
 
 
 type alias JsonMultiSelectFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -84,7 +85,7 @@ type alias JsonMultiSelectFieldProperties =
 
 
 type alias JsonMultiHttpSelectFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -97,7 +98,7 @@ type alias JsonMultiHttpSelectFieldProperties =
 
 
 type alias JsonCheckboxFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -108,7 +109,7 @@ type alias JsonCheckboxFieldProperties =
 
 
 type alias JsonRadioFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -121,7 +122,7 @@ type alias JsonRadioFieldProperties =
 
 
 type alias JsonRadioBoolFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -131,7 +132,7 @@ type alias JsonRadioBoolFieldProperties =
 
 
 type alias JsonRadioEnumFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -143,7 +144,7 @@ type alias JsonRadioEnumFieldProperties =
 
 
 type alias JsonAgeFieldProperties =
-    { required : Bool
+    { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
@@ -360,7 +361,7 @@ toField time order field =
 decoderSimpleJson : FieldType.SimpleFieldType -> Decode.Decoder JsonSimpleFieldProperties
 decoderSimpleJson tipe =
     Decode.succeed JsonSimpleFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -372,7 +373,7 @@ decoderSimpleJson tipe =
 decoderCheckboxJson : FieldType.CheckboxFieldType -> Decode.Decoder JsonCheckboxFieldProperties
 decoderCheckboxJson tipe =
     Decode.succeed JsonCheckboxFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -384,7 +385,7 @@ decoderCheckboxJson tipe =
 decoderSelectJson : Decode.Decoder JsonSelectFieldProperties
 decoderSelectJson =
     Decode.succeed JsonSelectFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -397,7 +398,7 @@ decoderSelectJson =
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
 decoderHttpSelectJson =
     Decode.succeed JsonHttpSelectFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -410,7 +411,7 @@ decoderHttpSelectJson =
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties
 decoderMultiSelectJson =
     Decode.succeed JsonMultiSelectFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -424,7 +425,7 @@ decoderMultiSelectJson =
 decoderMultiHttpSelectJson : Decode.Decoder JsonMultiHttpSelectFieldProperties
 decoderMultiHttpSelectJson =
     Decode.succeed JsonMultiHttpSelectFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -438,7 +439,7 @@ decoderMultiHttpSelectJson =
 decoderRadioJson : Decode.Decoder JsonRadioFieldProperties
 decoderRadioJson =
     Decode.succeed JsonRadioFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -452,7 +453,7 @@ decoderRadioJson =
 decoderRadioBoolJson : Decode.Decoder JsonRadioBoolFieldProperties
 decoderRadioBoolJson =
     Decode.succeed JsonRadioBoolFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -463,7 +464,7 @@ decoderRadioBoolJson =
 decoderRadioEnumJson : Decode.Decoder JsonRadioEnumFieldProperties
 decoderRadioEnumJson =
     Decode.succeed JsonRadioEnumFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
@@ -476,7 +477,7 @@ decoderRadioEnumJson =
 decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
 decoderAgeJson =
     Decode.succeed JsonAgeFieldProperties
-        |> DecodePipeline.required "required" Decode.bool
+        |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder

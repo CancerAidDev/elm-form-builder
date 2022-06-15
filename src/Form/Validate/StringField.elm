@@ -3,6 +3,7 @@ module Form.Validate.StringField exposing (StringError(..), errorToMessage, vali
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
+import Form.Field.Required as Required
 import Form.Locale as Locale
 import Form.Locale.Phone as Phone
 import Iso8601
@@ -118,7 +119,7 @@ validate locale field =
             String.trim (Field.getStringValue_ field)
     in
     if String.isEmpty trimmed then
-        if Field.isRequired (Field.StringField_ field) then
+        if Field.isRequired (Field.StringField_ field) == Required.Yes then
             Err EmptyError
 
         else
