@@ -41,8 +41,7 @@ suite =
                                 "key": "name",
                                 "label": "Full Name",
                                 "type": "text",
-                                "width": "50%",
-                                "nullable": true
+                                "width": "50%"
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -128,7 +127,6 @@ suite =
                             "type": "select",
                             "width": "50%",
                             "default": "Dog",
-                            "nullable": true,
                             "options": [
                                 { "value": "Dog" },
                                 { "value": "Cat" },
@@ -212,8 +210,7 @@ suite =
                             "label": "Tag",
                             "type": "httpSelect",
                             "width": "50%",
-                            "url": "tags",
-                            "nullable": true
+                            "url": "tags"
                         }"""
                     in
                     Decode.decodeString decoder json
