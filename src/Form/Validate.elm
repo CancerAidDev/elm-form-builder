@@ -27,6 +27,7 @@ import Dict
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.RadioEnum as RadioEnum
+import Form.Field.Required as Required
 import Form.Fields as Fields
 import Form.Lib.String as LibString
 import Form.Locale as Locale
@@ -103,7 +104,7 @@ validateField locale fields field =
 
 validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
 validateMultiStringField field =
-    if Set.isEmpty (Field.getMultiStringValue_ field) && Field.isRequired (Field.MultiStringField_ field) then
+    if Set.isEmpty (Field.getMultiStringValue_ field) && Field.isRequired (Field.MultiStringField_ field) == Required.Yes then
         Err NoneSelectedError
 
     else
@@ -124,7 +125,7 @@ validateBoolField properties =
 
 validateRadioBoolField : Fields.Fields -> Field.Field -> Field.RadioBoolFieldProperties -> Result BoolError (Maybe Bool)
 validateRadioBoolField fields field properties =
-    if Fields.isEnabled fields field && properties.required then
+    if Fields.isEnabled fields field && properties.required == Required.Yes then
         case properties.value of
             Nothing ->
                 Err EmptyBoolError
@@ -138,7 +139,7 @@ validateRadioBoolField fields field properties =
 
 validateRadioEnumField : Field.RadioEnumFieldProperties -> Result BoolError (Maybe RadioEnum.Value)
 validateRadioEnumField properties =
-    if properties.required then
+    if properties.required == Required.Yes then
         case properties.value of
             Nothing ->
                 Err EmptyBoolError
@@ -152,7 +153,7 @@ validateRadioEnumField properties =
 
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
 validateNumericField (Field.AgeField properties) =
-    if properties.required then
+    if properties.required == Required.Yes then
         let
             regex =
                 "^(1[89]|[2-9][0-9])$"

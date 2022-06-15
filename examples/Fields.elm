@@ -3,6 +3,7 @@ module Fields exposing (..)
 import Dict
 import Form.Field as FormField
 import Form.Field.Direction as Direction
+import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
 import Set
@@ -13,72 +14,67 @@ fields =
     [ \order ->
         ( "Uneditable field"
         , FormField.text
-            { required = False
+            { required = IsRequired.Yes
             , label = "Uneditable Field"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = True
-            , nullable = False
             }
         )
     , \order ->
         ( "not a valid email field"
         , FormField.email
-            { required = False
+            { required = IsRequired.Yes
             , label = "Not relevant Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = True
-            , nullable = False
             }
         )
     , \order ->
         ( "name"
         , FormField.text
-            { required = True
+            { required = IsRequired.Nullable
             , label = "Name"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = False
-            , nullable = True
             }
         )
     , \order ->
         ( "email"
         , FormField.email
-            { required = True
+            { required = IsRequired.Yes
             , label = "Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = False
-            , nullable = False
             }
         )
     , \order ->
         ( "secondaryEmail"
         , FormField.email
-            { required = False
+            { required = IsRequired.No
             , label = "Secondary Email Address"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = False
-            , nullable = False
             }
         )
     , \order ->
         ( "age"
         , FormField.age
-            { required = False
+            { required = IsRequired.Yes
             , label = "Age"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -90,20 +86,19 @@ fields =
     , \order ->
         ( "dateOfBirth"
         , FormField.dateOfBirth
-            { required = False
+            { required = IsRequired.Nullable
             , label = "Date of Birth"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
             , disabled = False
-            , nullable = True
             }
         )
     , \order ->
         ( "something"
         , FormField.select
-            { required = False
+            { required = IsRequired.Yes
             , label = "Something"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -115,13 +110,12 @@ fields =
                 , { label = Nothing, value = "Two" }
                 ]
             , disabled = True
-            , nullable = False
             }
         )
     , \order ->
         ( "state"
         , FormField.select
-            { required = False
+            { required = IsRequired.Nullable
             , label = "State"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -139,13 +133,12 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
             , disabled = False
-            , nullable = True
             }
         )
     , \order ->
         ( "modes"
         , FormField.multiSelect
-            { required = False
+            { required = IsRequired.No
             , label = "What modes of transport do you use?"
             , placeholder = "Mode"
             , width = Width.FullSize
@@ -166,7 +159,7 @@ fields =
     , \order ->
         ( "updates"
         , FormField.radio
-            { required = False
+            { required = IsRequired.No
             , label = "Are you up to date with your updates?"
             , width = Width.FullSize
             , enabledBy = Nothing
@@ -185,7 +178,7 @@ fields =
     , \order ->
         ( "newsletter"
         , FormField.radioBool
-            { required = True
+            { required = IsRequired.Yes
             , label = "Would you like to sign up to our newsletter?"
             , width = Width.FullSize
             , enabledBy = Nothing

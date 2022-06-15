@@ -11,6 +11,7 @@ module Form.View.Select exposing (select, httpSelect)
 
 import Form.Field as Field
 import Form.Field.Option as Select
+import Form.Field.Required as Required
 import Form.Msg as Msg
 import Html
 import Html.Attributes as HtmlAttributes
@@ -25,7 +26,7 @@ select key { value, required, options, disabled } =
     Html.div [ HtmlAttributes.class "select is-fullwidth" ]
         [ Html.select
             [ HtmlAttributes.name key
-            , HtmlAttributes.required required
+            , HtmlAttributes.required (required == Required.Yes)
             , HtmlAttributes.disabled disabled
             , HtmlEvents.onInput <| Msg.UpdateStringField key
             ]
@@ -64,7 +65,6 @@ httpSelect key properties =
                 , enabledBy = properties.enabledBy
                 , order = properties.order
                 , disabled = properties.disabled
-                , nullable = False
                 }
         )
         properties.options

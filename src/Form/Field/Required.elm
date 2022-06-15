@@ -28,8 +28,8 @@ import Json.Decode.Extra as DecodeExtra
 
 
 type IsRequired
-    = Nullable
-    | Yes
+    = Yes
+    | Nullable
     | No
 
 
