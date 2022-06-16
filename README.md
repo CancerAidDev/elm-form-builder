@@ -53,5 +53,6 @@ When your changes are ready to go (merged into main) it's time to do a release.
 3. Create a branch (possibly with your new changes) and push to github. Create a PR and have it reviewed before merging.
 4. Once branch merged, create a tag with the appropriate version (eg. 4.0.0) on github. Running `yarn run elm publish` will give you the commands to run. For the description, try to add something meaningful like "added nullable option to required".
 5. Run elm publish for real.
+6. Update the example site: `yarn build:pages` and then PR + merge to automatically deploy.
 
 It should take about 20 minutes for the updated package to be live on elm packages, but you can use the new version in your repos straight away.
