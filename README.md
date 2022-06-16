@@ -43,3 +43,13 @@ yarn elm-review
 yarn elm-test
 yarn elm make
 ```
+
+## Doing a release
+
+When your changes are ready to go (merged into main) it's time to do a release.
+
+1. elm bump: `yarn run elm bump`. Fix any issues this finds and accept recommended version suggestion.
+2. Check elm publish works: `yarn run elm publish`. It will fail when it gets to the github tag stage but might show some other suggestions / issues.
+3. 
+Merge change
+elm publish for real

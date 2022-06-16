@@ -27,6 +27,7 @@ import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 
 
+{-| -}
 type IsRequired
     = Yes
     | Nullable
