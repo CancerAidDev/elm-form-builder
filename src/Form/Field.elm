@@ -6,7 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , SearchableMultiSelectFieldProperties
+    , SearchableMultiSelectFieldProperties, searchableMultiSelect
     )
 
 {-| Field type and helper functions
@@ -217,6 +217,12 @@ httpSelect =
 multiSelect : MultiSelectFieldProperties {} -> Field
 multiSelect =
     MultiStringField_ << MultiSelectField
+
+
+{-| -}
+searchableMultiSelect : SearchableMultiSelectFieldProperties -> Field
+searchableMultiSelect =
+    MultiStringField_ << SearchableMultiSelectField
 
 
 {-| -}
