@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , SearchableMultiSelectFieldProperties
     )
 
 {-| Field type and helper functions
@@ -213,7 +214,7 @@ httpSelect =
 
 
 {-| -}
-multiSelect : MultiSelectFieldProperties -> Field
+multiSelect : MultiSelectFieldProperties {} -> Field
 multiSelect =
     MultiStringField_ << MultiSelectField
 
@@ -266,7 +267,8 @@ type NumericField
 
 {-| -}
 type MultiStringField
-    = MultiSelectField MultiSelectFieldProperties
+    = MultiSelectField (MultiSelectFieldProperties {})
+    | SearchableMultiSelectField SearchableMultiSelectFieldProperties
     | MultiHttpSelectField MultiHttpSelectFieldProperties
 
 
@@ -325,11 +327,20 @@ type alias MultiStringFieldProperties a =
 
 
 {-| -}
-type alias MultiSelectFieldProperties =
+type alias MultiSelectFieldProperties a =
     MultiStringFieldProperties
-        { placeholder : String
-        , showDropdown : Bool
-        , options : List Option.Option
+        { a
+            | placeholder : String
+            , showDropdown : Bool
+            , options : List Option.Option
+        }
+
+
+{-| -}
+type alias SearchableMultiSelectFieldProperties =
+    MultiSelectFieldProperties
+        { searchableOptions : List Option.Option
+        , searchInput : String
         }
 
 
@@ -477,6 +488,16 @@ getMultiStringProperties field =
             , disabled = disabled
             }
 
+        SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            }
+
 
 {-| Keep existing field if the value is Nothing
 -}
@@ -596,6 +617,9 @@ resetMultiStringFieldValueToDefault field =
         MultiSelectField properties ->
             MultiSelectField { properties | value = Set.empty }
 
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
+
 
 {-| -}
 setRequired : Required.IsRequired -> Field -> Field
@@ -618,6 +642,9 @@ setRequired required field =
 
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | required = required })
+
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | required = required })
 
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = required })
@@ -741,6 +768,9 @@ updateMultiStringOption_ option checked field =
         MultiSelectField properties ->
             MultiSelectField (update properties)
 
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField (update properties)
+
         MultiHttpSelectField properties ->
             MultiHttpSelectField (update properties)
 
@@ -751,6 +781,9 @@ updateMultiStringValue_ value field =
     case field of
         MultiSelectField properties ->
             MultiSelectField { properties | value = value }
+
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField { properties | value = value }
 
         MultiHttpSelectField properties ->
             MultiHttpSelectField { properties | value = value }
@@ -940,6 +973,9 @@ getMultiStringType field =
 
         MultiHttpSelectField _ ->
             FieldType.MultiHttpSelect
+
+        SearchableMultiSelectField _ ->
+            FieldType.SearchableMultiSelect
 
 
 {-| -}

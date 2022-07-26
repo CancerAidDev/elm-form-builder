@@ -77,6 +77,7 @@ type NumericFieldType
 {-| -}
 type MultiStringFieldType
     = MultiSelect
+    | SearchableMultiSelect
     | MultiHttpSelect
 
 

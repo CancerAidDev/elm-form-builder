@@ -88,6 +88,9 @@ control time locale key field =
         Field.MultiStringField_ (Field.MultiSelectField properties) ->
             MultiSelect.multiSelect key properties
 
+        Field.MultiStringField_ (Field.SearchableMultiSelectField properties) ->
+            MultiSelect.searchableMultiSelect key properties
+
         Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
             MultiSelect.multiHttpSelect key properties
 

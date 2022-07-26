@@ -1,4 +1,4 @@
-module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect)
+module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableMultiSelect)
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
@@ -17,7 +17,7 @@ import Set
 
 
 {-| -}
-multiSelect : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+multiSelect : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 multiSelect key properties =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
         [ Icon.css
@@ -26,7 +26,16 @@ multiSelect key properties =
         ]
 
 
-dropdownTrigger : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableMultiSelect key properties =
+    Html.div [ HtmlAttributes.class "dropdown is-active" ]
+        [ Icon.css
+        , dropdownTrigger key properties
+        , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
+        ]
+
+
+dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.Msg
 dropdownTrigger key { placeholder, value, showDropdown } =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
@@ -47,8 +56,36 @@ dropdownTrigger key { placeholder, value, showDropdown } =
         ]
 
 
-dropdownMenu : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
+    Html.div []
+        [ overlay key
+        , Html.div
+            [ HtmlAttributes.class "dropdown-menu"
+            , HtmlAttributes.id "dropdown-menu"
+            , Aria.roleDescription "menu"
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            ]
+            [ Html.div [ HtmlAttributes.class "dropdown-content" ]
+                [ Html.div
+                    [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
+                    [ Html.div [] [ Html.text <| String.fromInt (Set.size properties.value) ++ " Selected" ]
+                    , Html.button
+                        [ HtmlAttributes.class "button is-small"
+                        , HtmlEvents.onClick <| Msg.ResetField key
+                        ]
+                        [ Html.text "Reset" ]
+                    ]
+                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ]
+                    (List.map (\option -> viewCheckbox key properties option) properties.options)
+                ]
+            ]
+        ]
+
+
+searchableDropdownMenu : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableDropdownMenu key properties =
     Html.div []
         [ overlay key
         , Html.div
@@ -89,7 +126,7 @@ overlay key =
         []
 
 
-viewCheckbox : String -> Field.MultiSelectFieldProperties -> Option.Option -> Html.Html Msg.Msg
+viewCheckbox : String -> Field.MultiSelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
 viewCheckbox key properties option =
     let
         checked =

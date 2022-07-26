@@ -28,6 +28,7 @@ type JsonField
     | JsonSelectField JsonSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
     | JsonMultiSelectField JsonMultiSelectFieldProperties
+    | JsonSearchableMultiSelectField JsonSearchableMultiSelectFieldProperties
     | JsonMultiHttpSelectField JsonMultiHttpSelectFieldProperties
     | JsonRadioField JsonRadioFieldProperties
     | JsonCheckboxField JsonCheckboxFieldProperties
@@ -81,6 +82,21 @@ type alias JsonMultiSelectFieldProperties =
     , options : List Option.Option
     , showDropdown : Bool
     , disabled : Maybe Bool
+    }
+
+
+type alias JsonSearchableMultiSelectFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , placeholder : String
+    , options : List Option.Option
+    , showDropdown : Bool
+    , disabled : Maybe Bool
+    , searchInput : String
+    , searchableOptions : List Option.Option
     }
 
 
@@ -175,6 +191,9 @@ decoderForType fieldType =
 
         FieldType.MultiStringType FieldType.MultiSelect ->
             Decode.map JsonMultiSelectField decoderMultiSelectJson
+
+        FieldType.MultiStringType FieldType.SearchableMultiSelect ->
+            Decode.map JsonSearchableMultiSelectField decoderSearchableMultiSelectJson
 
         FieldType.MultiStringType FieldType.MultiHttpSelect ->
             Decode.map JsonMultiHttpSelectField decoderMultiHttpSelectJson
@@ -339,6 +358,25 @@ toField time order field =
                     }
             )
 
+        JsonSearchableMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, searchableOptions, searchInput } ->
+            ( key
+            , Field.MultiStringField_ <|
+                Field.SearchableMultiSelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , placeholder = placeholder
+                    , showDropdown = showDropdown
+                    , options = options
+                    , value = Set.empty
+                    , disabled = Maybe.withDefault False disabled
+                    , searchInput = searchInput
+                    , searchableOptions = searchableOptions
+                    }
+            )
+
         JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url, disabled } ->
             ( key
             , Field.MultiStringField_ <|
@@ -420,6 +458,22 @@ decoderMultiSelectJson =
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+
+
+decoderSearchableMultiSelectJson : Decode.Decoder JsonSearchableMultiSelectFieldProperties
+decoderSearchableMultiSelectJson =
+    Decode.succeed JsonSearchableMultiSelectFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "placeholder" Decode.string
+        |> DecodePipeline.required "options" (Decode.list Option.decoder)
+        |> DecodePipeline.hardcoded False
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.required "searchInput" Decode.string
+        |> DecodePipeline.required "searchableOptions" (Decode.list Option.decoder)
 
 
 decoderMultiHttpSelectJson : Decode.Decoder JsonMultiHttpSelectFieldProperties
