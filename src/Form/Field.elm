@@ -716,6 +716,9 @@ updateShowDropdown showDropdown field =
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | showDropdown = showDropdown })
 
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | showDropdown = showDropdown })
+
         MultiStringField_ (MultiHttpSelectField properties) ->
             MultiStringField_ (MultiHttpSelectField { properties | showDropdown = showDropdown })
 
