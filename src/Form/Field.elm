@@ -6,7 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , SearchableMultiSelectFieldProperties, searchableMultiSelect
+    , SearchableMultiSelectFieldProperties, searchableMultiSelect, updateSearchableMultiselectInput
     )
 
 {-| Field type and helper functions
@@ -551,6 +551,17 @@ updateMultiStringOption option checked field =
     case field of
         MultiStringField_ multiStringField ->
             MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
+
+        _ ->
+            field
+
+
+{-| -}
+updateSearchableMultiselectInput : String -> Field -> Field
+updateSearchableMultiselectInput input field =
+    case field of
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
 
         _ ->
             field

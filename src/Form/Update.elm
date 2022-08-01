@@ -48,3 +48,6 @@ update msg fields =
 
         Msg.UpdateShowDropdown key showDropdown ->
             ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
+
+        Msg.UpdateSearchbar key value ->
+            ( Fields.updateSearchbar key value fields, Cmd.none )

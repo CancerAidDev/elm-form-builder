@@ -2,6 +2,7 @@ module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableM
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
+import Debug
 import FontAwesome.Icon as Icon
 import FontAwesome.Solid as Icon
 import FontAwesome.Styles as Icon
@@ -86,6 +87,35 @@ dropdownMenu key properties =
 
 searchableDropdownMenu : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
 searchableDropdownMenu key properties =
+    let
+        optionSection : List Option.Option -> List (Html.Html Msg.Msg)
+        optionSection options =
+            let
+                optionItem : List (Html.Html Msg.Msg)
+                optionItem =
+                    List.map (\option -> viewCheckbox key properties option) options
+            in
+            if List.isEmpty options then
+                []
+
+            else
+                [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
+                ]
+
+        filteredOptions : List Option.Option
+        filteredOptions =
+            let
+                takeOption : String -> Option.Option -> Bool
+                takeOption searchString option =
+                    List.any (String.contains searchString) (option.value :: List.filterMap identity [ option.label ])
+
+                filterSearchable : String -> List Option.Option -> List Option.Option
+                filterSearchable searchString options =
+                    List.filter (takeOption searchString) options
+            in
+            filterSearchable properties.searchInput properties.searchableOptions
+    in
     Html.div []
         [ overlay key
         , Html.div
@@ -95,7 +125,7 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ Html.div
+                ([ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                     [ Html.div [] [ Html.text <| String.fromInt (Set.size properties.value) ++ " Selected" ]
                     , Html.button
@@ -104,10 +134,39 @@ searchableDropdownMenu key properties =
                         ]
                         [ Html.text "Reset" ]
                     ]
-                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ]
-                    (List.map (\option -> viewCheckbox key properties option) properties.options)
-                ]
+                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                 , Html.div [ HtmlAttributes.class "dropdown-item" ]
+                    [ Html.div [ HtmlAttributes.class "field" ]
+                        [ Html.span [ HtmlAttributes.class "control" ]
+                            [ Html.input
+                                ([ HtmlAttributes.class "input is-small"
+                                 , HtmlAttributes.placeholder "Search"
+                                 , HtmlEvents.onInput <| Msg.UpdateSearchbar key
+                                 , HtmlAttributes.value <| properties.searchInput
+                                 ]
+                                    ++ (case filteredOptions of
+                                            [] ->
+                                                []
+
+                                            headoption :: _ ->
+                                                [ Key.onKeyDown
+                                                    [ Key.enter <|
+                                                        Debug.log "onEnter msg" <|
+                                                            Msg.UpdateMultiStringField key headoption <|
+                                                                not <|
+                                                                    Set.member headoption.value properties.value
+                                                    ]
+                                                ]
+                                       )
+                                )
+                                []
+                            ]
+                        ]
+                    ]
+                 ]
+                    ++ optionSection properties.options
+                    ++ optionSection filteredOptions
+                )
             ]
         ]
 
