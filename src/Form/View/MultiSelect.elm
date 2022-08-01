@@ -90,15 +90,15 @@ searchableDropdownMenu key properties =
     let
         optionSection : List Option.Option -> List (Html.Html Msg.Msg)
         optionSection options =
-            let
-                optionItem : List (Html.Html Msg.Msg)
-                optionItem =
-                    List.map (\option -> viewCheckbox key properties option) options
-            in
             if List.isEmpty options then
                 []
 
             else
+                let
+                    optionItem : List (Html.Html Msg.Msg)
+                    optionItem =
+                        List.map (\option -> viewCheckbox key properties option) options
+                in
                 [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
                 ]
