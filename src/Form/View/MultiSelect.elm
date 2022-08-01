@@ -2,12 +2,12 @@ module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableM
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
-import Debug
 import FontAwesome.Icon as Icon
 import FontAwesome.Solid as Icon
 import FontAwesome.Styles as Icon
 import Form.Field as Field
 import Form.Field.Option as Option
+import Form.Lib.Events as LibEvents
 import Form.Msg as Msg
 import Html
 import Html.Attributes as HtmlAttributes
@@ -149,13 +149,13 @@ searchableDropdownMenu key properties =
                                                 []
 
                                             headoption :: _ ->
-                                                [ Key.onKeyDown
-                                                    [ Key.enter <|
-                                                        Debug.log "onEnter msg" <|
-                                                            Msg.UpdateMultiStringField key headoption <|
-                                                                not <|
-                                                                    Set.member headoption.value properties.value
-                                                    ]
+                                                [ LibEvents.onEnter <|
+                                                    Msg.UpdateMultiStringField
+                                                        key
+                                                        headoption
+                                                    <|
+                                                        not <|
+                                                            Set.member headoption.value properties.value
                                                 ]
                                        )
                                 )
