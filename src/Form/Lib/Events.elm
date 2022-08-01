@@ -21,4 +21,4 @@ onKeyDown correctCode msg =
             else
                 JsonDecode.fail "fail"
     in
-    HtmlEvents.on "keydown" (JsonDecode.oneOf [ JsonDecode.andThen isEscape HtmlEvents.keyCode ])
+    HtmlEvents.on "keydown" <| JsonDecode.andThen isEscape HtmlEvents.keyCode

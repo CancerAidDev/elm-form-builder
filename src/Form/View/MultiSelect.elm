@@ -150,10 +150,7 @@ searchableDropdownMenu key properties =
 
                                             headoption :: _ ->
                                                 [ LibEvents.onEnter <|
-                                                    Msg.UpdateMultiStringField
-                                                        key
-                                                        headoption
-                                                    <|
+                                                    Msg.UpdateMultiStringField key headoption <|
                                                         not <|
                                                             Set.member headoption.value properties.value
                                                 ]
