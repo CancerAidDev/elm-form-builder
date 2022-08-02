@@ -157,6 +157,32 @@ fields =
             }
         )
     , \order ->
+        ( "workdays"
+        , FormField.searchableMultiSelect
+            { required = IsRequired.Yes
+            , label = "What days of the week do you work?"
+            , placeholder = "Workdays"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = Set.empty
+            , showDropdown = False
+            , options =
+                [ { label = Just "Saturday", value = "Sat" }
+                , { label = Just "Sunday", value = "Sun" }
+                ]
+            , searchableOptions = 
+                [ { label = Just "Monday", value = "Mon" }
+                , { label = Just "Tuesday", value = "Tue" }
+                , { label = Just "Wednesday", value = "Wed" }
+                , { label = Just "Thursday", value = "Thu" }
+                , { label = Just "Friday", value = "Fri" }
+                ]
+            , searchInput = ""
+            , disabled = False
+            }
+        )
+    , \order ->
         ( "updates"
         , FormField.radio
             { required = IsRequired.Yes

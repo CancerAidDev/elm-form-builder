@@ -24,3 +24,4 @@ type Msg
     | UpdateNumericField String String
     | ResetField String
     | UpdateShowDropdown String Bool
+    | UpdateSearchbar String String

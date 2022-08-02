@@ -11,6 +11,7 @@ import Form.Fields as Fields
 import Json.Decode as Decode
 import Json.Encode as Encode
 import RemoteData
+import Set
 import Test
 import Time
 
@@ -348,6 +349,117 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
+            , Test.test "Multi-select field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.pet",
+                            "label": "Pet",
+                            "type": "multi_select",
+                            "width": "50%",
+                            "options": [
+                                { "value": "Dog"
+                                , "label": "Doggo" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ],
+                            "placeholder": "Pet"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "metadata.pet"
+                                , Field.MultiStringField_
+                                    (Field.MultiSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , label = "Pet"
+                                        , options =
+                                            [ { label = Just "Doggo"
+                                              , value = "Dog"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Cat"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Parrot"
+                                              }
+                                            ]
+                                        , placeholder = "Pet"
+                                        , value = Set.empty
+                                        , order = order
+                                        , disabled = False
+                                        , showDropdown = False
+                                        }
+                                    )
+                                )
+                            )
+            , Test.test "Searchable multi select field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.pet",
+                            "label": "Pet",
+                            "type": "searchable_multi_select",
+                            "width": "50%",
+                            "options": [
+                                { "value": "Dog"
+                                , "label": "Doggo" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ],
+                            "placeholder": "Pet",
+                            "searchableOptions": [
+                                { "value": "Tiger" },
+                                { "value": "Lion" }
+                            ]
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "metadata.pet"
+                                , Field.MultiStringField_
+                                    (Field.SearchableMultiSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , label = "Pet"
+                                        , options =
+                                            [ { label = Just "Doggo"
+                                              , value = "Dog"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Cat"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Parrot"
+                                              }
+                                            ]
+                                        , placeholder = "Pet"
+                                        , value = Set.empty
+                                        , order = order
+                                        , disabled = False
+                                        , showDropdown = False
+                                        , searchInput = ""
+                                        , searchableOptions =
+                                            [ { label = Nothing
+                                              , value = "Tiger"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Lion"
+                                              }
+                                            ]
+                                        }
+                                    )
+                                )
+                            )
             ]
         , Test.describe "Encoding Fields"
             [ Test.test "Metadata encoding without metadata form elements" <|
@@ -455,6 +567,133 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"tag":"foo"}}"""
+            , Test.test "Metadata encoding with a metadata multi-select form element" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "metadata.pet"
+                                  , Field.MultiStringField_ <|
+                                        Field.MultiSelectField
+                                            { required = Required.Yes
+                                            , label = "Pet"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = Set.fromList [ "Dog", "Cat" ]
+                                            , options =
+                                                [ { label = Nothing
+                                                  , value = "Dog"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Cat"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Parrot"
+                                                  }
+                                                ]
+                                            , placeholder = "Pets"
+                                            , showDropdown = True
+                                            , disabled = False
+                                            }
+                                  )
+                                ]
+
+                        encodedStr =
+                            Encode.encode 0 (encode testDict)
+                    in
+                    -- set makes no guarantee of order of results
+                    ( String.contains "Cat" encodedStr
+                    , String.contains "Dog" encodedStr
+                    )
+                        |> Expect.equal ( True, True )
+            , Test.test "Metadata encoding with a metadata multi-select form element with invalid field" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "metadata.pet"
+                                  , Field.MultiStringField_ <|
+                                        Field.MultiSelectField
+                                            { required = Required.Yes
+                                            , label = "Pet"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = Set.fromList [ "Dog", "Parrot" ]
+                                            , options =
+                                                [ { label = Nothing
+                                                  , value = "Dog"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Cat"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Parrot"
+                                                  }
+                                                ]
+                                            , placeholder = "Pets"
+                                            , showDropdown = True
+                                            , disabled = False
+                                            }
+                                  )
+                                ]
+
+                        encodedStr =
+                            Encode.encode 0 (encode testDict)
+                    in
+                    -- set makes no guarantee of order of results
+                    ( String.contains "Cat" encodedStr
+                    , String.contains "Dog" encodedStr
+                    )
+                        |> Expect.equal ( False, True )
+            , Test.test "Metadata encoding with a metadata searchable-multi-select form element" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "metadata.pet"
+                                  , Field.MultiStringField_ <|
+                                        Field.SearchableMultiSelectField
+                                            { required = Required.Yes
+                                            , label = "Pet"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = Set.fromList [ "Dog", "Lion" ]
+                                            , options =
+                                                [ { label = Nothing
+                                                  , value = "Dog"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Cat"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Parrot"
+                                                  }
+                                                ]
+                                            , searchableOptions =
+                                                [ { label = Nothing
+                                                  , value = "Lion"
+                                                  }
+                                                ]
+                                            , searchInput = ""
+                                            , placeholder = "Pets"
+                                            , showDropdown = True
+                                            , disabled = False
+                                            }
+                                  )
+                                ]
+
+                        encodedStr =
+                            Encode.encode 0 (encode testDict)
+                    in
+                    -- set makes no guarantee of order of results
+                    ( String.contains "Cat" encodedStr
+                    , String.contains "Dog" encodedStr
+                    , String.contains "Lion" encodedStr
+                    )
+                        |> Expect.equal ( False, True, True )
             , Test.test "Metadata encoding with multiple metadata form element" <|
                 \_ ->
                     let

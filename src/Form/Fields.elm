@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
     , hasCheckboxConsentField, isEnabled
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
 
 
 # Predicates
@@ -175,6 +175,13 @@ updateFieldRemoteOptions key options =
 updateShowDropdown : String -> Bool -> Fields -> Fields
 updateShowDropdown key showDropdown =
     Dict.update key (Maybe.map (Field.updateShowDropdown showDropdown))
+        >> updateEnabledByFields
+
+
+{-| -}
+updateSearchbar : String -> String -> Fields -> Fields
+updateSearchbar key value =
+    Dict.update key (Maybe.map (Field.updateSearchableMultiselectInput value))
         >> updateEnabledByFields
 
 

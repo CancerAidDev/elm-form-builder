@@ -1,4 +1,4 @@
-module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect)
+module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableMultiSelect)
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
@@ -7,6 +7,7 @@ import FontAwesome.Solid as Icon
 import FontAwesome.Styles as Icon
 import Form.Field as Field
 import Form.Field.Option as Option
+import Form.Lib.Events as LibEvents
 import Form.Msg as Msg
 import Html
 import Html.Attributes as HtmlAttributes
@@ -17,7 +18,7 @@ import Set
 
 
 {-| -}
-multiSelect : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+multiSelect : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 multiSelect key properties =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
         [ Icon.css
@@ -26,7 +27,16 @@ multiSelect key properties =
         ]
 
 
-dropdownTrigger : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableMultiSelect key properties =
+    Html.div [ HtmlAttributes.class "dropdown is-active" ]
+        [ Icon.css
+        , dropdownTrigger key properties
+        , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
+        ]
+
+
+dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.Msg
 dropdownTrigger key { placeholder, value, showDropdown } =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
@@ -47,7 +57,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
         ]
 
 
-dropdownMenu : String -> Field.MultiSelectFieldProperties -> Html.Html Msg.Msg
+dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
     Html.div []
         [ overlay key
@@ -75,6 +85,89 @@ dropdownMenu key properties =
         ]
 
 
+searchableDropdownMenu : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
+searchableDropdownMenu key properties =
+    let
+        optionSection : List Option.Option -> List (Html.Html Msg.Msg)
+        optionSection options =
+            if List.isEmpty options then
+                []
+
+            else
+                let
+                    optionItem : List (Html.Html Msg.Msg)
+                    optionItem =
+                        List.map (\option -> viewCheckbox key properties option) options
+                in
+                [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
+                ]
+
+        filteredOptions : List Option.Option
+        filteredOptions =
+            let
+                takeOption : String -> Option.Option -> Bool
+                takeOption searchString option =
+                    List.any (String.contains searchString) (option.value :: List.filterMap identity [ option.label ])
+
+                filterSearchable : String -> List Option.Option -> List Option.Option
+                filterSearchable searchString options =
+                    List.filter (takeOption searchString) options
+            in
+            filterSearchable properties.searchInput properties.searchableOptions
+    in
+    Html.div []
+        [ overlay key
+        , Html.div
+            [ HtmlAttributes.class "dropdown-menu"
+            , HtmlAttributes.id "dropdown-menu"
+            , Aria.roleDescription "menu"
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            ]
+            [ Html.div [ HtmlAttributes.class "dropdown-content" ]
+                ([ Html.div
+                    [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
+                    [ Html.div [] [ Html.text <| String.fromInt (Set.size properties.value) ++ " Selected" ]
+                    , Html.button
+                        [ HtmlAttributes.class "button is-small"
+                        , HtmlEvents.onClick <| Msg.ResetField key
+                        ]
+                        [ Html.text "Reset" ]
+                    ]
+                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                 , Html.div [ HtmlAttributes.class "dropdown-item" ]
+                    [ Html.div [ HtmlAttributes.class "field" ]
+                        [ Html.span [ HtmlAttributes.class "control" ]
+                            [ Html.input
+                                ([ HtmlAttributes.class "input is-small"
+                                 , HtmlAttributes.placeholder "Search"
+                                 , HtmlEvents.onInput <| Msg.UpdateSearchbar key
+                                 , HtmlAttributes.value <| properties.searchInput
+                                 ]
+                                    ++ (case filteredOptions of
+                                            [] ->
+                                                []
+
+                                            headoption :: _ ->
+                                                [ LibEvents.onEnter <|
+                                                    Msg.UpdateMultiStringField key headoption <|
+                                                        not <|
+                                                            Set.member headoption.value properties.value
+                                                ]
+                                       )
+                                )
+                                []
+                            ]
+                        ]
+                    ]
+                 ]
+                    ++ optionSection properties.options
+                    ++ optionSection filteredOptions
+                )
+            ]
+        ]
+
+
 overlay : String -> Html.Html Msg.Msg
 overlay key =
     Html.div
@@ -89,7 +182,7 @@ overlay key =
         []
 
 
-viewCheckbox : String -> Field.MultiSelectFieldProperties -> Option.Option -> Html.Html Msg.Msg
+viewCheckbox : String -> Field.MultiSelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
 viewCheckbox key properties option =
     let
         checked =

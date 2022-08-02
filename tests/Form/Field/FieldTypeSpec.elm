@@ -173,4 +173,37 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.err
+        , Test.test "Multi-select field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "multi_select"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.MultiStringType FieldType.MultiSelect))
+        , Test.test "Searchable multi-select field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "searchable_multi_select"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.MultiStringType FieldType.SearchableMultiSelect))
+        , Test.test "Multi http select field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "multi_http_select"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.MultiStringType FieldType.MultiHttpSelect))
         ]

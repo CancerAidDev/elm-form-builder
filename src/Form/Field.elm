@@ -1,8 +1,8 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
-    , AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age
+    , AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
     , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -13,12 +13,12 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, multiHttpSelect, radio, age
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age
 
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
+@docs AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
 
 
 # Getters
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
 
 
 # Predicates
@@ -213,9 +213,15 @@ httpSelect =
 
 
 {-| -}
-multiSelect : MultiSelectFieldProperties -> Field
+multiSelect : MultiSelectFieldProperties {} -> Field
 multiSelect =
     MultiStringField_ << MultiSelectField
+
+
+{-| -}
+searchableMultiSelect : SearchableMultiSelectFieldProperties -> Field
+searchableMultiSelect =
+    MultiStringField_ << SearchableMultiSelectField
 
 
 {-| -}
@@ -266,7 +272,8 @@ type NumericField
 
 {-| -}
 type MultiStringField
-    = MultiSelectField MultiSelectFieldProperties
+    = MultiSelectField (MultiSelectFieldProperties {})
+    | SearchableMultiSelectField SearchableMultiSelectFieldProperties
     | MultiHttpSelectField MultiHttpSelectFieldProperties
 
 
@@ -325,11 +332,20 @@ type alias MultiStringFieldProperties a =
 
 
 {-| -}
-type alias MultiSelectFieldProperties =
+type alias MultiSelectFieldProperties a =
     MultiStringFieldProperties
-        { placeholder : String
-        , showDropdown : Bool
-        , options : List Option.Option
+        { a
+            | placeholder : String
+            , showDropdown : Bool
+            , options : List Option.Option
+        }
+
+
+{-| -}
+type alias SearchableMultiSelectFieldProperties =
+    MultiSelectFieldProperties
+        { searchableOptions : List Option.Option
+        , searchInput : String
         }
 
 
@@ -477,6 +493,16 @@ getMultiStringProperties field =
             , disabled = disabled
             }
 
+        SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            }
+
 
 {-| Keep existing field if the value is Nothing
 -}
@@ -524,6 +550,17 @@ updateMultiStringOption option checked field =
     case field of
         MultiStringField_ multiStringField ->
             MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
+
+        _ ->
+            field
+
+
+{-| -}
+updateSearchableMultiselectInput : String -> Field -> Field
+updateSearchableMultiselectInput input field =
+    case field of
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
 
         _ ->
             field
@@ -596,6 +633,9 @@ resetMultiStringFieldValueToDefault field =
         MultiSelectField properties ->
             MultiSelectField { properties | value = Set.empty }
 
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
+
 
 {-| -}
 setRequired : Required.IsRequired -> Field -> Field
@@ -618,6 +658,9 @@ setRequired required field =
 
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | required = required })
+
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | required = required })
 
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = required })
@@ -683,6 +726,9 @@ updateShowDropdown showDropdown field =
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | showDropdown = showDropdown })
 
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ (SearchableMultiSelectField { properties | showDropdown = showDropdown })
+
         MultiStringField_ (MultiHttpSelectField properties) ->
             MultiStringField_ (MultiHttpSelectField { properties | showDropdown = showDropdown })
 
@@ -741,6 +787,9 @@ updateMultiStringOption_ option checked field =
         MultiSelectField properties ->
             MultiSelectField (update properties)
 
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField (update properties)
+
         MultiHttpSelectField properties ->
             MultiHttpSelectField (update properties)
 
@@ -751,6 +800,9 @@ updateMultiStringValue_ value field =
     case field of
         MultiSelectField properties ->
             MultiSelectField { properties | value = value }
+
+        SearchableMultiSelectField properties ->
+            SearchableMultiSelectField { properties | value = value }
 
         MultiHttpSelectField properties ->
             MultiHttpSelectField { properties | value = value }
@@ -940,6 +992,9 @@ getMultiStringType field =
 
         MultiHttpSelectField _ ->
             FieldType.MultiHttpSelect
+
+        SearchableMultiSelectField _ ->
+            FieldType.SearchableMultiSelect
 
 
 {-| -}
