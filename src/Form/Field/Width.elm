@@ -17,6 +17,7 @@ import Json.Decode.Extra as DecodeExtra
 type Width
     = HalfSize
     | FullSize
+    | Adaptive
 
 
 {-| -}
@@ -28,6 +29,9 @@ fromString str =
 
         "100%" ->
             Just FullSize
+
+        "adaptive" ->
+            Just Adaptive
 
         _ ->
             Nothing
@@ -42,6 +46,9 @@ toStyle width =
 
         FullSize ->
             "is-full"
+
+        Adaptive ->
+            "is-narrow"
 
 
 {-| -}
