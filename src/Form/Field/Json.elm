@@ -472,7 +472,7 @@ decoderSearchableMultiSelectJson =
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
-        |> DecodePipeline.required "searchInput" Decode.string
+        |> DecodePipeline.hardcoded ""
         |> DecodePipeline.required "searchableOptions" (Decode.list Option.decoder)
 
 

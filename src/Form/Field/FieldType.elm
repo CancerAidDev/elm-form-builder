@@ -136,6 +136,9 @@ fromString str =
         "multi_select" ->
             Just (MultiStringType MultiSelect)
 
+        "searchable_multi_select" ->
+            Just (MultiStringType SearchableMultiSelect)
+
         "multi_http_select" ->
             Just (MultiStringType MultiHttpSelect)
 
