@@ -2,6 +2,7 @@ module Form.Locale exposing
     ( Locale(..)
     , fromString, toString, urlParser
     , enAU
+    , enNZ, enUS, toCountryCode
     )
 
 {-| Locale data type
@@ -52,10 +53,25 @@ toString (Locale language country) =
     LanguageCode.toString language ++ "-" ++ CountryCode.toString country
 
 
+toCountryCode : Locale -> String
+toCountryCode (Locale _ country) =
+    CountryCode.toString country
+
+
 {-| -}
 enAU : Locale
 enAU =
     Locale LanguageCode.EN CountryCode.AU
+
+
+enNZ : Locale
+enNZ =
+    Locale LanguageCode.EN CountryCode.NZ
+
+
+enUS : Locale
+enUS =
+    Locale LanguageCode.EN CountryCode.US
 
 
 {-| -}

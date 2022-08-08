@@ -16,6 +16,7 @@ import Form.Field.Width as Width
 import Form.Fields as Fields
 import Form.Lib.String as LibString
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Locale.Phone as Phone
 import Form.Msg as Msg
 import Form.Validate as Validate
@@ -63,18 +64,18 @@ label field disabled =
 
 
 control : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
-control time locale key field =
+control time (Locale.Locale _ code) key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
                 FieldType.Phone ->
-                    phone time locale key field
+                    phone time code key field
 
                 FieldType.TextArea ->
                     textarea key properties
 
                 _ ->
-                    input time key field
+                    input time (Just code) key field
 
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
@@ -104,11 +105,11 @@ control time locale key field =
             Radio.radioEnum key properties
 
         Field.NumericField_ (Field.AgeField _) ->
-            input time key field
+            input time Nothing key field
 
 
-input : Time.Posix -> String -> Field.Field -> Html.Html Msg.Msg
-input time key field =
+input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
+input time code key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
             Html.input
@@ -117,7 +118,7 @@ input time key field =
                 , HtmlAttributes.type_ (FieldType.toType properties.tipe)
                 , HtmlAttributes.value properties.value
                 , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe)
+                , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
                     (FieldType.toMin
@@ -161,19 +162,19 @@ textarea key field =
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
-        , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe)
+        , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
 
 
-phone : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
-phone time (Locale.Locale _ countryCode) key field =
+phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
+phone time code key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix countryCode) ] ]
+            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
-            [ input time key field ]
+            [ input time (Just code) key field ]
         ]
 
 

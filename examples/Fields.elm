@@ -72,6 +72,18 @@ fields =
             }
         )
     , \order ->
+        ( "phone"
+        , FormField.phone
+            { required = IsRequired.Yes
+            , label = "Phone"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            }
+        )
+    , \order ->
         ( "age"
         , FormField.age
             { required = IsRequired.Nullable

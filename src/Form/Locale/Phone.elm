@@ -758,6 +758,16 @@ regex code =
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
+        CountryCode.NZ ->
+            "^(\\d{8}|\\d{9}|\\d{10})$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+        CountryCode.US ->
+            "^[23456789]\\d{2}[23456789]\\d{5}$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
         _ ->
             "^\\d.*$"
                 |> Regex.fromString
@@ -770,6 +780,16 @@ mobileRegex code =
     case code of
         CountryCode.AU ->
             "^4\\d{8}$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+        CountryCode.NZ ->
+            "^2(\\d{7}|\\d{8}|\\d{9})$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+        CountryCode.US ->
+            "^[23456789]\\d{2}[23456789]\\d{5}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
@@ -787,11 +807,28 @@ formatForSubmission code =
         >> (\phone -> phonePrefix code ++ phone)
 
 
+formatGroups : CountryCode.CountryCode -> String -> List Int
+formatGroups code currentPhone =
+    case code of
+        CountryCode.NZ ->
+            if String.length currentPhone < 9 then
+                [ 2, 3, 3 ]
+
+            else if String.length currentPhone < 10 then
+                [ 2, 3, 4 ]
+
+            else
+                [ 2, 3, 5 ]
+
+        _ ->
+            [ 3, 3, 3 ]
+
+
 {-| -}
 formatForDisplay : CountryCode.CountryCode -> String -> String
-formatForDisplay code =
-    StringExtra.rightOf (phonePrefix code)
-        >> String.toList
-        >> ListExtra.groupsOf 3
-        >> List.map String.fromList
-        >> String.join " "
+formatForDisplay code phone =
+    StringExtra.rightOf (phonePrefix code) phone
+        |> String.toList
+        |> ListExtra.groupsOfVarying (formatGroups code phone)
+        |> List.map String.fromList
+        |> String.join " "
