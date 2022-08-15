@@ -779,7 +779,7 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
         CountryCode.US ->
-            "^[23456789]\\d{2}[23456789]\\d{5}$"
+            "^[2-9]\\d{2}[2-9]\\d{6}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 

@@ -66,11 +66,11 @@ suite =
                 }
             , simpleFieldTest
                 FieldType.Phone
-                { valid = [ { value = "234234000", name = "Correct format and length" } ]
+                { valid = [ { value = "2342340000", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123123000", error = StringField.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
-                    , { value = "2342340000", error = StringField.InvalidMobilePhoneNumber, name = "> 9 digits" }
-                    , { value = "23423400", error = StringField.InvalidMobilePhoneNumber, name = "< 9 digits" }
+                    , { value = "23423400000", error = StringField.InvalidMobilePhoneNumber, name = "> 10 digits" }
+                    , { value = "234234000", error = StringField.InvalidMobilePhoneNumber, name = "< 10 digits" }
                     , { value = "asdf", error = StringField.InvalidPhoneNumber, name = "Doesn't begin with 2" }
                     ]
                 , locale = Locale.enUS

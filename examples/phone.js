@@ -8,6 +8,8 @@ function getNumberLength(countryCode) {
   switch (countryCode) {
     case "NZ":
       return 10;
+    case "US":
+      return 10;
     default:
       return 9;
   }
@@ -17,6 +19,8 @@ function getGroupRegex(countryCode) {
   switch (countryCode) {
     case "NZ":
       return new RegExp(`(.{0,2})(.{0,3})(.{0,5})`);
+    case "US":
+      return new RegExp(`(.{0,3})(.{0,3})(.{0,4})`);
     default:
       return new RegExp(`(.{0,3})(.{0,3})(.{0,3})`);
   }
