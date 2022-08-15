@@ -758,16 +758,6 @@ regex code =
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
-        CountryCode.NZ ->
-            "^(\\d{8}|\\d{9}|\\d{10})$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-
-        CountryCode.US ->
-            "^[23456789]\\d{2}[23456789]\\d{5}$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-
         _ ->
             "^\\d.*$"
                 |> Regex.fromString
@@ -784,7 +774,7 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
         CountryCode.NZ ->
-            "^2(\\d{7}|\\d{8}|\\d{9})$"
+            "^2\\d{7,9}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 

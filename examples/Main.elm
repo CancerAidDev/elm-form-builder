@@ -27,7 +27,7 @@ init =
             TimeExtra.partsToPosix Time.utc <|
                 TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
       , dialog = Nothing
-      , locale = Locale.enUS
+      , locale = Locale.enAU
       , form = Fields.fields
       , submitted = False
       }
