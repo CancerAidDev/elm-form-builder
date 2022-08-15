@@ -10,8 +10,6 @@ module Form.Update exposing (update)
 -}
 
 import Form.Fields as Fields
-import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone as Phone
 import Form.Msg as Msg
 import Form.Validate as Validate
 
@@ -21,11 +19,7 @@ update : Msg.Msg -> Fields.Fields -> ( Fields.Fields, Cmd Msg.Msg )
 update msg fields =
     case msg of
         Msg.UpdateStringField key value ->
-            if key == "phone" then
-                ( Fields.updateStringField key (Phone.formatForDisplay CountryCode.AU value) fields, Cmd.none )
-
-            else
-                ( Fields.updateStringField key value fields, Cmd.none )
+            ( Fields.updateStringField key value fields, Cmd.none )
 
         Msg.UpdateMultiStringField key value checked ->
             ( Fields.updateMultiStringOptionField key value checked fields, Cmd.none )

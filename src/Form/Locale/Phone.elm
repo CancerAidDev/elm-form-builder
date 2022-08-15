@@ -811,28 +811,7 @@ formatGroups code =
 
 
 formatForDisplay : CountryCode.CountryCode -> String -> String
-formatForDisplay code phone =
-    phone
-        |> String.toList
-        |> List.filter
-            (\value ->
-                if value == ' ' then
-                    False
-
-                else
-                    True
-            )
-        |> ListExtra.groupsOfVarying (formatGroups code)
-        |> List.map String.fromList
-        |> String.join " "
-
-
-
-{- check formatForDisplay -}
-
-
-formatForDisplayOld : CountryCode.CountryCode -> String -> String
-formatForDisplayOld code =
+formatForDisplay code =
     StringExtra.rightOf (phonePrefix code)
         >> String.toList
         >> ListExtra.groupsOfVarying (formatGroups code)
