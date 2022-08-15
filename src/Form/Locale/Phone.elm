@@ -797,28 +797,44 @@ formatForSubmission code =
         >> (\phone -> phonePrefix code ++ phone)
 
 
-formatGroups : CountryCode.CountryCode -> String -> List Int
-formatGroups code currentPhone =
+formatGroups : CountryCode.CountryCode -> List Int
+formatGroups code =
     case code of
         CountryCode.NZ ->
-            if String.length currentPhone < 9 then
-                [ 2, 3, 3 ]
+            [ 2, 3, 5 ]
 
-            else if String.length currentPhone < 10 then
-                [ 2, 3, 4 ]
-
-            else
-                [ 2, 3, 5 ]
+        CountryCode.US ->
+            [ 3, 3, 4 ]
 
         _ ->
             [ 3, 3, 3 ]
 
 
-{-| -}
 formatForDisplay : CountryCode.CountryCode -> String -> String
 formatForDisplay code phone =
-    StringExtra.rightOf (phonePrefix code) phone
+    phone
         |> String.toList
-        |> ListExtra.groupsOfVarying (formatGroups code phone)
+        |> List.filter
+            (\value ->
+                if value == ' ' then
+                    False
+
+                else
+                    True
+            )
+        |> ListExtra.groupsOfVarying (formatGroups code)
         |> List.map String.fromList
         |> String.join " "
+
+
+
+{- check formatForDisplay -}
+
+
+formatForDisplayOld : CountryCode.CountryCode -> String -> String
+formatForDisplayOld code =
+    StringExtra.rightOf (phonePrefix code)
+        >> String.toList
+        >> ListExtra.groupsOfVarying (formatGroups code)
+        >> List.map String.fromList
+        >> String.join " "
