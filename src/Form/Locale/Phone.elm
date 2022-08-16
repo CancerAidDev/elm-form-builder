@@ -1,11 +1,11 @@
-module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay)
+module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg)
 
 {-| Phone number helpers
 
 
 # Phone
 
-@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay
+@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg
 
 -}
 
@@ -817,3 +817,35 @@ formatForDisplay code =
         >> ListExtra.groupsOfVarying (formatGroups code)
         >> List.map String.fromList
         >> String.join " "
+
+
+toPlaceholder : Maybe CountryCode.CountryCode -> String
+toPlaceholder code =
+    case code of
+        Just CountryCode.US ->
+            "200 200 0000"
+
+        Just CountryCode.NZ ->
+            "20 000 0000"
+
+        Just _ ->
+            "400 000 000"
+
+        Nothing ->
+            ""
+
+
+mobileErrMsg : CountryCode.CountryCode -> String
+mobileErrMsg code =
+    case code of
+        CountryCode.AU ->
+            "Invalid mobile number (example: 400 000 000)"
+
+        CountryCode.NZ ->
+            "Invalid mobile number (example: 20 000 0000)"
+
+        CountryCode.US ->
+            "Invalid mobile number, (example: 200 200 0000)"
+
+        _ ->
+            "Invalid mobile number"

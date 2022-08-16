@@ -1,7 +1,4 @@
-module Form.Locale.CountryCode exposing
-    ( CountryCode(..), fromString, toString
-    , mobileErrMsg
-    )
+module Form.Locale.CountryCode exposing (CountryCode(..), fromString, toString)
 
 {-| Best effort at supporting [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166).
 
@@ -1729,24 +1726,3 @@ toString code =
 
         ZW ->
             "ZW"
-
-
-mobileErrMsg : Maybe CountryCode -> String
-mobileErrMsg maybeCode =
-    case maybeCode of
-        Just code ->
-            case code of
-                AU ->
-                    "Invalid mobile number (example: 400 000 000)"
-
-                NZ ->
-                    "Invalid mobile number (example: 20 000 0000)"
-
-                US ->
-                    "Invalid mobile number, (example: 200 200 0000)"
-
-                _ ->
-                    "Invalid mobile number"
-
-        Nothing ->
-            "Invalid mobile number"

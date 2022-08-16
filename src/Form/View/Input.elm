@@ -226,8 +226,8 @@ error submitted locale fields field =
 
 
 validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-validateForm locale fields field =
+validateForm ((Locale.Locale _ code) as locale) fields field =
     Validate.validateField locale fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage)
+            (Html.text << Validate.errorToMessage code)
             (always HtmlExtra.nothing)

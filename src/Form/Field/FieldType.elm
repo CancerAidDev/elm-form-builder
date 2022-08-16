@@ -25,6 +25,7 @@ module Form.Field.FieldType exposing
 
 import Form.Lib.Time as LibTime
 import Form.Locale.CountryCode as CountryCode
+import Form.Locale.Phone as Phone
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
@@ -184,25 +185,9 @@ toPlaceholder fieldType code =
             "your@email.com"
 
         Phone ->
-            toPhonePlaceholder code
+            Phone.toPlaceholder code
 
         _ ->
-            ""
-
-
-toPhonePlaceholder : Maybe CountryCode.CountryCode -> String
-toPhonePlaceholder code =
-    case code of
-        Just CountryCode.US ->
-            "200 200 0000"
-
-        Just CountryCode.NZ ->
-            "20 000 0000"
-
-        Just _ ->
-            "400 000 000"
-
-        Nothing ->
             ""
 
 
