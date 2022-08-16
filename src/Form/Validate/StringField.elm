@@ -5,6 +5,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.Required as Required
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Locale.Phone as Phone
 import Iso8601
 import Regex
@@ -22,8 +23,8 @@ type StringError
     | InvalidUrl
 
 
-errorToMessage : StringError -> String
-errorToMessage error =
+errorToMessage : StringError -> CountryCode.CountryCode -> String
+errorToMessage error code =
     case error of
         EmptyError ->
             "Field is required"
@@ -32,7 +33,7 @@ errorToMessage error =
             "Invalid option"
 
         InvalidMobilePhoneNumber ->
-            "Invalid mobile number"
+            Phone.mobileErrMsg code
 
         InvalidPhoneNumber ->
             "Invalid phone number"

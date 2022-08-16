@@ -1,11 +1,11 @@
-module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay)
+module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg)
 
 {-| Phone number helpers
 
 
 # Phone
 
-@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay
+@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg
 
 -}
 
@@ -773,6 +773,16 @@ mobileRegex code =
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
+        CountryCode.NZ ->
+            "^2\\d{7,9}$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+        CountryCode.US ->
+            "^[2-9]\\d{2}[2-9]\\d{6}$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
         _ ->
             "^\\d.*$"
                 |> Regex.fromString
@@ -787,11 +797,55 @@ formatForSubmission code =
         >> (\phone -> phonePrefix code ++ phone)
 
 
-{-| -}
+formatGroups : CountryCode.CountryCode -> List Int
+formatGroups code =
+    case code of
+        CountryCode.NZ ->
+            [ 2, 3, 5 ]
+
+        CountryCode.US ->
+            [ 3, 3, 4 ]
+
+        _ ->
+            [ 3, 3, 3 ]
+
+
 formatForDisplay : CountryCode.CountryCode -> String -> String
 formatForDisplay code =
     StringExtra.rightOf (phonePrefix code)
         >> String.toList
-        >> ListExtra.groupsOf 3
+        >> ListExtra.groupsOfVarying (formatGroups code)
         >> List.map String.fromList
         >> String.join " "
+
+
+toPlaceholder : Maybe CountryCode.CountryCode -> String
+toPlaceholder code =
+    case code of
+        Just CountryCode.US ->
+            "200 200 0000"
+
+        Just CountryCode.NZ ->
+            "20 000 0000"
+
+        Just _ ->
+            "400 000 000"
+
+        Nothing ->
+            ""
+
+
+mobileErrMsg : CountryCode.CountryCode -> String
+mobileErrMsg code =
+    case code of
+        CountryCode.AU ->
+            "Invalid mobile number (example: 400 000 000)"
+
+        CountryCode.NZ ->
+            "Invalid mobile number (example: 20 000 0000)"
+
+        CountryCode.US ->
+            "Invalid mobile number, (example: 200 200 0000)"
+
+        _ ->
+            "Invalid mobile number"
