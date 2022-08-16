@@ -1,6 +1,7 @@
 import { Elm } from "./Main.elm";
-// still need to import - is it possible to import in other codebases
-import "../src/Form/Lib/PhoneValidator";
+import { registerComponent } from "@canceraiddev/phone-validator";
+
+registerComponent();
 
 Elm.Main.init({
   node: document.querySelector("main"),

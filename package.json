@@ -17,5 +17,8 @@
     "elm-review": "^2.7.1",
     "elm-test": "^0.19.1-revision7",
     "parcel": "^2.5.0"
+  },
+  "dependencies": {
+    "@canceraiddev/phone-validator": "^0.0.1"
   }
 }

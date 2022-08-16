@@ -1,4 +1,6 @@
-export default class PhoneValidator extends HTMLElement {
+// moved to npm package and imported in index.js
+
+class PhoneValidator extends HTMLElement {
   constructor() {
     const self = super();
     self._countryCode = null;
@@ -69,8 +71,6 @@ export default class PhoneValidator extends HTMLElement {
   }
 }
 
-function registerComponent() {
+export function registerComponent() {
   window.customElements.define("phone-validator", PhoneValidator);
 }
-
-registerComponent();
