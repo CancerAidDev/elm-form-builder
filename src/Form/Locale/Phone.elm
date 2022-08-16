@@ -810,6 +810,7 @@ formatGroups code =
             [ 3, 3, 3 ]
 
 
+{-| -}
 formatForDisplay : CountryCode.CountryCode -> String -> String
 formatForDisplay code =
     StringExtra.rightOf (phonePrefix code)
@@ -819,6 +820,7 @@ formatForDisplay code =
         >> String.join " "
 
 
+{-| -}
 toPlaceholder : Maybe CountryCode.CountryCode -> String
 toPlaceholder code =
     case code of
@@ -835,6 +837,7 @@ toPlaceholder code =
             ""
 
 
+{-| -}
 mobileErrMsg : CountryCode.CountryCode -> String
 mobileErrMsg code =
     case code of
