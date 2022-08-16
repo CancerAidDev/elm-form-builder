@@ -1,16 +1,5 @@
 import { Elm } from "./Main.elm";
-import { groupDigitsListener } from "./phone";
-import PhoneValidator from "./phone";
-
-/*window.addEventListener(
-  "input",
-  function (event) {
-    groupDigitsListener(event, "AU");
-  },
-  true
-);*/
-
-window.customElements.define("phone-validator", PhoneValidator);
+import "../src/Form/Lib/PhoneValidator";
 
 Elm.Main.init({
   node: document.querySelector("main"),
