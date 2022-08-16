@@ -28,6 +28,7 @@ import Html.Attributes as HtmlAttributes
 import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
+import Json.Encode as Encode
 import Result.Extra as ResultExtra
 import Time
 
@@ -175,7 +176,16 @@ phone time code key field =
             [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
             [ input time (Just code) key field ]
+        , Html.node "phone-validator"
+            [ HtmlAttributes.property "countryCode" (encodeCountryCode code)
+            ]
+            []
         ]
+
+
+encodeCountryCode : CountryCode.CountryCode -> Encode.Value
+encodeCountryCode code =
+    Encode.string (CountryCode.toString code)
 
 
 checkbox : String -> Field.BoolFieldProperties a -> Html.Html Msg.Msg

@@ -45,6 +45,7 @@ function groupDigits(str, countryCode) {
 // can group the digits and work out where the cursor should be and set it using this
 // function.
 export function groupDigitsListener(event, countryCode) {
+  console.log(countryCode);
   const target = event.target;
   if (target.type === "tel") {
     const start = target.selectionStart ?? undefined;
@@ -53,5 +54,25 @@ export function groupDigitsListener(event, countryCode) {
     const beforeGrouped = groupDigits(before, countryCode);
     target.value = groupDigits(before + after, countryCode);
     target.selectionStart = target.selectionEnd = beforeGrouped.length;
+  }
+}
+
+export default class PhoneValidator extends HTMLElement {
+  constructor() {
+    const self = super();
+    self._countryCode = null;
+  }
+
+  set countryCode(code) {
+    console.log(code);
+    this._countryCode = code;
+    console.log(this._countryCode);
+    window.addEventListener(
+      "input",
+      function (event) {
+        groupDigitsListener(event, this._countryCode);
+      },
+      true
+    );
   }
 }
