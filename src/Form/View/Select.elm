@@ -53,8 +53,8 @@ viewOption selectedValue option =
 {-| -}
 httpSelect : String -> Field.HttpSelectFieldProperties -> Html.Html Msg.Msg
 httpSelect key properties =
-    RemoteData.map
-        (\options ->
+    case properties.options of
+        RemoteData.Success options ->
             select key
                 { value = properties.value
                 , required = properties.required
@@ -66,6 +66,12 @@ httpSelect key properties =
                 , order = properties.order
                 , disabled = properties.disabled
                 }
-        )
-        properties.options
-        |> RemoteData.withDefault HtmlExtra.nothing
+
+        RemoteData.Failure _ ->
+            Html.text "There was an error"
+
+        RemoteData.Loading ->
+            Html.text "Loading"
+
+        RemoteData.NotAsked ->
+            Html.text "NotAsked"

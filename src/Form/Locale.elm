@@ -25,6 +25,8 @@ module Form.Locale exposing
 
 import Form.Locale.CountryCode as CountryCode
 import Form.Locale.LanguageCode as LanguageCode
+import Json.Decode as Decode
+import Json.Decode.Extra as DecodeExtra
 import Url.Parser as UrlParser
 
 
@@ -80,3 +82,11 @@ enUS =
 urlParser : UrlParser.Parser (Locale -> a) a
 urlParser =
     UrlParser.custom "LOCALE" fromString
+
+
+{-| -}
+decoder : Decode.Decoder Locale
+decoder =
+    Decode.string
+        |> Decode.andThen
+            (fromString >> DecodeExtra.fromMaybe "Invalid locale")
