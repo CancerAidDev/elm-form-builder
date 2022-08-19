@@ -1,6 +1,6 @@
 module Form.Locale exposing
     ( Locale(..)
-    , fromString, toString, urlParser, toCountryCodeString
+    , fromString, toString, decoder, encode, urlParser, toCountryCodeString
     , enAU, enNZ, enUS
     )
 
@@ -14,7 +14,7 @@ module Form.Locale exposing
 
 # Helpers
 
-@docs fromString, toString, urlParser, toCountryCodeString
+@docs fromString, toString, decoder, encode, urlParser, toCountryCodeString
 
 
 # Locales
@@ -25,6 +25,9 @@ module Form.Locale exposing
 
 import Form.Locale.CountryCode as CountryCode
 import Form.Locale.LanguageCode as LanguageCode
+import Json.Decode as Decode
+import Json.Decode.Extra as DecodeExtra
+import Json.Encode as Encode
 import Url.Parser as UrlParser
 
 
@@ -50,6 +53,20 @@ fromString str =
 toString : Locale -> String
 toString (Locale language country) =
     LanguageCode.toString language ++ "-" ++ CountryCode.toString country
+
+
+{-| -}
+decoder : Decode.Decoder Locale
+decoder =
+    Decode.string
+        |> Decode.andThen
+            (fromString >> DecodeExtra.fromMaybe "Invalid locale")
+
+
+{-| -}
+encode : Locale -> Encode.Value
+encode =
+    toString >> Encode.string
 
 
 {-| -}
