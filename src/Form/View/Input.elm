@@ -39,18 +39,19 @@ view time submitted locale fields key field =
         disabled =
             not (Fields.isEnabled fields field)
     in
-    Html.fieldset
-        [ HtmlAttributes.class "column"
-        , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
-        , HtmlAttributes.disabled disabled
-        , HtmlAttributes.id key
-        ]
-        [ Html.div [ HtmlAttributes.class "field" ]
-            [ label field disabled
-            , control time locale key field
-            , error submitted locale fields field
+    HtmlExtra.viewIf (not <| Fields.isHidden fields field) <|
+        Html.fieldset
+            [ HtmlAttributes.class "column"
+            , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+            , HtmlAttributes.disabled disabled
+            , HtmlAttributes.id key
             ]
-        ]
+            [ Html.div [ HtmlAttributes.class "field" ]
+                [ label field disabled
+                , control time locale key field
+                , error submitted locale fields field
+                ]
+            ]
 
 
 label : Field.Field -> Bool -> Html.Html Msg.Msg

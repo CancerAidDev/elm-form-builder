@@ -21,6 +21,8 @@ fields =
             , order = order
             , value = ""
             , disabled = True
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -33,6 +35,8 @@ fields =
             , order = order
             , value = ""
             , disabled = True
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -45,6 +49,8 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -57,6 +63,8 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -69,6 +77,8 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -81,6 +91,8 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -93,6 +105,8 @@ fields =
             , order = order
             , value = Nothing
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -105,6 +119,8 @@ fields =
             , order = order
             , value = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -122,6 +138,8 @@ fields =
                 , { label = Nothing, value = "Two" }
                 ]
             , disabled = True
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -145,6 +163,8 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -166,6 +186,8 @@ fields =
                 , { label = Nothing, value = "Cycle" }
                 ]
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -192,6 +214,8 @@ fields =
                 ]
             , searchInput = ""
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -211,6 +235,8 @@ fields =
                 ]
             , direction = Direction.Row
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     , \order ->
@@ -223,6 +249,8 @@ fields =
             , order = order
             , value = Nothing
             , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
             }
         )
     ]
