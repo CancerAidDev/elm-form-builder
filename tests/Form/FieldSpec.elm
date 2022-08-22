@@ -16,7 +16,7 @@ suite =
             \initialString updateString ->
                 let
                     fieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False }
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing }
 
                     field =
                         Field.text fieldValues
@@ -28,7 +28,7 @@ suite =
             \option1 option2 ->
                 let
                     radioFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False }
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False, hidden = False, unhiddenBy = Nothing }
 
                     field =
                         Field.radio radioFieldValues
@@ -40,7 +40,7 @@ suite =
             \option1 option2 ->
                 let
                     radioFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False }
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False, hidden = False, unhiddenBy = Nothing }
 
                     field =
                         Field.radio radioFieldValues

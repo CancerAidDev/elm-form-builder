@@ -3,6 +3,7 @@ module Form.Fields exposing
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
     , hasCheckboxConsentField, isEnabled
+    , isHidden
     )
 
 {-| Fields.
@@ -146,7 +147,7 @@ updateFieldRequired fields field =
         Just enabledBy ->
             let
                 enabled =
-                    getEnabledByValue enabledBy fields
+                    getTriggersByValue enabledBy fields
                         |> Maybe.withDefault True
             in
             if not enabled then
@@ -202,7 +203,7 @@ isEnabled fields field =
         byFieldIsEnabled =
             case Field.getEnabledBy field of
                 Just key ->
-                    getEnabledByValue key fields
+                    getTriggersByValue key fields
                         |> Maybe.withDefault True
 
                 Nothing ->
@@ -211,9 +212,27 @@ isEnabled fields field =
     not isDisabledField && byFieldIsEnabled
 
 
+isHidden : Fields -> Field.Field -> Bool
+isHidden fields field =
+    let
+        isHiddenField =
+            (Field.getProperties field).hidden
+
+        byFieldIsUnhidden =
+            case Field.getUnhiddenBy field of
+                Just key ->
+                    getTriggersByValue key fields
+                        |> Maybe.withDefault True
+
+                Nothing ->
+                    True
+    in
+    not isHiddenField && byFieldIsUnhidden
+
+
 {-| -}
-getEnabledByValue : String -> Fields -> Maybe Bool
-getEnabledByValue key fields =
+getTriggersByValue : String -> Fields -> Maybe Bool
+getTriggersByValue key fields =
     case Dict.get key fields of
         Just (Field.BoolField_ (Field.RadioBoolField { value })) ->
             case value of

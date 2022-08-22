@@ -65,6 +65,8 @@ httpSelect key properties =
                 , enabledBy = properties.enabledBy
                 , order = properties.order
                 , disabled = properties.disabled
+                , hidden = properties.hidden
+                , unhiddenBy = properties.unhiddenBy
                 }
         )
         properties.options
