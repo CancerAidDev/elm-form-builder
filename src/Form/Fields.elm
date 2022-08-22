@@ -3,7 +3,7 @@ module Form.Fields exposing
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
     , hasCheckboxConsentField, isEnabled
-    , isHidden
+    , isShown
     )
 
 {-| Fields.
@@ -212,13 +212,13 @@ isEnabled fields field =
     not isDisabledField && byFieldIsEnabled
 
 
-isHidden : Fields -> Field.Field -> Bool
-isHidden fields field =
+isShown : Fields -> Field.Field -> Bool
+isShown fields field =
     let
         isHiddenField =
             (Field.getProperties field).hidden
 
-        byFieldIsUnhidden =
+        byFieldIsShown =
             case Field.getUnhiddenBy field of
                 Just key ->
                     getTriggersByValue key fields
@@ -227,7 +227,7 @@ isHidden fields field =
                 Nothing ->
                     True
     in
-    not isHiddenField && byFieldIsUnhidden
+    not isHiddenField && byFieldIsShown
 
 
 {-| -}

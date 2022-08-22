@@ -38,8 +38,11 @@ view time submitted locale fields key field =
     let
         disabled =
             not (Fields.isEnabled fields field)
+
+        shown =
+            Fields.isShown fields field
     in
-    HtmlExtra.viewIf (not <| Fields.isHidden fields field) <|
+    HtmlExtra.viewIf shown <|
         Html.fieldset
             [ HtmlAttributes.class "column"
             , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
@@ -47,16 +50,16 @@ view time submitted locale fields key field =
             , HtmlAttributes.id key
             ]
             [ Html.div [ HtmlAttributes.class "field" ]
-                [ label field disabled
+                [ label field disabled shown
                 , control time locale key field
                 , error submitted locale fields field
                 ]
             ]
 
 
-label : Field.Field -> Bool -> Html.Html Msg.Msg
-label field disabled =
-    HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
+label : Field.Field -> Bool -> Bool -> Html.Html Msg.Msg
+label field disabled shown =
+    HtmlExtra.viewIf (not (Field.isCheckbox field) && shown) <|
         Html.label [ HtmlAttributes.class "label" ]
             [ Html.text (Field.getLabel field)
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|

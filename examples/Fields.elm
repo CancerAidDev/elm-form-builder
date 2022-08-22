@@ -253,6 +253,20 @@ fields =
             , unhiddenBy = Nothing
             }
         )
+    , \order ->
+        ( "newsletterFreq"
+        , FormField.radioBool
+            { required = IsRequired.Nullable
+            , label = "How often would you like to receive our newsletter?"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = Nothing
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Just "newsletter"
+            }
+        )
     ]
         |> List.indexedMap (\index field -> field index)
         |> Dict.fromList
