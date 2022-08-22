@@ -2,8 +2,7 @@ module Form.Fields exposing
     ( Fields
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
-    , hasCheckboxConsentField, isEnabled
-    , isShown
+    , hasCheckboxConsentField, isEnabled, isShown
     )
 
 {-| Fields.
@@ -26,7 +25,7 @@ module Form.Fields exposing
 
 # Predicates
 
-@docs hasCheckboxConsentField, isEnabled
+@docs hasCheckboxConsentField, isEnabled, isShown
 
 -}
 
@@ -212,6 +211,7 @@ isEnabled fields field =
     not isDisabledField && byFieldIsEnabled
 
 
+{-| -}
 isShown : Fields -> Field.Field -> Bool
 isShown fields field =
     let
