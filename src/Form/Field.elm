@@ -1,8 +1,8 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age
     , AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
-    , getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -23,12 +23,12 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
 
 
 # Predicates
@@ -62,7 +62,7 @@ import Set
 
 {-| -}
 text : StringFieldProperties {} -> Field
-text { required, label, width, enabledBy, order, value, disabled } =
+text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -73,12 +73,14 @@ text { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Text
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 email : StringFieldProperties {} -> Field
-email { required, label, width, enabledBy, order, value, disabled } =
+email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -89,12 +91,14 @@ email { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Email
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
+dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -105,12 +109,14 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Date FieldType.DateOfBirth
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value, disabled } =
+datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -121,12 +127,14 @@ datePast { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Date FieldType.DatePast
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 phone : StringFieldProperties {} -> Field
-phone { required, label, width, enabledBy, order, value, disabled } =
+phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -137,12 +145,14 @@ phone { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Phone
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 url : StringFieldProperties {} -> Field
-url { required, label, width, enabledBy, order, value, disabled } =
+url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -153,12 +163,14 @@ url { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Url
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 textarea : StringFieldProperties {} -> Field
-textarea { required, label, width, enabledBy, order, value, disabled } =
+textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
         SimpleField
             { required = required
@@ -169,12 +181,14 @@ textarea { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.TextArea
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
 {-| -}
 checkbox : BoolFieldProperties {} -> Field
-checkbox { required, label, width, enabledBy, order, value, disabled } =
+checkbox { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     BoolField_ <|
         CheckboxField
             { required = required
@@ -185,6 +199,8 @@ checkbox { required, label, width, enabledBy, order, value, disabled } =
             , tipe = FieldType.Checkbox
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
@@ -286,6 +302,8 @@ type alias FieldProperties a =
         , enabledBy : Maybe String
         , order : Int
         , disabled : Bool
+        , hidden : Bool
+        , unhiddenBy : Maybe String
     }
 
 
@@ -415,20 +433,22 @@ getProperties field =
 
 
 getCommonProperties : FieldProperties a -> CommonFieldProperties
-getCommonProperties { required, label, width, enabledBy, order, disabled } =
+getCommonProperties { required, label, width, enabledBy, order, disabled, hidden, unhiddenBy } =
     { required = required
     , label = label
     , width = width
     , enabledBy = enabledBy
     , order = order
     , disabled = disabled
+    , hidden = hidden
+    , unhiddenBy = unhiddenBy
     }
 
 
 getStringProperties : StringField -> FieldProperties { value : String }
 getStringProperties field =
     case field of
-        HttpSelectField { required, label, width, enabledBy, order, value, disabled } ->
+        HttpSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -436,9 +456,11 @@ getStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
-        SimpleField { required, label, width, enabledBy, order, value, disabled } ->
+        SimpleField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -446,9 +468,11 @@ getStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
-        SelectField { required, label, width, enabledBy, order, value, disabled } ->
+        SelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -456,9 +480,11 @@ getStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
-        RadioField { required, label, width, enabledBy, order, value, disabled } ->
+        RadioField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -466,6 +492,8 @@ getStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
@@ -473,7 +501,7 @@ getStringProperties field =
 getMultiStringProperties : MultiStringField -> FieldProperties { value : Set.Set String }
 getMultiStringProperties field =
     case field of
-        MultiHttpSelectField { required, label, width, enabledBy, order, value, disabled } ->
+        MultiHttpSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -481,9 +509,11 @@ getMultiStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
-        MultiSelectField { required, label, width, enabledBy, order, value, disabled } ->
+        MultiSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -491,9 +521,11 @@ getMultiStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
-        SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled } ->
+        SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -501,6 +533,8 @@ getMultiStringProperties field =
             , order = order
             , value = value
             , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
             }
 
 
@@ -529,6 +563,17 @@ updateStringDisabled value field =
     case field of
         StringField_ _ ->
             genericUpdateStringField updateStringDisabled_ value field
+
+        _ ->
+            field
+
+
+{-| -}
+updateStringHidden : Bool -> Field -> Field
+updateStringHidden value field =
+    case field of
+        StringField_ _ ->
+            genericUpdateStringField updateStringHidden_ value field
 
         _ ->
             field
@@ -770,6 +815,23 @@ updateStringDisabled_ value field =
             RadioField { properties | disabled = value }
 
 
+{-| -}
+updateStringHidden_ : Bool -> StringField -> StringField
+updateStringHidden_ value field =
+    case field of
+        SimpleField properties ->
+            SimpleField { properties | hidden = value }
+
+        SelectField properties ->
+            SelectField { properties | hidden = value }
+
+        HttpSelectField properties ->
+            HttpSelectField { properties | hidden = value }
+
+        RadioField properties ->
+            RadioField { properties | hidden = value }
+
+
 updateMultiStringOption_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
 updateMultiStringOption_ option checked field =
     let
@@ -868,6 +930,12 @@ getLabel =
 getEnabledBy : Field -> Maybe String
 getEnabledBy =
     getProperties >> .enabledBy
+
+
+{-| -}
+getUnhiddenBy : Field -> Maybe String
+getUnhiddenBy =
+    getProperties >> .unhiddenBy
 
 
 {-| -}

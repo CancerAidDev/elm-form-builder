@@ -2,7 +2,7 @@ module Form.Fields exposing
     ( Fields
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
-    , hasCheckboxConsentField, isEnabled
+    , hasCheckboxConsentField, isEnabled, isShown
     )
 
 {-| Fields.
@@ -25,7 +25,7 @@ module Form.Fields exposing
 
 # Predicates
 
-@docs hasCheckboxConsentField, isEnabled
+@docs hasCheckboxConsentField, isEnabled, isShown
 
 -}
 
@@ -146,7 +146,7 @@ updateFieldRequired fields field =
         Just enabledBy ->
             let
                 enabled =
-                    getEnabledByValue enabledBy fields
+                    getTriggersByValue enabledBy fields
                         |> Maybe.withDefault True
             in
             if not enabled then
@@ -202,7 +202,7 @@ isEnabled fields field =
         byFieldIsEnabled =
             case Field.getEnabledBy field of
                 Just key ->
-                    getEnabledByValue key fields
+                    getTriggersByValue key fields
                         |> Maybe.withDefault True
 
                 Nothing ->
@@ -212,8 +212,27 @@ isEnabled fields field =
 
 
 {-| -}
-getEnabledByValue : String -> Fields -> Maybe Bool
-getEnabledByValue key fields =
+isShown : Fields -> Field.Field -> Bool
+isShown fields field =
+    let
+        isHiddenField =
+            (Field.getProperties field).hidden
+
+        byFieldIsShown =
+            case Field.getUnhiddenBy field of
+                Just key ->
+                    getTriggersByValue key fields
+                        |> Maybe.withDefault True
+
+                Nothing ->
+                    True
+    in
+    not isHiddenField && byFieldIsShown
+
+
+{-| -}
+getTriggersByValue : String -> Fields -> Maybe Bool
+getTriggersByValue key fields =
     case Dict.get key fields of
         Just (Field.BoolField_ (Field.RadioBoolField { value })) ->
             case value of

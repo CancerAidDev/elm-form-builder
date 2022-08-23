@@ -59,6 +59,8 @@ suite =
                                         , order = order
                                         , value = ""
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         }
                                 )
                             )
@@ -160,6 +162,8 @@ suite =
                                         , value = "Dog"
                                         , order = order
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         }
                                     )
                                 )
@@ -230,6 +234,8 @@ suite =
                                         , value = ""
                                         , order = order
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         }
                                     )
                                 )
@@ -289,6 +295,8 @@ suite =
                                         , order = order
                                         , value = False
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         }
                                     )
                                 )
@@ -332,6 +340,8 @@ suite =
                                         , order = order
                                         , value = False
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         }
                                     )
                                 )
@@ -393,6 +403,8 @@ suite =
                                         , value = Set.empty
                                         , order = order
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         , showDropdown = False
                                         }
                                     )
@@ -446,6 +458,8 @@ suite =
                                         , value = Set.empty
                                         , order = order
                                         , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
                                         , showDropdown = False
                                         , searchInput = ""
                                         , searchableOptions =
@@ -478,6 +492,8 @@ suite =
                                             , order = order
                                             , value = "Foo Bar"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -501,6 +517,8 @@ suite =
                                             , order = order
                                             , value = "bar"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -535,6 +553,8 @@ suite =
                                                   }
                                                 ]
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -560,6 +580,8 @@ suite =
                                             , options = RemoteData.NotAsked
                                             , url = "tags"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -595,6 +617,8 @@ suite =
                                             , placeholder = "Pets"
                                             , showDropdown = True
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -635,6 +659,8 @@ suite =
                                             , placeholder = "Pets"
                                             , showDropdown = True
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -681,6 +707,8 @@ suite =
                                             , placeholder = "Pets"
                                             , showDropdown = True
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]
@@ -710,6 +738,8 @@ suite =
                                             , order = 1
                                             , value = "2022-01-01"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 , ( "metadata.email"
@@ -723,6 +753,8 @@ suite =
                                             , order = order
                                             , value = "foo@example.com"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 , ( "metadata.name"
@@ -736,6 +768,8 @@ suite =
                                             , order = 2
                                             , value = "Foo Bar"
                                             , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
                                             }
                                   )
                                 ]

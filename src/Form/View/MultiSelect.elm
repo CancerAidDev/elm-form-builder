@@ -188,19 +188,20 @@ viewCheckbox key properties option =
         checked =
             Set.member option.value properties.value
     in
-    Html.div [ HtmlAttributes.class "dropdown-item" ]
-        [ Html.label [ HtmlAttributes.class "checkbox" ]
-            [ Html.input
-                [ HtmlAttributes.class "mr-2"
-                , HtmlAttributes.type_ "checkbox"
-                , HtmlAttributes.disabled properties.disabled
-                , HtmlAttributes.checked checked
-                , HtmlEvents.onCheck <| Msg.UpdateMultiStringField key option
+    HtmlExtra.viewIf (not properties.hidden) <|
+        Html.div [ HtmlAttributes.class "dropdown-item" ]
+            [ Html.label [ HtmlAttributes.class "checkbox" ]
+                [ Html.input
+                    [ HtmlAttributes.class "mr-2"
+                    , HtmlAttributes.type_ "checkbox"
+                    , HtmlAttributes.disabled properties.disabled
+                    , HtmlAttributes.checked checked
+                    , HtmlEvents.onCheck <| Msg.UpdateMultiStringField key option
+                    ]
+                    []
+                , Html.text (option.label |> Maybe.withDefault option.value)
                 ]
-                []
-            , Html.text (option.label |> Maybe.withDefault option.value)
             ]
-        ]
 
 
 {-| -}
@@ -219,6 +220,8 @@ multiHttpSelect key properties =
                 , enabledBy = properties.enabledBy
                 , order = properties.order
                 , disabled = properties.disabled
+                , hidden = properties.hidden
+                , unhiddenBy = properties.unhiddenBy
                 }
         )
         properties.options

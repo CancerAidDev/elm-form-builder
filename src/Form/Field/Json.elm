@@ -45,6 +45,8 @@ type alias JsonSimpleFieldProperties =
     , enabledBy : Maybe String
     , tipe : FieldType.SimpleFieldType
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -57,6 +59,8 @@ type alias JsonSelectFieldProperties =
     , default : Maybe String
     , options : List Option.Option
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -69,6 +73,8 @@ type alias JsonHttpSelectFieldProperties =
     , default : Maybe String
     , url : String
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -82,6 +88,8 @@ type alias JsonMultiSelectFieldProperties =
     , options : List Option.Option
     , showDropdown : Bool
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -95,6 +103,8 @@ type alias JsonSearchableMultiSelectFieldProperties =
     , options : List Option.Option
     , showDropdown : Bool
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     , searchInput : String
     , searchableOptions : List Option.Option
     }
@@ -110,6 +120,8 @@ type alias JsonMultiHttpSelectFieldProperties =
     , url : String
     , showDropdown : Bool
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -121,6 +133,8 @@ type alias JsonCheckboxFieldProperties =
     , enabledBy : Maybe String
     , tipe : FieldType.CheckboxFieldType
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -134,6 +148,8 @@ type alias JsonRadioFieldProperties =
     , options : List Option.Option
     , direction : Direction.Direction
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -144,6 +160,8 @@ type alias JsonRadioBoolFieldProperties =
     , width : Width.Width
     , enabledBy : Maybe String
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -156,6 +174,8 @@ type alias JsonRadioEnumFieldProperties =
     , default : Maybe RadioEnum.Value
     , options : List RadioEnum.Value
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -166,6 +186,8 @@ type alias JsonAgeFieldProperties =
     , width : Width.Width
     , enabledBy : Maybe String
     , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
     }
 
 
@@ -217,7 +239,7 @@ decoderForType fieldType =
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
 toField time order field =
     case field of
-        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled } ->
+        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -229,10 +251,12 @@ toField time order field =
                     , order = order
                     , value = FieldType.defaultValue time tipe |> Maybe.withDefault ""
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonCheckboxField { tipe, required, key, label, width, enabledBy, disabled } ->
+        JsonCheckboxField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.CheckboxField
@@ -244,10 +268,12 @@ toField time order field =
                     , order = order
                     , value = False
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled } ->
+        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -260,10 +286,12 @@ toField time order field =
                     , options = options
                     , value = Maybe.withDefault "" default
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled } ->
+        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -277,10 +305,12 @@ toField time order field =
                     , options = RemoteData.NotAsked
                     , value = Maybe.withDefault "" default
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonRadioField { required, key, label, width, default, enabledBy, options, direction, disabled } ->
+        JsonRadioField { required, key, label, width, default, enabledBy, options, direction, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.StringField_ <|
                 Field.RadioField
@@ -294,10 +324,12 @@ toField time order field =
                     , value = Maybe.withDefault "" default
                     , direction = direction
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonAgeField { required, key, label, width, enabledBy, disabled } ->
+        JsonAgeField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.NumericField_ <|
                 Field.AgeField
@@ -308,10 +340,12 @@ toField time order field =
                     , order = order
                     , value = Nothing
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonRadioEnumField { required, key, label, width, default, enabledBy, options, disabled } ->
+        JsonRadioEnumField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioEnumField
@@ -324,10 +358,12 @@ toField time order field =
                     , options = options
                     , value = default
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonRadioBoolField { required, key, label, width, enabledBy, disabled } ->
+        JsonRadioBoolField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.BoolField_ <|
                 Field.RadioBoolField
@@ -338,10 +374,12 @@ toField time order field =
                     , order = order
                     , value = Nothing
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled } ->
+        JsonMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.MultiSelectField
@@ -355,10 +393,12 @@ toField time order field =
                     , options = options
                     , value = Set.empty
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
-        JsonSearchableMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, searchableOptions, searchInput } ->
+        JsonSearchableMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy, searchableOptions, searchInput } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.SearchableMultiSelectField
@@ -372,12 +412,14 @@ toField time order field =
                     , options = options
                     , value = Set.empty
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     , searchInput = searchInput
                     , searchableOptions = searchableOptions
                     }
             )
 
-        JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url, disabled } ->
+        JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.MultiHttpSelectField
@@ -392,6 +434,8 @@ toField time order field =
                     , options = RemoteData.NotAsked
                     , value = Set.empty
                     , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
                     }
             )
 
@@ -406,6 +450,8 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderCheckboxJson : FieldType.CheckboxFieldType -> Decode.Decoder JsonCheckboxFieldProperties
@@ -418,6 +464,8 @@ decoderCheckboxJson tipe =
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderSelectJson : Decode.Decoder JsonSelectFieldProperties
@@ -431,6 +479,8 @@ decoderSelectJson =
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
@@ -444,6 +494,8 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
         |> DecodePipeline.required "url" Decode.string
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties
@@ -458,6 +510,8 @@ decoderMultiSelectJson =
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderSearchableMultiSelectJson : Decode.Decoder JsonSearchableMultiSelectFieldProperties
@@ -472,6 +526,8 @@ decoderSearchableMultiSelectJson =
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded ""
         |> DecodePipeline.required "searchableOptions" (Decode.list Option.decoder)
 
@@ -488,6 +544,8 @@ decoderMultiHttpSelectJson =
         |> DecodePipeline.required "url" Decode.string
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderRadioJson : Decode.Decoder JsonRadioFieldProperties
@@ -502,6 +560,8 @@ decoderRadioJson =
         |> DecodePipeline.required "options" (Decode.list Option.decoder)
         |> DecodePipeline.optional "direction" Direction.decoder Direction.Column
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderRadioBoolJson : Decode.Decoder JsonRadioBoolFieldProperties
@@ -513,6 +573,8 @@ decoderRadioBoolJson =
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderRadioEnumJson : Decode.Decoder JsonRadioEnumFieldProperties
@@ -526,6 +588,8 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "default" (Decode.maybe RadioEnum.decoder) Nothing
         |> DecodePipeline.required "options" (Decode.list RadioEnum.decoder)
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
 decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
@@ -537,3 +601,5 @@ decoderAgeJson =
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing

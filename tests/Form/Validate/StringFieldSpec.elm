@@ -176,4 +176,6 @@ simpleField tipe { required, value } =
         , value = value
         , tipe = tipe
         , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
         }
