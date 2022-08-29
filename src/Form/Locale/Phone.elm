@@ -848,7 +848,7 @@ mobileErrMsg code =
             "Invalid mobile number (example: 20 000 0000)"
 
         CountryCode.US ->
-            "Invalid mobile number, (example: 212 200 0000)"
+            "Invalid mobile number (example: 212 200 0000)"
 
         _ ->
             "Invalid mobile number"
