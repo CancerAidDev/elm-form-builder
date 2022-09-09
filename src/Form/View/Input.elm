@@ -233,5 +233,5 @@ validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Ms
 validateForm ((Locale.Locale _ code) as locale) fields field =
     Validate.validateField locale fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage code)
+            (Html.text << Validate.errorToMessage field code)
             (always HtmlExtra.nothing)

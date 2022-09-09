@@ -23,8 +23,8 @@ type StringError
     | InvalidUrl
 
 
-errorToMessage : StringError -> CountryCode.CountryCode -> String
-errorToMessage error code =
+errorToMessage : Field.Field -> StringError -> CountryCode.CountryCode -> String
+errorToMessage field error code =
     case error of
         EmptyError ->
             "Field is required"
@@ -33,7 +33,7 @@ errorToMessage error code =
             "Invalid option"
 
         InvalidMobilePhoneNumber ->
-            Phone.mobileErrMsg code
+            Phone.mobileErrMsg field code
 
         InvalidPhoneNumber ->
             "Invalid phone number"

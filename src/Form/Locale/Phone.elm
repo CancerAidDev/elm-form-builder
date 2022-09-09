@@ -9,6 +9,7 @@ module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSub
 
 -}
 
+import Form.Field as Field
 import Form.Locale.CountryCode as CountryCode
 import List.Extra as ListExtra
 import Regex
@@ -838,17 +839,33 @@ toPlaceholder code =
 
 
 {-| -}
-mobileErrMsg : CountryCode.CountryCode -> String
-mobileErrMsg code =
+mobileErrMsg : Field.Field -> CountryCode.CountryCode -> String
+mobileErrMsg field code =
     case code of
         CountryCode.AU ->
-            "Invalid mobile number (example: 400 000 000)"
+            "Invalid mobile number (example: 4XX XXX XXX)"
 
         CountryCode.NZ ->
-            "Invalid mobile number (example: 20 000 0000)"
+            let
+                defaultPrefix =
+                    "20"
+
+                firstTwoNumbers =
+                    case Field.getStringValue field of
+                        Nothing ->
+                            defaultPrefix
+
+                        Just str ->
+                            if String.length str >= 2 then
+                                String.slice 0 2 str
+
+                            else
+                                defaultPrefix
+            in
+            "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
 
         CountryCode.US ->
-            "Invalid mobile number (example: 212 200 0000)"
+            "Invalid mobile number (example: 212 2XX XXXX)"
 
         _ ->
             "Invalid mobile number"

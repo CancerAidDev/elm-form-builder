@@ -227,11 +227,11 @@ type Error
 
 
 {-| -}
-errorToMessage : CountryCode.CountryCode -> Error -> String
-errorToMessage code error =
+errorToMessage : Field.Field -> CountryCode.CountryCode -> Error -> String
+errorToMessage field code error =
     case error of
         StringError_ err ->
-            ValidateStringField.errorToMessage err code
+            ValidateStringField.errorToMessage field err code
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"
