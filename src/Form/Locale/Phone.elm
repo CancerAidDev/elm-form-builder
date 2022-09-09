@@ -1,15 +1,14 @@
-module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg)
+module Form.Locale.Phone exposing (regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder)
 
 {-| Phone number helpers
 
 
 # Phone
 
-@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder, mobileErrMsg
+@docs regex, mobileRegex, phonePrefix, formatForSubmission, formatForDisplay, toPlaceholder
 
 -}
 
-import Form.Field as Field
 import Form.Locale.CountryCode as CountryCode
 import List.Extra as ListExtra
 import Regex
@@ -836,36 +835,3 @@ toPlaceholder code =
 
         Nothing ->
             ""
-
-
-{-| -}
-mobileErrMsg : Field.Field -> CountryCode.CountryCode -> String
-mobileErrMsg field code =
-    case code of
-        CountryCode.AU ->
-            "Invalid mobile number (example: 4XX XXX XXX)"
-
-        CountryCode.NZ ->
-            let
-                defaultPrefix =
-                    "20"
-
-                firstTwoNumbers =
-                    case Field.getStringValue field of
-                        Nothing ->
-                            defaultPrefix
-
-                        Just str ->
-                            if String.length str >= 2 then
-                                String.slice 0 2 str
-
-                            else
-                                defaultPrefix
-            in
-            "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
-
-        CountryCode.US ->
-            "Invalid mobile number (example: 212 2XX XXXX)"
-
-        _ ->
-            "Invalid mobile number"

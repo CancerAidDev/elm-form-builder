@@ -33,7 +33,7 @@ errorToMessage field error code =
             "Invalid option"
 
         InvalidMobilePhoneNumber ->
-            Phone.mobileErrMsg field code
+            mobileErrMsg field code
 
         InvalidPhoneNumber ->
             "Invalid phone number"
@@ -47,6 +47,39 @@ errorToMessage field error code =
 
         InvalidUrl ->
             "Invalid url"
+
+
+{-| -}
+mobileErrMsg : Field.Field -> CountryCode.CountryCode -> String
+mobileErrMsg field code =
+    case code of
+        CountryCode.AU ->
+            "Invalid mobile number (example: 4XX XXX XXX)"
+
+        CountryCode.NZ ->
+            let
+                defaultPrefix =
+                    "20"
+
+                firstTwoNumbers =
+                    case Field.getStringValue field of
+                        Nothing ->
+                            defaultPrefix
+
+                        Just str ->
+                            if String.length str >= 2 then
+                                String.slice 0 2 str
+
+                            else
+                                defaultPrefix
+            in
+            "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
+
+        CountryCode.US ->
+            "Invalid mobile number (example: 212 2XX XXXX)"
+
+        _ ->
+            "Invalid mobile number"
 
 
 emailValidator : String -> Result StringError String
