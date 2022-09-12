@@ -25,7 +25,7 @@ module Form.Field.FieldType exposing
 
 import Form.Lib.Time as LibTime
 import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone as Phone
+import Form.Validate.Phone as Phone
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
@@ -185,7 +185,7 @@ toPlaceholder fieldType code =
             "your@email.com"
 
         Phone ->
-            Phone.toPlaceholder code
+            Phone.toMobilePlaceholder code
 
         _ ->
             ""

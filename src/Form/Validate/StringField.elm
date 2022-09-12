@@ -1,39 +1,87 @@
-module Form.Validate.StringField exposing (StringError(..), errorToMessage, validate)
+module Form.Validate.StringField exposing (validate)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
-import Form.Field.Option as Option
 import Form.Field.Required as Required
 import Form.Locale as Locale
-import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone as Phone
-import Iso8601
-import Regex
-import RemoteData
-import Url
+import Form.Validate.Date as Date
+import Form.Validate.Email as Email
+import Form.Validate.Options as Options
+import Form.Validate.Phone as Phone
+import Form.Validate.Required as Required
+import Form.Validate.Types as Types exposing (StringError(..))
+import Form.Validate.UrlValidator as UrlValidator
 
 
-type StringError
-    = EmptyError
-    | InvalidOption
-    | InvalidMobilePhoneNumber
-    | InvalidPhoneNumber
-    | InvalidEmail
-    | InvalidDate
-    | InvalidUrl
+validate : Locale.Locale -> Field.StringField -> Result Types.StringError String
+validate locale field =
+    let
+        trimmed =
+            String.trim (Field.getStringValue_ field)
+
+        isRequired =
+            Field.isRequired (Field.StringField_ field) == Required.Yes
+
+        isRequiredValidated =
+            Required.requiredValidator locale trimmed
+
+        validateField =
+            case field of
+                Field.SimpleField { tipe, value } ->
+                    case tipe of
+                        FieldType.Email ->
+                            Email.emailValidator locale trimmed
+
+                        FieldType.Date _ ->
+                            Date.dateValidator locale trimmed
+
+                        FieldType.Phone ->
+                            Phone.phoneValidator locale trimmed
+
+                        FieldType.Url ->
+                            UrlValidator.urlValidator locale trimmed
+
+                        FieldType.Text ->
+                            Ok trimmed
+
+                        FieldType.TextArea ->
+                            Ok trimmed
+
+                Field.SelectField { value, options } ->
+                    Options.optionsValidator options locale trimmed
+
+                Field.HttpSelectField { value, options } ->
+                    Options.remoteOptionsValidator options locale trimmed
+
+                Field.RadioField { value, options } ->
+                    Options.optionsValidator options locale trimmed
+    in
+    if String.isEmpty trimmed then
+        if Field.isRequired (Field.StringField_ field) == Required.Yes then
+            Err Types.RequiredError
+
+        else
+            Ok trimmed
+
+    else
+        validateField
 
 
-errorToMessage : Field.Field -> StringError -> CountryCode.CountryCode -> String
-errorToMessage field error code =
+errorToMessage : StringError -> Locale.Locale -> Field.StringField -> String
+errorToMessage error locale field =
+    let
+        trimmed =
+            String.trim (Field.getStringValue_ field)
+    in
     case error of
-        EmptyError ->
+        RequiredError ->
             "Field is required"
 
         InvalidOption ->
             "Invalid option"
 
         InvalidMobilePhoneNumber ->
-            mobileErrMsg field code
+            Phone.mobileErrorToMessage locale trimmed
 
         InvalidPhoneNumber ->
             "Invalid phone number"
@@ -47,150 +95,3 @@ errorToMessage field error code =
 
         InvalidUrl ->
             "Invalid url"
-
-
-{-| -}
-mobileErrMsg : Field.Field -> CountryCode.CountryCode -> String
-mobileErrMsg field code =
-    case code of
-        CountryCode.AU ->
-            "Invalid mobile number (example: 4XX XXX XXX)"
-
-        CountryCode.NZ ->
-            let
-                defaultPrefix =
-                    "20"
-
-                firstTwoNumbers =
-                    case Field.getStringValue field of
-                        Nothing ->
-                            defaultPrefix
-
-                        Just str ->
-                            if String.length str >= 2 then
-                                String.slice 0 2 str
-
-                            else
-                                defaultPrefix
-            in
-            "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
-
-        CountryCode.US ->
-            "Invalid mobile number (example: 212 2XX XXXX)"
-
-        _ ->
-            "Invalid mobile number"
-
-
-emailValidator : String -> Result StringError String
-emailValidator value =
-    let
-        regex =
-            "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    if Regex.contains regex value then
-        Ok value
-
-    else
-        Err InvalidEmail
-
-
-urlValidator : String -> Result StringError String
-urlValidator value =
-    case Url.fromString value of
-        Just _ ->
-            Ok value
-
-        Nothing ->
-            Err InvalidUrl
-
-
-dateValidator : String -> Result StringError String
-dateValidator value =
-    Iso8601.toTime value
-        |> Result.map Iso8601.fromTime
-        |> Result.mapError (always InvalidDate)
-
-
-phoneValidator : Locale.Locale -> String -> Result StringError String
-phoneValidator (Locale.Locale _ code) value =
-    let
-        normalisedValue =
-            value |> String.words |> String.concat
-    in
-    if Regex.contains (Phone.mobileRegex code) normalisedValue then
-        Ok (Phone.formatForSubmission code normalisedValue)
-
-    else if Regex.contains (Phone.regex code) normalisedValue then
-        Err InvalidMobilePhoneNumber
-
-    else
-        Err InvalidPhoneNumber
-
-
-optionsValidator : String -> List Option.Option -> Result StringError String
-optionsValidator value options =
-    if List.map .value options |> List.member value then
-        Ok value
-
-    else
-        Err InvalidOption
-
-
-remoteOptionsValidator : String -> RemoteData.RemoteData err (List Option.Option) -> Result StringError String
-remoteOptionsValidator value options =
-    options
-        |> RemoteData.map (optionsValidator value)
-        |> RemoteData.withDefault (Err InvalidOption)
-
-
-validate : Locale.Locale -> Field.StringField -> Result StringError String
-validate locale field =
-    let
-        trimmed =
-            String.trim (Field.getStringValue_ field)
-    in
-    if String.isEmpty trimmed then
-        if Field.isRequired (Field.StringField_ field) == Required.Yes then
-            Err EmptyError
-
-        else
-            Ok trimmed
-
-    else
-        stringValidator locale (Field.updateStringValue_ trimmed field)
-
-
-stringValidator : Locale.Locale -> Field.StringField -> Result StringError String
-stringValidator locale field =
-    case field of
-        Field.SimpleField { tipe, value } ->
-            case tipe of
-                FieldType.Email ->
-                    emailValidator value
-
-                FieldType.Date _ ->
-                    dateValidator value
-
-                FieldType.Phone ->
-                    phoneValidator locale value
-
-                FieldType.Url ->
-                    urlValidator value
-
-                FieldType.Text ->
-                    Ok value
-
-                FieldType.TextArea ->
-                    Ok value
-
-        Field.SelectField { value, options } ->
-            optionsValidator value options
-
-        Field.HttpSelectField { value, options } ->
-            remoteOptionsValidator value options
-
-        Field.RadioField { value, options } ->
-            optionsValidator value options
