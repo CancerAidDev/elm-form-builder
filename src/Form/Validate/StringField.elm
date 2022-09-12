@@ -22,8 +22,8 @@ validate locale field =
         isRequired =
             Field.isRequired (Field.StringField_ field) == Required.Yes
 
-        isRequiredValidated =
-            Required.requiredValidator locale trimmed
+        isEmptyString =
+            String.isEmpty trimmed
 
         validateField =
             case field of
@@ -56,8 +56,8 @@ validate locale field =
                 Field.RadioField { value, options } ->
                     Options.optionsValidator options locale trimmed
     in
-    if String.isEmpty trimmed then
-        if Field.isRequired (Field.StringField_ field) == Required.Yes then
+    if isEmptyString then
+        if isRequired then
             Err Types.RequiredError
 
         else
