@@ -32,14 +32,11 @@ import Form.Validate.UrlValidator as UrlValidator
 
 {-| Validator API for a StringField being valid.
 -}
-validate : Locale.Locale -> Field.StringField -> Result Types.StringFieldError String
+validate : Locale.Locale -> Field.StringField -> Result Types.StringFieldError Field.StringField
 validate locale field =
     let
-        trimmed =
-            String.trim (Field.getStringValue_ field)
-
         requiredResult =
-            Required.requiredValidator locale trimmed
+            Required.requiredValidator locale field
     in
     case requiredResult of
         Err err ->
@@ -47,67 +44,63 @@ validate locale field =
                 Err err
 
             else
-                Ok trimmed
+                Ok field
 
         Ok _ ->
             case field of
                 Field.SimpleField { tipe } ->
                     case tipe of
                         FieldType.Email ->
-                            Email.emailValidator locale trimmed
+                            Email.emailValidator locale field
 
                         FieldType.Date _ ->
-                            Date.dateValidator locale trimmed
+                            Date.dateValidator locale field
 
                         FieldType.Phone ->
-                            Phone.phoneValidator locale trimmed
+                            Phone.phoneValidator locale field
 
                         FieldType.Url ->
-                            UrlValidator.urlValidator locale trimmed
+                            UrlValidator.urlValidator locale field
 
                         FieldType.Text ->
-                            Ok trimmed
+                            Ok field
 
                         FieldType.TextArea ->
-                            Ok trimmed
+                            Ok field
 
                 Field.SelectField { options } ->
-                    Options.optionsValidator options locale trimmed
+                    Options.optionsValidator options locale field
 
                 Field.HttpSelectField { options } ->
-                    Options.remoteOptionsValidator options locale trimmed
+                    Options.remoteOptionsValidator options locale field
 
                 Field.RadioField { options } ->
-                    Options.optionsValidator options locale trimmed
+                    Options.optionsValidator options locale field
 
 
 {-| Localised error message API for a StringField error.
 -}
-errorToMessage : Types.StringFieldError -> Locale.Locale -> Field.StringField -> String
-errorToMessage error locale field =
+errorToMessage : Locale.Locale -> Types.StringFieldError -> String
+errorToMessage locale error =
     case error of
-        Types.RequiredError ->
+        Types.RequiredError _ ->
             "Field is required"
 
-        Types.InvalidOption ->
+        Types.InvalidOption _ ->
             "Invalid option"
 
-        Types.InvalidMobilePhoneNumber ->
-            let
-                trimmed =
-                    String.trim (Field.getStringValue_ field)
-            in
-            Phone.mobileErrorToMessage locale trimmed
+        Types.InvalidMobilePhoneNumber field ->
+            Phone.mobileErrorToMessage locale field
 
-        Types.InvalidPhoneNumber ->
+        Types.InvalidPhoneNumber _ ->
             "Invalid phone number"
 
-        Types.InvalidEmail ->
+        Types.InvalidEmail _ ->
             "Invalid email address"
 
-        Types.InvalidDate ->
+        Types.InvalidDate _ ->
             -- Only old browsers without a date picker should trigger this error
             "Date format should be YYYY-MM-DD"
 
-        Types.InvalidUrl ->
+        Types.InvalidUrl _ ->
             "Invalid url"

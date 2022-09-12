@@ -31,8 +31,8 @@ import Form.Field.Required as Required
 import Form.Fields as Fields
 import Form.Lib.String as LibString
 import Form.Locale as Locale
-import Form.Locale.CountryCode as CountryCode
 import Form.Validate.StringField as ValidateStringField
+import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
 import Regex
 import Set
@@ -220,18 +220,18 @@ type NumericError
 
 {-| -}
 type Error
-    = StringError_ ValidateStringField.StringError
+    = StringError_ StringFieldTypes.StringFieldError
     | MultiStringError_ MultiStringError
     | BoolError_ BoolError
     | NumericError_ NumericError
 
 
 {-| -}
-errorToMessage : Field.Field -> CountryCode.CountryCode -> Error -> String
-errorToMessage field code error =
+errorToMessage : Error -> Locale.Locale -> String
+errorToMessage error locale =
     case error of
         StringError_ err ->
-            ValidateStringField.errorToMessage field err code
+            ValidateStringField.errorToMessage err locale
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"

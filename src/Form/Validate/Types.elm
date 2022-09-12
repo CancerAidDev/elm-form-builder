@@ -1,6 +1,6 @@
 module Form.Validate.Types exposing
-    ( Validator, ErrorToMessage
-    , StringFieldError(..)
+    ( Validator
+    , ErrorToMessage, StringFieldError(..)
     )
 
 {-| Types used for validation.
@@ -8,34 +8,38 @@ module Form.Validate.Types exposing
 
 # Validate
 
-@docs StringError
+@docs Validator
 
-@docs Validator, ErrorToMessage
+
+# Error Messages
+
+@docs ErrorToMessage, StringFieldError
 
 -}
 
+import Form.Field as Field
 import Form.Locale as Locale
 
 
 {-| Error messages that can be produced or displayed for a StringField
 -}
 type StringFieldError
-    = RequiredError
-    | InvalidOption
-    | InvalidMobilePhoneNumber
-    | InvalidPhoneNumber
-    | InvalidEmail
-    | InvalidDate
-    | InvalidUrl
+    = RequiredError Field.StringField
+    | InvalidOption Field.StringField
+    | InvalidMobilePhoneNumber Field.StringField
+    | InvalidPhoneNumber Field.StringField
+    | InvalidEmail Field.StringField
+    | InvalidDate Field.StringField
+    | InvalidUrl Field.StringField
 
 
 {-| API for validating StringFields (already with just the value of the field)
 -}
 type alias Validator =
-    Locale.Locale -> String -> Result StringFieldError String
+    Locale.Locale -> Field.StringField -> Result StringFieldError Field.StringField
 
 
 {-| API for localised error messages
 -}
 type alias ErrorToMessage =
-    Locale.Locale -> String -> String
+    Locale.Locale -> Field.StringField -> String
