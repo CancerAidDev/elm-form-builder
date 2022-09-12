@@ -94,6 +94,7 @@ formatForDisplay code =
         >> String.join " "
 
 
+{-| -}
 toMobilePlaceholder : Maybe CountryCode.CountryCode -> String
 toMobilePlaceholder code =
     case code of

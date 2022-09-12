@@ -1,4 +1,21 @@
-module Form.Validate.StringField exposing (errorToMessage, validate)
+module Form.Validate.StringField exposing
+    ( validate
+    , errorToMessage
+    )
+
+{-| Validate a localised StringField and produce a localised error message.
+
+
+# Validate
+
+@docs validate
+
+
+# Error Messages
+
+@docs errorToMessage
+
+-}
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
@@ -15,7 +32,7 @@ import Form.Validate.UrlValidator as UrlValidator
 
 {-| Validator API for a StringField being valid.
 -}
-validate : Locale.Locale -> Field.StringField -> Result Types.StringError String
+validate : Locale.Locale -> Field.StringField -> Result Types.StringFieldError String
 validate locale field =
     let
         trimmed =
@@ -64,7 +81,9 @@ validate locale field =
                     Options.optionsValidator options locale trimmed
 
 
-errorToMessage : Types.StringError -> Locale.Locale -> Field.StringField -> String
+{-| Localised error message API for a StringField error.
+-}
+errorToMessage : Types.StringFieldError -> Locale.Locale -> Field.StringField -> String
 errorToMessage error locale field =
     case error of
         Types.RequiredError ->

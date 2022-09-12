@@ -92,7 +92,7 @@ suite =
         ]
 
 
-simpleFieldTest : FieldType.SimpleFieldType -> { valid : List { value : String, name : String }, invalid : List { value : String, error : Types.StringError, name : String }, locale : Locale.Locale } -> Test.Test
+simpleFieldTest : FieldType.SimpleFieldType -> { valid : List { value : String, name : String }, invalid : List { value : String, error : Types.StringFieldError, name : String }, locale : Locale.Locale } -> Test.Test
 simpleFieldTest tipe { valid, invalid, locale } =
     let
         field : { required : Required.IsRequired, value : String } -> Field.StringField

@@ -8,7 +8,7 @@ import RemoteData
 
 {-| Validator API for a value being in a list of options.
 -}
-optionsValidator : List Option.Option -> Locale -> String -> Result ValidatorTypes.StringError String
+optionsValidator : List Option.Option -> Locale -> String -> Result ValidatorTypes.StringFieldError String
 optionsValidator options _ value =
     if List.map .value options |> List.member value then
         Ok value
@@ -19,7 +19,7 @@ optionsValidator options _ value =
 
 {-| Validator API for a value being in a list of remote (retrieved via network) options.
 -}
-remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Locale -> String -> Result ValidatorTypes.StringError String
+remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Locale -> String -> Result ValidatorTypes.StringFieldError String
 remoteOptionsValidator remoteOptions locale value =
     RemoteData.map (\o -> optionsValidator o locale value) remoteOptions
         |> RemoteData.withDefault (Err ValidatorTypes.InvalidOption)
