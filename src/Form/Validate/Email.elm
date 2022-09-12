@@ -1,4 +1,4 @@
-module Form.Validate.Email exposing (..)
+module Form.Validate.Email exposing (emailValidator)
 
 import Form.Format.Email as Email
 import Form.Locale as Locale

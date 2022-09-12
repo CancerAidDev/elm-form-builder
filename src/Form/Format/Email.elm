@@ -1,5 +1,11 @@
 module Form.Format.Email exposing (regex)
 
+{-| A (simple and quiet possilby wrong) email regular expression
+
+@docs regex
+
+-}
+
 import Form.Locale.CountryCode as CountryCode
 import Regex
 

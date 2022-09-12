@@ -1,4 +1,4 @@
-module Form.Validate.StringField exposing (validate)
+module Form.Validate.StringField exposing (errorToMessage, validate)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
@@ -9,25 +9,32 @@ import Form.Validate.Email as Email
 import Form.Validate.Options as Options
 import Form.Validate.Phone as Phone
 import Form.Validate.Required as Required
-import Form.Validate.Types as Types exposing (StringError(..))
+import Form.Validate.Types as Types
 import Form.Validate.UrlValidator as UrlValidator
 
 
+{-| Validator API for a StringField being valid.
+-}
 validate : Locale.Locale -> Field.StringField -> Result Types.StringError String
 validate locale field =
     let
         trimmed =
             String.trim (Field.getStringValue_ field)
 
-        isRequired =
-            Field.isRequired (Field.StringField_ field) == Required.Yes
+        requiredResult =
+            Required.requiredValidator locale trimmed
+    in
+    case requiredResult of
+        Err err ->
+            if Field.isRequired (Field.StringField_ field) == Required.Yes then
+                Err err
 
-        isEmptyString =
-            String.isEmpty trimmed
+            else
+                Ok trimmed
 
-        validateField =
+        Ok _ ->
             case field of
-                Field.SimpleField { tipe, value } ->
+                Field.SimpleField { tipe } ->
                     case tipe of
                         FieldType.Email ->
                             Email.emailValidator locale trimmed
@@ -47,51 +54,41 @@ validate locale field =
                         FieldType.TextArea ->
                             Ok trimmed
 
-                Field.SelectField { value, options } ->
+                Field.SelectField { options } ->
                     Options.optionsValidator options locale trimmed
 
-                Field.HttpSelectField { value, options } ->
+                Field.HttpSelectField { options } ->
                     Options.remoteOptionsValidator options locale trimmed
 
-                Field.RadioField { value, options } ->
+                Field.RadioField { options } ->
                     Options.optionsValidator options locale trimmed
-    in
-    if isEmptyString then
-        if isRequired then
-            Err Types.RequiredError
-
-        else
-            Ok trimmed
-
-    else
-        validateField
 
 
-errorToMessage : StringError -> Locale.Locale -> Field.StringField -> String
+errorToMessage : Types.StringError -> Locale.Locale -> Field.StringField -> String
 errorToMessage error locale field =
-    let
-        trimmed =
-            String.trim (Field.getStringValue_ field)
-    in
     case error of
-        RequiredError ->
+        Types.RequiredError ->
             "Field is required"
 
-        InvalidOption ->
+        Types.InvalidOption ->
             "Invalid option"
 
-        InvalidMobilePhoneNumber ->
+        Types.InvalidMobilePhoneNumber ->
+            let
+                trimmed =
+                    String.trim (Field.getStringValue_ field)
+            in
             Phone.mobileErrorToMessage locale trimmed
 
-        InvalidPhoneNumber ->
+        Types.InvalidPhoneNumber ->
             "Invalid phone number"
 
-        InvalidEmail ->
+        Types.InvalidEmail ->
             "Invalid email address"
 
-        InvalidDate ->
+        Types.InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
             "Date format should be YYYY-MM-DD"
 
-        InvalidUrl ->
+        Types.InvalidUrl ->
             "Invalid url"

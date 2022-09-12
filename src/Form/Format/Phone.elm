@@ -1,6 +1,6 @@
 module Form.Format.Phone exposing (mobileRegex, landlineRegex)
 
-{-| Phone number formatting helpers
+{-| Mobile (cell) and landline phone number regular expressions
 
 
 # Phone
@@ -10,10 +10,7 @@ module Form.Format.Phone exposing (mobileRegex, landlineRegex)
 -}
 
 import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone exposing (phonePrefix)
-import List.Extra as ListExtra
 import Regex
-import String.Extra as StringExtra
 
 
 landlineRegex : CountryCode.CountryCode -> Regex.Regex

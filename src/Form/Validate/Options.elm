@@ -6,6 +6,8 @@ import Form.Validate.Types as ValidatorTypes
 import RemoteData
 
 
+{-| Validator API for a value being in a list of options.
+-}
 optionsValidator : List Option.Option -> Locale -> String -> Result ValidatorTypes.StringError String
 optionsValidator options _ value =
     if List.map .value options |> List.member value then
@@ -15,6 +17,8 @@ optionsValidator options _ value =
         Err ValidatorTypes.InvalidOption
 
 
+{-| Validator API for a value being in a list of remote (retrieved via network) options.
+-}
 remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Locale -> String -> Result ValidatorTypes.StringError String
 remoteOptionsValidator remoteOptions locale value =
     RemoteData.map (\o -> optionsValidator o locale value) remoteOptions

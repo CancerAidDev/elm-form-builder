@@ -1,6 +1,13 @@
-module Form.Validate.Phone exposing (mobileErrorToMessage, phoneValidator, toMobilePlaceholder)
+module Form.Validate.Phone exposing (formatForDisplay, mobileErrorToMessage, phoneValidator, toMobilePlaceholder)
 
-{-| -}
+{-| Phone number helpers
+
+
+# Phone
+
+@docs formatForDisplay, mobileErrorToMessage, phoneValidator, toMobilePlaceholder
+
+-}
 
 import Form.Format.Phone as Phone
 import Form.Locale as Locale
@@ -12,6 +19,8 @@ import Regex
 import String.Extra as StringExtra
 
 
+{-| Validator API for localised (mobile/cell/landline) phone numbers.
+-}
 phoneValidator : ValidatorTypes.Validator
 phoneValidator (Locale.Locale _ code) value =
     let
@@ -28,7 +37,8 @@ phoneValidator (Locale.Locale _ code) value =
         Err ValidatorTypes.InvalidPhoneNumber
 
 
-{-| -}
+{-| Error Message API for localised (mobile/cell/landline) phone number validation
+-}
 mobileErrorToMessage : ValidatorTypes.ErrorToMessage
 mobileErrorToMessage (Locale.Locale _ country) str =
     case country of
@@ -37,15 +47,12 @@ mobileErrorToMessage (Locale.Locale _ country) str =
 
         CountryCode.NZ ->
             let
-                defaultPrefix =
-                    "20"
-
                 firstTwoNumbers =
                     if String.length str >= 2 then
                         String.slice 0 2 str
 
                     else
-                        defaultPrefix
+                        "20"
             in
             "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
 
