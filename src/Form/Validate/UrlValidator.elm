@@ -14,4 +14,4 @@ urlValidator _ field =
             Ok field
 
         Nothing ->
-            Err (ValidateTypes.InvalidUrl field)
+            Err ValidateTypes.InvalidUrl

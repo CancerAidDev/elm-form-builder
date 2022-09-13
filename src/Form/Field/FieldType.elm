@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType
     )
 
 {-| Field Type
@@ -19,13 +19,11 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType
 
 -}
 
 import Form.Lib.Time as LibTime
-import Form.Locale.CountryCode as CountryCode
-import Form.Validate.Phone as Phone
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
@@ -175,20 +173,6 @@ toType fieldType =
 
         TextArea ->
             "textarea"
-
-
-{-| -}
-toPlaceholder : SimpleFieldType -> Maybe CountryCode.CountryCode -> String
-toPlaceholder fieldType code =
-    case fieldType of
-        Email ->
-            "your@email.com"
-
-        Phone ->
-            Phone.toMobilePlaceholder code
-
-        _ ->
-            ""
 
 
 {-| -}

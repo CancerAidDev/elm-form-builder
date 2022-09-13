@@ -13,7 +13,7 @@ requiredValidator _ field =
             String.trim (Field.getStringValue_ field)
     in
     if String.isEmpty trimmed then
-        Err (ValidatorTypes.RequiredError field)
+        Err ValidatorTypes.RequiredError
 
     else
         Ok field

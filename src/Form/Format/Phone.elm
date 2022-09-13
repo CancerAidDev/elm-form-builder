@@ -1,16 +1,27 @@
-module Form.Format.Phone exposing (mobileRegex, landlineRegex)
+module Form.Format.Phone exposing
+    ( mobileRegex, landlineRegex
+    , formatForDisplay, formatForSubmission, formatGroups
+    )
 
 {-| Mobile (cell) and landline phone number regular expressions
 
 
-# Phone
+# Phone Regexes
 
 @docs mobileRegex, landlineRegex
+
+
+# Phone Formatting
+
+@docs formatForDisplay, formatForSubmission, formatGroups
 
 -}
 
 import Form.Locale.CountryCode as CountryCode
+import Form.Locale.Phone as Phone
+import List.Extra as ListExtra
 import Regex
+import String.Extra as StringExtra
 
 
 landlineRegex : CountryCode.CountryCode -> Regex.Regex
@@ -50,3 +61,34 @@ mobileRegex code =
             "^\\d.*$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
+
+
+{-| -}
+formatForSubmission : CountryCode.CountryCode -> String -> String
+formatForSubmission code =
+    String.words
+        >> String.concat
+        >> (\phone -> Phone.phonePrefix code ++ phone)
+
+
+formatGroups : CountryCode.CountryCode -> List Int
+formatGroups code =
+    case code of
+        CountryCode.NZ ->
+            [ 2, 3, 5 ]
+
+        CountryCode.US ->
+            [ 3, 3, 4 ]
+
+        _ ->
+            [ 3, 3, 3 ]
+
+
+{-| -}
+formatForDisplay : CountryCode.CountryCode -> String -> String
+formatForDisplay code =
+    StringExtra.rightOf (Phone.phonePrefix code)
+        >> String.toList
+        >> ListExtra.groupsOfVarying (formatGroups code)
+        >> List.map String.fromList
+        >> String.join " "

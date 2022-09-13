@@ -32,7 +32,7 @@ import Form.Validate.UrlValidator as UrlValidator
 
 {-| Validator API for a StringField being valid.
 -}
-validate : Locale.Locale -> Field.StringField -> Result Types.StringFieldError Field.StringField
+validate : Types.Validator
 validate locale field =
     let
         requiredResult =
@@ -80,27 +80,27 @@ validate locale field =
 
 {-| Localised error message API for a StringField error.
 -}
-errorToMessage : Locale.Locale -> Types.StringFieldError -> String
-errorToMessage locale error =
+errorToMessage : Locale.Locale -> Field.StringField -> Types.StringFieldError -> String
+errorToMessage locale field error =
     case error of
-        Types.RequiredError _ ->
+        Types.RequiredError ->
             "Field is required"
 
-        Types.InvalidOption _ ->
+        Types.InvalidOption ->
             "Invalid option"
 
-        Types.InvalidMobilePhoneNumber field ->
+        Types.InvalidMobilePhoneNumber ->
             Phone.mobileErrorToMessage locale field
 
-        Types.InvalidPhoneNumber _ ->
+        Types.InvalidPhoneNumber ->
             "Invalid phone number"
 
-        Types.InvalidEmail _ ->
+        Types.InvalidEmail ->
             "Invalid email address"
 
-        Types.InvalidDate _ ->
+        Types.InvalidDate ->
             -- Only old browsers without a date picker should trigger this error
             "Date format should be YYYY-MM-DD"
 
-        Types.InvalidUrl _ ->
+        Types.InvalidUrl ->
             "Invalid url"

@@ -24,13 +24,13 @@ import Form.Locale as Locale
 {-| Error messages that can be produced or displayed for a StringField
 -}
 type StringFieldError
-    = RequiredError Field.StringField
-    | InvalidOption Field.StringField
-    | InvalidMobilePhoneNumber Field.StringField
-    | InvalidPhoneNumber Field.StringField
-    | InvalidEmail Field.StringField
-    | InvalidDate Field.StringField
-    | InvalidUrl Field.StringField
+    = RequiredError
+    | InvalidOption
+    | InvalidMobilePhoneNumber
+    | InvalidPhoneNumber
+    | InvalidEmail
+    | InvalidDate
+    | InvalidUrl
 
 
 {-| API for validating StringFields (already with just the value of the field)

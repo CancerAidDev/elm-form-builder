@@ -21,6 +21,7 @@
         "Form.Locale.LanguageCode",
         "Form.Locale.Phone",
         "Form.Locale",
+        "Form.Placeholder.Phone",
         "Form.Msg",
         "Form.Update",
         "Form.Validate",

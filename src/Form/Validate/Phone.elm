@@ -1,11 +1,11 @@
-module Form.Validate.Phone exposing (formatForDisplay, mobileErrorToMessage, phoneValidator, toMobilePlaceholder)
+module Form.Validate.Phone exposing (phoneValidator, mobileErrorToMessage)
 
 {-| Phone number helpers
 
 
 # Phone
 
-@docs formatForDisplay, mobileErrorToMessage, phoneValidator, toMobilePlaceholder
+@docs phoneValidator, mobileErrorToMessage
 
 -}
 
@@ -13,11 +13,8 @@ import Form.Field as Field
 import Form.Format.Phone as Phone
 import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone as Phone
 import Form.Validate.Types as ValidatorTypes
-import List.Extra as ListExtra
 import Regex
-import String.Extra as StringExtra
 
 
 {-| Validator API for localised (mobile/cell/landline) phone numbers.
@@ -32,10 +29,10 @@ phoneValidator (Locale.Locale _ code) field =
         Ok field
 
     else if Regex.contains (Phone.landlineRegex code) normalisedValue then
-        Err (ValidatorTypes.InvalidMobilePhoneNumber field)
+        Err ValidatorTypes.InvalidMobilePhoneNumber
 
     else
-        Err (ValidatorTypes.InvalidPhoneNumber field)
+        Err ValidatorTypes.InvalidPhoneNumber
 
 
 {-| Error Message API for localised (mobile/cell/landline) phone number validation
@@ -65,51 +62,3 @@ mobileErrorToMessage (Locale.Locale _ country) field =
 
         _ ->
             "Invalid mobile number"
-
-
-{-| -}
-formatForSubmission : CountryCode.CountryCode -> String -> String
-formatForSubmission code =
-    String.words
-        >> String.concat
-        >> (\phone -> Phone.phonePrefix code ++ phone)
-
-
-formatGroups : CountryCode.CountryCode -> List Int
-formatGroups code =
-    case code of
-        CountryCode.NZ ->
-            [ 2, 3, 5 ]
-
-        CountryCode.US ->
-            [ 3, 3, 4 ]
-
-        _ ->
-            [ 3, 3, 3 ]
-
-
-{-| -}
-formatForDisplay : CountryCode.CountryCode -> String -> String
-formatForDisplay code =
-    StringExtra.rightOf (Phone.phonePrefix code)
-        >> String.toList
-        >> ListExtra.groupsOfVarying (formatGroups code)
-        >> List.map String.fromList
-        >> String.join " "
-
-
-{-| -}
-toMobilePlaceholder : Maybe CountryCode.CountryCode -> String
-toMobilePlaceholder code =
-    case code of
-        Just CountryCode.US ->
-            "212 200 0000"
-
-        Just CountryCode.NZ ->
-            "20 000 0000"
-
-        Just _ ->
-            "400 000 000"
-
-        Nothing ->
-            ""

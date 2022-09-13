@@ -11,4 +11,4 @@ dateValidator : ValidatorTypes.Validator
 dateValidator _ field =
     Iso8601.toTime (Field.getStringValue_ field)
         |> Result.map (\_ -> field)
-        |> Result.mapError (always (ValidatorTypes.InvalidDate field))
+        |> Result.mapError (always ValidatorTypes.InvalidDate)

@@ -19,6 +19,7 @@ import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Locale.Phone as Phone
 import Form.Msg as Msg
+import Form.Placeholder.Placeholder as Placeholder
 import Form.Validate as Validate
 import Form.View.MultiSelect as MultiSelect
 import Form.View.Radio as Radio
@@ -122,7 +123,7 @@ input time code key field =
                 , HtmlAttributes.type_ (FieldType.toType properties.tipe)
                 , HtmlAttributes.value properties.value
                 , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlAttributes.placeholder (FieldType.toPlaceholder properties.tipe code)
+                , HtmlAttributes.placeholder (Placeholder.toPlaceholder properties.tipe code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
                     (FieldType.toMin
@@ -166,7 +167,7 @@ textarea key field =
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
-        , HtmlAttributes.placeholder (FieldType.toPlaceholder field.tipe Nothing)
+        , HtmlAttributes.placeholder (Placeholder.toPlaceholder field.tipe Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
@@ -230,8 +231,8 @@ error submitted locale fields field =
 
 
 validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-validateForm ((Locale.Locale _ code) as locale) fields field =
+validateForm locale fields field =
     Validate.validateField locale fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage field code)
+            (Html.text << Validate.errorToMessage locale)
             (always HtmlExtra.nothing)

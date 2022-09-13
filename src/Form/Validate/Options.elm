@@ -19,12 +19,12 @@ optionsValidator options _ field =
         Ok field
 
     else
-        Err (ValidatorTypes.InvalidOption field)
+        Err ValidatorTypes.InvalidOption
 
 
 {-| Validator API for a value being in a list of remote (retrieved via network) options.
 -}
 remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> ValidatorTypes.Validator
-remoteOptionsValidator remoteOptions locale value =
-    RemoteData.map (\o -> optionsValidator o locale value) remoteOptions
+remoteOptionsValidator remoteOptions locale field =
+    RemoteData.map (\o -> optionsValidator o locale field) remoteOptions
         |> RemoteData.withDefault (Err ValidatorTypes.InvalidOption)
