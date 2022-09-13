@@ -3,7 +3,7 @@
     "name": "canceraiddev/elm-form-builder",
     "summary": "Form widgets and validation used for internal projects.",
     "license": "Apache-2.0",
-    "version": "7.2.2",
+    "version": "8.0.0",
     "exposed-modules": [
         "Form.Field.Direction",
         "Form.Field.FieldType",

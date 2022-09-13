@@ -28,7 +28,7 @@ phoneValidator (Locale.Locale _ code) field =
     if Regex.contains (Phone.mobileRegex code) normalisedValue then
         Ok field
 
-    else if Regex.contains (Phone.landlineRegex code) normalisedValue then
+    else if Regex.contains (Phone.landlineRejectRegex code) normalisedValue then
         Err ValidatorTypes.InvalidMobilePhoneNumber
 
     else

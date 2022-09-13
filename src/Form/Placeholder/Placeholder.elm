@@ -11,6 +11,8 @@ import Form.Locale.CountryCode as CountryCode
 import Form.Placeholder.Phone as Phone
 
 
+{-| Placeholder to render for the given field type.
+-}
 toPlaceholder : FieldType.SimpleFieldType -> Maybe CountryCode.CountryCode -> String
 toPlaceholder fieldType code =
     case fieldType of

@@ -1,19 +1,19 @@
 module Form.Format.Phone exposing
-    ( mobileRegex, landlineRegex
-    , formatForDisplay, formatForSubmission, formatGroups
+    ( mobileRegex, landlineRejectRegex
+    , formatForSubmission, formatForDisplay
     )
 
-{-| Mobile (cell) and landline phone number regular expressions
+{-| Mobile phone number regular expressions and formatting.
 
 
 # Phone Regexes
 
-@docs mobileRegex, landlineRegex
+@docs mobileRegex, landlineRejectRegex
 
 
 # Phone Formatting
 
-@docs formatForDisplay, formatForSubmission, formatGroups
+@docs formatForSubmission, formatForDisplay
 
 -}
 
@@ -24,21 +24,8 @@ import Regex
 import String.Extra as StringExtra
 
 
-landlineRegex : CountryCode.CountryCode -> Regex.Regex
-landlineRegex code =
-    case code of
-        CountryCode.AU ->
-            "^\\d{9}$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-
-        _ ->
-            "^\\d.*$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-
-
-{-| -}
+{-| The numbers to accept based on country.
+-}
 mobileRegex : CountryCode.CountryCode -> Regex.Regex
 mobileRegex code =
     case code of
@@ -63,12 +50,39 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
 
+{-| The landline numbers to reject (we only accept mobile numbers) based on country.
+-}
+landlineRejectRegex : CountryCode.CountryCode -> Regex.Regex
+landlineRejectRegex code =
+    case code of
+        CountryCode.AU ->
+            "^\\d{9}$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+        _ ->
+            "^\\d.*$"
+                |> Regex.fromString
+                |> Maybe.withDefault Regex.never
+
+
 {-| -}
 formatForSubmission : CountryCode.CountryCode -> String -> String
 formatForSubmission code =
     String.words
         >> String.concat
         >> (\phone -> Phone.phonePrefix code ++ phone)
+
+
+{-| The groupings of digits for phone numbers
+-}
+formatForDisplay : CountryCode.CountryCode -> String -> String
+formatForDisplay code =
+    StringExtra.rightOf (Phone.phonePrefix code)
+        >> String.toList
+        >> ListExtra.groupsOfVarying (formatGroups code)
+        >> List.map String.fromList
+        >> String.join " "
 
 
 formatGroups : CountryCode.CountryCode -> List Int
@@ -82,13 +96,3 @@ formatGroups code =
 
         _ ->
             [ 3, 3, 3 ]
-
-
-{-| -}
-formatForDisplay : CountryCode.CountryCode -> String -> String
-formatForDisplay code =
-    StringExtra.rightOf (Phone.phonePrefix code)
-        >> String.toList
-        >> ListExtra.groupsOfVarying (formatGroups code)
-        >> List.map String.fromList
-        >> String.join " "

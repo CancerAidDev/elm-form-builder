@@ -1,11 +1,18 @@
 module Form.Format.ForSubmission exposing (formatForSubmission)
 
+{-| Translates between what is displayed in the form and what is submitted to the server.
+
+@docs formatForSubmission
+
+-}
+
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Format.Phone as Phone
 import Form.Locale as Locale
 
 
+{-| -}
 formatForSubmission : Locale.Locale -> Field.StringField -> String
 formatForSubmission (Locale.Locale _ code) field =
     let
