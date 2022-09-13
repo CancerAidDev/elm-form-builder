@@ -39,5 +39,12 @@ suite =
                             HelperSpec.simpleField Form.Field.FieldType.Phone { required = IsRequired.Yes, value = "400" }
                     in
                     StringField.errorToMessage Locale.enAU phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal "Invalid mobile number (example: 4XX XXX XXX)"
+            , Test.test "en-US incorrect number" <|
+                \_ ->
+                    let
+                        phoneNumber =
+                            HelperSpec.simpleField Form.Field.FieldType.Phone { required = IsRequired.Yes, value = "212 3" }
+                    in
+                    StringField.errorToMessage Locale.enUS phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal "Invalid mobile number (example: 212 2XX XXXX)"
             ]
         ]
