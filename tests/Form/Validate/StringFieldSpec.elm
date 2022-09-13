@@ -1,9 +1,9 @@
-module Form.Validate.StringFieldSpec exposing (..)
+module Form.Validate.StringFieldSpec exposing (suite)
 
 import Expect
 import Form.Field.FieldType
 import Form.Field.Required as IsRequired
-import Form.Locale as Locale exposing (Locale(..))
+import Form.Locale as Locale
 import Form.Validate.HelperSpec as HelperSpec
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
