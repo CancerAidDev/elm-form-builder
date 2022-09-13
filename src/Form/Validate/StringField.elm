@@ -20,7 +20,6 @@ module Form.Validate.StringField exposing
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
-import Form.Locale as Locale
 import Form.Validate.Date as Date
 import Form.Validate.Email as Email
 import Form.Validate.Options as Options
@@ -80,7 +79,7 @@ validate locale field =
 
 {-| Localised error message API for a StringField error.
 -}
-errorToMessage : Locale.Locale -> Field.StringField -> Types.StringFieldError -> String
+errorToMessage : Types.ErrorToMessage
 errorToMessage locale field error =
     case error of
         Types.RequiredError ->

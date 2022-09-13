@@ -42,4 +42,4 @@ type alias Validator =
 {-| API for localised error messages
 -}
 type alias ErrorToMessage =
-    Locale.Locale -> Field.StringField -> String
+    Locale.Locale -> Field.StringField -> StringFieldError -> String

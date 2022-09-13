@@ -37,7 +37,7 @@ phoneValidator (Locale.Locale _ code) field =
 
 {-| Error Message API for localised (mobile/cell/landline) phone number validation
 -}
-mobileErrorToMessage : ValidatorTypes.ErrorToMessage
+mobileErrorToMessage : Locale.Locale -> Field.StringField -> String
 mobileErrorToMessage (Locale.Locale _ country) field =
     case country of
         CountryCode.AU ->

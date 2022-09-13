@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (simpleFieldTest)
+module Form.Validate.HelperSpec exposing (simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
