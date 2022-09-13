@@ -4,7 +4,6 @@ COVERAGE_THRESHOLD=$1
 COVERAGE_DIR="./.coverage"
 
 TESTSTR=$(yarn elm-coverage ./src)
-rm -r $COVERAGE_DIR
 echo "$TESTSTR"
 
 case "$TESTSTR" in
