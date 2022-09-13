@@ -9,7 +9,7 @@ import Test
 
 suite : Test.Test
 suite =
-    Test.describe "Form.Validate.Date"
+    Test.describe "Form.Validate.Email"
         [ Test.describe "validate"
             [ simpleFieldTest
                 FieldType.Email

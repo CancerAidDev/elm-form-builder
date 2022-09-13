@@ -1,4 +1,4 @@
-module Form.Validate.StringFieldSpec exposing (suite)
+module Form.Validate.TextSpec exposing (suite)
 
 import Form.Field.FieldType as FieldType
 import Form.Locale as Locale
@@ -8,7 +8,7 @@ import Test
 
 suite : Test.Test
 suite =
-    Test.describe "Form.Validate.Date"
+    Test.describe "Form.Validate.Text and Form.Validate.TextArea"
         [ Test.describe "validate"
             [ simpleFieldTest
                 FieldType.Text
