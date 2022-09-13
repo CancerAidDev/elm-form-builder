@@ -2,14 +2,13 @@ module Form.Validate.Options exposing (optionsValidator, remoteOptionsValidator)
 
 import Form.Field as Field
 import Form.Field.Option as Option
-import Form.Locale as Locale
-import Form.Validate.Types as ValidatorTypes exposing (StringFieldError)
+import Form.Validate.Types as Types
 import RemoteData
 
 
 {-| Validator API for a value being in a list of options.
 -}
-optionsValidator : List Option.Option -> ValidatorTypes.Validator
+optionsValidator : List Option.Option -> Types.Validator
 optionsValidator options _ field =
     let
         value =
@@ -19,12 +18,12 @@ optionsValidator options _ field =
         Ok field
 
     else
-        Err ValidatorTypes.InvalidOption
+        Err Types.InvalidOption
 
 
 {-| Validator API for a value being in a list of remote (retrieved via network) options.
 -}
-remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> ValidatorTypes.Validator
+remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Types.Validator
 remoteOptionsValidator remoteOptions locale field =
     RemoteData.map (\o -> optionsValidator o locale field) remoteOptions
-        |> RemoteData.withDefault (Err ValidatorTypes.InvalidOption)
+        |> RemoteData.withDefault (Err Types.InvalidOption)

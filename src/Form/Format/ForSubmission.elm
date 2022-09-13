@@ -33,11 +33,11 @@ formatForSubmission (Locale.Locale _ code) field =
                 FieldType.TextArea ->
                     value
 
-        Field.SelectField { options } ->
+        Field.SelectField _ ->
             value
 
-        Field.HttpSelectField { options } ->
+        Field.HttpSelectField _ ->
             value
 
-        Field.RadioField { options } ->
+        Field.RadioField _ ->
             value

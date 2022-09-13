@@ -1,4 +1,4 @@
-module Form.Placeholder.Placeholder exposing (..)
+module Form.Placeholder.Placeholder exposing (toPlaceholder)
 
 {-| Placeholder is a localised String value to place inside text fields to help the user understand what to put.
 
@@ -6,7 +6,7 @@ module Form.Placeholder.Placeholder exposing (..)
 
 -}
 
-import Form.Field.FieldType as FieldType exposing (SimpleFieldType(..))
+import Form.Field.FieldType as FieldType
 import Form.Locale.CountryCode as CountryCode
 import Form.Placeholder.Phone as Phone
 
@@ -14,10 +14,10 @@ import Form.Placeholder.Phone as Phone
 toPlaceholder : FieldType.SimpleFieldType -> Maybe CountryCode.CountryCode -> String
 toPlaceholder fieldType code =
     case fieldType of
-        Email ->
+        FieldType.Email ->
             "your@email.com"
 
-        Phone ->
+        FieldType.Phone ->
             Phone.toMobilePlaceholder code
 
         _ ->
