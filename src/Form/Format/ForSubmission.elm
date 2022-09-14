@@ -39,7 +39,9 @@ formatForSubmission (Locale.Locale _ code) field =
                     value
 
         Field.DateField _ ->
-            Field.getParsedDateValue_ field |> Maybe.map (Date.formatForSubmission code) |> Maybe.withDefault (Field.getStringValue_ field)
+            Field.getParsedDateValue_ field
+                |> Maybe.map (Date.formatForSubmission code)
+                |> Maybe.withDefault (Field.getStringValue_ field)
 
         Field.SelectField _ ->
             value
