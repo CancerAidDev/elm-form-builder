@@ -8,6 +8,7 @@ module Form.Format.ForSubmission exposing (formatForSubmission)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
+import Form.Format.Date as Date
 import Form.Format.Phone as Phone
 import Form.Locale as Locale
 
@@ -25,9 +26,6 @@ formatForSubmission (Locale.Locale _ code) field =
                 FieldType.Email ->
                     value
 
-                FieldType.Date _ ->
-                    value
-
                 FieldType.Phone ->
                     Phone.formatForSubmission code (Field.getStringValue_ field)
 
@@ -39,6 +37,9 @@ formatForSubmission (Locale.Locale _ code) field =
 
                 FieldType.TextArea ->
                     value
+
+        Field.DateField _ ->
+            Field.getParsedDateValue_ field |> Maybe.map (Date.formatForSubmission code) |> Maybe.withDefault (Field.getStringValue_ field)
 
         Field.SelectField _ ->
             value
