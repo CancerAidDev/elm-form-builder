@@ -15,7 +15,14 @@ type alias NewStringField =
     { required : Required.IsRequired, value : String } -> Field.StringField
 
 
-simpleFieldTest : FieldType.StringFieldType -> NewStringField -> { valid : List { value : String, name : String }, invalid : List { value : String, error : Types.StringFieldError, name : String }, locale : Locale.Locale } -> Test.Test
+type alias TestSuite =
+    { valid : List { value : String, name : String }
+    , invalid : List { value : String, error : Types.StringFieldError, name : String }
+    , locale : Locale.Locale
+    }
+
+
+simpleFieldTest : FieldType.StringFieldType -> NewStringField -> TestSuite -> Test.Test
 simpleFieldTest tipe field { valid, invalid, locale } =
     let
         validTest : { required : Required.IsRequired } -> List Test.Test
