@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (dateField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -11,13 +11,13 @@ import Form.Validate.Types as Types
 import Test
 
 
-simpleFieldTest : FieldType.SimpleFieldType -> { valid : List { value : String, name : String }, invalid : List { value : String, error : Types.StringFieldError, name : String }, locale : Locale.Locale } -> Test.Test
-simpleFieldTest tipe { valid, invalid, locale } =
-    let
-        field : { required : Required.IsRequired, value : String } -> Field.StringField
-        field =
-            simpleField tipe
+type alias NewStringField =
+    { required : Required.IsRequired, value : String } -> Field.StringField
 
+
+simpleFieldTest : FieldType.StringFieldType -> NewStringField -> { valid : List { value : String, name : String }, invalid : List { value : String, error : Types.StringFieldError, name : String }, locale : Locale.Locale } -> Test.Test
+simpleFieldTest tipe field { valid, invalid, locale } =
+    let
         validTest : { required : Required.IsRequired } -> List Test.Test
         validTest { required } =
             List.map
@@ -85,7 +85,7 @@ simpleFieldTest tipe { valid, invalid, locale } =
         ]
 
 
-simpleField : FieldType.SimpleFieldType -> { required : Required.IsRequired, value : String } -> Field.StringField
+simpleField : FieldType.SimpleFieldType -> NewStringField
 simpleField tipe { required, value } =
     Field.SimpleField
         { required = required
@@ -94,6 +94,23 @@ simpleField tipe { required, value } =
         , enabledBy = Nothing
         , order = 1
         , value = value
+        , tipe = tipe
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        }
+
+
+dateField : FieldType.DateFieldType -> NewStringField
+dateField tipe { required, value } =
+    Field.DateField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , parsedDate = Nothing
         , tipe = tipe
         , disabled = False
         , hidden = False

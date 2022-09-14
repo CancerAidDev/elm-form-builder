@@ -41,7 +41,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.SimpleType (FieldType.Date FieldType.DateOfBirth))))
+                        (Ok (FieldType.StringType (FieldType.DateType FieldType.DateOfBirth)))
         , Test.test "Date past field type" <|
             \_ ->
                 let
@@ -52,7 +52,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.SimpleType (FieldType.Date FieldType.DatePast))))
+                        (Ok (FieldType.StringType (FieldType.DateType FieldType.DatePast)))
         , Test.test "Phone field type" <|
             \_ ->
                 let
