@@ -729,14 +729,15 @@ suite =
                             Dict.fromList
                                 [ ( "metadata.date"
                                   , Field.StringField_ <|
-                                        Field.SimpleField
+                                        Field.DateField
                                             { required = Required.Yes
                                             , label = "Date"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
-                                            , tipe = FieldType.Date FieldType.DatePast
+                                            , tipe = FieldType.DatePast
                                             , order = 1
                                             , value = "2022-01-01"
+                                            , parsedDate = Nothing
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing

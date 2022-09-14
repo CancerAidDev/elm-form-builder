@@ -52,9 +52,6 @@ validate locale field =
                         FieldType.Email ->
                             Email.emailValidator locale field
 
-                        FieldType.Date _ ->
-                            Date.dateValidator locale field
-
                         FieldType.Phone ->
                             Phone.phoneValidator locale field
 
@@ -66,6 +63,9 @@ validate locale field =
 
                         FieldType.TextArea ->
                             Ok field
+
+                Field.DateField _ ->
+                    Date.dateValidator locale field
 
                 Field.SelectField { options } ->
                     Options.optionsValidator options locale field

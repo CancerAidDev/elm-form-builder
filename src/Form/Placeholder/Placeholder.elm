@@ -13,13 +13,13 @@ import Form.Placeholder.Phone as Phone
 
 {-| Placeholder to render for the given field type.
 -}
-toPlaceholder : FieldType.SimpleFieldType -> Maybe CountryCode.CountryCode -> String
+toPlaceholder : FieldType.FieldType -> Maybe CountryCode.CountryCode -> String
 toPlaceholder fieldType code =
     case fieldType of
-        FieldType.Email ->
+        FieldType.StringType (FieldType.SimpleType FieldType.Email) ->
             "your@email.com"
 
-        FieldType.Phone ->
+        FieldType.StringType (FieldType.SimpleType FieldType.Phone) ->
             Phone.toMobilePlaceholder code
 
         _ ->

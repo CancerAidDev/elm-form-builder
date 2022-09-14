@@ -10,5 +10,5 @@ import Iso8601
 dateValidator : ValidatorTypes.Validator
 dateValidator _ field =
     Iso8601.toTime (Field.getStringValue_ field)
-        |> Result.map (\_ -> field)
+        |> Result.map (\v -> Field.updateParsedDateValue v field)
         |> Result.mapError (always ValidatorTypes.InvalidDate)
