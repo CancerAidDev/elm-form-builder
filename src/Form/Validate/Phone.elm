@@ -14,9 +14,7 @@ import Form.Format.Phone as Phone
 import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Validate.Types as ValidatorTypes
-import ParseInt
 import Regex
-import Result.Extra as ResultExtra
 
 
 {-| Validator API for localised (mobile/cell/landline) phone numbers.
@@ -68,7 +66,7 @@ mobileErrorToMessage (Locale.Locale _ country) field =
                         stdPrefix
 
                 mobilePrefix =
-                    ParseInt.parseInt firstTwoNumbers |> Result.andThen (\i -> Ok (getPrefix i)) |> ResultExtra.extract (always stdPrefix)
+                    String.toInt firstTwoNumbers |> Maybe.map getPrefix |> Maybe.withDefault stdPrefix
             in
             "Invalid mobile number (example: " ++ mobilePrefix ++ " XXX XXX[XX])"
 
