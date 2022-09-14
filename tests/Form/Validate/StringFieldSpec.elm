@@ -15,7 +15,7 @@ suite : Test.Test
 suite =
     Test.describe "Form.Validate.StringField"
         [ Test.describe "errorToMessage"
-            [ Test.fuzz (Fuzz.intRange 20 29) "en-NZ mobile errors 20-29" <|
+            [ Test.fuzz (Fuzz.intRange 20 29) "en-NZ mobile errors 20-29 - too short" <|
                 \startPhoneNumber ->
                     let
                         startPhoneNumberStr =
@@ -25,13 +25,20 @@ suite =
                             HelperSpec.simpleField Form.Field.FieldType.Phone { required = IsRequired.Yes, value = startPhoneNumberStr ++ " 000" }
                     in
                     StringField.errorToMessage Locale.enNZ phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal ("Invalid mobile number (example: " ++ startPhoneNumberStr ++ " XXX XXX[XX])")
-            , Test.test "en-NZ mobile too short - default prefix 20" <|
+            , Test.test "en-NZ mobile too short - default prefix 20 - too short - not even a prefix" <|
                 \_ ->
                     let
                         phoneNumber =
                             HelperSpec.simpleField Form.Field.FieldType.Phone { required = IsRequired.Yes, value = "1" }
                     in
-                    StringField.errorToMessage Locale.enNZ phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal "Invalid mobile number (example: 20 XXX XXX[XX])"
+                    StringField.errorToMessage Locale.enNZ phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal "Invalid mobile number (example: 2X XXX XXX[XX])"
+            , Test.test "en-NZ mobile too short - default prefix 20 - wrong prefix" <|
+                \_ ->
+                    let
+                        phoneNumber =
+                            HelperSpec.simpleField Form.Field.FieldType.Phone { required = IsRequired.Yes, value = "31 123" }
+                    in
+                    StringField.errorToMessage Locale.enNZ phoneNumber Types.InvalidMobilePhoneNumber |> Expect.equal "Invalid mobile number (example: 2X XXX XXX[XX])"
             , Test.test "en-AU incorrect number" <|
                 \_ ->
                     let

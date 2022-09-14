@@ -31,7 +31,8 @@
             "lattyware/elm-fontawesome": "5.0.0",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
             "samhstn/time-format": "1.0.0",
-            "tesk9/accessible-html": "5.0.0"
+            "tesk9/accessible-html": "5.0.0",
+            "fredcy/elm-parseint": "2.0.1"
         },
         "indirect": {
             "elm/bytes": "1.0.8",

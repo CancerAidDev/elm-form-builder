@@ -14,7 +14,9 @@ import Form.Format.Phone as Phone
 import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Validate.Types as ValidatorTypes
+import ParseInt
 import Regex
+import Result.Extra as ResultExtra
 
 
 {-| Validator API for localised (mobile/cell/landline) phone numbers.
@@ -45,6 +47,9 @@ mobileErrorToMessage (Locale.Locale _ country) field =
 
         CountryCode.NZ ->
             let
+                stdPrefix =
+                    "2X"
+
                 str =
                     String.trim (Field.getStringValue_ field)
 
@@ -53,9 +58,19 @@ mobileErrorToMessage (Locale.Locale _ country) field =
                         String.slice 0 2 str
 
                     else
-                        "20"
+                        stdPrefix
+
+                getPrefix i =
+                    if i >= 20 && i <= 29 then
+                        String.fromInt i
+
+                    else
+                        stdPrefix
+
+                mobilePrefix =
+                    ParseInt.parseInt firstTwoNumbers |> Result.andThen (\i -> Ok (getPrefix i)) |> ResultExtra.extract (always stdPrefix)
             in
-            "Invalid mobile number (example: " ++ firstTwoNumbers ++ " XXX XXX[XX])"
+            "Invalid mobile number (example: " ++ mobilePrefix ++ " XXX XXX[XX])"
 
         CountryCode.US ->
             "Invalid mobile number (example: 212 2XX XXXX)"
