@@ -29,10 +29,11 @@ import Form.Field.FieldType as FieldType
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Fields as Fields
+import Form.Format.ForSubmission as ForSubmission
 import Form.Lib.String as LibString
 import Form.Locale as Locale
-import Form.Locale.CountryCode as CountryCode
 import Form.Validate.StringField as ValidateStringField
+import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
 import Regex
 import Set
@@ -45,10 +46,10 @@ validateField locale fields field =
         Field.StringField_ stringField ->
             ValidateStringField.validate locale stringField
                 |> Result.map
-                    (\updatedValue ->
-                        Field.StringField_ (Field.updateStringValue_ updatedValue stringField)
+                    (\validField ->
+                        Field.StringField_ (Field.updateStringValue_ (ForSubmission.formatForSubmission locale validField) stringField)
                     )
-                |> Result.mapError StringError_
+                |> Result.mapError (StringError_ stringField)
 
         Field.MultiStringField_ multiStringField ->
             validateMultiStringField multiStringField
@@ -220,18 +221,18 @@ type NumericError
 
 {-| -}
 type Error
-    = StringError_ ValidateStringField.StringError
+    = StringError_ Field.StringField StringFieldTypes.StringFieldError
     | MultiStringError_ MultiStringError
     | BoolError_ BoolError
     | NumericError_ NumericError
 
 
 {-| -}
-errorToMessage : CountryCode.CountryCode -> Error -> String
-errorToMessage code error =
+errorToMessage : Locale.Locale -> Error -> String
+errorToMessage locale error =
     case error of
-        StringError_ err ->
-            ValidateStringField.errorToMessage err code
+        StringError_ field err ->
+            ValidateStringField.errorToMessage locale field err
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"
