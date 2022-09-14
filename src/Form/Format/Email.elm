@@ -1,6 +1,6 @@
 module Form.Format.Email exposing (regex)
 
-{-| A (simple and quiet possilby wrong) email regular expression
+{-| A (simple and quite possibly wrong) email regular expression
 
 @docs regex
 
