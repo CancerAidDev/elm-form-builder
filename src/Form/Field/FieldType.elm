@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, toClassDate
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType
 
 -}
 
