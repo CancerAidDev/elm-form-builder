@@ -769,12 +769,12 @@ mobileRegex : CountryCode.CountryCode -> Regex.Regex
 mobileRegex code =
     case code of
         CountryCode.AU ->
-            "^4\\d{8}$"
+            "^4(?:83[0-38]|93[0-6])\\d{5}|4(?:[0-3]\\d|4[047-9]|5[0-25-9]|6[06-9]|7[02-9]|8[0-24-9]|9[0-27-9])\\d{6}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
         CountryCode.NZ ->
-            "^2\\d{7,9}$"
+            "^2[0-27-9]\\d{7,8}|21\\d{6}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
