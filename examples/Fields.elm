@@ -140,6 +140,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , hasEmptyOption = Just True 
             }
         )
     , \order ->
@@ -165,6 +166,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , hasEmptyOption = Just True 
             }
         )
     , \order ->
