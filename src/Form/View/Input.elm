@@ -86,7 +86,7 @@ control time (Locale.Locale _ code) key field =
             input time (Just code) key field
 
         Field.StringField_ (Field.SelectField properties) ->
-            Select.select key properties
+            Select.select (Maybe.withDefault "" properties.default) key properties
 
         Field.StringField_ (Field.HttpSelectField properties) ->
             Select.httpSelect key properties
