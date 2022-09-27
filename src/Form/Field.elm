@@ -1,8 +1,8 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age
-    , AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -18,17 +18,17 @@ module Form.Field exposing
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
+@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getMultiStringValue_, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
 
 
 # Predicates
@@ -58,6 +58,7 @@ import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
 import RemoteData
 import Set
+import Time
 
 
 {-| -}
@@ -100,14 +101,15 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
 dateOfBirth : StringFieldProperties {} -> Field
 dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
-        SimpleField
+        DateField
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
-            , tipe = FieldType.Date FieldType.DateOfBirth
+            , tipe = FieldType.DateOfBirth
             , value = value
+            , parsedDate = Nothing
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
@@ -118,14 +120,15 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden,
 datePast : StringFieldProperties {} -> Field
 datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
-        SimpleField
+        DateField
             { required = required
             , label = label
             , width = width
             , enabledBy = enabledBy
             , order = order
-            , tipe = FieldType.Date FieldType.DatePast
+            , tipe = FieldType.DatePast
             , value = value
+            , parsedDate = Nothing
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
@@ -269,6 +272,7 @@ type Field
 {-| -}
 type StringField
     = SimpleField SimpleFieldProperties
+    | DateField DateFieldProperties
     | SelectField SelectFieldProperties
     | HttpSelectField HttpSelectFieldProperties
     | RadioField RadioFieldProperties
@@ -324,6 +328,14 @@ type alias StringFieldProperties a =
 type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
+        }
+
+
+{-| -}
+type alias DateFieldProperties =
+    StringFieldProperties
+        { tipe : FieldType.DateFieldType
+        , parsedDate : Maybe Time.Posix
         }
 
 
@@ -472,6 +484,18 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        DateField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
         SelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
@@ -579,6 +603,17 @@ updateStringHidden value field =
             field
 
 
+{-| -}
+updateParsedDateValue : Time.Posix -> StringField -> StringField
+updateParsedDateValue value stringField =
+    case stringField of
+        DateField properties ->
+            DateField { properties | parsedDate = Just value }
+
+        _ ->
+            stringField
+
+
 genericUpdateStringField : (a -> StringField -> StringField) -> a -> Field -> Field
 genericUpdateStringField f value field =
     case field of
@@ -662,6 +697,9 @@ resetStringFieldValueToDefault field =
         SimpleField properties ->
             SimpleField { properties | value = "" }
 
+        DateField properties ->
+            DateField { properties | value = "", parsedDate = Nothing }
+
         SelectField properties ->
             SelectField { properties | value = properties.default |> Maybe.withDefault "" }
 
@@ -688,6 +726,9 @@ setRequired required field =
     case field of
         StringField_ (SimpleField properties) ->
             StringField_ (SimpleField { properties | required = required })
+
+        StringField_ (DateField properties) ->
+            StringField_ (DateField { properties | required = required })
 
         StringField_ (SelectField properties) ->
             StringField_ (SelectField { properties | required = required })
@@ -788,6 +829,9 @@ updateStringValue_ value field =
         SimpleField properties ->
             SimpleField { properties | value = value }
 
+        DateField properties ->
+            DateField { properties | value = value }
+
         SelectField properties ->
             SelectField { properties | value = value }
 
@@ -805,6 +849,9 @@ updateStringDisabled_ value field =
         SimpleField properties ->
             SimpleField { properties | disabled = value }
 
+        DateField properties ->
+            DateField { properties | disabled = value }
+
         SelectField properties ->
             SelectField { properties | disabled = value }
 
@@ -821,6 +868,9 @@ updateStringHidden_ value field =
     case field of
         SimpleField properties ->
             SimpleField { properties | hidden = value }
+
+        DateField properties ->
+            DateField { properties | hidden = value }
 
         SelectField properties ->
             SelectField { properties | hidden = value }
@@ -945,6 +995,17 @@ getStringValue_ =
 
 
 {-| -}
+getParsedDateValue_ : StringField -> Maybe Time.Posix
+getParsedDateValue_ field =
+    case field of
+        DateField props ->
+            props.parsedDate
+
+        _ ->
+            Nothing
+
+
+{-| -}
 getMultiStringValue_ : MultiStringField -> Set.Set String
 getMultiStringValue_ =
     getMultiStringProperties >> .value
@@ -1040,6 +1101,9 @@ getStringType field =
     case field of
         SimpleField properties ->
             FieldType.SimpleType properties.tipe
+
+        DateField properties ->
+            FieldType.DateType properties.tipe
 
         SelectField _ ->
             FieldType.Select

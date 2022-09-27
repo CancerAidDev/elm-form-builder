@@ -25,6 +25,7 @@ import Time
 
 type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
+    | JsonDateField JsonDateFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
     | JsonMultiSelectField JsonMultiSelectFieldProperties
@@ -44,6 +45,19 @@ type alias JsonSimpleFieldProperties =
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.SimpleFieldType
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    }
+
+
+type alias JsonDateFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , tipe : FieldType.DateFieldType
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
@@ -205,6 +219,9 @@ decoderForType fieldType =
         FieldType.StringType (FieldType.SimpleType simpleType) ->
             Decode.map JsonSimpleField (decoderSimpleJson simpleType)
 
+        FieldType.StringType (FieldType.DateType dateType) ->
+            Decode.map JsonDateField (decoderDateJson dateType)
+
         FieldType.StringType FieldType.Select ->
             Decode.map JsonSelectField decoderSelectJson
 
@@ -249,7 +266,25 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = FieldType.defaultValue time tipe |> Maybe.withDefault ""
+                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    }
+            )
+
+        JsonDateField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+            ( key
+            , Field.StringField_ <|
+                Field.DateField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , tipe = tipe
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.DateType tipe)) |> Maybe.withDefault ""
+                    , parsedDate = Nothing
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -443,6 +478,20 @@ toField time order field =
 decoderSimpleJson : FieldType.SimpleFieldType -> Decode.Decoder JsonSimpleFieldProperties
 decoderSimpleJson tipe =
     Decode.succeed JsonSimpleFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.hardcoded tipe
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties
+decoderDateJson tipe =
+    Decode.succeed JsonDateFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string

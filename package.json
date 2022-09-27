@@ -7,15 +7,19 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "parcel examples/index.html",
-    "build:pages": "rm -rf docs && parcel build examples/index.html --dist-dir docs --public-url /elm-form-builder"
+    "build:pages": "rm -rf docs && parcel build examples/index.html --dist-dir docs --public-url /elm-form-builder",
+    "test:elm-unit": "./scripts/elm-coverage.sh 56"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.5.0",
     "bulma": "^0.9.4",
     "elm": "^0.19.1-5",
+    "elm-coverage": "^0.4.1",
     "elm-format": "^0.8.5",
     "elm-review": "^2.7.1",
     "elm-test": "^0.19.1-revision7",
     "parcel": "^2.5.0"
+  },
+  "dependencies": {
   }
 }

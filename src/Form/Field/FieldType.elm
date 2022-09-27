@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType
     )
 
 {-| Field Type
@@ -19,13 +19,11 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toPlaceholder, toType
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType
 
 -}
 
 import Form.Lib.Time as LibTime
-import Form.Locale.CountryCode as CountryCode
-import Form.Locale.Phone as Phone
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
@@ -43,6 +41,7 @@ type FieldType
 {-| -}
 type StringFieldType
     = SimpleType SimpleFieldType
+    | DateType DateFieldType
     | Select
     | HttpSelect
     | Radio
@@ -65,7 +64,6 @@ type CheckboxFieldType
 type SimpleFieldType
     = Text
     | Email
-    | Date DateFieldType
     | Phone
     | Url
     | TextArea
@@ -100,10 +98,10 @@ fromString str =
             Just (StringType (SimpleType Email))
 
         "date_birth" ->
-            Just (StringType (SimpleType (Date DateOfBirth)))
+            Just (StringType (DateType DateOfBirth))
 
         "date_past" ->
-            Just (StringType (SimpleType (Date DatePast)))
+            Just (StringType (DateType DatePast))
 
         "phone" ->
             Just (StringType (SimpleType Phone))
@@ -155,47 +153,36 @@ fromString str =
 
 
 {-| -}
-toType : SimpleFieldType -> String
+toType : FieldType -> String
 toType fieldType =
     case fieldType of
-        Text ->
+        StringType (SimpleType Text) ->
             "text"
 
-        Email ->
+        StringType (SimpleType Email) ->
             "email"
 
-        Date _ ->
-            "date"
-
-        Phone ->
+        StringType (SimpleType Phone) ->
             "tel"
 
-        Url ->
+        StringType (SimpleType Url) ->
             "url"
 
-        TextArea ->
+        StringType (SimpleType TextArea) ->
             "textarea"
 
-
-{-| -}
-toPlaceholder : SimpleFieldType -> Maybe CountryCode.CountryCode -> String
-toPlaceholder fieldType code =
-    case fieldType of
-        Email ->
-            "your@email.com"
-
-        Phone ->
-            Phone.toPlaceholder code
+        StringType (DateType _) ->
+            "date"
 
         _ ->
             ""
 
 
 {-| -}
-toMaxLength : SimpleFieldType -> Maybe Int
+toMaxLength : FieldType -> Maybe Int
 toMaxLength fieldType =
     case fieldType of
-        Date _ ->
+        StringType (DateType _) ->
             Just 10
 
         _ ->
@@ -206,7 +193,7 @@ toMaxLength fieldType =
 toMin : Time.Posix -> FieldType -> Maybe String
 toMin time fieldType =
     case fieldType of
-        StringType (SimpleType (Date _)) ->
+        StringType (DateType _) ->
             time
                 |> TimeExtra.add TimeExtra.Year -120 Time.utc
                 |> TimeExtra.floor TimeExtra.Year Time.utc
@@ -224,7 +211,7 @@ toMin time fieldType =
 toMax : Time.Posix -> FieldType -> Maybe String
 toMax time fieldType =
     case fieldType of
-        StringType (SimpleType (Date _)) ->
+        StringType (DateType _) ->
             Just (LibTime.toDateString time)
 
         NumericType Age ->
@@ -235,10 +222,10 @@ toMax time fieldType =
 
 
 {-| -}
-defaultValue : Time.Posix -> SimpleFieldType -> Maybe String
+defaultValue : Time.Posix -> FieldType -> Maybe String
 defaultValue time fieldType =
     case fieldType of
-        Date DateOfBirth ->
+        StringType (DateType _) ->
             time
                 |> TimeExtra.add TimeExtra.Year -40 Time.utc
                 |> TimeExtra.floor TimeExtra.Year Time.utc
@@ -250,26 +237,20 @@ defaultValue time fieldType =
 
 
 {-| -}
-toClass : SimpleFieldType -> String
+toClass : FieldType -> String
 toClass fieldType =
     case fieldType of
-        Text ->
-            "input"
-
-        Email ->
-            "input"
-
-        Date _ ->
-            "input"
-
-        Phone ->
-            "input"
-
-        Url ->
-            "input"
-
-        TextArea ->
+        StringType (SimpleType TextArea) ->
             "textarea"
+
+        StringType (SimpleType _) ->
+            "input"
+
+        StringType (DateType _) ->
+            "input"
+
+        _ ->
+            ""
 
 
 {-| -}
