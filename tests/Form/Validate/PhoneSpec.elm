@@ -25,9 +25,9 @@ suite =
             , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
                 (HelperSpec.simpleField FieldType.Phone)
                 { valid =
-                    [ { value = "23456789", name = "Correct format and length 8" }
-                    , { value = "234567890", name = "Correct format and length 9" }
-                    , { value = "2345678901", name = "Correct format and length 10" }
+                    [ { value = "21234567", name = "Correct format and length 8" }
+                    , { value = "212345678", name = "Correct format and length 9" }
+                    , { value = "2123456789", name = "Correct format and length 10" }
                     ]
                 , invalid =
                     [ { value = "12345678", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2" }
