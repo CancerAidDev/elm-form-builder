@@ -164,7 +164,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , hasEmptyOption = Just True
+                                        , hasEmptyOption = Nothing
                                         }
                                     )
                                 )
@@ -237,7 +237,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , hasEmptyOption = Just True
+                                        , hasEmptyOption = Nothing
                                         }
                                     )
                                 )
