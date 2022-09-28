@@ -22,7 +22,7 @@ import RemoteData
 
 {-| -}
 select : String -> String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
-select empty key { value, required, options, disabled, hidden, hasEmptyOption } =
+select empty key { value, required, options, disabled, hidden, hasEmptyOption, placeholder } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -35,9 +35,20 @@ select empty key { value, required, options, disabled, hidden, hasEmptyOption } 
                     emptyOption empty :: List.map (viewOption value) options
 
                  else
-                    List.map (viewOption value) options
+                    viewPlaceholder (Maybe.withDefault "" placeholder) :: List.map (viewOption value) options
                 )
             ]
+
+
+viewPlaceholder : String -> Html.Html Msg.Msg
+viewPlaceholder placeholder =
+    Html.option
+        [ HtmlAttributes.value ""
+        , HtmlAttributes.disabled True
+        , HtmlAttributes.selected True
+        , HtmlAttributes.hidden True
+        ]
+        [ Html.text placeholder ]
 
 
 emptyOption : String -> Html.Html Msg.Msg
@@ -75,6 +86,7 @@ httpSelect key properties =
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
                 , hasEmptyOption = properties.hasEmptyOption
+                , placeholder = properties.placeholder
                 }
         )
         properties.options
