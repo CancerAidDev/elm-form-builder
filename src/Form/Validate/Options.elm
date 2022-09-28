@@ -3,7 +3,6 @@ module Form.Validate.Options exposing (optionsValidator, remoteOptionsValidator)
 import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Validate.Types as Types
-import Json.Decode exposing (field)
 import RemoteData
 
 
