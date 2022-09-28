@@ -165,7 +165,7 @@ suite =
                                         , hidden = False
                                         , unhiddenBy = Nothing
                                         , hasEmptyOption = Nothing
-                                        , placeholder = Just ""
+                                        , placeholder = Nothing
                                         }
                                     )
                                 )
@@ -239,7 +239,7 @@ suite =
                                         , hidden = False
                                         , unhiddenBy = Nothing
                                         , hasEmptyOption = Nothing
-                                        , placeholder = Just ""
+                                        , placeholder = Nothing
                                         }
                                     )
                                 )
@@ -560,7 +560,7 @@ suite =
                                             , hidden = False
                                             , unhiddenBy = Nothing
                                             , hasEmptyOption = Just True
-                                            , placeholder = Just ""
+                                            , placeholder = Nothing
                                             }
                                   )
                                 ]
@@ -589,7 +589,7 @@ suite =
                                             , hidden = False
                                             , unhiddenBy = Nothing
                                             , hasEmptyOption = Just True
-                                            , placeholder = Just ""
+                                            , placeholder = Nothing
                                             }
                                   )
                                 ]
