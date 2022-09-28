@@ -67,14 +67,14 @@ validate locale field =
                 Field.DateField _ ->
                     Date.dateValidator locale field
 
-                Field.SelectField { options } ->
-                    Options.optionsValidator options locale field
+                Field.SelectField { options, hasEmptyOption } ->
+                    Options.optionsValidator hasEmptyOption options locale field
 
                 Field.HttpSelectField { options } ->
                     Options.remoteOptionsValidator options locale field
 
                 Field.RadioField { options } ->
-                    Options.optionsValidator options locale field
+                    Options.optionsValidator (Just True) options locale field
 
 
 {-| Localised error message API for a StringField error.
