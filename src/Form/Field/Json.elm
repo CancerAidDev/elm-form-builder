@@ -76,6 +76,7 @@ type alias JsonSelectFieldProperties =
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
     , hasEmptyOption : Maybe Bool
+    , placeholder : Maybe String
     }
 
 
@@ -91,6 +92,7 @@ type alias JsonHttpSelectFieldProperties =
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
     , hasEmptyOption : Maybe Bool
+    , placeholder : Maybe String
     }
 
 
@@ -310,7 +312,7 @@ toField time order field =
                     }
             )
 
-        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, hasEmptyOption } ->
+        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, hasEmptyOption, placeholder } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -326,10 +328,11 @@ toField time order field =
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
                     , hasEmptyOption = hasEmptyOption
+                    , placeholder = placeholder
                     }
             )
 
-        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, hasEmptyOption } ->
+        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, hasEmptyOption, placeholder } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -346,6 +349,7 @@ toField time order field =
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
                     , hasEmptyOption = hasEmptyOption
+                    , placeholder = placeholder
                     }
             )
 
@@ -535,6 +539,7 @@ decoderSelectJson =
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "hasEmptyOption" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "placeholder" (Decode.maybe Decode.string) Nothing
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
@@ -551,6 +556,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "hasEmptyOption" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "placeholder" (Decode.maybe Decode.string) Nothing
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties

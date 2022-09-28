@@ -141,6 +141,7 @@ fields =
             , hidden = False
             , unhiddenBy = Nothing
             , hasEmptyOption = Just True 
+            , placeholder = Just ""
             }
         )
     , \order ->
@@ -167,6 +168,7 @@ fields =
             , hidden = False
             , unhiddenBy = Nothing
             , hasEmptyOption = Just True 
+            , placeholder = Just ""
             }
         )
     , \order ->
