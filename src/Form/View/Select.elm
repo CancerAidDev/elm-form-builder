@@ -22,7 +22,7 @@ import RemoteData
 
 {-| -}
 select : String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden } =
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -31,15 +31,21 @@ select key { value, required, options, disabled, hidden } =
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 ]
-                (emptyOption :: List.map (viewOption value) options)
+                (viewPlaceholder hasSelectablePlaceholder placeholder
+                    :: List.map (viewOption value) options
+                )
             ]
 
 
-emptyOption : Html.Html Msg.Msg
-emptyOption =
+viewPlaceholder : Bool -> String -> Html.Html Msg.Msg
+viewPlaceholder selectabled placeholder =
     Html.option
-        [ HtmlAttributes.value "" ]
-        [ Html.text "" ]
+        [ HtmlAttributes.value placeholder
+        , HtmlAttributes.disabled (not selectabled)
+        , HtmlAttributes.selected (not selectabled)
+        , HtmlAttributes.hidden (not selectabled)
+        ]
+        [ Html.text placeholder ]
 
 
 viewOption : String -> Select.Option -> Html.Html Msg.Msg
@@ -56,7 +62,8 @@ httpSelect : String -> Field.HttpSelectFieldProperties -> Html.Html Msg.Msg
 httpSelect key properties =
     RemoteData.map
         (\options ->
-            select key
+            select
+                key
                 { value = properties.value
                 , required = properties.required
                 , default = properties.default
@@ -68,6 +75,8 @@ httpSelect key properties =
                 , disabled = properties.disabled
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
+                , placeholder = properties.placeholder
+                , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
                 }
         )
         properties.options

@@ -164,6 +164,8 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
                                         }
                                     )
                                 )
@@ -236,6 +238,8 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
                                         }
                                     )
                                 )
@@ -555,6 +559,8 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , placeholder = ""
+                                            , hasSelectablePlaceholder = True
                                             }
                                   )
                                 ]
@@ -582,6 +588,8 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , placeholder = ""
+                                            , hasSelectablePlaceholder = True
                                             }
                                   )
                                 ]

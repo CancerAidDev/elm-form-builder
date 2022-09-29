@@ -140,6 +140,8 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , placeholder = ""
+            , hasSelectablePlaceholder = True
             }
         )
     , \order ->
@@ -158,13 +160,15 @@ fields =
                 , { label = Nothing, value = "Northern Territory" }
                 , { label = Nothing, value = "Queensland" }
                 , { label = Nothing, value = "South Australian" }
-                , { label = Nothing, value = "Tasmanian" }
+                , { label = Nothing, value = "Tasmania" }
                 , { label = Nothing, value = "Victorian" }
                 , { label = Nothing, value = "Western Australia" }
                 ]
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , placeholder = "State"
+            , hasSelectablePlaceholder =  False 
             }
         )
     , \order ->

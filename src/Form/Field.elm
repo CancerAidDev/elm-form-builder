@@ -344,6 +344,8 @@ type alias SelectFieldProperties =
     StringFieldProperties
         { default : Maybe String
         , options : List Option.Option
+        , placeholder : String
+        , hasSelectablePlaceholder : Bool
         }
 
 
@@ -353,6 +355,8 @@ type alias HttpSelectFieldProperties =
         { url : String
         , default : Maybe String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        , placeholder : String
+        , hasSelectablePlaceholder : Bool
         }
 
 
