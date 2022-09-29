@@ -21,8 +21,8 @@ import RemoteData
 
 
 {-| -}
-select : String -> String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
-select empty key { value, required, options, disabled, hidden, hasEmptyOption, placeholder } =
+select : String -> Field.SelectFieldProperties -> Html.Html Msg.Msg
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -31,31 +31,21 @@ select empty key { value, required, options, disabled, hidden, hasEmptyOption, p
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 ]
-                (if hasEmptyOption == Just True then
-                    emptyOption empty :: List.map (viewOption value) options
-
-                 else
-                    viewPlaceholder (Maybe.withDefault "" placeholder) :: List.map (viewOption value) options
+                (viewPlaceholder hasSelectablePlaceholder placeholder
+                    :: List.map (viewOption value) options
                 )
             ]
 
 
-viewPlaceholder : String -> Html.Html Msg.Msg
-viewPlaceholder placeholder =
+viewPlaceholder : Bool -> String -> Html.Html Msg.Msg
+viewPlaceholder selectabled placeholder =
     Html.option
-        [ HtmlAttributes.value ""
-        , HtmlAttributes.disabled True
-        , HtmlAttributes.selected True
-        , HtmlAttributes.hidden True
+        [ HtmlAttributes.value placeholder
+        , HtmlAttributes.disabled (not selectabled)
+        , HtmlAttributes.selected (not selectabled)
+        , HtmlAttributes.hidden (not selectabled)
         ]
         [ Html.text placeholder ]
-
-
-emptyOption : String -> Html.Html Msg.Msg
-emptyOption empty =
-    Html.option
-        [ HtmlAttributes.value empty ]
-        [ Html.text empty ]
 
 
 viewOption : String -> Select.Option -> Html.Html Msg.Msg
@@ -72,7 +62,7 @@ httpSelect : String -> Field.HttpSelectFieldProperties -> Html.Html Msg.Msg
 httpSelect key properties =
     RemoteData.map
         (\options ->
-            select ""
+            select
                 key
                 { value = properties.value
                 , required = properties.required
@@ -85,8 +75,8 @@ httpSelect key properties =
                 , disabled = properties.disabled
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
-                , hasEmptyOption = properties.hasEmptyOption
                 , placeholder = properties.placeholder
+                , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
                 }
         )
         properties.options

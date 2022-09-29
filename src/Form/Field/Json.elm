@@ -75,8 +75,8 @@ type alias JsonSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , hasEmptyOption : Maybe Bool
-    , placeholder : Maybe String
+    , placeholder : String
+    , hasSelectablePlaceholder : Bool
     }
 
 
@@ -91,8 +91,8 @@ type alias JsonHttpSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , hasEmptyOption : Maybe Bool
-    , placeholder : Maybe String
+    , placeholder : String
+    , hasSelectablePlaceholder : Bool
     }
 
 
@@ -312,7 +312,7 @@ toField time order field =
                     }
             )
 
-        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, hasEmptyOption, placeholder } ->
+        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -327,12 +327,12 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , hasEmptyOption = hasEmptyOption
                     , placeholder = placeholder
+                    , hasSelectablePlaceholder = hasSelectablePlaceholder
                     }
             )
 
-        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, hasEmptyOption, placeholder } ->
+        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -348,8 +348,8 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , hasEmptyOption = hasEmptyOption
                     , placeholder = placeholder
+                    , hasSelectablePlaceholder = hasSelectablePlaceholder
                     }
             )
 
@@ -538,8 +538,8 @@ decoderSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "hasEmptyOption" (Decode.map Just Decode.bool) Nothing
-        |> DecodePipeline.optional "placeholder" (Decode.maybe Decode.string) Nothing
+        |> DecodePipeline.optional "placeholder" Decode.string ""
+        |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
@@ -555,8 +555,8 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "hasEmptyOption" (Decode.map Just Decode.bool) Nothing
-        |> DecodePipeline.optional "placeholder" (Decode.maybe Decode.string) Nothing
+        |> DecodePipeline.optional "placeholder" Decode.string ""
+        |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties

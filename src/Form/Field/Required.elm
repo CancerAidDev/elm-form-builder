@@ -37,12 +37,11 @@ type IsRequired
 {-| -}
 fromBool : Bool -> IsRequired
 fromBool bool =
-    case bool of
-        True ->
-            Yes
+    if bool then
+        Yes
 
-        False ->
-            No
+    else
+        No
 
 
 {-| -}

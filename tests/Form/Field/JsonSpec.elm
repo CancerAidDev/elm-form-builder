@@ -164,8 +164,8 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , hasEmptyOption = Nothing
-                                        , placeholder = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
                                         }
                                     )
                                 )
@@ -238,8 +238,8 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , hasEmptyOption = Nothing
-                                        , placeholder = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
                                         }
                                     )
                                 )
@@ -559,8 +559,8 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , hasEmptyOption = Just True
-                                            , placeholder = Nothing
+                                            , placeholder = ""
+                                            , hasSelectablePlaceholder = True
                                             }
                                   )
                                 ]
@@ -588,8 +588,8 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , hasEmptyOption = Just True
-                                            , placeholder = Nothing
+                                            , placeholder = ""
+                                            , hasSelectablePlaceholder = True
                                             }
                                   )
                                 ]
