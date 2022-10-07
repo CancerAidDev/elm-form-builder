@@ -32,6 +32,7 @@ type StringFieldError
     | InvalidDate
     | InvalidUrl
     | RegexIncongruence String
+    | IllegalRegex
 
 
 {-| API for validating StringFields (already with just the value of the field)

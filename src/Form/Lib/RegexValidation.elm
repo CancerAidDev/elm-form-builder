@@ -2,6 +2,7 @@ module Form.Lib.RegexValidation exposing (RegexValidation, decoder)
 
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
+import Regex
 
 
 type alias RegexValidation =
@@ -12,6 +13,18 @@ type alias RegexValidation =
 
 decoder : Decode.Decoder RegexValidation
 decoder =
-    Decode.succeed RegexValidation
+    (Decode.succeed RegexValidation
         |> DecodePipeline.required "pattern" Decode.string
         |> DecodePipeline.optional "message" Decode.string ""
+    )
+        |> Decode.andThen regexCheckValidity
+
+
+regexCheckValidity : RegexValidation -> Decode.Decoder RegexValidation
+regexCheckValidity { pattern, message } =
+    case Regex.fromString pattern of
+        Just _ ->
+            Decode.succeed { pattern = pattern, message = message }
+
+        Nothing ->
+            Decode.fail ("Invalid regex pattern: \"" ++ pattern ++ "\"")

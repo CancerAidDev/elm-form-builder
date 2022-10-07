@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (dateField, regexFullNameField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (dateField, illegalRegexField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -109,27 +109,6 @@ simpleField tipe { required, value } =
         }
 
 
-regexFullNameField : FieldType.SimpleFieldType -> NewStringField
-regexFullNameField tipe { required, value } =
-    Field.SimpleField
-        { required = required
-        , label = "Field"
-        , width = Width.FullSize
-        , enabledBy = Nothing
-        , order = 1
-        , value = value
-        , tipe = tipe
-        , disabled = False
-        , hidden = False
-        , unhiddenBy = Nothing
-        , regex_validation =
-            Just
-                { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
-                , message = "Please enter your full name"
-                }
-        }
-
-
 regexNonEmployeeEmailField : FieldType.SimpleFieldType -> NewStringField
 regexNonEmployeeEmailField tipe { required, value } =
     Field.SimpleField
@@ -146,6 +125,27 @@ regexNonEmployeeEmailField tipe { required, value } =
         , regex_validation =
             Just
                 { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
+                , message = "Please use the employee's personal email address"
+                }
+        }
+
+
+illegalRegexField : FieldType.SimpleFieldType -> NewStringField
+illegalRegexField tipe { required, value } =
+    Field.SimpleField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , tipe = tipe
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , regex_validation =
+            Just
+                { pattern = "["
                 , message = "Please use the employee's personal email address"
                 }
         }

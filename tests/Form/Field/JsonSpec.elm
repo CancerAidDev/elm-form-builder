@@ -65,6 +65,39 @@ suite =
                                         }
                                 )
                             )
+            , Test.test "Simple field decoder with regex" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "text",
+                                "width": "50%",
+                                "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "name"
+                                , Field.StringField_ <|
+                                    Field.SimpleField
+                                        { tipe = FieldType.Text
+                                        , label = "Full Name"
+                                        , required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = ""
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , regex_validation = Just { pattern = "^[a-zA-Z]+$", message = "Only letters allowed" }
+                                        }
+                                )
+                            )
             , Test.test "Simple field decoder with select type" <|
                 \_ ->
                     let
@@ -116,6 +149,36 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Simple field decoder with invalid regex record" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "text",
+                                "width": "50%",
+                                "regex_validation": { "mmmmm": "im hungry" }
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Simple field decoder with illegal regex" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "text",
+                                "width": "50%",
+                                "regex_validation": { "pattern": "[", "message": "Only letters allowed" }
                             }"""
                     in
                     Decode.decodeString decoder json

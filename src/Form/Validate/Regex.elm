@@ -19,7 +19,7 @@ regexValidator regex_validation field =
                         Err <| ValidatorTypes.RegexIncongruence message
 
                 Nothing ->
-                    Err <| ValidatorTypes.RegexIncongruence "Invalid regex pattern"
+                    Err <| ValidatorTypes.IllegalRegex
 
         Nothing ->
             Ok field
