@@ -16,6 +16,7 @@ import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Form.Lib.RegexValidation as RegexValidation
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData
@@ -48,6 +49,7 @@ type alias JsonSimpleFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , regex_validation : Maybe RegexValidation.RegexValidation
     }
 
 
@@ -260,7 +262,7 @@ decoderForType fieldType =
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
 toField time order field =
     case field of
-        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, regex_validation } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -274,6 +276,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , regex_validation = regex_validation
                     }
             )
 
@@ -495,6 +498,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "regex_validation" (Decode.map Just RegexValidation.decoder) Nothing
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties

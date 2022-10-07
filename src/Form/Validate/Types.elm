@@ -31,6 +31,7 @@ type StringFieldError
     | InvalidEmail
     | InvalidDate
     | InvalidUrl
+    | RegexIncongruence String
 
 
 {-| API for validating StringFields (already with just the value of the field)

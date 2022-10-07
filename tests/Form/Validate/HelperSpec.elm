@@ -105,6 +105,7 @@ simpleField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
+        , regex_validation = Nothing
         }
 
 

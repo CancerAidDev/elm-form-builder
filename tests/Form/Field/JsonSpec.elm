@@ -61,6 +61,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , regex_validation = Nothing
                                         }
                                 )
                             )
@@ -498,6 +499,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regex_validation = Nothing
                                             }
                                   )
                                 ]
@@ -523,6 +525,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regex_validation = Nothing
                                             }
                                   )
                                 ]
@@ -764,6 +767,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regex_validation = Nothing
                                             }
                                   )
                                 , ( "metadata.name"
@@ -779,6 +783,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regex_validation = Nothing
                                             }
                                   )
                                 ]

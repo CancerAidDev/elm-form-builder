@@ -24,6 +24,7 @@ import Form.Validate.Date as Date
 import Form.Validate.Email as Email
 import Form.Validate.Options as Options
 import Form.Validate.Phone as Phone
+import Form.Validate.Regex as RegexValidator
 import Form.Validate.Required as Required
 import Form.Validate.Types as Types
 import Form.Validate.UrlValidator as UrlValidator
@@ -47,22 +48,28 @@ validate locale field =
 
         Ok _ ->
             case field of
-                Field.SimpleField { tipe } ->
-                    case tipe of
-                        FieldType.Email ->
-                            Email.emailValidator locale field
+                Field.SimpleField { tipe, regex_validation } ->
+                    RegexValidator.regexValidator
+                        regex_validation
+                        field
+                        |> Result.andThen
+                            (\postRegexField ->
+                                case tipe of
+                                    FieldType.Email ->
+                                        Email.emailValidator locale postRegexField
 
-                        FieldType.Phone ->
-                            Phone.phoneValidator locale field
+                                    FieldType.Phone ->
+                                        Phone.phoneValidator locale postRegexField
 
-                        FieldType.Url ->
-                            UrlValidator.urlValidator locale field
+                                    FieldType.Url ->
+                                        UrlValidator.urlValidator locale postRegexField
 
-                        FieldType.Text ->
-                            Ok field
+                                    FieldType.Text ->
+                                        Ok postRegexField
 
-                        FieldType.TextArea ->
-                            Ok field
+                                    FieldType.TextArea ->
+                                        Ok postRegexField
+                            )
 
                 Field.DateField _ ->
                     Date.dateValidator locale field
@@ -103,3 +110,6 @@ errorToMessage locale field error =
 
         Types.InvalidUrl ->
             "Invalid url"
+
+        Types.RegexIncongruence msg ->
+            msg

@@ -23,6 +23,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Nothing
             }
         )
     , \order ->
@@ -37,13 +38,14 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Nothing
             }
         )
     , \order ->
         ( "name"
         , FormField.text
             { required = IsRequired.Yes
-            , label = "Name"
+            , label = "Full Name"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
@@ -51,6 +53,10 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Just     
+                { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
+                , message = "Please enter your full name"
+                }
             }
         )
     , \order ->
@@ -65,6 +71,10 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Just 
+                { pattern = "^.*(?=(?<!@facs\\.nsw\\.gov\\.au)$)(?=(?<!@justice\\.nsw\\.gov\\.au)$)"
+                , message = "Please use the employee's personal email address"
+                }
             }
         )
     , \order ->
@@ -79,6 +89,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Nothing
             }
         )
     , \order ->
@@ -93,6 +104,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , regex_validation = Nothing
             }
         )
     , \order ->
