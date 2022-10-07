@@ -74,7 +74,7 @@ fields =
             , unhiddenBy = Nothing
             , regex_validation =
                 Just
-                    { pattern = "^.*(?=(?<!@facs\\.nsw\\.gov\\.au)$)(?=(?<!@justice\\.nsw\\.gov\\.au)$)"
+                    { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
                     , message = "Please use the employee's personal email address"
                     }
             }
