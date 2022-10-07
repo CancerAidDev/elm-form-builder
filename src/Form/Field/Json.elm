@@ -498,7 +498,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "regexValidation" (Decode.map Just RegexValidation.decoder) Nothing
+        |> DecodePipeline.optional "regex_validation" (Decode.map Just RegexValidation.decoder) Nothing
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties

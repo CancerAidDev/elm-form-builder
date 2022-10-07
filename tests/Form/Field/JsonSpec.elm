@@ -75,7 +75,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regexValidation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
+                                "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -163,7 +163,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regexValidation": { "mmmmm": "im hungry" }
+                                "regex_validation": { "mmmmm": "im hungry" }
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -178,7 +178,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regexValidation": { "pattern": "[", "message": "Only letters allowed" }
+                                "regex_validation": { "pattern": "[", "message": "Only letters allowed" }
                             }"""
                     in
                     Decode.decodeString decoder json
