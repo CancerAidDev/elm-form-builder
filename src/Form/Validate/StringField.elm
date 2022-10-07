@@ -49,27 +49,27 @@ validate locale field =
         Ok _ ->
             case field of
                 Field.SimpleField { tipe, regexValidation } ->
-                    RegexValidator.regexValidator
-                        regexValidation
-                        field
-                        |> Result.andThen
-                            (\postRegexField ->
-                                case tipe of
-                                    FieldType.Email ->
-                                        Email.emailValidator locale postRegexField
+                    let
+                        simpleFieldValidator : Field.StringField -> Result Types.StringFieldError Field.StringField
+                        simpleFieldValidator valField =
+                            case tipe of
+                                FieldType.Email ->
+                                    Email.emailValidator locale valField
 
-                                    FieldType.Phone ->
-                                        Phone.phoneValidator locale postRegexField
+                                FieldType.Phone ->
+                                    Phone.phoneValidator locale valField
 
-                                    FieldType.Url ->
-                                        UrlValidator.urlValidator locale postRegexField
+                                FieldType.Url ->
+                                    UrlValidator.urlValidator locale valField
 
-                                    FieldType.Text ->
-                                        Ok postRegexField
+                                FieldType.Text ->
+                                    Ok valField
 
-                                    FieldType.TextArea ->
-                                        Ok postRegexField
-                            )
+                                FieldType.TextArea ->
+                                    Ok valField
+                    in
+                    simpleFieldValidator field
+                        |> Result.andThen (RegexValidator.regexValidator regexValidation)
 
                 Field.DateField _ ->
                     Date.dateValidator locale field
