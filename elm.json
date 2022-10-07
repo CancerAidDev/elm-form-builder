@@ -20,6 +20,7 @@
         "Form.Format.Phone",
         "Form.Lib.Nonempty",
         "Form.Lib.Time",
+        "Form.Lib.RegexValidation",
         "Form.Locale.CountryCode",
         "Form.Locale.LanguageCode",
         "Form.Locale.Phone",

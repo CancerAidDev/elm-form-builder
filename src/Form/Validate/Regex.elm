@@ -1,4 +1,4 @@
-module Form.Validate.Regex exposing (..)
+module Form.Validate.Regex exposing (regexValidator)
 
 import Form.Field as Field
 import Form.Lib.RegexValidation as RegexValidation

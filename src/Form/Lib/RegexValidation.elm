@@ -1,4 +1,4 @@
-module Form.Lib.RegexValidation exposing (..)
+module Form.Lib.RegexValidation exposing (RegexValidation, decoder)
 
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
