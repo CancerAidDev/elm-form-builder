@@ -105,7 +105,7 @@ simpleField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , regex_validation = Nothing
+        , regexValidation = Nothing
         }
 
 
@@ -122,7 +122,7 @@ regexNonEmployeeEmailField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , regex_validation =
+        , regexValidation =
             Just
                 { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
                 , message = "Please use the employee's personal email address"
@@ -143,7 +143,7 @@ illegalRegexField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , regex_validation =
+        , regexValidation =
             Just
                 { pattern = "["
                 , message = "Please use the employee's personal email address"

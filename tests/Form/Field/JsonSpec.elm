@@ -61,7 +61,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , regex_validation = Nothing
+                                        , regexValidation = Nothing
                                         }
                                 )
                             )
@@ -75,7 +75,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
+                                "regexValidation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -94,7 +94,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , regex_validation = Just { pattern = "^[a-zA-Z]+$", message = "Only letters allowed" }
+                                        , regexValidation = Just { pattern = "^[a-zA-Z]+$", message = "Only letters allowed" }
                                         }
                                 )
                             )
@@ -163,7 +163,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regex_validation": { "mmmmm": "im hungry" }
+                                "regexValidation": { "mmmmm": "im hungry" }
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -178,7 +178,7 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%",
-                                "regex_validation": { "pattern": "[", "message": "Only letters allowed" }
+                                "regexValidation": { "pattern": "[", "message": "Only letters allowed" }
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -562,7 +562,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , regex_validation = Nothing
+                                            , regexValidation = Nothing
                                             }
                                   )
                                 ]
@@ -588,7 +588,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , regex_validation = Nothing
+                                            , regexValidation = Nothing
                                             }
                                   )
                                 ]
@@ -830,7 +830,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , regex_validation = Nothing
+                                            , regexValidation = Nothing
                                             }
                                   )
                                 , ( "metadata.name"
@@ -846,7 +846,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
-                                            , regex_validation = Nothing
+                                            , regexValidation = Nothing
                                             }
                                   )
                                 ]

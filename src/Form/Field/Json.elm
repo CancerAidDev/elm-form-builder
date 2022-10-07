@@ -49,7 +49,7 @@ type alias JsonSimpleFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , regex_validation : Maybe RegexValidation.RegexValidation
+    , regexValidation : Maybe RegexValidation.RegexValidation
     }
 
 
@@ -262,7 +262,7 @@ decoderForType fieldType =
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
 toField time order field =
     case field of
-        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, regex_validation } ->
+        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, regexValidation } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -276,7 +276,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , regex_validation = regex_validation
+                    , regexValidation = regexValidation
                     }
             )
 
@@ -498,7 +498,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "regex_validation" (Decode.map Just RegexValidation.decoder) Nothing
+        |> DecodePipeline.optional "regexValidation" (Decode.map Just RegexValidation.decoder) Nothing
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties

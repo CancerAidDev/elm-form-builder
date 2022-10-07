@@ -63,8 +63,8 @@ import Time
 
 
 {-| -}
-text : StringFieldProperties { regex_validation : Maybe RegexValidation.RegexValidation } -> Field
-text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regex_validation } =
+text : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -77,13 +77,13 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regex_validation = regex_validation
+            , regexValidation = regexValidation
             }
 
 
 {-| -}
-email : StringFieldProperties { regex_validation : Maybe RegexValidation.RegexValidation } -> Field
-email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regex_validation } =
+email : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -96,7 +96,7 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regex_validation = regex_validation
+            , regexValidation = regexValidation
             }
 
 
@@ -139,8 +139,8 @@ datePast { required, label, width, enabledBy, order, value, disabled, hidden, un
 
 
 {-| -}
-phone : StringFieldProperties { regex_validation : Maybe RegexValidation.RegexValidation } -> Field
-phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regex_validation } =
+phone : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -153,13 +153,13 @@ phone { required, label, width, enabledBy, order, value, disabled, hidden, unhid
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regex_validation = regex_validation
+            , regexValidation = regexValidation
             }
 
 
 {-| -}
-url : StringFieldProperties { regex_validation : Maybe RegexValidation.RegexValidation } -> Field
-url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regex_validation } =
+url : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -172,13 +172,13 @@ url { required, label, width, enabledBy, order, value, disabled, hidden, unhidde
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regex_validation = regex_validation
+            , regexValidation = regexValidation
             }
 
 
 {-| -}
-textarea : StringFieldProperties { regex_validation : Maybe RegexValidation.RegexValidation } -> Field
-textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regex_validation } =
+textarea : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -191,7 +191,7 @@ textarea { required, label, width, enabledBy, order, value, disabled, hidden, un
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regex_validation = regex_validation
+            , regexValidation = regexValidation
             }
 
 
@@ -334,7 +334,7 @@ type alias StringFieldProperties a =
 type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
-        , regex_validation : Maybe RegexValidation.RegexValidation
+        , regexValidation : Maybe RegexValidation.RegexValidation
         }
 
 

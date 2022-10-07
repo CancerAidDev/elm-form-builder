@@ -23,7 +23,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Nothing
+            , regexValidation = Nothing
             }
         )
     , \order ->
@@ -38,7 +38,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Nothing
+            , regexValidation = Nothing
             }
         )
     , \order ->
@@ -53,7 +53,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation =
+            , regexValidation =
                 Just
                     { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
                     , message = "Please enter your full name"
@@ -72,7 +72,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation =
+            , regexValidation =
                 Just
                     { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
                     , message = "Please use the employee's personal email address"
@@ -91,7 +91,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Nothing
+            , regexValidation = Nothing
             }
         )
     , \order ->
@@ -106,7 +106,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Nothing
+            , regexValidation = Nothing
             }
         )
     , \order ->

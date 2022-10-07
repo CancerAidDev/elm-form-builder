@@ -7,8 +7,8 @@ import Regex
 
 
 regexValidator : Maybe RegexValidation.RegexValidation -> Field.StringField -> Result ValidatorTypes.StringFieldError Field.StringField
-regexValidator regex_validation field =
-    case regex_validation of
+regexValidator regexValidation field =
+    case regexValidation of
         Just { pattern, message } ->
             case Regex.fromString pattern of
                 Just regex ->

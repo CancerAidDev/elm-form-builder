@@ -48,9 +48,9 @@ validate locale field =
 
         Ok _ ->
             case field of
-                Field.SimpleField { tipe, regex_validation } ->
+                Field.SimpleField { tipe, regexValidation } ->
                     RegexValidator.regexValidator
-                        regex_validation
+                        regexValidation
                         field
                         |> Result.andThen
                             (\postRegexField ->
