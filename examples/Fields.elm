@@ -53,10 +53,11 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Just     
-                { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
-                , message = "Please enter your full name"
-                }
+            , regex_validation =
+                Just
+                    { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
+                    , message = "Please enter your full name"
+                    }
             }
         )
     , \order ->
@@ -71,10 +72,11 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regex_validation = Just 
-                { pattern = "^.*(?=(?<!@facs\\.nsw\\.gov\\.au)$)(?=(?<!@justice\\.nsw\\.gov\\.au)$)"
-                , message = "Please use the employee's personal email address"
-                }
+            , regex_validation =
+                Just
+                    { pattern = "^.*(?=(?<!@facs\\.nsw\\.gov\\.au)$)(?=(?<!@justice\\.nsw\\.gov\\.au)$)"
+                    , message = "Please use the employee's personal email address"
+                    }
             }
         )
     , \order ->
@@ -180,7 +182,7 @@ fields =
             , hidden = False
             , unhiddenBy = Nothing
             , placeholder = "State"
-            , hasSelectablePlaceholder =  False 
+            , hasSelectablePlaceholder = False
             }
         )
     , \order ->
@@ -221,7 +223,7 @@ fields =
                 [ { label = Just "Saturday", value = "Sat" }
                 , { label = Just "Sunday", value = "Sun" }
                 ]
-            , searchableOptions = 
+            , searchableOptions =
                 [ { label = Just "Monday", value = "Mon" }
                 , { label = Just "Tuesday", value = "Tue" }
                 , { label = Just "Wednesday", value = "Wed" }
