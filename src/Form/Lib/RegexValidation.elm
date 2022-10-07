@@ -1,16 +1,27 @@
-module Form.Lib.RegexValidation exposing (RegexValidation, decoder)
+module Form.Lib.RegexValidation exposing (decoder, RegexValidation)
+
+{-| Helper functions for Regex Validation
+
+
+# Time
+
+@docs decoder, RegexValidation
+
+-}
 
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import Regex
 
 
+{-| -}
 type alias RegexValidation =
     { pattern : String
     , message : String
     }
 
 
+{-| -}
 decoder : Decode.Decoder RegexValidation
 decoder =
     (Decode.succeed RegexValidation
