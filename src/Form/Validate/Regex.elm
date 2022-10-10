@@ -10,16 +10,11 @@ regexValidator : Maybe RegexValidation.RegexValidation -> Field.StringField -> R
 regexValidator regexValidation field =
     case regexValidation of
         Just { pattern, message } ->
-            case Regex.fromString pattern of
-                Just regex ->
-                    if Regex.contains regex (Field.getStringValue_ field) then
-                        Ok field
+            if Regex.contains pattern (Field.getStringValue_ field) then
+                Ok field
 
-                    else
-                        Err <| ValidatorTypes.RegexIncongruence message
-
-                Nothing ->
-                    Err <| ValidatorTypes.IllegalRegex
+            else
+                Err <| ValidatorTypes.RegexIncongruence message
 
         Nothing ->
             Ok field

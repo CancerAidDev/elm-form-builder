@@ -6,6 +6,7 @@ import Form.Field.Direction as Direction
 import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
+import Regex
 import Set
 
 
@@ -43,41 +44,75 @@ fields =
         )
     , \order ->
         ( "name"
-        , FormField.text
-            { required = IsRequired.Yes
-            , label = "Full Name"
-            , width = Width.FullSize
-            , enabledBy = Nothing
-            , order = order
-            , value = ""
-            , disabled = False
-            , hidden = False
-            , unhiddenBy = Nothing
-            , regexValidation =
-                Just
-                    { pattern = "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b"
-                    , message = "Please enter your full name"
+        , case Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" of
+            Nothing ->
+                FormField.text
+                    { required = IsRequired.Yes
+                    , label = "Full Name"
+                    , width = Width.FullSize
+                    , enabledBy = Nothing
+                    , order = order
+                    , value = "Regex does not compile"
+                    , disabled = True
+                    , hidden = False
+                    , unhiddenBy = Nothing
+                    , regexValidation =
+                        Nothing
                     }
-            }
+
+            Just regex ->
+                FormField.text
+                    { required = IsRequired.Yes
+                    , label = "Full Name"
+                    , width = Width.FullSize
+                    , enabledBy = Nothing
+                    , order = order
+                    , value = ""
+                    , disabled = False
+                    , hidden = False
+                    , unhiddenBy = Nothing
+                    , regexValidation =
+                        Just
+                            { pattern = regex
+                            , message = "Please enter your full name"
+                            }
+                    }
         )
     , \order ->
         ( "email"
-        , FormField.email
-            { required = IsRequired.Yes
-            , label = "Email Address"
-            , width = Width.FullSize
-            , enabledBy = Nothing
-            , order = order
-            , value = ""
-            , disabled = False
-            , hidden = False
-            , unhiddenBy = Nothing
-            , regexValidation =
-                Just
-                    { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
-                    , message = "Please use the employee's personal email address"
+        , case Regex.fromString "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)" of
+            Nothing ->
+                FormField.text
+                    { required = IsRequired.Yes
+                    , label = "Email Address"
+                    , width = Width.FullSize
+                    , enabledBy = Nothing
+                    , order = order
+                    , value = "Regex does not compile"
+                    , disabled = True
+                    , hidden = False
+                    , unhiddenBy = Nothing
+                    , regexValidation =
+                        Nothing
                     }
-            }
+
+            Just regex ->
+                FormField.email
+                    { required = IsRequired.Yes
+                    , label = "Email Address"
+                    , width = Width.FullSize
+                    , enabledBy = Nothing
+                    , order = order
+                    , value = ""
+                    , disabled = False
+                    , hidden = False
+                    , unhiddenBy = Nothing
+                    , regexValidation =
+                        Just
+                            { pattern = regex
+                            , message = "Please use the employee's personal email address"
+                            }
+                    }
         )
     , \order ->
         ( "secondaryEmail"

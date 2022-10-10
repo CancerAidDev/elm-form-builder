@@ -16,7 +16,7 @@ import Regex
 
 {-| -}
 type alias RegexValidation =
-    { pattern : String
+    { pattern : Regex.Regex
     , message : String
     }
 
@@ -24,18 +24,20 @@ type alias RegexValidation =
 {-| -}
 decoder : Decode.Decoder RegexValidation
 decoder =
-    (Decode.succeed RegexValidation
-        |> DecodePipeline.required "pattern" Decode.string
+    Decode.succeed RegexValidation
+        |> DecodePipeline.required "pattern" regexDecoder
         |> DecodePipeline.optional "message" Decode.string ""
-    )
-        |> Decode.andThen regexCheckValidity
 
 
-regexCheckValidity : RegexValidation -> Decode.Decoder RegexValidation
-regexCheckValidity { pattern, message } =
-    case Regex.fromString pattern of
-        Just _ ->
-            Decode.succeed { pattern = pattern, message = message }
+regexDecoder : Decode.Decoder Regex.Regex
+regexDecoder =
+    Decode.string
+        |> Decode.andThen
+            (\pattern ->
+                case Regex.fromString pattern of
+                    Just regex ->
+                        Decode.succeed regex
 
-        Nothing ->
-            Decode.fail ("Invalid regex pattern: \"" ++ pattern ++ "\"")
+                    Nothing ->
+                        Decode.fail "Regex does not compile"
+            )

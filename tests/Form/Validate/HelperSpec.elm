@@ -1,5 +1,6 @@
-module Form.Validate.HelperSpec exposing (dateField, illegalRegexField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
+import Either
 import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
@@ -8,6 +9,7 @@ import Form.Field.Width as Width
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
+import Regex
 import Test
 
 
@@ -109,46 +111,37 @@ simpleField tipe { required, value } =
         }
 
 
-regexNonEmployeeEmailField : FieldType.SimpleFieldType -> NewStringField
-regexNonEmployeeEmailField tipe { required, value } =
-    Field.SimpleField
-        { required = required
-        , label = "Field"
-        , width = Width.FullSize
-        , enabledBy = Nothing
-        , order = 1
-        , value = value
-        , tipe = tipe
-        , disabled = False
-        , hidden = False
-        , unhiddenBy = Nothing
-        , regexValidation =
-            Just
-                { pattern = "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
-                , message = "Please use the employee's personal email address"
-                }
-        }
+regexNonEmployeeEmailField : FieldType.SimpleFieldType -> Either.Either String NewStringField
+regexNonEmployeeEmailField tipe =
+    let
+        regexString : String
+        regexString =
+            "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
+    in
+    case Regex.fromString regexString of
+        Nothing ->
+            Either.Left <| "Regex /" ++ regexString ++ "/ in test suite definition failed to compile"
 
-
-illegalRegexField : FieldType.SimpleFieldType -> NewStringField
-illegalRegexField tipe { required, value } =
-    Field.SimpleField
-        { required = required
-        , label = "Field"
-        , width = Width.FullSize
-        , enabledBy = Nothing
-        , order = 1
-        , value = value
-        , tipe = tipe
-        , disabled = False
-        , hidden = False
-        , unhiddenBy = Nothing
-        , regexValidation =
-            Just
-                { pattern = "["
-                , message = "Please use the employee's personal email address"
-                }
-        }
+        Just regex ->
+            Either.Right <|
+                \{ required, value } ->
+                    Field.SimpleField
+                        { required = required
+                        , label = "Field"
+                        , width = Width.FullSize
+                        , enabledBy = Nothing
+                        , order = 1
+                        , value = value
+                        , tipe = tipe
+                        , disabled = False
+                        , hidden = False
+                        , unhiddenBy = Nothing
+                        , regexValidation =
+                            Just
+                                { pattern = regex
+                                , message = "Please use the employee's personal email address"
+                                }
+                        }
 
 
 dateField : FieldType.DateFieldType -> NewStringField

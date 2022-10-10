@@ -113,6 +113,3 @@ errorToMessage locale field error =
 
         Types.RegexIncongruence msg ->
             msg
-
-        Types.IllegalRegex ->
-            "Regex does not compile"
