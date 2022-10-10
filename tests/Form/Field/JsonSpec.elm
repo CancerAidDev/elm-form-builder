@@ -68,19 +68,19 @@ suite =
                             )
             , Test.test "Simple field decoder with regex" <|
                 \_ ->
-                    let
-                        json =
-                            """{
-                                "required": true,
-                                "key": "name",
-                                "label": "Full Name",
-                                "type": "text",
-                                "width": "50%",
-                                "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
-                            }"""
-                    in
                     case Regex.fromString "^[a-zA-Z]+$" of
                         Just regex ->
+                            let
+                                json =
+                                    """{
+                                        "required": true,
+                                        "key": "name",
+                                        "label": "Full Name",
+                                        "type": "text",
+                                        "width": "50%",
+                                        "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
+                                    }"""
+                            in
                             Decode.decodeString decoder json
                                 |> Expect.equal
                                     (Ok
