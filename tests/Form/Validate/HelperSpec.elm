@@ -116,7 +116,8 @@ regexNonEmployeeEmailField tipe =
     let
         regexString : String
         regexString =
-            "^.*(?=(?<!@bigcompany\\.com)$)(?=(?<!@bigorganisation\\.org)$)"
+            -- regex that forbids strings that end with @bigcompany.com
+            "([^@].{14}|.{1}[^b].{13}|.{2}[^i].{12}|.{3}[^g].{11}|.{4}[^c].{10}|.{5}[^o].{9}|.{6}[^m].{8}|.{7}[^p].{7}|.{8}[^a].{6}|.{9}[^n].{5}|.{10}[^y].{4}|.{11}[^.].{3}|.{12}[^c].{2}|.{13}[^o].{1}|.{14}[^m]$|^.{0,14})$"
     in
     case Regex.fromString regexString of
         Nothing ->
