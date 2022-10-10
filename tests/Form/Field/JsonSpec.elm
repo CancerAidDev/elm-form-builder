@@ -10,6 +10,7 @@ import Form.Field.Width as Width
 import Form.Fields as Fields
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Regex
 import RemoteData
 import Set
 import Test
@@ -67,37 +68,42 @@ suite =
                             )
             , Test.test "Simple field decoder with regex" <|
                 \_ ->
-                    let
-                        json =
-                            """{
-                                "required": true,
-                                "key": "name",
-                                "label": "Full Name",
-                                "type": "text",
-                                "width": "50%",
-                                "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
-                            }"""
-                    in
-                    Decode.decodeString decoder json
-                        |> Expect.equal
-                            (Ok
-                                ( "name"
-                                , Field.StringField_ <|
-                                    Field.SimpleField
-                                        { tipe = FieldType.Text
-                                        , label = "Full Name"
-                                        , required = Required.Yes
-                                        , width = Width.HalfSize
-                                        , enabledBy = Nothing
-                                        , order = order
-                                        , value = ""
-                                        , disabled = False
-                                        , hidden = False
-                                        , unhiddenBy = Nothing
-                                        , regexValidation = Just { pattern = "^[a-zA-Z]+$", message = "Only letters allowed" }
-                                        }
-                                )
-                            )
+                    case Regex.fromString "^[a-zA-Z]+$" of
+                        Just regex ->
+                            let
+                                json =
+                                    """{
+                                        "required": true,
+                                        "key": "name",
+                                        "label": "Full Name",
+                                        "type": "text",
+                                        "width": "50%",
+                                        "regex_validation": { "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }
+                                    }"""
+                            in
+                            Decode.decodeString decoder json
+                                |> Expect.equal
+                                    (Ok
+                                        ( "name"
+                                        , Field.StringField_ <|
+                                            Field.SimpleField
+                                                { tipe = FieldType.Text
+                                                , label = "Full Name"
+                                                , required = Required.Yes
+                                                , width = Width.HalfSize
+                                                , enabledBy = Nothing
+                                                , order = order
+                                                , value = ""
+                                                , disabled = False
+                                                , hidden = False
+                                                , unhiddenBy = Nothing
+                                                , regexValidation = Just { pattern = regex, message = "Only letters allowed" }
+                                                }
+                                        )
+                                    )
+
+                        Nothing ->
+                            Expect.fail "Regex failed to compile"
             , Test.test "Simple field decoder with select type" <|
                 \_ ->
                     let
