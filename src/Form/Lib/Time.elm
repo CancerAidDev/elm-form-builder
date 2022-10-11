@@ -1,14 +1,11 @@
-module Form.Lib.Time exposing
-    ( toDateString
-    , offsetYear
-    )
+module Form.Lib.Time exposing (toDateString, offsetYear)
 
 {-| Helper functions for working with elm/time
 
 
 # Time
 
-@docs toDateString
+@docs toDateString, offsetYear
 
 -}
 
