@@ -1,6 +1,6 @@
 module Form.Lib.RegexValidation exposing
     ( decoder, RegexValidation
-    , forbidSuffixRegex
+    , forbidSuffixRegex, fromSuffixConstraints
     )
 
 {-| Helper functions for Regex Validation
@@ -30,6 +30,18 @@ decoder =
     Decode.succeed RegexValidation
         |> DecodePipeline.required "pattern" regexDecoder
         |> DecodePipeline.optional "message" Decode.string ""
+
+
+{-| -}
+fromSuffixConstraints : List ( String, String ) -> List RegexValidation
+fromSuffixConstraints constraints =
+    let
+        pairToRegexValidation : ( String, String ) -> Maybe RegexValidation
+        pairToRegexValidation ( suffix, message ) =
+            Maybe.map (\regex -> { pattern = regex, message = message }) <|
+                forbidSuffixRegex suffix
+    in
+    List.filterMap pairToRegexValidation constraints
 
 
 {-| Constructs a Regex that forbids a string from having the provided suffixes.

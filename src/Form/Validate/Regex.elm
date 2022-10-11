@@ -6,15 +6,15 @@ import Form.Validate.Types as ValidatorTypes
 import Regex
 
 
-regexValidator : Maybe RegexValidation.RegexValidation -> Field.StringField -> Result ValidatorTypes.StringFieldError Field.StringField
+regexValidator : List RegexValidation.RegexValidation -> Field.StringField -> Result ValidatorTypes.StringFieldError Field.StringField
 regexValidator regexValidation field =
     case regexValidation of
-        Just { pattern, message } ->
+        { pattern, message } :: xs ->
             if Regex.contains pattern (Field.getStringValue_ field) then
-                Ok field
+                regexValidator xs field
 
             else
                 Err <| ValidatorTypes.RegexIncongruence message
 
-        Nothing ->
+        [] ->
             Ok field

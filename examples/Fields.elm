@@ -81,24 +81,7 @@ fields =
     , \order ->
         ( "email"
           -- regex that forbids strings that end with @bigcompany.com
-        , case Regex.fromString "([^@].{14}|.{1}[^b].{13}|.{2}[^i].{12}|.{3}[^g].{11}|.{4}[^c].{10}|.{5}[^o].{9}|.{6}[^m].{8}|.{7}[^p].{7}|.{8}[^a].{6}|.{9}[^n].{5}|.{10}[^y].{4}|.{11}[^.].{3}|.{12}[^c].{2}|.{13}[^o].{1}|.{14}[^m]$|^.{0,14})$" of
-            Nothing ->
-                FormField.text
-                    { required = IsRequired.Yes
-                    , label = "Email Address"
-                    , width = Width.FullSize
-                    , enabledBy = Nothing
-                    , order = order
-                    , value = "Regex does not compile"
-                    , disabled = True
-                    , hidden = False
-                    , unhiddenBy = Nothing
-                    , regexValidation =
-                        Nothing
-                    }
-
-            Just regex ->
-                FormField.email
+        ,   FormField.email
                     { required = IsRequired.Yes
                     , label = "Email Address"
                     , width = Width.FullSize
@@ -108,11 +91,13 @@ fields =
                     , disabled = False
                     , hidden = False
                     , unhiddenBy = Nothing
-                    , regexValidation =
-                        Just
-                            { pattern = regex
-                            , message = "Please use the employee's personal email address"
+                    , forbiddenDomains =
+                        [{ domain = "bigcompany.com"
+                            , message = "Please don't use the company email address"
                             }
+                            ,{ domain = "bigorganisation.org"
+                            , message = "Please don't use the organisation email address"
+                            }]
                     }
         )
     , \order ->

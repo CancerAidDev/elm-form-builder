@@ -53,6 +53,7 @@ import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
@@ -62,8 +63,12 @@ import Set
 import Time
 
 
+
+-- change these to use a list of regexvalidations instead
+
+
 {-| -}
-text : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+text : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
 text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
@@ -82,8 +87,8 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
 
 
 {-| -}
-email : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
-email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
+email : StringFieldProperties { forbiddenDomains : List EmailFormat.ForbiddenDomain } -> Field
+email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, forbiddenDomains } =
     StringField_ <|
         SimpleField
             { required = required
@@ -96,7 +101,11 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
-            , regexValidation = regexValidation
+            , regexValidation =
+                RegexValidation.fromSuffixConstraints <|
+                    List.map
+                        (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                        forbiddenDomains
             }
 
 
@@ -139,7 +148,7 @@ datePast { required, label, width, enabledBy, order, value, disabled, hidden, un
 
 
 {-| -}
-phone : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+phone : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
 phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
@@ -158,7 +167,7 @@ phone { required, label, width, enabledBy, order, value, disabled, hidden, unhid
 
 
 {-| -}
-url : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+url : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
 url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
@@ -177,7 +186,7 @@ url { required, label, width, enabledBy, order, value, disabled, hidden, unhidde
 
 
 {-| -}
-textarea : StringFieldProperties { regexValidation : Maybe RegexValidation.RegexValidation } -> Field
+textarea : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
 textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
         SimpleField
@@ -334,7 +343,7 @@ type alias StringFieldProperties a =
 type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
-        , regexValidation : Maybe RegexValidation.RegexValidation
+        , regexValidation : List RegexValidation.RegexValidation
         }
 
 

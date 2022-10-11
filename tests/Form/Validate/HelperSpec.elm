@@ -1,15 +1,14 @@
 module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
-import Either
 import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
-import Regex
 import Test
 
 
@@ -107,42 +106,35 @@ simpleField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , regexValidation = Nothing
+        , regexValidation = []
         }
 
 
-regexNonEmployeeEmailField : FieldType.SimpleFieldType -> Either.Either String NewStringField
-regexNonEmployeeEmailField tipe =
-    let
-        regexString : String
-        regexString =
-            -- regex that forbids strings that end with @bigcompany.com
-            "([^@].{14}|.{1}[^b].{13}|.{2}[^i].{12}|.{3}[^g].{11}|.{4}[^c].{10}|.{5}[^o].{9}|.{6}[^m].{8}|.{7}[^p].{7}|.{8}[^a].{6}|.{9}[^n].{5}|.{10}[^y].{4}|.{11}[^.].{3}|.{12}[^c].{2}|.{13}[^o].{1}|.{14}[^m]$|^.{0,14})$"
-    in
-    case Regex.fromString regexString of
-        Nothing ->
-            Either.Left <| "Regex /" ++ regexString ++ "/ in test suite definition failed to compile"
-
-        Just regex ->
-            Either.Right <|
-                \{ required, value } ->
-                    Field.SimpleField
-                        { required = required
-                        , label = "Field"
-                        , width = Width.FullSize
-                        , enabledBy = Nothing
-                        , order = 1
-                        , value = value
-                        , tipe = tipe
-                        , disabled = False
-                        , hidden = False
-                        , unhiddenBy = Nothing
-                        , regexValidation =
-                            Just
-                                { pattern = regex
-                                , message = "Please use the employee's personal email address"
-                                }
-                        }
+regexNonEmployeeEmailField : NewStringField
+regexNonEmployeeEmailField { required, value } =
+    Field.SimpleField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , tipe = FieldType.Email
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , regexValidation =
+            RegexValidation.fromSuffixConstraints <|
+                List.map
+                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                    [ { domain = "bigorganisation.org"
+                      , message = "Please don't use the organisation email"
+                      }
+                    , { domain = "bigcompany.com"
+                      , message = "Please don't use the company email"
+                      }
+                    ]
+        }
 
 
 dateField : FieldType.DateFieldType -> NewStringField

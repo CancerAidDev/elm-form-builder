@@ -16,6 +16,7 @@ import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
@@ -26,6 +27,7 @@ import Time
 
 type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
+    | JsonEmailField JsonEmailFieldProperties
     | JsonDateField JsonDateFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
@@ -49,7 +51,21 @@ type alias JsonSimpleFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , regexValidation : Maybe RegexValidation.RegexValidation
+    , regexValidation : List RegexValidation.RegexValidation
+    }
+
+
+type alias JsonEmailFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , tipe : FieldType.SimpleFieldType
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , forbiddenDomains : List EmailFormat.ForbiddenDomain
     }
 
 
@@ -223,7 +239,12 @@ decoderForType : FieldType.FieldType -> Decode.Decoder JsonField
 decoderForType fieldType =
     case fieldType of
         FieldType.StringType (FieldType.SimpleType simpleType) ->
-            Decode.map JsonSimpleField (decoderSimpleJson simpleType)
+            case simpleType of
+                FieldType.Email ->
+                    Decode.map JsonEmailField decoderEmailJson
+
+                _ ->
+                    Decode.map JsonSimpleField (decoderSimpleJson simpleType)
 
         FieldType.StringType (FieldType.DateType dateType) ->
             Decode.map JsonDateField (decoderDateJson dateType)
@@ -277,6 +298,28 @@ toField time order field =
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
                     , regexValidation = regexValidation
+                    }
+            )
+
+        JsonEmailField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, forbiddenDomains } ->
+            ( key
+            , Field.StringField_ <|
+                Field.SimpleField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , tipe = tipe
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , regexValidation =
+                        RegexValidation.fromSuffixConstraints <|
+                            List.map
+                                (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                                forbiddenDomains
                     }
             )
 
@@ -498,7 +541,22 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "regex_validation" (Decode.map Just RegexValidation.decoder) Nothing
+        |> DecodePipeline.optional "regex_validation" (Decode.list RegexValidation.decoder) []
+
+
+decoderEmailJson : Decode.Decoder JsonEmailFieldProperties
+decoderEmailJson =
+    Decode.succeed JsonEmailFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.hardcoded FieldType.Email
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "forbidden_domains" (Decode.list EmailFormat.decoderForbiddenDomain) []
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties
