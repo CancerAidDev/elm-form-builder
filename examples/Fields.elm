@@ -24,7 +24,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
-            , regexValidation = Nothing
+            , regexValidation = []
             }
         )
     , \order ->
@@ -39,7 +39,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
-            , regexValidation = Nothing
+            , forbiddenDomains = []
             }
         )
     , \order ->
@@ -57,7 +57,7 @@ fields =
                     , hidden = False
                     , unhiddenBy = Nothing
                     , regexValidation =
-                        Nothing
+                        []
                     }
 
             Just regex ->
@@ -72,33 +72,34 @@ fields =
                     , hidden = False
                     , unhiddenBy = Nothing
                     , regexValidation =
-                        Just
-                            { pattern = regex
-                            , message = "Please enter your full name"
-                            }
+                        [ { pattern = regex
+                          , message = "Please enter your full name"
+                          }
+                        ]
                     }
         )
     , \order ->
         ( "email"
-          -- regex that forbids strings that end with @bigcompany.com
-        ,   FormField.email
-                    { required = IsRequired.Yes
-                    , label = "Email Address"
-                    , width = Width.FullSize
-                    , enabledBy = Nothing
-                    , order = order
-                    , value = ""
-                    , disabled = False
-                    , hidden = False
-                    , unhiddenBy = Nothing
-                    , forbiddenDomains =
-                        [{ domain = "bigcompany.com"
-                            , message = "Please don't use the company email address"
-                            }
-                            ,{ domain = "bigorganisation.org"
-                            , message = "Please don't use the organisation email address"
-                            }]
-                    }
+          -- forbid emails from bigcompany.com or bigorganisation.org
+        , FormField.email
+            { required = IsRequired.Yes
+            , label = "Email Address"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            , forbiddenDomains =
+                [ { domain = "bigcompany.com"
+                  , message = "Please don't use the company email address"
+                  }
+                , { domain = "bigorganisation.org"
+                  , message = "Please don't use the organisation email address"
+                  }
+                ]
+            }
         )
     , \order ->
         ( "secondaryEmail"
@@ -112,7 +113,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regexValidation = Nothing
+            , forbiddenDomains = []
             }
         )
     , \order ->
@@ -127,7 +128,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , regexValidation = Nothing
+            , regexValidation = []
             }
         )
     , \order ->
