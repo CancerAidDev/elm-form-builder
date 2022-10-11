@@ -135,6 +135,7 @@ datePast { required, label, width, enabledBy, order, value, disabled, hidden, un
             }
 
 
+{-| -}
 dateFuture : StringFieldProperties {} -> Field
 dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
     StringField_ <|
