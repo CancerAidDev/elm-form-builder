@@ -1,17 +1,16 @@
-module Form.Lib.Time exposing (toDateString, offsetYear)
+module Form.Lib.Time exposing (toDateString)
 
 {-| Helper functions for working with elm/time
 
 
 # Time
 
-@docs toDateString, offsetYear
+@docs toDateString
 
 -}
 
 import Iso8601
 import Time
-import Time.Extra as TimeExtra
 
 
 {-| Uses Iso8601.fromTime produces a date with timestamp and takes first 10 characters to return "YYYY-MM-DD"
@@ -19,12 +18,3 @@ import Time.Extra as TimeExtra
 toDateString : Time.Posix -> String
 toDateString =
     Iso8601.fromTime >> String.left 10
-
-
-{-| Offsets a time by the given number of years and returns a new time, floored to the start of the year.
--}
-offsetYear : Int -> Time.Posix -> Time.Posix
-offsetYear offset time =
-    time
-        |> TimeExtra.add TimeExtra.Year offset Time.utc
-        |> TimeExtra.floor TimeExtra.Year Time.utc
