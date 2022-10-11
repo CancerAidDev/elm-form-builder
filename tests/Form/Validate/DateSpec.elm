@@ -23,5 +23,11 @@ suite =
                 , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
                 , locale = Locale.enAU
                 }
+            , HelperSpec.simpleFieldTest (FieldType.DateType FieldType.DateFuture)
+                (HelperSpec.dateField FieldType.DateFuture)
+                { valid = [ { value = "2025-05-30", name = "Simple date" } ]
+                , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
+                , locale = Locale.enAU
+                }
             ]
         ]

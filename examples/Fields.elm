@@ -160,6 +160,34 @@ fields =
             }
         )
     , \order ->
+        ( "datePast"
+        , FormField.datePast
+            { required = IsRequired.Nullable
+            , label = "Claim Started"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            }
+        )
+    , \order ->
+        ( "dateFuture"
+        , FormField.dateFuture
+            { required = IsRequired.Nullable
+            , label = "Start Date"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            }
+        )
+    , \order ->
         ( "something"
         , FormField.select
             { required = IsRequired.No
