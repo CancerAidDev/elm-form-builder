@@ -27,7 +27,6 @@ import Form.Lib.Time as LibTime
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
-import Time.Extra as TimeExtra
 
 
 {-| -}
@@ -85,6 +84,7 @@ type MultiStringFieldType
 type DateFieldType
     = DatePast
     | DateOfBirth
+    | DateFuture
 
 
 {-| -}
@@ -102,6 +102,9 @@ fromString str =
 
         "date_past" ->
             Just (StringType (DateType DatePast))
+
+        "date_future" ->
+            Just (StringType (DateType DateFuture))
 
         "phone" ->
             Just (StringType (SimpleType Phone))
@@ -193,12 +196,20 @@ toMaxLength fieldType =
 toMin : Time.Posix -> FieldType -> Maybe String
 toMin time fieldType =
     case fieldType of
-        StringType (DateType _) ->
+        StringType (DateType DateOfBirth) ->
             time
-                |> TimeExtra.add TimeExtra.Year -120 Time.utc
-                |> TimeExtra.floor TimeExtra.Year Time.utc
+                |> LibTime.offsetYear -120
                 |> LibTime.toDateString
                 |> Just
+
+        StringType (DateType DatePast) ->
+            time
+                |> LibTime.offsetYear -120
+                |> LibTime.toDateString
+                |> Just
+
+        StringType (DateType DateFuture) ->
+            Just (LibTime.toDateString time)
 
         NumericType Age ->
             Just "18"
@@ -211,8 +222,17 @@ toMin time fieldType =
 toMax : Time.Posix -> FieldType -> Maybe String
 toMax time fieldType =
     case fieldType of
-        StringType (DateType _) ->
+        StringType (DateType DateOfBirth) ->
             Just (LibTime.toDateString time)
+
+        StringType (DateType DatePast) ->
+            Just (LibTime.toDateString time)
+
+        StringType (DateType DateFuture) ->
+            time
+                |> LibTime.offsetYear 10
+                |> LibTime.toDateString
+                |> Just
 
         NumericType Age ->
             Just "99"
@@ -227,8 +247,7 @@ defaultValue time fieldType =
     case fieldType of
         StringType (DateType _) ->
             time
-                |> TimeExtra.add TimeExtra.Year -40 Time.utc
-                |> TimeExtra.floor TimeExtra.Year Time.utc
+                |> LibTime.offsetYear -40
                 |> LibTime.toDateString
                 |> Just
 
