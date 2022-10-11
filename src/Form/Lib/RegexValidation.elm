@@ -1,14 +1,11 @@
-module Form.Lib.RegexValidation exposing
-    ( decoder, RegexValidation
-    , forbidSuffixRegex, fromSuffixConstraints
-    )
+module Form.Lib.RegexValidation exposing (decoder, RegexValidation, forbidSuffixRegex, fromSuffixConstraints)
 
 {-| Helper functions for Regex Validation
 
 
 # Time
 
-@docs decoder, RegexValidation
+@docs decoder, RegexValidation, forbidSuffixRegex, fromSuffixConstraints
 
 -}
 
