@@ -1,10 +1,11 @@
-module Form.Validate.HelperSpec exposing (dateField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
@@ -105,6 +106,34 @@ simpleField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
+        , regexValidation = []
+        }
+
+
+regexNonEmployeeEmailField : NewStringField
+regexNonEmployeeEmailField { required, value } =
+    Field.SimpleField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , tipe = FieldType.Email
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , regexValidation =
+            RegexValidation.fromSuffixConstraints <|
+                List.map
+                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                    [ { domain = "bigorganisation.org"
+                      , message = "Please don't use the organisation email"
+                      }
+                    , { domain = "bigcompany.com"
+                      , message = "Please don't use the company email"
+                      }
+                    ]
         }
 
 

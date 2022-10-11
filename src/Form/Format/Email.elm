@@ -1,13 +1,30 @@
-module Form.Format.Email exposing (regex)
+module Form.Format.Email exposing (regex, ForbiddenDomain, decoderForbiddenDomain)
 
 {-| A (simple and quite possibly wrong) email regular expression
 
-@docs regex
+@docs regex, ForbiddenDomain, decoderForbiddenDomain
 
 -}
 
 import Form.Locale.CountryCode as CountryCode
+import Json.Decode as Decode
+import Json.Decode.Pipeline as DecodePipeline
 import Regex
+
+
+{-| -}
+decoderForbiddenDomain : Decode.Decoder ForbiddenDomain
+decoderForbiddenDomain =
+    Decode.succeed ForbiddenDomain
+        |> DecodePipeline.required "domain" Decode.string
+        |> DecodePipeline.required "message" Decode.string
+
+
+{-| -}
+type alias ForbiddenDomain =
+    { domain : String
+    , message : String
+    }
 
 
 {-| -}

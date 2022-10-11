@@ -3,7 +3,7 @@
     "name": "canceraiddev/elm-form-builder",
     "summary": "Form widgets and validation used for internal projects.",
     "license": "Apache-2.0",
-    "version": "11.0.0",
+    "version": "12.0.0",
     "exposed-modules": [
         "Form.Field.Direction",
         "Form.Field.FieldType",
@@ -20,6 +20,7 @@
         "Form.Format.Phone",
         "Form.Lib.Nonempty",
         "Form.Lib.Time",
+        "Form.Lib.RegexValidation",
         "Form.Locale.CountryCode",
         "Form.Locale.LanguageCode",
         "Form.Locale.Phone",

@@ -10,6 +10,7 @@ import Form.Field.Width as Width
 import Form.Fields as Fields
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Regex
 import RemoteData
 import Set
 import Test
@@ -61,9 +62,86 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , regexValidation = []
                                         }
                                 )
                             )
+            , Test.test "Simple field decoder with regex" <|
+                \_ ->
+                    case Regex.fromString "^[a-zA-Z]+$" of
+                        Just regex ->
+                            let
+                                json =
+                                    """{
+                                        "required": true,
+                                        "key": "name",
+                                        "label": "Full Name",
+                                        "type": "text",
+                                        "width": "50%",
+                                        "regex_validation": [{ "pattern": "^[a-zA-Z]+$", "message": "Only letters allowed" }]
+                                    }"""
+                            in
+                            Decode.decodeString decoder json
+                                |> Expect.equal
+                                    (Ok
+                                        ( "name"
+                                        , Field.StringField_ <|
+                                            Field.SimpleField
+                                                { tipe = FieldType.Text
+                                                , label = "Full Name"
+                                                , required = Required.Yes
+                                                , width = Width.HalfSize
+                                                , enabledBy = Nothing
+                                                , order = order
+                                                , value = ""
+                                                , disabled = False
+                                                , hidden = False
+                                                , unhiddenBy = Nothing
+                                                , regexValidation = [ { pattern = regex, message = "Only letters allowed" } ]
+                                                }
+                                        )
+                                    )
+
+                        Nothing ->
+                            Expect.fail "Regex failed to compile"
+            , Test.test "Email field decoder with regex" <|
+                \_ ->
+                    case Regex.fromString "([^t].{7}|.{1}[^e].{6}|.{2}[^s].{5}|.{3}[^t].{4}|.{4}[^.].{3}|.{5}[^c].{2}|.{6}[^o].{1}|.{7}[^m]$|^.{0,7})$" of
+                        Just regex ->
+                            let
+                                json =
+                                    """{
+                                        "required": true,
+                                        "key": "personal_email",
+                                        "label": "Personal Email",
+                                        "type": "email",
+                                        "width": "50%",
+                                        "forbidden_domains": [{ "domain": "test.com", "message": "Don't use company email" }]
+                                    }"""
+                            in
+                            Decode.decodeString decoder json
+                                |> Expect.equal
+                                    (Ok
+                                        ( "personal_email"
+                                        , Field.StringField_ <|
+                                            Field.SimpleField
+                                                { tipe = FieldType.Email
+                                                , label = "Personal Email"
+                                                , required = Required.Yes
+                                                , width = Width.HalfSize
+                                                , enabledBy = Nothing
+                                                , order = order
+                                                , value = ""
+                                                , disabled = False
+                                                , hidden = False
+                                                , unhiddenBy = Nothing
+                                                , regexValidation = [ { pattern = regex, message = "Don't use company email" } ]
+                                                }
+                                        )
+                                    )
+
+                        Nothing ->
+                            Expect.fail "Regex failed to compile"
             , Test.test "Simple field decoder with select type" <|
                 \_ ->
                     let
@@ -115,6 +193,36 @@ suite =
                                 "label": "Full Name",
                                 "type": "text",
                                 "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Simple field decoder with invalid regex record" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "text",
+                                "width": "50%",
+                                "regex_validation": { "mmmmm": "im hungry" }
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Simple field decoder with illegal regex" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "text",
+                                "width": "50%",
+                                "regex_validation": [{ "pattern": "[", "message": "Only letters allowed" }, { "pattern": "^[a-zA-Z]+$", "message": "Valid Regex" }]
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -498,6 +606,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regexValidation = []
                                             }
                                   )
                                 ]
@@ -523,6 +632,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regexValidation = []
                                             }
                                   )
                                 ]
@@ -764,6 +874,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regexValidation = []
                                             }
                                   )
                                 , ( "metadata.name"
@@ -779,6 +890,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , regexValidation = []
                                             }
                                   )
                                 ]
