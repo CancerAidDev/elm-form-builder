@@ -1,6 +1,7 @@
 module Form.Lib.Time exposing
     ( toDateString
     , offsetYear
+    , offsetDay
     )
 
 {-| Helper functions for working with elm/time
@@ -33,3 +34,9 @@ offsetYear offset time =
     time
         |> TimeExtra.add TimeExtra.Year offset Time.utc
         |> TimeExtra.floor TimeExtra.Year Time.utc
+
+
+offsetDay : Int -> Time.Posix -> Time.Posix
+offsetDay offset time =
+    time
+        |> TimeExtra.add TimeExtra.Day offset Time.utc

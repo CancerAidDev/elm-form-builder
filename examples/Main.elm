@@ -25,7 +25,7 @@ init : ( Model.Model, Cmd Msg.Msg )
 init =
     ( { startTime =
             TimeExtra.partsToPosix Time.utc <|
-                TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
+                TimeExtra.Parts 2022 Time.Nov 9 0 0 0 0
       , dialog = Nothing
       , locale = Locale.enAU
       , form = Fields.fields
