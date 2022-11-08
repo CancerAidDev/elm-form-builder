@@ -13,6 +13,8 @@ module Form.Lib.Time exposing
 
 @docs offsetYear
 
+@docs offsetDay
+
 -}
 
 import Iso8601
