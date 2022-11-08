@@ -40,3 +40,4 @@ offsetDay : Int -> Time.Posix -> Time.Posix
 offsetDay offset time =
     time
         |> TimeExtra.add TimeExtra.Day offset Time.utc
+        |> TimeExtra.floor TimeExtra.Day Time.utc
