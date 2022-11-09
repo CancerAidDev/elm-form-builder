@@ -38,6 +38,8 @@ offsetYear offset time =
         |> TimeExtra.floor TimeExtra.Year Time.utc
 
 
+{-| Offsets a time by the given number of days and returns a new time, floored to the start of the day.
+-}
 offsetDay : Int -> Time.Posix -> Time.Posix
 offsetDay offset time =
     time
