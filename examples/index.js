@@ -11,4 +11,5 @@ window.addEventListener(
 
 Elm.Main.init({
   node: document.querySelector("main"),
+  flags: { date: new Date().toISOString() },
 });

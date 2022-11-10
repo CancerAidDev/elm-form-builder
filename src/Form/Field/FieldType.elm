@@ -209,7 +209,10 @@ toMin time fieldType =
                 |> Just
 
         StringType (DateType DateFuture) ->
-            Just (LibTime.toDateString time)
+            time
+                |> LibTime.offsetDay 1
+                |> LibTime.toDateString
+                |> Just
 
         NumericType Age ->
             Just "18"
