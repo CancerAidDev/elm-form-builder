@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser
 import Fields
 import Form.Locale as Locale
+import Iso8601
 import Model
 import Msg
 import Time
@@ -11,21 +12,29 @@ import Update
 import View
 
 
-main : Program {} Model.Model Msg.Msg
+type alias Flags =
+    { date : String }
+
+
+main : Program Flags Model.Model Msg.Msg
 main =
     Browser.element
-        { init = \_ -> init
+        { init = init
         , update = Update.update
         , view = View.view
         , subscriptions = \_ -> Sub.none
         }
 
 
-init : ( Model.Model, Cmd Msg.Msg )
-init =
+init : Flags -> ( Model.Model, Cmd Msg.Msg )
+init { date } =
     ( { startTime =
-            TimeExtra.partsToPosix Time.utc <|
-                TimeExtra.Parts 2022 Time.Nov 9 0 0 0 0
+            let
+                default =
+                    TimeExtra.partsToPosix Time.utc <|
+                        TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
+            in
+            Iso8601.toTime date |> Result.withDefault default
       , dialog = Nothing
       , locale = Locale.enAU
       , form = Fields.fields
