@@ -204,7 +204,7 @@ tag key field =
                 [ Html.input
                     [ HtmlAttributes.name key
                     , HtmlAttributes.class "input is-link"
-                    , HtmlAttributes.placeholder field.placeholder
+                    , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
                     , LibEvents.onEnter (Msg.UpdateTags key field.value True 0)
                     , HtmlAttributes.value field.value

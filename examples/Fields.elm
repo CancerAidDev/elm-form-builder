@@ -348,7 +348,7 @@ fields =
             , disabled = False
             , hidden = False 
             , unhiddenBy = Nothing
-            , placeholder = "Add new tag..."
+            , placeholder = Just "Add new tag..."
             })
     ]
         |> List.indexedMap (\index field -> field index)

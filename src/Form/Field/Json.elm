@@ -559,7 +559,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , placeholder = ""
+                    , placeholder = Nothing
                     }
             )
 

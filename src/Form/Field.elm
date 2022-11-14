@@ -396,7 +396,7 @@ type alias TagFieldProperties a =
         { a
             | value : String
             , tags : List String
-            , placeholder : String
+            , placeholder : Maybe String
         }
 
 
