@@ -13,7 +13,7 @@ import Set
 fields : FormFields.Fields
 fields =
     [ \order ->
-        ( "Uneditable field"
+        ( "Uneditable"
         , FormField.text
             { required = IsRequired.No
             , label = "Uneditable Field"
@@ -237,7 +237,7 @@ fields =
         )
     , \order ->
         ( "modes"
-        , FormField.multiSelect
+        , FormField.multiSelect 
             { required = IsRequired.Yes
             , label = "What modes of transport do you use?"
             , placeholder = "Mode"
@@ -335,6 +335,21 @@ fields =
             , unhiddenBy = Just "newsletter"
             }
         )
+    , \order ->
+        ("NewsletterTags"
+        , FormField.tag 
+            {required = IsRequired.Yes
+            , label = "NewsLetter Tags"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = "Test"
+            , tags = ["Hello", "Goodbye", "Beta"]
+            , disabled = False
+            , hidden = False 
+            , unhiddenBy = Nothing
+            , placeholder = "Add new tag..."
+            })
     ]
         |> List.indexedMap (\index field -> field index)
         |> Dict.fromList

@@ -61,6 +61,7 @@ import Html.Attributes exposing (hidden, placeholder, required, value)
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
+import List.Extra as ListExtra
 import RemoteData
 import Set
 import Time
@@ -94,7 +95,7 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
 
 
 tag : TagFieldProperties {} -> Field
-tag { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, placeholder } =
+tag { required, label, width, enabledBy, order, value, tags, disabled, hidden, unhiddenBy, placeholder } =
     ListStringField_ <|
         TagField
             { required = required
@@ -103,6 +104,7 @@ tag { required, label, width, enabledBy, order, value, disabled, hidden, unhidde
             , enabledBy = enabledBy
             , order = order
             , value = value
+            , tags = tags
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
@@ -392,7 +394,8 @@ type alias StringFieldProperties a =
 type alias TagFieldProperties a =
     FieldProperties
         { a
-            | value : List String
+            | value : String
+            , tags : List String
             , placeholder : String
         }
 
@@ -769,7 +772,7 @@ resetValueToDefault field =
             NumericField_ (AgeField { properties | value = Nothing })
 
         ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | value = [] })
+            ListStringField_ (TagField { properties | value = "", tags = [] })
 
 
 resetStringFieldValueToDefault : StringField -> StringField
@@ -892,11 +895,11 @@ updateNumericValue value field =
             field
 
 
-updateListStringValue : Bool -> String -> Field -> Field
-updateListStringValue addTag value field =
+updateListStringValue : Bool -> String -> Int -> Field -> Field
+updateListStringValue addTag value index field =
     case field of
         ListStringField_ listStringField ->
-            ListStringField_ <| updateListStringValue_ addTag value listStringField
+            ListStringField_ <| updateListStringValue_ addTag value listStringField index
 
         _ ->
             field
@@ -1057,13 +1060,13 @@ updateNumericValue_ value (AgeField properties) =
 
 
 {-| -}
-updateListStringValue_ : Bool -> String -> ListStringField -> ListStringField
-updateListStringValue_ addTag value (TagField properties) =
+updateListStringValue_ : Bool -> String -> ListStringField -> Int -> ListStringField
+updateListStringValue_ addTag value (TagField properties) index =
     if addTag then
-        TagField { properties | value = value :: properties.value }
+        TagField { properties | tags = value :: properties.tags }
 
     else
-        TagField { properties | value = List.filter (\v -> v /= value) properties.value }
+        TagField { properties | tags = ListExtra.removeAt index properties.tags }
 
 
 {-| -}
@@ -1117,7 +1120,7 @@ getListStringValue_ : ListStringField -> List String
 getListStringValue_ field =
     case field of
         TagField v ->
-            v.value
+            v.tags
 
 
 {-| -}
@@ -1303,8 +1306,8 @@ encode field =
         NumericField_ (AgeField { value }) ->
             EncodeExtra.maybe Encode.int value
 
-        ListStringField_ (TagField { value }) ->
-            Encode.list Encode.string value
+        ListStringField_ (TagField { tags }) ->
+            Encode.list Encode.string tags
 
 
 {-| -}

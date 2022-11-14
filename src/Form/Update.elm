@@ -51,3 +51,6 @@ update msg fields =
 
         Msg.UpdateSearchbar key value ->
             ( Fields.updateSearchbar key value fields, Cmd.none )
+
+        Msg.UpdateTags key value addTag index ->
+            ( Fields.updateTags addTag key value index fields, Cmd.none )
