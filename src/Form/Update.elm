@@ -54,3 +54,6 @@ update msg fields =
 
         Msg.UpdateTags key value addTag index ->
             ( Fields.updateTags addTag key value index fields, Cmd.none )
+
+        Msg.UpdateTagInput key value ->
+            ( Fields.updateTagInput key value fields, Cmd.none )

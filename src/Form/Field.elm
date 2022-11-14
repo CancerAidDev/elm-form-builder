@@ -6,7 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , ListStringField(..), TagFieldProperties, getListStringValue_, tag, updateListStringValue, updateListStringValue_
+    , ListStringField(..), TagFieldProperties, getListStringValue_, tag, updateListStringInput, updateListStringValue, updateListStringValue_
     )
 
 {-| Field type and helper functions
@@ -906,6 +906,17 @@ updateListStringValue addTag value index field =
 
 
 {-| -}
+updateListStringInput : String -> Field -> Field
+updateListStringInput input field =
+    case field of
+        ListStringField_ (TagField properties) ->
+            ListStringField_ (TagField { properties | value = input })
+
+        _ ->
+            field
+
+
+{-| -}
 updateShowDropdown : Bool -> Field -> Field
 updateShowDropdown showDropdown field =
     case field of
@@ -1062,11 +1073,18 @@ updateNumericValue_ value (AgeField properties) =
 {-| -}
 updateListStringValue_ : Bool -> String -> ListStringField -> Int -> ListStringField
 updateListStringValue_ addTag value (TagField properties) index =
-    if addTag then
-        TagField { properties | tags = value :: properties.tags }
+    if addTag && value /= "" then
+        TagField
+            { properties
+                | tags = value :: properties.tags
+                , value = ""
+            }
+
+    else if not addTag then
+        TagField { properties | tags = ListExtra.removeAt index properties.tags }
 
     else
-        TagField { properties | tags = ListExtra.removeAt index properties.tags }
+        TagField { properties | tags = properties.tags }
 
 
 {-| -}

@@ -339,11 +339,11 @@ fields =
         ("NewsletterTags"
         , FormField.tag 
             {required = IsRequired.Yes
-            , label = "NewsLetter Tags"
+            , label = "Newsletter Tags"
             , width = Width.FullSize
             , enabledBy = Nothing
-            , order = order
-            , value = "Test"
+            , order = order 
+            , value = "" 
             , tags = ["Hello", "Goodbye", "Beta"]
             , disabled = False
             , hidden = False 

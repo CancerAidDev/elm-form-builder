@@ -3,7 +3,7 @@ module Form.Fields exposing
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
     , hasCheckboxConsentField, isEnabled, isShown
-    , updateTags
+    , updateTagInput, updateTags
     )
 
 {-| Fields.
@@ -176,6 +176,13 @@ updateFieldRemoteOptions key options =
 updateTags : Bool -> String -> String -> Int -> Fields -> Fields
 updateTags addTag key index value =
     Dict.update key (Maybe.map (Field.updateListStringValue addTag index value))
+
+
+{-| -}
+updateTagInput : String -> String -> Fields -> Fields
+updateTagInput key value =
+    Dict.update key (Maybe.map (Field.updateListStringInput value))
+        >> updateEnabledByFields
 
 
 {-| -}

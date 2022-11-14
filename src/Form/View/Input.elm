@@ -14,6 +14,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
+import Form.Lib.Events as LibEvents
 import Form.Lib.String as LibString
 import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
@@ -29,7 +30,6 @@ import Html.Attributes as HtmlAttributes
 import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
-import Json.Decode as JsonDecode
 import List.Extra as ListExtra
 import Result.Extra as ResultExtra
 import Time
@@ -193,22 +193,28 @@ textarea key field =
 
 tag : String -> Field.TagFieldProperties {} -> Html.Html Msg.Msg
 tag key field =
+    let
+        addMsg : Msg.Msg
+        addMsg =
+            Msg.UpdateTags key field.value True 0
+    in
     Html.div []
         [ Html.div [ HtmlAttributes.class "field has-addons" ]
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
                     [ HtmlAttributes.name key
                     , HtmlAttributes.class "input is-link"
-                    , HtmlAttributes.type_ "text"
                     , HtmlAttributes.placeholder field.placeholder
-                    , HtmlEvents.onInput (Msg.UpdateStringField key)
+                    , HtmlEvents.onInput (Msg.UpdateTagInput key)
+                    , LibEvents.onEnter (Msg.UpdateTags key field.value True 0)
+                    , HtmlAttributes.value field.value
                     ]
-                    [ Html.text field.value ]
+                    []
                 ]
             , Html.p [ HtmlAttributes.class "control" ]
                 [ Html.a
                     [ HtmlAttributes.class "button is-link"
-                    , HtmlEvents.onClick (Msg.UpdateTags key field.value True 0)
+                    , HtmlEvents.onClick addMsg
                     ]
                     [ Html.text "Add" ]
                 ]

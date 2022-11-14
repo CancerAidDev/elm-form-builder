@@ -26,3 +26,4 @@ type Msg
     | UpdateShowDropdown String Bool
     | UpdateSearchbar String String
     | UpdateTags String String Bool Int
+    | UpdateTagInput String String
