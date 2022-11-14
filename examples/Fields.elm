@@ -285,7 +285,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
-            , pagination = Just { page = 2, pageSize = 2 }
+            , pagination = Just { page = 1, pageSize = 2 }
             }
         )
     , \order ->
