@@ -3,6 +3,7 @@ module Form.Fields exposing
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
     , hasCheckboxConsentField, isEnabled, isShown
+    , updateTags
     )
 
 {-| Fields.
@@ -169,6 +170,12 @@ updateNumericField key value =
 updateFieldRemoteOptions : String -> RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option) -> Fields -> Fields
 updateFieldRemoteOptions key options =
     Dict.update key (Maybe.map (Field.updateRemoteOptions options))
+
+
+{-| -}
+updateTags : Bool -> String -> String -> Fields -> Fields
+updateTags addTag key value =
+    Dict.update key (Maybe.map (Field.updateListStringValue addTag value))
 
 
 {-| -}

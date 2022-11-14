@@ -2,6 +2,7 @@ module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType
+    , ListStringFieldType(..)
     )
 
 {-| Field Type
@@ -35,6 +36,7 @@ type FieldType
     | MultiStringType MultiStringFieldType
     | BoolType BoolFieldType
     | NumericType NumericFieldType
+    | ListStringType ListStringFieldType
 
 
 {-| -}
@@ -44,6 +46,10 @@ type StringFieldType
     | Select
     | HttpSelect
     | Radio
+
+
+type ListStringFieldType
+    = Tag
 
 
 {-| -}
