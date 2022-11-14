@@ -1,8 +1,7 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..), ListStringFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType
-    , ListStringFieldType(..)
     )
 
 {-| Field Type
@@ -10,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, MultiStringFieldType, DateFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, MultiStringFieldType, DateFieldType, ListStringFieldType
 
 
 # Decoder
@@ -48,6 +47,7 @@ type StringFieldType
     | Radio
 
 
+{-| -}
 type ListStringFieldType
     = Tag
 
