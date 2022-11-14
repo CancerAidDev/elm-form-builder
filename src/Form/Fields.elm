@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePagination
     , hasCheckboxConsentField, isEnabled, isShown
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePagination
 
 
 # Predicates
@@ -35,6 +35,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Json as FieldJson
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
+import Form.Lib.Pagination as LibPag
 import Http.Detailed as HttpDetailed
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
@@ -182,6 +183,13 @@ updateShowDropdown key showDropdown =
 updateSearchbar : String -> String -> Fields -> Fields
 updateSearchbar key value =
     Dict.update key (Maybe.map (Field.updateSearchableMultiselectInput value))
+        >> updateEnabledByFields
+
+
+{-| -}
+updatePagination : String -> LibPag.PaginationMsg -> Fields -> Fields
+updatePagination key msg =
+    Dict.update key (Maybe.map (Field.updatePaginationState msg))
         >> updateEnabledByFields
 
 

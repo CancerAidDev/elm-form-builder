@@ -51,3 +51,6 @@ update msg fields =
 
         Msg.UpdateSearchbar key value ->
             ( Fields.updateSearchbar key value fields, Cmd.none )
+
+        Msg.UpdatePagination key direction ->
+            ( Fields.updatePagination key direction fields, Cmd.none )

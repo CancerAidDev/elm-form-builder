@@ -11,6 +11,7 @@ module Form.Msg exposing (Msg(..))
 
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
+import Form.Lib.Pagination as LibPag
 
 
 {-| -}
@@ -25,3 +26,4 @@ type Msg
     | ResetField String
     | UpdateShowDropdown String Bool
     | UpdateSearchbar String String
+    | UpdatePagination String LibPag.PaginationMsg

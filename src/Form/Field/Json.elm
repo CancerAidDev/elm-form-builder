@@ -484,6 +484,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , pagination = Nothing
                     }
             )
 
@@ -505,6 +506,7 @@ toField time order field =
                     , unhiddenBy = unhiddenBy
                     , searchInput = searchInput
                     , searchableOptions = searchableOptions
+                    , pagination = Nothing
                     }
             )
 

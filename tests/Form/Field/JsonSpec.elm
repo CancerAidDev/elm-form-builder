@@ -518,6 +518,7 @@ suite =
                                         , hidden = False
                                         , unhiddenBy = Nothing
                                         , showDropdown = False
+                                        , pagination = Nothing
                                         }
                                     )
                                 )
@@ -582,6 +583,7 @@ suite =
                                               , value = "Lion"
                                               }
                                             ]
+                                        , pagination = Nothing
                                         }
                                     )
                                 )
@@ -737,6 +739,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , pagination = Nothing
                                             }
                                   )
                                 ]
@@ -779,6 +782,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , pagination = Nothing
                                             }
                                   )
                                 ]
@@ -827,6 +831,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , pagination = Nothing
                                             }
                                   )
                                 ]

@@ -2,7 +2,7 @@ module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updatePaginationState
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updatePaginationState
 
 
 # Predicates
@@ -54,6 +54,7 @@ import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
+import Form.Lib.Pagination as LibPag
 import Form.Lib.RegexValidation as RegexValidation
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
@@ -407,6 +408,7 @@ type alias MultiSelectFieldProperties a =
             | placeholder : String
             , showDropdown : Bool
             , options : List Option.Option
+            , pagination : Maybe LibPag.PaginationState
         }
 
 
@@ -679,7 +681,43 @@ updateSearchableMultiselectInput : String -> Field -> Field
 updateSearchableMultiselectInput input field =
     case field of
         MultiStringField_ (SearchableMultiSelectField properties) ->
-            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
+            let
+                pagination =
+                    Maybe.map (\pag -> { pag | page = 1 }) properties.pagination
+            in
+            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input, pagination = pagination })
+
+        _ ->
+            field
+
+
+{-| -}
+updatePaginationState : LibPag.PaginationMsg -> Field -> Field
+updatePaginationState msg field =
+    case field of
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            let
+                pagination =
+                    Maybe.map
+                        (\pag ->
+                            let
+                                newpage : Int
+                                newpage =
+                                    case ( pag.page, msg ) of
+                                        ( 1, LibPag.DownPag ) ->
+                                            1
+
+                                        ( _, LibPag.UpPag ) ->
+                                            pag.page + 1
+
+                                        ( _, LibPag.DownPag ) ->
+                                            pag.page - 1
+                            in
+                            { pag | page = newpage }
+                        )
+                        properties.pagination
+            in
+            MultiStringField_ (SearchableMultiSelectField { properties | pagination = pagination })
 
         _ ->
             field
@@ -753,10 +791,18 @@ resetMultiStringFieldValueToDefault field =
             MultiHttpSelectField { properties | value = Set.empty }
 
         MultiSelectField properties ->
-            MultiSelectField { properties | value = Set.empty }
+            let
+                pagination =
+                    Maybe.map (\pag -> { pag | page = 1 }) properties.pagination
+            in
+            MultiSelectField { properties | value = Set.empty, pagination = pagination }
 
         SearchableMultiSelectField properties ->
-            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
+            let
+                pagination =
+                    Maybe.map (\pag -> { pag | page = 1 }) properties.pagination
+            in
+            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "", pagination = pagination }
 
 
 {-| -}

@@ -8,6 +8,7 @@ import FontAwesome.Styles as Icon
 import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
+import Form.Lib.Pagination as LibPag
 import Form.Msg as Msg
 import Html
 import Html.Attributes as HtmlAttributes
@@ -115,6 +116,62 @@ searchableDropdownMenu key properties =
                     List.filter (takeOption searchString) options
             in
             filterSearchable properties.searchInput properties.searchableOptions
+
+        paginatedOptions : List Option.Option
+        paginatedOptions =
+            case properties.pagination of
+                Just { page, pageSize } ->
+                    List.take pageSize (List.drop ((page - 1) * pageSize) filteredOptions)
+
+                Nothing ->
+                    filteredOptions
+
+        pagControls : List (Html.Html Msg.Msg)
+        pagControls =
+            case properties.pagination of
+                Just { page, pageSize } ->
+                    let
+                        quot : Int
+                        quot =
+                            List.length filteredOptions // pageSize
+
+                        maxPage : Int
+                        maxPage =
+                            max 1 <|
+                                if (remainderBy pageSize <| List.length filteredOptions) == 0 then
+                                    quot
+
+                                else
+                                    quot + 1
+                    in
+                    [ Html.div [ HtmlAttributes.class "dropdown-item columns is-variable is-1" ]
+                        [ Html.div [ HtmlAttributes.class "column is-narrow" ]
+                            [ Html.button
+                                [ HtmlAttributes.class "button is-small"
+                                , HtmlEvents.onClick <| Msg.UpdatePagination key LibPag.DownPag
+                                , HtmlAttributes.disabled <| page == 1
+                                ]
+                                [ Html.text "<" ]
+                            ]
+                        , Html.div [ HtmlAttributes.class "column " ]
+                            [ Html.div [ HtmlAttributes.class "tags has-addons is-justify-content-center", HtmlAttributes.style "height" "30px" ]
+                                [ Html.span [ HtmlAttributes.class "tag is-link", HtmlAttributes.style "height" "100%" ] [ Html.text <| "" ++ String.fromInt page ]
+                                , Html.span [ HtmlAttributes.class "tag", HtmlAttributes.style "height" "100%" ] [ Html.text <| "of " ++ String.fromInt maxPage ]
+                                ]
+                            ]
+                        , Html.div [ HtmlAttributes.class "column is-narrow" ]
+                            [ Html.button
+                                [ HtmlAttributes.class "button is-small"
+                                , HtmlEvents.onClick <| Msg.UpdatePagination key LibPag.UpPag
+                                , HtmlAttributes.disabled <| page == maxPage
+                                ]
+                                [ Html.text ">" ]
+                            ]
+                        ]
+                    ]
+
+                Nothing ->
+                    []
     in
     Html.div []
         [ overlay key
@@ -144,7 +201,7 @@ searchableDropdownMenu key properties =
                                  , HtmlEvents.onInput <| Msg.UpdateSearchbar key
                                  , HtmlAttributes.value <| properties.searchInput
                                  ]
-                                    ++ (case filteredOptions of
+                                    ++ (case paginatedOptions of
                                             [] ->
                                                 []
 
@@ -162,7 +219,8 @@ searchableDropdownMenu key properties =
                     ]
                  ]
                     ++ optionSection properties.options
-                    ++ optionSection filteredOptions
+                    ++ optionSection paginatedOptions
+                    ++ pagControls
                 )
             ]
         ]
@@ -222,6 +280,7 @@ multiHttpSelect key properties =
                 , disabled = properties.disabled
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
+                , pagination = Nothing
                 }
         )
         properties.options
