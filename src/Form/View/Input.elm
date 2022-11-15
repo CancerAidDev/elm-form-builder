@@ -203,7 +203,7 @@ tag key field =
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
                     [ HtmlAttributes.name key
-                    , HtmlAttributes.class "input is-link"
+                    , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
                     , LibEvents.onEnter (Msg.UpdateTags key field.value True 0)
@@ -219,7 +219,7 @@ tag key field =
                     [ Html.text "Add" ]
                 ]
             ]
-        , Html.p [] [ viewTags key field.tags ]
+        , viewTags key field.tags
         ]
 
 
@@ -228,11 +228,11 @@ viewTags key tags =
     Html.div []
         (List.map
             (\t ->
-                Html.span [ HtmlAttributes.class "tag is-link mr-1 p-3" ]
+                Html.span [ HtmlAttributes.class "tag is-link mr-1" ]
                     [ Html.text t
                     , Html.button
                         [ HtmlAttributes.class "delete is-small"
-                        , HtmlEvents.onClick (Msg.UpdateTags key "Hello World" False (Maybe.withDefault 0 (ListExtra.elemIndex t tags)))
+                        , HtmlEvents.onClick (Msg.UpdateTags key "" False (Maybe.withDefault 0 (ListExtra.elemIndex t tags)))
                         ]
                         []
                     ]
