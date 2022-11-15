@@ -157,6 +157,9 @@ fromString str =
         "age" ->
             Just (NumericType Age)
 
+        "tags" ->
+            Just (ListStringType Tag)
+
         _ ->
             Nothing
 

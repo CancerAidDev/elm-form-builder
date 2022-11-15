@@ -75,6 +75,17 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Phone)))
+        , Test.test "URL field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "url"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Url)))
         , Test.test "TextArea field type" <|
             \_ ->
                 let
@@ -217,4 +228,15 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.MultiStringType FieldType.MultiHttpSelect))
+        , Test.test "List String Field Type" <|
+            \_ ->
+                let
+                    json =
+                        """ 
+                            "tags"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.ListStringType FieldType.Tag))
         ]

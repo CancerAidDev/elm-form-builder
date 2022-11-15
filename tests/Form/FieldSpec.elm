@@ -48,4 +48,16 @@ suite =
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
                         (Field.radio { radioFieldValues | value = option2 })
+        , Test.fuzz2 Fuzz.string Fuzz.string "Update Tag Input" <|
+            \initialString updateString ->
+                let
+                    listStringFieldValues =
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, tags = [], disabled = False, hidden = False, unhiddenBy = Nothing, placeholder = Nothing }
+
+                    field =
+                        Field.tag listStringFieldValues
+                in
+                Field.updateListStringInput updateString field
+                    |> Expect.equal
+                        (Field.tag { listStringFieldValues | value = updateString })
         ]
