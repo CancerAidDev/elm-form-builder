@@ -52,6 +52,9 @@ type alias JsonListStringFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , placeholder : Maybe String
+    , value : String
+    , tags : List String
     }
 
 
@@ -775,3 +778,6 @@ decoderTagJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "placeholder" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "value" Decode.string
+        |> DecodePipeline.required "tags" (Decode.list Decode.string)
