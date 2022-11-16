@@ -13,7 +13,7 @@ import Set
 fields : FormFields.Fields
 fields =
     [ \order ->
-        ( "Uneditable field"
+        ( "Uneditable"
         , FormField.text
             { required = IsRequired.No
             , label = "Uneditable Field"
@@ -333,6 +333,22 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Just "newsletter"
+            }
+        )
+    , \order ->
+        ( "NewsletterTags"
+        , FormField.tag
+            { required = IsRequired.Yes
+            , label = "Newsletter Tags"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , tags = Set.fromList [ "Hello", "Goodbye", "Beta" ]
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            , placeholder = Just "Add new tag..."
             }
         )
     ]

@@ -14,6 +14,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
+import Form.Lib.Events as LibEvents
 import Form.Lib.String as LibString
 import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
@@ -30,6 +31,7 @@ import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
 import Result.Extra as ResultExtra
+import Set
 import Time
 
 
@@ -115,6 +117,9 @@ control time (Locale.Locale _ code) key field =
         Field.NumericField_ (Field.AgeField _) ->
             input time Nothing key field
 
+        Field.ListStringField_ (Field.TagField _) ->
+            input time Nothing key field
+
 
 input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
 input time code key field =
@@ -166,6 +171,9 @@ input time code key field =
                 ]
                 []
 
+        Field.ListStringField_ (Field.TagField properties) ->
+            tag key properties
+
         _ ->
             HtmlExtra.nothing
 
@@ -181,6 +189,56 @@ textarea key field =
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
+
+
+tag : String -> Field.TagFieldProperties {} -> Html.Html Msg.Msg
+tag key field =
+    let
+        addMsg : Msg.Msg
+        addMsg =
+            Msg.UpdateTags key field.value True
+    in
+    Html.div []
+        [ Html.div [ HtmlAttributes.class "field has-addons" ]
+            [ Html.p [ HtmlAttributes.class "control is-expanded" ]
+                [ Html.input
+                    [ HtmlAttributes.name key
+                    , HtmlAttributes.class "input"
+                    , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
+                    , HtmlEvents.onInput (Msg.UpdateTagInput key)
+                    , LibEvents.onEnter (Msg.UpdateTags key field.value True)
+                    , HtmlAttributes.value field.value
+                    ]
+                    []
+                ]
+            , Html.p [ HtmlAttributes.class "control" ]
+                [ Html.a
+                    [ HtmlAttributes.class "button is-link"
+                    , HtmlEvents.onClick addMsg
+                    ]
+                    [ Html.text "Add" ]
+                ]
+            ]
+        , viewTags key field.tags
+        ]
+
+
+viewTags : String -> Set.Set String -> Html.Html Msg.Msg
+viewTags key tags =
+    Html.div []
+        (List.map
+            (\t ->
+                Html.span [ HtmlAttributes.class "tag is-link mr-1" ]
+                    [ Html.text t
+                    , Html.button
+                        [ HtmlAttributes.class "delete is-small"
+                        , HtmlEvents.onClick (Msg.UpdateTags key t False)
+                        ]
+                        []
+                    ]
+            )
+            (Set.toList tags)
+        )
 
 
 phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg

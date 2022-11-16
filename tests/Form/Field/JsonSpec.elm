@@ -458,6 +458,19 @@ suite =
                                     )
                                 )
                             )
+            , Test.test "List string field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "petNames",
+                                "label": "Pet Name",
+                                "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
             , Test.test "Checkbox consent field decoder with missing field" <|
                 \_ ->
                     let
@@ -614,6 +627,32 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":"Foo Bar"}"""
+            , Test.test "Metadata encoding with a list form element" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "name"
+                                  , Field.ListStringField_ <|
+                                        Field.TagField
+                                            { required = Required.Yes
+                                            , label = "Full Name"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = "Foo Bar"
+                                            , tags = Set.empty
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , placeholder = Nothing
+                                            }
+                                  )
+                                ]
+                    in
+                    Encode.encode 0 (encode testDict)
+                        |> Expect.equal
+                            """{"name":[]}"""
             , Test.test "Metadata encoding with a metadata simple form element" <|
                 \_ ->
                     let
@@ -861,6 +900,22 @@ suite =
                                             , unhiddenBy = Nothing
                                             }
                                   )
+                                , ( "metadata.dateFuture"
+                                  , Field.StringField_ <|
+                                        Field.DateField
+                                            { required = Required.Yes
+                                            , label = "Date"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.DateFuture
+                                            , order = 1
+                                            , value = "2023-01-01"
+                                            , parsedDate = Nothing
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            }
+                                  )
                                 , ( "metadata.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
@@ -893,10 +948,26 @@ suite =
                                             , regexValidation = []
                                             }
                                   )
+                                , ( "name"
+                                  , Field.ListStringField_ <|
+                                        Field.TagField
+                                            { required = Required.Yes
+                                            , label = "Full Name"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = "Foo Bar"
+                                            , tags = Set.empty
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , placeholder = Nothing
+                                            }
+                                  )
                                 ]
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"date":"2022-01-01","email":"foo@example.com","name":"Foo Bar"}}"""
+                            """{"metadata":{"date":"2022-01-01","dateFuture":"2023-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
             ]
         ]

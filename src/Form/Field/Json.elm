@@ -39,6 +39,23 @@ type JsonField
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
     | JsonAgeField JsonAgeFieldProperties
+    | JsonTagField JsonListStringFieldProperties
+
+
+type alias JsonListStringFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , tipe : FieldType.ListStringFieldType
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , placeholder : Maybe String
+    , value : String
+    , tags : List String
+    }
 
 
 type alias JsonSimpleFieldProperties =
@@ -278,6 +295,9 @@ decoderForType fieldType =
 
         FieldType.NumericType FieldType.Age ->
             Decode.map JsonAgeField decoderAgeJson
+
+        FieldType.ListStringType FieldType.Tag ->
+            Decode.map JsonTagField (decoderTagJson FieldType.Tag)
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -528,6 +548,24 @@ toField time order field =
                     }
             )
 
+        JsonTagField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+            ( key
+            , Field.ListStringField_ <|
+                Field.TagField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = ""
+                    , tags = Set.empty
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , placeholder = Nothing
+                    }
+            )
+
 
 decoderSimpleJson : FieldType.SimpleFieldType -> Decode.Decoder JsonSimpleFieldProperties
 decoderSimpleJson tipe =
@@ -726,3 +764,20 @@ decoderAgeJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderTagJson : FieldType.ListStringFieldType -> Decode.Decoder JsonListStringFieldProperties
+decoderTagJson tipe =
+    Decode.succeed JsonListStringFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.hardcoded tipe
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "placeholder" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "value" Decode.string
+        |> DecodePipeline.required "tags" (Decode.list Decode.string)

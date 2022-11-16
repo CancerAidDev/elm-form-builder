@@ -20,6 +20,5 @@
     "elm-test": "^0.19.1-revision7",
     "parcel": "^2.5.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
