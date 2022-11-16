@@ -237,7 +237,7 @@ fields =
         )
     , \order ->
         ( "modes"
-        , FormField.multiSelect 
+        , FormField.multiSelect
             { required = IsRequired.Yes
             , label = "What modes of transport do you use?"
             , placeholder = "Mode"
@@ -336,20 +336,21 @@ fields =
             }
         )
     , \order ->
-        ("NewsletterTags"
-        , FormField.tag 
-            {required = IsRequired.Yes
+        ( "NewsletterTags"
+        , FormField.tag
+            { required = IsRequired.Yes
             , label = "Newsletter Tags"
             , width = Width.FullSize
             , enabledBy = Nothing
-            , order = order 
-            , value = "" 
-            , tags = Set.fromList["Hello", "Goodbye", "Beta"]
+            , order = order
+            , value = ""
+            , tags = Set.fromList [ "Hello", "Goodbye", "Beta" ]
             , disabled = False
-            , hidden = False 
+            , hidden = False
             , unhiddenBy = Nothing
             , placeholder = Just "Add new tag..."
-            })
+            }
+        )
     ]
         |> List.indexedMap (\index field -> field index)
         |> Dict.fromList
