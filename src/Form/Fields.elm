@@ -172,9 +172,9 @@ updateFieldRemoteOptions key options =
 
 
 {-| -}
-updateTags : Bool -> String -> String -> Int -> Fields -> Fields
-updateTags addTag key index value =
-    Dict.update key (Maybe.map (Field.updateListStringValue addTag index value))
+updateTags : Bool -> String -> String -> Fields -> Fields
+updateTags addTag key value =
+    Dict.update key (Maybe.map (Field.updateListStringValue addTag value))
 
 
 {-| -}

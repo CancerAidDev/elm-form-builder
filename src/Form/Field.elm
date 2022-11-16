@@ -58,7 +58,6 @@ import Form.Lib.RegexValidation as RegexValidation
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
-import List.Extra as ListExtra
 import RemoteData
 import Set
 import Time
@@ -389,7 +388,7 @@ type alias TagFieldProperties a =
     FieldProperties
         { a
             | value : String
-            , tags : List String
+            , tags : Set.Set String
             , placeholder : Maybe String
         }
 
@@ -766,7 +765,7 @@ resetValueToDefault field =
             NumericField_ (AgeField { properties | value = Nothing })
 
         ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | value = "", tags = [] })
+            ListStringField_ (TagField { properties | value = "", tags = Set.empty })
 
 
 resetStringFieldValueToDefault : StringField -> StringField
@@ -890,11 +889,11 @@ updateNumericValue value field =
 
 
 {-| -}
-updateListStringValue : Bool -> String -> Int -> Field -> Field
-updateListStringValue addTag value index field =
+updateListStringValue : Bool -> String -> Field -> Field
+updateListStringValue addTag value field =
     case field of
         ListStringField_ listStringField ->
-            ListStringField_ <| updateListStringValue_ addTag value listStringField index
+            ListStringField_ <| updateListStringValue_ addTag value listStringField
 
         _ ->
             field
@@ -1066,17 +1065,17 @@ updateNumericValue_ value (AgeField properties) =
 
 
 {-| -}
-updateListStringValue_ : Bool -> String -> ListStringField -> Int -> ListStringField
-updateListStringValue_ addTag value (TagField properties) index =
+updateListStringValue_ : Bool -> String -> ListStringField -> ListStringField
+updateListStringValue_ addTag value (TagField properties) =
     if addTag && value /= "" then
         TagField
             { properties
-                | tags = value :: properties.tags
+                | tags = Set.insert value properties.tags
                 , value = ""
             }
 
     else if not addTag then
-        TagField { properties | tags = ListExtra.removeAt index properties.tags }
+        TagField { properties | tags = Set.remove value properties.tags }
 
     else
         TagField { properties | tags = properties.tags }
@@ -1129,7 +1128,7 @@ getParsedDateValue_ field =
 
 
 {-| -}
-getListStringValue_ : ListStringField -> List String
+getListStringValue_ : ListStringField -> Set.Set String
 getListStringValue_ field =
     case field of
         TagField v ->
@@ -1320,7 +1319,9 @@ encode field =
             EncodeExtra.maybe Encode.int value
 
         ListStringField_ (TagField { tags }) ->
-            Encode.list Encode.string tags
+            tags
+                |> Set.toList
+                |> Encode.list Encode.string
 
 
 {-| -}

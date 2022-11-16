@@ -30,8 +30,8 @@ import Html.Attributes as HtmlAttributes
 import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
-import List.Extra as ListExtra
 import Result.Extra as ResultExtra
+import Set
 import Time
 
 
@@ -196,7 +196,7 @@ tag key field =
     let
         addMsg : Msg.Msg
         addMsg =
-            Msg.UpdateTags key field.value True 0
+            Msg.UpdateTags key field.value True
     in
     Html.div []
         [ Html.div [ HtmlAttributes.class "field has-addons" ]
@@ -206,7 +206,7 @@ tag key field =
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
-                    , LibEvents.onEnter (Msg.UpdateTags key field.value True 0)
+                    , LibEvents.onEnter (Msg.UpdateTags key field.value True)
                     , HtmlAttributes.value field.value
                     ]
                     []
@@ -223,7 +223,7 @@ tag key field =
         ]
 
 
-viewTags : String -> List String -> Html.Html Msg.Msg
+viewTags : String -> Set.Set String -> Html.Html Msg.Msg
 viewTags key tags =
     Html.div []
         (List.map
@@ -232,12 +232,12 @@ viewTags key tags =
                     [ Html.text t
                     , Html.button
                         [ HtmlAttributes.class "delete is-small"
-                        , HtmlEvents.onClick (Msg.UpdateTags key "" False (Maybe.withDefault 0 (ListExtra.elemIndex t tags)))
+                        , HtmlEvents.onClick (Msg.UpdateTags key t False)
                         ]
                         []
                     ]
             )
-            tags
+            (Set.toList tags)
         )
 
 

@@ -107,14 +107,14 @@ validateField locale fields field =
             validateListStringField listStringField
                 |> Result.map
                     (\updatedValue ->
-                        Field.ListStringField_ (Field.updateListStringValue_ False updatedValue listStringField 1)
+                        Field.ListStringField_ (Field.updateListStringValue_ False updatedValue listStringField)
                     )
                 |> Result.mapError ListStringError_
 
 
 validateListStringField : Field.ListStringField -> Result ListStringError String
 validateListStringField field =
-    if List.isEmpty (Field.getListStringValue_ field) && Field.isRequired (Field.ListStringField_ field) == Required.Yes then
+    if Set.isEmpty (Field.getListStringValue_ field) && Field.isRequired (Field.ListStringField_ field) == Required.Yes then
         Err EmptyListError
 
     else

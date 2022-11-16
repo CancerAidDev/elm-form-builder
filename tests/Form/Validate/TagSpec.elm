@@ -4,6 +4,7 @@ import Expect
 import Form.Field as Field
 import Form.Field.Required as Required
 import Form.Field.Width as Width
+import Set
 import Test
 
 
@@ -20,7 +21,7 @@ suite =
                     , enabledBy = Nothing
                     , order = 1
                     , value = ""
-                    , tags = [ "Sally", "Sophie", "Susan" ]
+                    , tags = Set.fromList [ "Sally", "Sophie", "Susan" ]
                     , disabled = False
                     , hidden = False
                     , unhiddenBy = Nothing
@@ -40,14 +41,14 @@ suite =
                             , enabledBy = Nothing
                             , order = 1
                             , value = ""
-                            , tags = [ "Sally", "Sophie", "Susan" ]
+                            , tags = Set.fromList [ "Sally", "Sophie", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "" 0 field )
+                    ( "name", Field.updateListStringValue True "" field )
             )
         , Test.test "Add a name to the list"
             (\_ ->
@@ -61,14 +62,14 @@ suite =
                             , enabledBy = Nothing
                             , order = 1
                             , value = ""
-                            , tags = [ "Momo", "Sally", "Sophie", "Susan" ]
+                            , tags = Set.fromList [ "Momo", "Sally", "Sophie", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "Momo" 0 field )
+                    ( "name", Field.updateListStringValue True "Momo" field )
             )
         , Test.test "Remove name from the list"
             (\_ ->
@@ -82,13 +83,13 @@ suite =
                             , enabledBy = Nothing
                             , order = 1
                             , value = ""
-                            , tags = [ "Sally", "Susan" ]
+                            , tags = Set.fromList [ "Sally", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue False "Sophie" 1 field )
+                    ( "name", Field.updateListStringValue False "Sophie" field )
             )
         ]
