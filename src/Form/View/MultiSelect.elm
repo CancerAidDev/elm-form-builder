@@ -106,9 +106,13 @@ searchableDropdownMenu key properties =
         filteredOptions : List Option.Option
         filteredOptions =
             let
+                caseInsensitiveContains : String -> String -> Bool
+                caseInsensitiveContains s1 s2 =
+                    String.contains (String.toLower s1) (String.toLower s2)
+
                 takeOption : String -> Option.Option -> Bool
                 takeOption searchString option =
-                    List.any (String.contains searchString) (option.value :: List.filterMap identity [ option.label ])
+                    List.any (caseInsensitiveContains searchString) (option.value :: List.filterMap identity [ option.label ])
 
                 filterSearchable : String -> List Option.Option -> List Option.Option
                 filterSearchable searchString options =
