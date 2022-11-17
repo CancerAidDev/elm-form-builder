@@ -25,5 +25,5 @@ type Msg
     | ResetField String
     | UpdateShowDropdown String Bool
     | UpdateSearchbar String String
-    | UpdateTags String String Bool
+    | UpdateTags String String (List String) Bool
     | UpdateTagInput String String

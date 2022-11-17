@@ -889,11 +889,11 @@ updateNumericValue value field =
 
 
 {-| -}
-updateListStringValue : Bool -> String -> Field -> Field
-updateListStringValue addTag value field =
+updateListStringValue : Bool -> String -> List String -> Field -> Field
+updateListStringValue addTag value tags field =
     case field of
         ListStringField_ listStringField ->
-            ListStringField_ <| updateListStringValue_ addTag value listStringField
+            ListStringField_ <| updateListStringValue_ addTag value tags listStringField
 
         _ ->
             field
@@ -1065,17 +1065,17 @@ updateNumericValue_ value (AgeField properties) =
 
 
 {-| -}
-updateListStringValue_ : Bool -> String -> ListStringField -> ListStringField
-updateListStringValue_ addTag value (TagField properties) =
+updateListStringValue_ : Bool -> String -> List String -> ListStringField -> ListStringField
+updateListStringValue_ addTag value tags (TagField properties) =
     if addTag && value /= "" then
         TagField
             { properties
-                | tags = Set.insert value properties.tags
+                | tags = Set.insert value (Set.fromList tags)
                 , value = ""
             }
 
     else if not addTag then
-        TagField { properties | tags = Set.remove value properties.tags }
+        TagField { properties | tags = Set.remove value (Set.fromList tags) }
 
     else
         TagField { properties | tags = properties.tags }

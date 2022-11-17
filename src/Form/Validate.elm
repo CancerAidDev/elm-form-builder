@@ -107,7 +107,7 @@ validateField locale fields field =
             validateListStringField listStringField
                 |> Result.map
                     (\updatedValue ->
-                        Field.ListStringField_ (Field.updateListStringValue_ False updatedValue listStringField)
+                        Field.ListStringField_ (Field.updateListStringValue_ False updatedValue (Set.toList (Field.getListStringValue_ listStringField)) listStringField)
                     )
                 |> Result.mapError ListStringError_
 

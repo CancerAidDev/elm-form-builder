@@ -196,17 +196,17 @@ tag key field =
     let
         addMsg : Msg.Msg
         addMsg =
-            Msg.UpdateTags key field.value True
+            Msg.UpdateTags key field.value (Set.toList field.tags) True
     in
-    Html.div []
-        [ Html.div [ HtmlAttributes.class "field has-addons" ]
+    Html.div [ HtmlAttributes.class "mb-0" ]
+        [ Html.div [ HtmlAttributes.class "mb-0 field has-addons" ]
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
                     [ HtmlAttributes.name key
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
-                    , LibEvents.onEnter (Msg.UpdateTags key field.value True)
+                    , LibEvents.onEnter addMsg
                     , HtmlAttributes.value field.value
                     ]
                     []
@@ -228,11 +228,11 @@ viewTags key tags =
     Html.div []
         (List.map
             (\t ->
-                Html.span [ HtmlAttributes.class "tag is-link mr-1" ]
+                Html.span [ HtmlAttributes.class "tag is-link mr-1 mt-1" ]
                     [ Html.text t
                     , Html.button
                         [ HtmlAttributes.class "delete is-small"
-                        , HtmlEvents.onClick (Msg.UpdateTags key t False)
+                        , HtmlEvents.onClick (Msg.UpdateTags key t (Set.toList tags) False)
                         ]
                         []
                     ]

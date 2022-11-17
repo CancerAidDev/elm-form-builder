@@ -48,7 +48,7 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "" field )
+                    ( "name", Field.updateListStringValue True "" [ "Sally", "Sophie", "Susan" ] field )
             )
         , Test.test "Add a name to the list"
             (\_ ->
@@ -69,7 +69,7 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "Momo" field )
+                    ( "name", Field.updateListStringValue True "Momo" [ "Momo", "Sally", "Sophie", "Susan" ] field )
             )
         , Test.test "Remove name from the list"
             (\_ ->
@@ -90,6 +90,6 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue False "Sophie" field )
+                    ( "name", Field.updateListStringValue False "Sophie" [ "Sally", "Susan" ] field )
             )
         ]
