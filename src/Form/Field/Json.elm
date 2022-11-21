@@ -557,8 +557,8 @@ toField time order field =
                     , width = width
                     , enabledBy = enabledBy
                     , order = order
-                    , value = ""
-                    , tags = Set.empty
+                    , value = Set.empty
+                    , inputBar = ""
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -779,5 +779,5 @@ decoderTagJson tipe =
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "placeholder" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.required "value" Decode.string
-        |> DecodePipeline.required "tags" (Decode.list Decode.string)
+        |> DecodePipeline.required "inputBar" Decode.string
+        |> DecodePipeline.required "value" (Decode.list Decode.string)

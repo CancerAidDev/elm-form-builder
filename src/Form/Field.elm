@@ -88,7 +88,7 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
 
 {-| -}
 tag : TagFieldProperties {} -> Field
-tag { required, label, width, enabledBy, order, value, tags, disabled, hidden, unhiddenBy, placeholder } =
+tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, placeholder } =
     ListStringField_ <|
         TagField
             { required = required
@@ -97,7 +97,7 @@ tag { required, label, width, enabledBy, order, value, tags, disabled, hidden, u
             , enabledBy = enabledBy
             , order = order
             , value = value
-            , tags = tags
+            , inputBar = inputBar
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
@@ -385,10 +385,9 @@ type alias StringFieldProperties a =
 
 {-| -}
 type alias TagFieldProperties a =
-    FieldProperties
+    MultiStringFieldProperties
         { a
-            | value : String
-            , tags : Set.Set String
+            | inputBar : String
             , placeholder : Maybe String
         }
 
@@ -765,7 +764,7 @@ resetValueToDefault field =
             NumericField_ (AgeField { properties | value = Nothing })
 
         ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | value = "", tags = Set.empty })
+            ListStringField_ (TagField { properties | value = Set.empty })
 
 
 resetStringFieldValueToDefault : StringField -> StringField
@@ -904,7 +903,7 @@ updateListStringInput : String -> Field -> Field
 updateListStringInput input field =
     case field of
         ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | value = input })
+            ListStringField_ (TagField { properties | inputBar = input })
 
         _ ->
             field
@@ -1070,15 +1069,15 @@ updateListStringValue_ addTag value (TagField properties) =
     if addTag && value /= "" then
         TagField
             { properties
-                | tags = Set.insert value properties.tags
-                , value = ""
+                | value = Set.insert value properties.value
+                , inputBar = ""
             }
 
     else if not addTag then
-        TagField { properties | tags = Set.remove value properties.tags }
+        TagField { properties | value = Set.remove value properties.value }
 
     else
-        TagField { properties | tags = properties.tags }
+        TagField { properties | value = properties.value }
 
 
 {-| -}
@@ -1132,7 +1131,7 @@ getListStringValue_ : ListStringField -> Set.Set String
 getListStringValue_ field =
     case field of
         TagField v ->
-            v.tags
+            v.value
 
 
 {-| -}
@@ -1318,8 +1317,8 @@ encode field =
         NumericField_ (AgeField { value }) ->
             EncodeExtra.maybe Encode.int value
 
-        ListStringField_ (TagField { tags }) ->
-            tags
+        ListStringField_ (TagField { value }) ->
+            value
                 |> Set.toList
                 |> Encode.list Encode.string
 

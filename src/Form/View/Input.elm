@@ -196,7 +196,7 @@ tag key field =
     let
         addMsg : Msg.Msg
         addMsg =
-            Msg.UpdateTags key field.value True
+            Msg.UpdateTags key field.inputBar True
     in
     Html.div []
         [ Html.div [ HtmlAttributes.class "field has-addons" ]
@@ -206,8 +206,8 @@ tag key field =
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
-                    , LibEvents.onEnter (Msg.UpdateTags key field.value True)
-                    , HtmlAttributes.value field.value
+                    , LibEvents.onEnter (Msg.UpdateTags key field.inputBar True)
+                    , HtmlAttributes.value field.inputBar
                     ]
                     []
                 ]
@@ -219,7 +219,7 @@ tag key field =
                     [ Html.text "Add" ]
                 ]
             ]
-        , viewTags key field.tags
+        , viewTags key field.value
         ]
 
 

@@ -53,12 +53,12 @@ suite =
             \initialString updateString ->
                 let
                     listStringFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, tags = Set.empty, disabled = False, hidden = False, unhiddenBy = Nothing, placeholder = Nothing }
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, inputBar = initialString, value = Set.empty, disabled = False, hidden = False, unhiddenBy = Nothing, placeholder = Nothing }
 
                     field =
                         Field.tag listStringFieldValues
                 in
                 Field.updateListStringInput updateString field
                     |> Expect.equal
-                        (Field.tag { listStringFieldValues | value = updateString })
+                        (Field.tag { listStringFieldValues | inputBar = updateString })
         ]
