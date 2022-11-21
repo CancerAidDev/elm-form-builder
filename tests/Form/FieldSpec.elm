@@ -6,7 +6,6 @@ import Form.Field.Direction as Direction
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Fuzz
-import Set
 import Test
 
 
@@ -49,16 +48,4 @@ suite =
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
                         (Field.radio { radioFieldValues | value = option2 })
-        , Test.fuzz2 Fuzz.string Fuzz.string "Update Tag Input" <|
-            \initialString updateString ->
-                let
-                    listStringFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, inputBar = initialString, value = Set.empty, disabled = False, hidden = False, unhiddenBy = Nothing, placeholder = Nothing }
-
-                    field =
-                        Field.tag listStringFieldValues
-                in
-                Field.updateListStringInput updateString field
-                    |> Expect.equal
-                        (Field.tag { listStringFieldValues | inputBar = updateString })
         ]

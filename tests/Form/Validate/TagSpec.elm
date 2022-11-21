@@ -13,7 +13,7 @@ suite =
     let
         field : Field.Field
         field =
-            Field.ListStringField_ <|
+            Field.MultiStringField_ <|
                 Field.TagField
                     { required = Required.Yes
                     , label = "Full Name"
@@ -33,7 +33,7 @@ suite =
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
@@ -48,13 +48,13 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "" field )
+                    ( "name", Field.updateTagsValue True "" field )
             )
         , Test.test "Add a name to the list"
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
@@ -69,13 +69,13 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "Momo" field )
+                    ( "name", Field.updateTagsValue True "Momo" field )
             )
         , Test.test "Remove name from the list"
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
@@ -90,6 +90,6 @@ suite =
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue False "Sophie" field )
+                    ( "name", Field.updateTagsValue False "Sophie" field )
             )
         ]

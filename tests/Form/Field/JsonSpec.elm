@@ -633,7 +633,7 @@ suite =
                         testDict =
                             Dict.fromList
                                 [ ( "name"
-                                  , Field.ListStringField_ <|
+                                  , Field.MultiStringField_ <|
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"
@@ -949,7 +949,7 @@ suite =
                                             }
                                   )
                                 , ( "name"
-                                  , Field.ListStringField_ <|
+                                  , Field.MultiStringField_ <|
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"

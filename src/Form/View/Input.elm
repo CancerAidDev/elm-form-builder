@@ -105,6 +105,9 @@ control time (Locale.Locale _ code) key field =
         Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
             MultiSelect.multiHttpSelect key properties
 
+        Field.MultiStringField_ (Field.TagField _) ->
+            input time Nothing key field
+
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties
 
@@ -115,9 +118,6 @@ control time (Locale.Locale _ code) key field =
             Radio.radioEnum key properties
 
         Field.NumericField_ (Field.AgeField _) ->
-            input time Nothing key field
-
-        Field.ListStringField_ (Field.TagField _) ->
             input time Nothing key field
 
 
@@ -171,7 +171,7 @@ input time code key field =
                 ]
                 []
 
-        Field.ListStringField_ (Field.TagField properties) ->
+        Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties
 
         _ ->

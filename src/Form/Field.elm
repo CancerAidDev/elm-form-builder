@@ -1,8 +1,8 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), ListStringField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getListStringValue_
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateListStringValue, updateListStringValue_, updateListStringInput
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getTagsValue_
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -13,7 +13,7 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, ListStringField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
 
 
 # Properties
@@ -23,12 +23,12 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getListStringValue_
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getTagsValue_
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateListStringValue, updateListStringValue_, updateListStringInput
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
 
 
 # Predicates
@@ -89,7 +89,7 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
 {-| -}
 tag : TagFieldProperties {} -> Field
 tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, placeholder } =
-    ListStringField_ <|
+    MultiStringField_ <|
         TagField
             { required = required
             , label = label
@@ -320,7 +320,6 @@ type Field
     | MultiStringField_ MultiStringField
     | BoolField_ BoolField
     | NumericField_ NumericField
-    | ListStringField_ ListStringField
 
 
 {-| -}
@@ -340,11 +339,6 @@ type BoolField
 
 
 {-| -}
-type ListStringField
-    = TagField (TagFieldProperties {})
-
-
-{-| -}
 type NumericField
     = AgeField AgeFieldProperties
 
@@ -354,6 +348,7 @@ type MultiStringField
     = MultiSelectField (MultiSelectFieldProperties {})
     | SearchableMultiSelectField SearchableMultiSelectFieldProperties
     | MultiHttpSelectField MultiHttpSelectFieldProperties
+    | TagField (TagFieldProperties {})
 
 
 {-| -}
@@ -516,9 +511,6 @@ getProperties field =
         NumericField_ (AgeField properties) ->
             getCommonProperties properties
 
-        ListStringField_ (TagField properties) ->
-            getCommonProperties properties
-
 
 getCommonProperties : FieldProperties a -> CommonFieldProperties
 getCommonProperties { required, label, width, enabledBy, order, disabled, hidden, unhiddenBy } =
@@ -626,6 +618,18 @@ getMultiStringProperties field =
             }
 
         SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
+        TagField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
             , width = width
@@ -763,9 +767,6 @@ resetValueToDefault field =
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | value = Nothing })
 
-        ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | value = Set.empty })
-
 
 resetStringFieldValueToDefault : StringField -> StringField
 resetStringFieldValueToDefault field =
@@ -798,6 +799,9 @@ resetMultiStringFieldValueToDefault field =
         SearchableMultiSelectField properties ->
             SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
 
+        TagField properties ->
+            TagField { properties | value = Set.empty, inputBar = "" }
+
 
 {-| -}
 setRequired : Required.IsRequired -> Field -> Field
@@ -827,6 +831,9 @@ setRequired required field =
         MultiStringField_ (SearchableMultiSelectField properties) ->
             MultiStringField_ (SearchableMultiSelectField { properties | required = required })
 
+        MultiStringField_ (TagField properties) ->
+            MultiStringField_ (TagField { properties | required = required })
+
         BoolField_ (CheckboxField properties) ->
             BoolField_ (CheckboxField { properties | required = required })
 
@@ -838,9 +845,6 @@ setRequired required field =
 
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | required = required })
-
-        ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | required = required })
 
 
 {-| -}
@@ -888,22 +892,22 @@ updateNumericValue value field =
 
 
 {-| -}
-updateListStringValue : Bool -> String -> Field -> Field
-updateListStringValue addTag value field =
+updateTagsValue : Bool -> String -> Field -> Field
+updateTagsValue addTag value field =
     case field of
-        ListStringField_ listStringField ->
-            ListStringField_ <| updateListStringValue_ addTag value listStringField
+        MultiStringField_ multiStringField ->
+            MultiStringField_ <| updateTagsValue_ addTag value multiStringField
 
         _ ->
             field
 
 
 {-| -}
-updateListStringInput : String -> Field -> Field
-updateListStringInput input field =
+updateTagsInputBarValue : String -> Field -> Field
+updateTagsInputBarValue input field =
     case field of
-        ListStringField_ (TagField properties) ->
-            ListStringField_ (TagField { properties | inputBar = input })
+        MultiStringField_ (TagField properties) ->
+            MultiStringField_ (TagField { properties | inputBar = input })
 
         _ ->
             field
@@ -1009,6 +1013,9 @@ updateMultiStringOption_ option checked field =
         MultiHttpSelectField properties ->
             MultiHttpSelectField (update properties)
 
+        TagField properties ->
+            TagField (update properties)
+
 
 {-| -}
 updateMultiStringValue_ : Set.Set String -> MultiStringField -> MultiStringField
@@ -1022,6 +1029,9 @@ updateMultiStringValue_ value field =
 
         MultiHttpSelectField properties ->
             MultiHttpSelectField { properties | value = value }
+
+        TagField properties ->
+            TagField { properties | value = value }
 
 
 {-| -}
@@ -1064,20 +1074,25 @@ updateNumericValue_ value (AgeField properties) =
 
 
 {-| -}
-updateListStringValue_ : Bool -> String -> ListStringField -> ListStringField
-updateListStringValue_ addTag value (TagField properties) =
-    if addTag && value /= "" then
-        TagField
-            { properties
-                | value = Set.insert value properties.value
-                , inputBar = ""
-            }
+updateTagsValue_ : Bool -> String -> MultiStringField -> MultiStringField
+updateTagsValue_ addTag value field =
+    case field of
+        TagField properties ->
+            if addTag && value /= "" then
+                TagField
+                    { properties
+                        | value = Set.insert value properties.value
+                        , inputBar = ""
+                    }
 
-    else if not addTag then
-        TagField { properties | value = Set.remove value properties.value }
+            else if not addTag then
+                TagField { properties | value = Set.remove value properties.value }
 
-    else
-        TagField { properties | value = properties.value }
+            else
+                TagField { properties | value = properties.value }
+
+        _ ->
+            field
 
 
 {-| -}
@@ -1127,11 +1142,14 @@ getParsedDateValue_ field =
 
 
 {-| -}
-getListStringValue_ : ListStringField -> Set.Set String
-getListStringValue_ field =
+getTagsValue_ : MultiStringField -> Set.Set String
+getTagsValue_ field =
     case field of
         TagField v ->
             v.value
+
+        _ ->
+            Set.empty
 
 
 {-| -}
@@ -1201,9 +1219,6 @@ getType field =
         NumericField_ (AgeField _) ->
             FieldType.NumericType FieldType.Age
 
-        ListStringField_ (TagField _) ->
-            FieldType.ListStringType FieldType.Tag
-
 
 {-| -}
 isNumericField : Field -> Bool
@@ -1259,6 +1274,9 @@ getMultiStringType field =
 
         SearchableMultiSelectField _ ->
             FieldType.SearchableMultiSelect
+
+        TagField _ ->
+            FieldType.Tags
 
 
 {-| -}
@@ -1316,11 +1334,6 @@ encode field =
 
         NumericField_ (AgeField { value }) ->
             EncodeExtra.maybe Encode.int value
-
-        ListStringField_ (TagField { value }) ->
-            value
-                |> Set.toList
-                |> Encode.list Encode.string
 
 
 {-| -}
