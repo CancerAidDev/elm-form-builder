@@ -2,9 +2,6 @@ module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableM
 
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
-import FontAwesome.Icon as Icon
-import FontAwesome.Solid as Icon
-import FontAwesome.Styles as Icon
 import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
@@ -21,17 +18,16 @@ import Set
 multiSelect : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 multiSelect key properties =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
-        [ Icon.css
-        , dropdownTrigger key properties
+        [ dropdownTrigger key properties
         , HtmlExtra.viewIf properties.showDropdown <| dropdownMenu key properties
         ]
 
 
+{-| -}
 searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
 searchableMultiSelect key properties =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
-        [ Icon.css
-        , dropdownTrigger key properties
+        [ dropdownTrigger key properties
         , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
         ]
 
@@ -52,7 +48,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
                 , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
                 ]
                 [ Html.text <| String.fromInt (Set.size value) ]
-            , Html.span [ HtmlAttributes.class "icon" ] [ Icon.viewIcon Icon.angleDown ]
+            , Html.span [ HtmlAttributes.class "icon" ] [ Html.i [ HtmlAttributes.class "fa-solid fa-angle-down" ] [] ]
             ]
         ]
 

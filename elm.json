@@ -55,7 +55,6 @@
         "justinmimbs/time-extra": "1.1.1 <= v < 2.0.0",
         "jzxhuang/http-extras": "2.1.0 <= v < 3.0.0",
         "krisajenkins/remotedata": "6.0.1 <= v < 7.0.0",
-        "lattyware/elm-fontawesome": "5.0.0 <= v < 6.0.0",
         "mgold/elm-nonempty-list": "4.2.0 <= v < 5.0.0",
         "rtfeldman/elm-iso8601-date-strings": "1.1.4 <= v < 2.0.0",
         "tesk9/accessible-html": "5.0.0 <= v < 6.0.0"
