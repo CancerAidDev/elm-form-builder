@@ -36,7 +36,7 @@ dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.
 dropdownTrigger key { placeholder, value, showDropdown } =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
-            [ HtmlAttributes.class "button"
+            [ HtmlAttributes.class "button pl-4 pr-0"
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
@@ -44,11 +44,24 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             ]
             [ Html.span [] [ Html.text placeholder ]
             , Html.span
-                [ HtmlAttributes.class "tag is-link ml-4"
+                [ HtmlAttributes.class "tag is-link ml-2"
                 , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
                 ]
                 [ Html.text <| String.fromInt (Set.size value) ]
-            , Html.span [ HtmlAttributes.class "icon" ] [ Html.i [ HtmlAttributes.class "fa-solid fa-angle-down" ] [] ]
+            , Html.span
+                [ HtmlAttributes.class "icon mx-3"
+                ]
+                [ Html.i
+                    [ HtmlAttributes.class
+                        (if showDropdown then
+                            "fa-solid fa-angle-up fa-lg"
+
+                         else
+                            "fa-solid fa-angle-down fa-lg"
+                        )
+                    ]
+                    []
+                ]
             ]
         ]
 
