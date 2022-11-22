@@ -35,7 +35,6 @@ type FieldType
     | MultiStringType MultiStringFieldType
     | BoolType BoolFieldType
     | NumericType NumericFieldType
-    | ListStringType ListStringFieldType
 
 
 {-| -}
@@ -84,6 +83,7 @@ type MultiStringFieldType
     = MultiSelect
     | SearchableMultiSelect
     | MultiHttpSelect
+    | Tags
 
 
 {-| -}
@@ -158,7 +158,7 @@ fromString str =
             Just (NumericType Age)
 
         "tags" ->
-            Just (ListStringType Tag)
+            Just (MultiStringType Tags)
 
         _ ->
             Nothing

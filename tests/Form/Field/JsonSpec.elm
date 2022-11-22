@@ -633,15 +633,15 @@ suite =
                         testDict =
                             Dict.fromList
                                 [ ( "name"
-                                  , Field.ListStringField_ <|
+                                  , Field.MultiStringField_ <|
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
-                                            , value = "Foo Bar"
-                                            , tags = Set.empty
+                                            , inputBar = "Foo Bar"
+                                            , value = Set.empty
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
@@ -949,15 +949,15 @@ suite =
                                             }
                                   )
                                 , ( "name"
-                                  , Field.ListStringField_ <|
+                                  , Field.MultiStringField_ <|
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
-                                            , value = "Foo Bar"
-                                            , tags = Set.empty
+                                            , inputBar = "Foo Bar"
+                                            , value = Set.empty
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing

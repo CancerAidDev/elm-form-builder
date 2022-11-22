@@ -228,7 +228,7 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.MultiStringType FieldType.MultiHttpSelect))
-        , Test.test "List String Field Type" <|
+        , Test.test "Tags Field Type" <|
             \_ ->
                 let
                     json =
@@ -238,5 +238,5 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.ListStringType FieldType.Tag))
+                        (Ok (FieldType.MultiStringType FieldType.Tags))
         ]

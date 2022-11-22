@@ -13,15 +13,15 @@ suite =
     let
         field : Field.Field
         field =
-            Field.ListStringField_ <|
+            Field.MultiStringField_ <|
                 Field.TagField
                     { required = Required.Yes
                     , label = "Full Name"
                     , width = Width.HalfSize
                     , enabledBy = Nothing
                     , order = 1
-                    , value = ""
-                    , tags = Set.fromList [ "Sally", "Sophie", "Susan" ]
+                    , inputBar = ""
+                    , value = Set.fromList [ "Sally", "Sophie", "Susan" ]
                     , disabled = False
                     , hidden = False
                     , unhiddenBy = Nothing
@@ -33,63 +33,63 @@ suite =
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing
                             , order = 1
-                            , value = ""
-                            , tags = Set.fromList [ "Sally", "Sophie", "Susan" ]
+                            , inputBar = ""
+                            , value = Set.fromList [ "Sally", "Sophie", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "" field )
+                    ( "name", Field.updateTagsValue True "" field )
             )
         , Test.test "Add a name to the list"
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing
                             , order = 1
-                            , value = ""
-                            , tags = Set.fromList [ "Momo", "Sally", "Sophie", "Susan" ]
+                            , inputBar = ""
+                            , value = Set.fromList [ "Momo", "Sally", "Sophie", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue True "Momo" field )
+                    ( "name", Field.updateTagsValue True "Momo" field )
             )
         , Test.test "Remove name from the list"
             (\_ ->
                 Expect.equal
                     ( "name"
-                    , Field.ListStringField_ <|
+                    , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing
                             , order = 1
-                            , value = ""
-                            , tags = Set.fromList [ "Sally", "Susan" ]
+                            , inputBar = ""
+                            , value = Set.fromList [ "Sally", "Susan" ]
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
                             , placeholder = Nothing
                             }
                     )
-                    ( "name", Field.updateListStringValue False "Sophie" field )
+                    ( "name", Field.updateTagsValue False "Sophie" field )
             )
         ]

@@ -103,23 +103,6 @@ validateField locale fields field =
                     )
                 |> Result.mapError NumericError_
 
-        Field.ListStringField_ listStringField ->
-            validateListStringField listStringField
-                |> Result.map
-                    (\updatedValue ->
-                        Field.ListStringField_ (Field.updateListStringValue_ False updatedValue listStringField)
-                    )
-                |> Result.mapError ListStringError_
-
-
-validateListStringField : Field.ListStringField -> Result ListStringError String
-validateListStringField field =
-    if Set.isEmpty (Field.getListStringValue_ field) && Field.isRequired (Field.ListStringField_ field) == Required.Yes then
-        Err EmptyListError
-
-    else
-        Ok ""
-
 
 validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
 validateMultiStringField field =
@@ -236,17 +219,12 @@ type NumericError
     = InvalidAge
 
 
-type ListStringError
-    = EmptyListError
-
-
 {-| -}
 type Error
     = StringError_ Field.StringField StringFieldTypes.StringFieldError
     | MultiStringError_ MultiStringError
     | BoolError_ BoolError
     | NumericError_ NumericError
-    | ListStringError_ ListStringError
 
 
 {-| -}
@@ -267,6 +245,3 @@ errorToMessage locale error =
 
         NumericError_ InvalidAge ->
             "Age must be 18-99"
-
-        ListStringError_ EmptyListError ->
-            "Field must not be empty"

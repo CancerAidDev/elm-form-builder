@@ -105,6 +105,9 @@ control time (Locale.Locale _ code) key field =
         Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
             MultiSelect.multiHttpSelect key properties
 
+        Field.MultiStringField_ (Field.TagField _) ->
+            input time Nothing key field
+
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties
 
@@ -115,9 +118,6 @@ control time (Locale.Locale _ code) key field =
             Radio.radioEnum key properties
 
         Field.NumericField_ (Field.AgeField _) ->
-            input time Nothing key field
-
-        Field.ListStringField_ (Field.TagField _) ->
             input time Nothing key field
 
 
@@ -171,7 +171,7 @@ input time code key field =
                 ]
                 []
 
-        Field.ListStringField_ (Field.TagField properties) ->
+        Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties
 
         _ ->
@@ -196,7 +196,7 @@ tag key field =
     let
         addMsg : Msg.Msg
         addMsg =
-            Msg.UpdateTags key field.value True
+            Msg.UpdateTags key field.inputBar True
     in
     Html.div []
         [ Html.div [ HtmlAttributes.class "field has-addons" ]
@@ -206,8 +206,8 @@ tag key field =
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
-                    , LibEvents.onEnter (Msg.UpdateTags key field.value True)
-                    , HtmlAttributes.value field.value
+                    , LibEvents.onEnter (Msg.UpdateTags key field.inputBar True)
+                    , HtmlAttributes.value field.inputBar
                     ]
                     []
                 ]
@@ -219,7 +219,7 @@ tag key field =
                     [ Html.text "Add" ]
                 ]
             ]
-        , viewTags key field.tags
+        , viewTags key field.value
         ]
 
 
