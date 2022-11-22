@@ -1,7 +1,7 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getTagsValue_
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
@@ -23,7 +23,7 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth, getTagsValue_
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
 
 
 # Setters
@@ -1076,20 +1076,16 @@ updateNumericValue_ value (AgeField properties) =
 {-| -}
 updateTagsValue_ : Bool -> String -> MultiStringField -> MultiStringField
 updateTagsValue_ addTag value field =
-    case field of
-        TagField properties ->
-            if addTag && value /= "" then
-                TagField
-                    { properties
-                        | value = Set.insert value properties.value
-                        , inputBar = ""
-                    }
+    case ( field, String.isEmpty value, addTag ) of
+        ( TagField properties, False, True ) ->
+            TagField
+                { properties
+                    | value = Set.insert value properties.value
+                    , inputBar = ""
+                }
 
-            else if not addTag then
-                TagField { properties | value = Set.remove value properties.value }
-
-            else
-                TagField { properties | value = properties.value }
+        ( TagField properties, False, False ) ->
+            TagField { properties | value = Set.remove value properties.value }
 
         _ ->
             field
@@ -1139,17 +1135,6 @@ getParsedDateValue_ field =
 
         _ ->
             Nothing
-
-
-{-| -}
-getTagsValue_ : MultiStringField -> Set.Set String
-getTagsValue_ field =
-    case field of
-        TagField v ->
-            v.value
-
-        _ ->
-            Set.empty
 
 
 {-| -}
