@@ -150,7 +150,7 @@ searchableDropdownMenu key properties =
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                  , Html.div [ HtmlAttributes.class "dropdown-item" ]
                     [ Html.div [ HtmlAttributes.class "field" ]
-                        [ Html.span [ HtmlAttributes.class "control" ]
+                        [ Html.div [ HtmlAttributes.class "control has-icons-left" ]
                             [ Html.input
                                 ([ HtmlAttributes.class "input is-small"
                                  , HtmlAttributes.placeholder "Search"
@@ -170,6 +170,8 @@ searchableDropdownMenu key properties =
                                        )
                                 )
                                 []
+                            , Html.span [ HtmlAttributes.class "icon is-left pl-1" ]
+                                [ Html.i [ HtmlAttributes.class "fa-solid fa-search" ] [] ]
                             ]
                         ]
                     ]
