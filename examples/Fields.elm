@@ -191,7 +191,7 @@ fields =
         )
     , \order ->
         ( "newsletter"
-        , FormField.mkRadio <|
+        , FormField.mkRadioBool <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Would you like to sign up to our newsletter?"
                 >> FormField.setOrder order
