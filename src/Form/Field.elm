@@ -180,7 +180,7 @@ mkRadioBool setters =
         << RadioBoolField
 
 
-{-| Makes a radio field for selection of enumerables. Initialises without options - make sure to add these using setOptions.
+{-| Makes a radio field for selection of Yes/No/N/A enums. Initialises without options - make sure to add these using setOptions.
 
 In addition to the common builders, the following are available:
 
