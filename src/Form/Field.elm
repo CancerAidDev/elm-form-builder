@@ -161,12 +161,148 @@ radioEnumFieldDefaults =
     }
 
 
+selectFieldDefaults : SelectFieldProperties
+selectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
 
+
+httpSelectFieldDefaults : HttpSelectFieldProperties
+httpSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , url = ""
+    , default = Nothing
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
+
+
+multiSelectFieldDefaults : MultiSelectFieldProperties {}
+multiSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    }
+
+
+searchableMultiSelectFieldDefaults : SearchableMultiSelectFieldProperties
+searchableMultiSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    , searchableOptions = []
+    , searchInput = ""
+    }
+
+
+multiHttpSelectFieldDefaults : MultiHttpSelectFieldProperties
+multiHttpSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , showDropdown = False
+    , url = ""
+    }
+
+
+radioFieldDefaults : RadioFieldProperties
+radioFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , direction = Direction.Column
+    }
+
+
+ageFieldDefaults : AgeFieldProperties
+ageFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+
+-- {-| -}
+-- type alias MultiHttpSelectFieldProperties =
+--     MultiStringFieldProperties
+--         { placeholder : String
+--         , showDropdown : Bool
+--         , url : String
+--         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+--         }
 -- MAKERS
 
 
 {-| Text input by default, use setEmail\_, setPhone\_, setUrl\_, setTextArea\_ helpers to change
 -}
+
+
+
+--TODO: Determine which params need to be mandatory, and need to be passed into mk
+
+
 mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
 mkInput setters =
     simpleFieldDefaults
@@ -213,6 +349,62 @@ mkRadioEnum setters =
         |> setters
         |> BoolField_
         << RadioEnumField
+
+
+mkSelect : (SelectFieldProperties -> SelectFieldProperties) -> Field
+mkSelect setters =
+    selectFieldDefaults
+        |> setters
+        |> StringField_
+        << SelectField
+
+
+mkHttpSelect : (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
+mkHttpSelect setters =
+    httpSelectFieldDefaults
+        |> setters
+        |> StringField_
+        << HttpSelectField
+
+
+mkMultiSelect : (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
+mkMultiSelect setters =
+    multiSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << MultiSelectField
+
+
+mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
+mkSearchableMultiSelect setters =
+    searchableMultiSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << SearchableMultiSelectField
+
+
+mkMultiHttpSelect : (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
+mkMultiHttpSelect setters =
+    multiHttpSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << MultiHttpSelectField
+
+
+mkRadio : (RadioFieldProperties -> RadioFieldProperties) -> Field
+mkRadio setters =
+    radioFieldDefaults
+        |> setters
+        |> StringField_
+        << RadioField
+
+
+mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
+mkAgeField setters =
+    ageFieldDefaults
+        |> setters
+        |> NumericField_
+        << AgeField
 
 
 
@@ -305,6 +497,21 @@ setPlaceholder_ placeholder field =
     { field | placeholder = placeholder }
 
 
+setSelectablePlaceholder : FieldProperties { a | hasSelectablePlaceholder : Bool } -> FieldProperties { a | hasSelectablePlaceholder : Bool }
+setSelectablePlaceholder field =
+    { field | hasSelectablePlaceholder = True }
+
+
+setRemoteUrl_ : String -> FieldProperties { a | url : String } -> FieldProperties { a | url : String }
+setRemoteUrl_ url_ field =
+    { field | url = url_ }
+
+
+setSearchableOptions_ : List Option.Option -> SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties
+setSearchableOptions_ searchableOptions field =
+    { field | searchableOptions = searchableOptions }
+
+
 setEmail_ : SimpleFieldProperties -> SimpleFieldProperties
 setEmail_ =
     setTipe_ FieldType.Email
@@ -333,6 +540,11 @@ setDateOfBirth_ =
 setDateFuture_ : DateFieldProperties -> DateFieldProperties
 setDateFuture_ =
     setTipe_ FieldType.DateFuture
+
+
+setDirection : Direction.Direction -> RadioFieldProperties -> RadioFieldProperties
+setDirection direction field =
+    { field | direction = direction }
 
 
 
