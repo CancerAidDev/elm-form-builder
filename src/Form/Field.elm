@@ -77,7 +77,6 @@ import Time
 
 
 -- MAKERS
---TODO: Determine which params need to be mandatory, and need to be passed into mk
 
 
 {-| Makes an input field, defaulting to text input.
