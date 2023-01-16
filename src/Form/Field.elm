@@ -1,12 +1,13 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+    , mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag
+    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setTipe, setUnhiddenBy, setUrl, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag, setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setTipe, setUnhiddenBy, setUrl, setValue, setWidth
     )
 
 {-| Field type and helper functions
@@ -14,12 +15,22 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField
 
 
 # Properties
 
 @docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+
+
+# Constructors
+
+@docs mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag
+
+
+# Construction Property Setters
+
+@docs setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setTipe, setUnhiddenBy, setUrl, setValue, setWidth
 
 
 # Getters
@@ -69,6 +80,7 @@ import Time
 --TODO: Determine which params need to be mandatory, and need to be passed into mk
 
 
+{-| -}
 mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
 mkInput setters =
     simpleFieldDefaults
@@ -77,6 +89,7 @@ mkInput setters =
         << SimpleField
 
 
+{-| -}
 mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
 mkDate setters =
     dateFieldDefaults
@@ -85,6 +98,7 @@ mkDate setters =
         << DateField
 
 
+{-| -}
 mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
 mkTag setters =
     tagFieldDefaults
@@ -93,6 +107,7 @@ mkTag setters =
         << TagField
 
 
+{-| -}
 mkCheckbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
 mkCheckbox setters =
     checkboxFieldDefaults
@@ -101,6 +116,7 @@ mkCheckbox setters =
         << CheckboxField
 
 
+{-| -}
 mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
 mkRadioBool setters =
     radioBoolFieldDefaults
@@ -109,6 +125,7 @@ mkRadioBool setters =
         << RadioBoolField
 
 
+{-| -}
 mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
 mkRadioEnum setters =
     radioEnumFieldDefaults
@@ -117,6 +134,7 @@ mkRadioEnum setters =
         << RadioEnumField
 
 
+{-| -}
 mkSelect : (SelectFieldProperties -> SelectFieldProperties) -> Field
 mkSelect setters =
     selectFieldDefaults
@@ -125,6 +143,7 @@ mkSelect setters =
         << SelectField
 
 
+{-| -}
 mkHttpSelect : (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
 mkHttpSelect setters =
     httpSelectFieldDefaults
@@ -133,6 +152,7 @@ mkHttpSelect setters =
         << HttpSelectField
 
 
+{-| -}
 mkMultiSelect : (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
 mkMultiSelect setters =
     multiSelectFieldDefaults
@@ -141,6 +161,7 @@ mkMultiSelect setters =
         << MultiSelectField
 
 
+{-| -}
 mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
 mkSearchableMultiSelect setters =
     searchableMultiSelectFieldDefaults
@@ -149,6 +170,7 @@ mkSearchableMultiSelect setters =
         << SearchableMultiSelectField
 
 
+{-| -}
 mkMultiHttpSelect : (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
 mkMultiHttpSelect setters =
     multiHttpSelectFieldDefaults
@@ -157,6 +179,7 @@ mkMultiHttpSelect setters =
         << MultiHttpSelectField
 
 
+{-| -}
 mkRadio : (RadioFieldProperties -> RadioFieldProperties) -> Field
 mkRadio setters =
     radioFieldDefaults
@@ -165,6 +188,7 @@ mkRadio setters =
         << RadioField
 
 
+{-| -}
 mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
 mkAgeField setters =
     ageFieldDefaults
@@ -177,51 +201,61 @@ mkAgeField setters =
 -- SETTERS
 
 
+{-| -}
 setIsRequired : Required.IsRequired -> FieldProperties a -> FieldProperties a
 setIsRequired required field =
     { field | required = required }
 
 
+{-| -}
 setLabel : String -> FieldProperties a -> FieldProperties a
 setLabel label field =
     { field | label = label }
 
 
+{-| -}
 setWidth : Width.Width -> FieldProperties a -> FieldProperties a
 setWidth width field =
     { field | width = width }
 
 
+{-| -}
 setEnabledBy : String -> FieldProperties a -> FieldProperties a
 setEnabledBy enabledBy field =
     { field | enabledBy = Just enabledBy }
 
 
+{-| -}
 setOrder : Int -> FieldProperties a -> FieldProperties a
 setOrder order field =
     { field | order = order }
 
 
+{-| -}
 setDisabled : Bool -> FieldProperties a -> FieldProperties a
 setDisabled disabled field =
     { field | disabled = disabled }
 
 
+{-| -}
 setHidden : Bool -> FieldProperties a -> FieldProperties a
 setHidden hidden field =
     { field | hidden = hidden }
 
 
+{-| -}
 setUnhiddenBy : String -> FieldProperties a -> FieldProperties a
 setUnhiddenBy unhiddenBy field =
     { field | unhiddenBy = Just unhiddenBy }
 
 
+{-| -}
 setRegexValidation : List RegexValidation.RegexValidation -> SimpleFieldProperties -> SimpleFieldProperties
 setRegexValidation regexValidation field =
     { field | regexValidation = regexValidation }
 
 
+{-| -}
 setForbiddenEmailDomains : List EmailFormat.ForbiddenDomain -> SimpleFieldProperties -> SimpleFieldProperties
 setForbiddenEmailDomains forbiddenDomains field =
     { field
@@ -233,81 +267,97 @@ setForbiddenEmailDomains forbiddenDomains field =
     }
 
 
+{-| -}
 setTagsInputBar : String -> TagFieldProperties -> TagFieldProperties
 setTagsInputBar inputBar field =
     { field | inputBar = inputBar }
 
 
+{-| -}
 setTipe : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
 setTipe tipe field =
     { field | tipe = tipe }
 
 
+{-| -}
 setValue : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
 setValue value field =
     { field | value = value }
 
 
+{-| -}
 setDefault : d -> FieldProperties { a | default : d } -> FieldProperties { a | default : d }
 setDefault default field =
     { field | default = default }
 
 
+{-| -}
 setOptions : o -> FieldProperties { a | options : o } -> FieldProperties { a | options : o }
 setOptions options field =
     { field | options = options }
 
 
+{-| -}
 setPlaceholder : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
 setPlaceholder placeholder field =
     { field | placeholder = placeholder }
 
 
+{-| -}
 setSelectablePlaceholder : FieldProperties { a | hasSelectablePlaceholder : Bool } -> FieldProperties { a | hasSelectablePlaceholder : Bool }
 setSelectablePlaceholder field =
     { field | hasSelectablePlaceholder = True }
 
 
+{-| -}
 setRemoteUrl : String -> FieldProperties { a | url : String } -> FieldProperties { a | url : String }
 setRemoteUrl url_ field =
     { field | url = url_ }
 
 
+{-| -}
 setSearchableOptions : List Option.Option -> SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties
 setSearchableOptions searchableOptions field =
     { field | searchableOptions = searchableOptions }
 
 
+{-| -}
 setEmail : SimpleFieldProperties -> SimpleFieldProperties
 setEmail =
     setTipe FieldType.Email
 
 
+{-| -}
 setPhone : SimpleFieldProperties -> SimpleFieldProperties
 setPhone =
     setTipe FieldType.Phone
 
 
+{-| -}
 setUrl : SimpleFieldProperties -> SimpleFieldProperties
 setUrl =
     setTipe FieldType.Url
 
 
+{-| -}
 setTextArea : SimpleFieldProperties -> SimpleFieldProperties
 setTextArea =
     setTipe FieldType.TextArea
 
 
+{-| -}
 setDateOfBirth : DateFieldProperties -> DateFieldProperties
 setDateOfBirth =
     setTipe FieldType.DateOfBirth
 
 
+{-| -}
 setDateFuture : DateFieldProperties -> DateFieldProperties
 setDateFuture =
     setTipe FieldType.DateFuture
 
 
+{-| -}
 setDirection : Direction.Direction -> RadioFieldProperties -> RadioFieldProperties
 setDirection direction field =
     { field | direction = direction }
