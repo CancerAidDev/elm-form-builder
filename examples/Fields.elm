@@ -17,7 +17,7 @@ fields =
         , FormField.mkInput <|
             FormField.setLabel "Uneditable Field"
                 >> FormField.setOrder order
-                >> FormField.setDisabled True
+                >> FormField.setDisabled
         )
     , \order ->
         ( "not a valid email field"
@@ -25,7 +25,7 @@ fields =
             FormField.setEmail
                 >> FormField.setLabel "Not relevant Email Address"
                 >> FormField.setOrder order
-                >> FormField.setDisabled True
+                >> FormField.setDisabled
         )
     , \order ->
         ( "name"
@@ -36,7 +36,7 @@ fields =
                         >> FormField.setLabel "Full Name"
                         >> FormField.setOrder order
                         >> FormField.setValue "Regex does not compile"
-                        >> FormField.setDisabled True
+                        >> FormField.setDisabled
 
             Just regex ->
                 FormField.mkInput <|
@@ -121,7 +121,7 @@ fields =
           <|
             FormField.setLabel "Something"
                 >> FormField.setOrder order
-                >> FormField.setDisabled True
+                >> FormField.setDisabled
                 >> FormField.setSelectablePlaceholder
         )
     , \order ->
