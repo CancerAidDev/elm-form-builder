@@ -116,6 +116,51 @@ tagFieldDefaults =
     }
 
 
+checkboxFieldDefaults : CheckboxFieldProperties
+checkboxFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = False
+    , tipe = FieldType.Checkbox
+    }
+
+
+radioBoolFieldDefaults : RadioBoolFieldProperties
+radioBoolFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+radioEnumFieldDefaults : RadioEnumFieldProperties
+radioEnumFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , default = Nothing
+    , options = []
+    }
+
+
 
 -- MAKERS
 
@@ -144,6 +189,30 @@ mkTag setters =
         |> setters
         |> MultiStringField_
         << TagField
+
+
+mkCheckbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
+mkCheckbox setters =
+    checkboxFieldDefaults
+        |> setters
+        |> BoolField_
+        << CheckboxField
+
+
+mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
+mkRadioBool setters =
+    radioBoolFieldDefaults
+        |> setters
+        |> BoolField_
+        << RadioBoolField
+
+
+mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
+mkRadioEnum setters =
+    radioEnumFieldDefaults
+        |> setters
+        |> BoolField_
+        << RadioEnumField
 
 
 
@@ -219,6 +288,16 @@ setTipe_ tipe field =
 setValue_ : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
 setValue_ value field =
     { field | value = value }
+
+
+setDefault_ : d -> FieldProperties { a | default : d } -> FieldProperties { a | default : d }
+setDefault_ default field =
+    { field | default = default }
+
+
+setOptions_ : o -> FieldProperties { a | options : o } -> FieldProperties { a | options : o }
+setOptions_ options field =
+    { field | options = options }
 
 
 setPlaceholder_ : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
