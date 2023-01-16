@@ -2,7 +2,7 @@ module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
     , mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag
-    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setTipe, setUnhiddenBy, setUrl, setValue, setWidth
+    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setUnhiddenBy, setUrl, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
@@ -30,7 +30,7 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setTipe, setUnhiddenBy, setUrl, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setUnhiddenBy, setUrl, setValue, setWidth
 
 
 # Getters
@@ -80,7 +80,19 @@ import Time
 --TODO: Determine which params need to be mandatory, and need to be passed into mk
 
 
-{-| -}
+{-| Makes an input field, defaulting to text input.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+  - `setEmail`
+  - `setPhone`
+  - `setUrl`
+  - `setTextArea`
+
+If setEmail is used, `setForbiddenEmailDomains` can additionally be used in lieu of `setRegexValidation` for convenience.
+
+-}
 mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
 mkInput setters =
     simpleFieldDefaults
@@ -89,7 +101,14 @@ mkInput setters =
         << SimpleField
 
 
-{-| -}
+{-| Makes a date input field, defaulting to a DatePast type.
+
+In addition to the common builders, the following are available:
+
+  - `setDateOfBirth`
+  - `setDateFuture`
+
+-}
 mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
 mkDate setters =
     dateFieldDefaults
@@ -98,7 +117,24 @@ mkDate setters =
         << DateField
 
 
-{-| -}
+{-| Makes an age input field.
+-}
+mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
+mkAgeField setters =
+    ageFieldDefaults
+        |> setters
+        |> NumericField_
+        << AgeField
+
+
+{-| Makes a tag field.
+
+In addition to the common builders, the following are available:
+
+  - `setTagsInputBar String`
+  - `setPlaceholder (Maybe String)`
+
+-}
 mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
 mkTag setters =
     tagFieldDefaults
@@ -107,7 +143,8 @@ mkTag setters =
         << TagField
 
 
-{-| -}
+{-| Makes a checkbox field.
+-}
 mkCheckbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
 mkCheckbox setters =
     checkboxFieldDefaults
@@ -116,70 +153,15 @@ mkCheckbox setters =
         << CheckboxField
 
 
-{-| -}
-mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
-mkRadioBool setters =
-    radioBoolFieldDefaults
-        |> setters
-        |> BoolField_
-        << RadioBoolField
+{-| Makes a radio field. Initialises without options - make sure to add these using setOptions.
 
+In addition to the common builders, the following are available:
 
-{-| -}
-mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
-mkRadioEnum setters =
-    radioEnumFieldDefaults
-        |> setters
-        |> BoolField_
-        << RadioEnumField
+  - `setDefault String`
+  - `setOptions (List Option.Option)`
+  - `setDirection Direction.Direction`
 
-
-{-| -}
-mkSelect : (SelectFieldProperties -> SelectFieldProperties) -> Field
-mkSelect setters =
-    selectFieldDefaults
-        |> setters
-        |> StringField_
-        << SelectField
-
-
-{-| -}
-mkHttpSelect : (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
-mkHttpSelect setters =
-    httpSelectFieldDefaults
-        |> setters
-        |> StringField_
-        << HttpSelectField
-
-
-{-| -}
-mkMultiSelect : (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
-mkMultiSelect setters =
-    multiSelectFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << MultiSelectField
-
-
-{-| -}
-mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
-mkSearchableMultiSelect setters =
-    searchableMultiSelectFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << SearchableMultiSelectField
-
-
-{-| -}
-mkMultiHttpSelect : (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
-mkMultiHttpSelect setters =
-    multiHttpSelectFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << MultiHttpSelectField
-
-
-{-| -}
+-}
 mkRadio : (RadioFieldProperties -> RadioFieldProperties) -> Field
 mkRadio setters =
     radioFieldDefaults
@@ -188,13 +170,117 @@ mkRadio setters =
         << RadioField
 
 
-{-| -}
-mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
-mkAgeField setters =
-    ageFieldDefaults
+{-| Makes a boolean radio field.
+-}
+mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
+mkRadioBool setters =
+    radioBoolFieldDefaults
         |> setters
-        |> NumericField_
-        << AgeField
+        |> BoolField_
+        << RadioBoolField
+
+
+{-| Makes a radio field for selection of enumerables. Initialises without options - make sure to add these using setOptions.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault RadioEnum.Value`
+  - `setOptions (List RadioEnum.Value)`
+
+-}
+mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
+mkRadioEnum setters =
+    radioEnumFieldDefaults
+        |> setters
+        |> BoolField_
+        << RadioEnumField
+
+
+{-| Makes a drop-down select field. Initialises without options - make sure to add these using setOptions.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+  - `setSelectablePlaceholder`
+
+-}
+mkSelect : (SelectFieldProperties -> SelectFieldProperties) -> Field
+mkSelect setters =
+    selectFieldDefaults
+        |> setters
+        |> StringField_
+        << SelectField
+
+
+{-| Makes a remotely fetched drop-down select field. Make sure to set the remote URL.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option))`
+  - `setPlaceholder String`
+  - `setUrl String`
+  - `setSelectablePlaceholder`
+
+-}
+mkHttpSelect : (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
+mkHttpSelect setters =
+    httpSelectFieldDefaults
+        |> setters
+        |> StringField_
+        << HttpSelectField
+
+
+{-| Makes a multi select field. Make sure to set options.
+
+In addition to the common builders, the following are available:
+
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+
+-}
+mkMultiSelect : (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
+mkMultiSelect setters =
+    multiSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << MultiSelectField
+
+
+{-| Makes a searchable multi select field. Make sure to set the options and searchable options if required.
+
+In addition to the common builders, the following are available:
+
+  - `setOptions (List Option.Option)`
+  - `setSearchableOptions (List Option.Option)`
+  - `setPlaceholder String`
+
+-}
+mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
+mkSearchableMultiSelect setters =
+    searchableMultiSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << SearchableMultiSelectField
+
+
+{-| Makes a remotely fetched multi select field. Make sure to set the remote URL.
+
+In addition to the common builders, the following are available:
+
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+  - `setUrl String`
+
+-}
+mkMultiHttpSelect : (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
+mkMultiHttpSelect setters =
+    multiHttpSelectFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << MultiHttpSelectField
 
 
 
@@ -273,7 +359,8 @@ setTagsInputBar inputBar field =
     { field | inputBar = inputBar }
 
 
-{-| -}
+{-| This shouldn't be exposed for safety purposes - make custom builders instead.
+-}
 setTipe : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
 setTipe tipe field =
     { field | tipe = tipe }
@@ -286,9 +373,9 @@ setValue value field =
 
 
 {-| -}
-setDefault : d -> FieldProperties { a | default : d } -> FieldProperties { a | default : d }
+setDefault : d -> FieldProperties { a | default : Maybe d } -> FieldProperties { a | default : Maybe d }
 setDefault default field =
-    { field | default = default }
+    { field | default = Just default }
 
 
 {-| -}
