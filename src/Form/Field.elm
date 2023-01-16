@@ -91,6 +91,17 @@ In addition to the common builders, the following are available:
 
 If setEmail is used, `setForbiddenEmailDomains` can additionally be used in lieu of `setRegexValidation` for convenience.
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
 mkInput setters =
@@ -107,6 +118,17 @@ In addition to the common builders, the following are available:
   - `setDateOfBirth`
   - `setDateFuture`
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
 mkDate setters =
@@ -117,6 +139,18 @@ mkDate setters =
 
 
 {-| Makes an age input field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
 mkAgeField setters =
@@ -133,6 +167,17 @@ In addition to the common builders, the following are available:
   - `setTagsInputBar String`
   - `setPlaceholder (Maybe String)`
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
 mkTag setters =
@@ -143,6 +188,18 @@ mkTag setters =
 
 
 {-| Makes a checkbox field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkCheckbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
 mkCheckbox setters =
@@ -162,6 +219,17 @@ In addition to the common builders, the following are available:
 
 A list of options needs to be passed in, but setters passed in will override these.
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkRadio : List Option.Option -> (RadioFieldProperties -> RadioFieldProperties) -> Field
 mkRadio options setters =
@@ -173,6 +241,18 @@ mkRadio options setters =
 
 
 {-| Makes a boolean radio field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
 mkRadioBool setters =
@@ -188,6 +268,17 @@ In addition to the common builders, the following are available:
 
   - `setDefault RadioEnum.Value`
   - `setOptions (List RadioEnum.Value)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
 
 -}
 mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
@@ -209,6 +300,17 @@ In addition to the common builders, the following are available:
 
 A list of options needs to be passed in, but setters passed in will override these.
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkSelect : List Option.Option -> (SelectFieldProperties -> SelectFieldProperties) -> Field
 mkSelect options setters =
@@ -229,6 +331,17 @@ In addition to the common builders, the following are available:
   - `setRemoteUrl String`
   - `setSelectablePlaceholder`
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkHttpSelect : String -> (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
 mkHttpSelect url_ setters =
@@ -248,6 +361,17 @@ In addition to the common builders, the following are available:
 
 A list of options needs to be passed in, but setters passed in will override these.
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkMultiSelect : List Option.Option -> (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
 mkMultiSelect options setters =
@@ -266,6 +390,17 @@ In addition to the common builders, the following are available:
   - `setSearchableOptions (List Option.Option)`
   - `setPlaceholder String`
 
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
 -}
 mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
 mkSearchableMultiSelect setters =
@@ -282,6 +417,17 @@ In addition to the common builders, the following are available:
   - `setOptions (List Option.Option)`
   - `setPlaceholder String`
   - `setRemoteUrl String`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
 
 -}
 mkMultiHttpSelect : String -> (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
@@ -328,15 +474,15 @@ setOrder order field =
 
 
 {-| -}
-setDisabled : Bool -> FieldProperties a -> FieldProperties a
-setDisabled disabled field =
-    { field | disabled = disabled }
+setDisabled : FieldProperties a -> FieldProperties a
+setDisabled field =
+    { field | disabled = True }
 
 
 {-| -}
-setHidden : Bool -> FieldProperties a -> FieldProperties a
-setHidden hidden field =
-    { field | hidden = hidden }
+setHidden : FieldProperties a -> FieldProperties a
+setHidden field =
+    { field | hidden = True }
 
 
 {-| -}
