@@ -6,7 +6,6 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , mkEmail, mkPhone, mkText, mkUrl
     )
 
 {-| Field type and helper functions
@@ -84,9 +83,9 @@ setWidth_ width field =
     { field | width = width }
 
 
-setEnabledBy_ : Maybe String -> FieldProperties a -> FieldProperties a
+setEnabledBy_ : String -> FieldProperties a -> FieldProperties a
 setEnabledBy_ enabledBy field =
-    { field | enabledBy = enabledBy }
+    { field | enabledBy = Just enabledBy }
 
 
 setOrder_ : Int -> FieldProperties a -> FieldProperties a
@@ -104,9 +103,9 @@ setHidden_ hidden field =
     { field | hidden = hidden }
 
 
-setUnhiddenBy_ : Maybe String -> FieldProperties a -> FieldProperties a
+setUnhiddenBy_ : String -> FieldProperties a -> FieldProperties a
 setUnhiddenBy_ unhiddenBy field =
-    { field | unhiddenBy = unhiddenBy }
+    { field | unhiddenBy = Just unhiddenBy }
 
 
 
@@ -129,17 +128,17 @@ setForbiddenEmailDomains_ forbiddenDomains field =
     }
 
 
-setTipe_ : FieldType.SimpleFieldType -> SimpleFieldProperties -> SimpleFieldProperties
+
+-- these are type constrained by the defaults and mk functions
+
+
+setTipe_ : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
 setTipe_ tipe field =
     { field | tipe = tipe }
 
 
-
--- STRINGFIELDPROPERTIES
-
-
-setStringFieldValue_ : String -> StringFieldProperties a -> StringFieldProperties a
-setStringFieldValue_ value field =
+setValue_ : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
+setValue_ value field =
     { field | value = value }
 
 
@@ -163,67 +162,88 @@ simpleFieldDefaults =
     }
 
 
-mkText : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkText setters =
+dateFieldDefaults : DateFieldProperties
+dateFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , tipe = FieldType.DatePast
+    , value = ""
+    , parsedDate = Nothing
+    }
+
+
+{-| Text input by default, use setEmail\_, setPhone\_, setUrl\_, setTextArea\_ helpers to change
+-}
+mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkInput setters =
     simpleFieldDefaults
         |> setters
         |> StringField_
         << SimpleField
 
 
-mkEmail : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkEmail setters =
-    simpleFieldDefaults
-        |> setTipe_ FieldType.Email
-        << setters
+setEmail_ : SimpleFieldProperties -> SimpleFieldProperties
+setEmail_ =
+    setTipe_ FieldType.Email
+
+
+setPhone_ : SimpleFieldProperties -> SimpleFieldProperties
+setPhone_ =
+    setTipe_ FieldType.Phone
+
+
+setUrl_ : SimpleFieldProperties -> SimpleFieldProperties
+setUrl_ =
+    setTipe_ FieldType.Url
+
+
+setTextArea_ : SimpleFieldProperties -> SimpleFieldProperties
+setTextArea_ =
+    setTipe_ FieldType.TextArea
+
+
+mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
+mkDate setters =
+    dateFieldDefaults
+        |> setters
         |> StringField_
-        << SimpleField
+        << DateField
 
 
-mkPhone : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkPhone setters =
-    simpleFieldDefaults
-        |> setTipe_ FieldType.Phone
-        << setters
-        |> StringField_
-        << SimpleField
+setDateOfBirth_ : DateFieldProperties -> DateFieldProperties
+setDateOfBirth_ =
+    setTipe_ FieldType.DateOfBirth
 
 
-mkUrl : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkUrl setters =
-    simpleFieldDefaults
-        |> setTipe_ FieldType.Url
-        << setters
-        |> StringField_
-        << SimpleField
-
-
-mkTextArea : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkTextArea setters =
-    simpleFieldDefaults
-        |> setTipe_ FieldType.TextArea
-        << setters
-        |> StringField_
-        << SimpleField
+setDateFuture_ : DateFieldProperties -> DateFieldProperties
+setDateFuture_ =
+    setTipe_ FieldType.DateFuture
 
 
 
 -- textSample : Field
 -- textSample =
---     mkText <|
+--     mkInput <|
 --         setLabel_ "Text"
 --             >> setRegexValidation_ []
 --             >> setOrder_ 123
 --             >> setWidth_ Width.HalfSize
---             >> setStringFieldValue_ "test"
+--             >> setValue_ "test"
 -- emailSample : Field
 -- emailSample =
---     mkEmail <|
---         setLabel_ "Email"
+--     mkInput <|
+--         setEmail_
+--             >> setLabel_ "Email"
 --             >> setForbiddenEmailDomains_ [ { domain = "test.com", message = "No work emails" } ]
 --             >> setOrder_ 123
 --             >> setWidth_ Width.HalfSize
---             >> setStringFieldValue_ "test"
+--             >> setValue_ "123"
 -- END
 
 
