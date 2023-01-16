@@ -64,95 +64,7 @@ import Time
 
 
 
--- SETTERS
 -- FIELDPROPERTIES A
-
-
-setRequired_ : Required.IsRequired -> FieldProperties a -> FieldProperties a
-setRequired_ required field =
-    { field | required = required }
-
-
-setLabel_ : String -> FieldProperties a -> FieldProperties a
-setLabel_ label field =
-    { field | label = label }
-
-
-setWidth_ : Width.Width -> FieldProperties a -> FieldProperties a
-setWidth_ width field =
-    { field | width = width }
-
-
-setEnabledBy_ : String -> FieldProperties a -> FieldProperties a
-setEnabledBy_ enabledBy field =
-    { field | enabledBy = Just enabledBy }
-
-
-setOrder_ : Int -> FieldProperties a -> FieldProperties a
-setOrder_ order field =
-    { field | order = order }
-
-
-setDisabled_ : Bool -> FieldProperties a -> FieldProperties a
-setDisabled_ disabled field =
-    { field | disabled = disabled }
-
-
-setHidden_ : Bool -> FieldProperties a -> FieldProperties a
-setHidden_ hidden field =
-    { field | hidden = hidden }
-
-
-setUnhiddenBy_ : String -> FieldProperties a -> FieldProperties a
-setUnhiddenBy_ unhiddenBy field =
-    { field | unhiddenBy = Just unhiddenBy }
-
-
-
--- SIMPLEFIELDPROPERTIES
-
-
-setRegexValidation_ : List RegexValidation.RegexValidation -> SimpleFieldProperties -> SimpleFieldProperties
-setRegexValidation_ regexValidation field =
-    { field | regexValidation = regexValidation }
-
-
-setForbiddenEmailDomains_ : List EmailFormat.ForbiddenDomain -> SimpleFieldProperties -> SimpleFieldProperties
-setForbiddenEmailDomains_ forbiddenDomains field =
-    { field
-        | regexValidation =
-            RegexValidation.fromSuffixConstraints <|
-                List.map
-                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
-                    forbiddenDomains
-    }
-
-
-
--- TAGFIELDPROPERTIES
-
-
-setTagsInputBar_ : String -> TagFieldProperties -> TagFieldProperties
-setTagsInputBar_ inputBar field =
-    { field | inputBar = inputBar }
-
-
-setTipe_ : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
-setTipe_ tipe field =
-    { field | tipe = tipe }
-
-
-setValue_ : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
-setValue_ value field =
-    { field | value = value }
-
-
-setPlaceholder_ : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
-setPlaceholder_ placeholder field =
-    { field | placeholder = placeholder }
-
-
-
 -- DEFAULTS
 
 
@@ -204,6 +116,10 @@ tagFieldDefaults =
     }
 
 
+
+-- MAKERS
+
+
 {-| Text input by default, use setEmail\_, setPhone\_, setUrl\_, setTextArea\_ helpers to change
 -}
 mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
@@ -212,6 +128,102 @@ mkInput setters =
         |> setters
         |> StringField_
         << SimpleField
+
+
+mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
+mkDate setters =
+    dateFieldDefaults
+        |> setters
+        |> StringField_
+        << DateField
+
+
+mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
+mkTag setters =
+    tagFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << TagField
+
+
+
+-- SETTERS
+
+
+setRequired_ : Required.IsRequired -> FieldProperties a -> FieldProperties a
+setRequired_ required field =
+    { field | required = required }
+
+
+setLabel_ : String -> FieldProperties a -> FieldProperties a
+setLabel_ label field =
+    { field | label = label }
+
+
+setWidth_ : Width.Width -> FieldProperties a -> FieldProperties a
+setWidth_ width field =
+    { field | width = width }
+
+
+setEnabledBy_ : String -> FieldProperties a -> FieldProperties a
+setEnabledBy_ enabledBy field =
+    { field | enabledBy = Just enabledBy }
+
+
+setOrder_ : Int -> FieldProperties a -> FieldProperties a
+setOrder_ order field =
+    { field | order = order }
+
+
+setDisabled_ : Bool -> FieldProperties a -> FieldProperties a
+setDisabled_ disabled field =
+    { field | disabled = disabled }
+
+
+setHidden_ : Bool -> FieldProperties a -> FieldProperties a
+setHidden_ hidden field =
+    { field | hidden = hidden }
+
+
+setUnhiddenBy_ : String -> FieldProperties a -> FieldProperties a
+setUnhiddenBy_ unhiddenBy field =
+    { field | unhiddenBy = Just unhiddenBy }
+
+
+setRegexValidation_ : List RegexValidation.RegexValidation -> SimpleFieldProperties -> SimpleFieldProperties
+setRegexValidation_ regexValidation field =
+    { field | regexValidation = regexValidation }
+
+
+setForbiddenEmailDomains_ : List EmailFormat.ForbiddenDomain -> SimpleFieldProperties -> SimpleFieldProperties
+setForbiddenEmailDomains_ forbiddenDomains field =
+    { field
+        | regexValidation =
+            RegexValidation.fromSuffixConstraints <|
+                List.map
+                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                    forbiddenDomains
+    }
+
+
+setTagsInputBar_ : String -> TagFieldProperties -> TagFieldProperties
+setTagsInputBar_ inputBar field =
+    { field | inputBar = inputBar }
+
+
+setTipe_ : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
+setTipe_ tipe field =
+    { field | tipe = tipe }
+
+
+setValue_ : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
+setValue_ value field =
+    { field | value = value }
+
+
+setPlaceholder_ : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
+setPlaceholder_ placeholder field =
+    { field | placeholder = placeholder }
 
 
 setEmail_ : SimpleFieldProperties -> SimpleFieldProperties
@@ -234,14 +246,6 @@ setTextArea_ =
     setTipe_ FieldType.TextArea
 
 
-mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
-mkDate setters =
-    dateFieldDefaults
-        |> setters
-        |> StringField_
-        << DateField
-
-
 setDateOfBirth_ : DateFieldProperties -> DateFieldProperties
 setDateOfBirth_ =
     setTipe_ FieldType.DateOfBirth
@@ -250,14 +254,6 @@ setDateOfBirth_ =
 setDateFuture_ : DateFieldProperties -> DateFieldProperties
 setDateFuture_ =
     setTipe_ FieldType.DateFuture
-
-
-mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
-mkTag setters =
-    tagFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << TagField
 
 
 
