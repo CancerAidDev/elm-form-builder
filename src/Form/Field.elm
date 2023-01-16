@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , mkEmail, mkPhone, mkText, mkUrl
     )
 
 {-| Field type and helper functions
@@ -64,7 +65,166 @@ import Time
 
 
 
--- change these to use a list of regexvalidations instead
+-- SETTERS
+-- FIELDPROPERTIES A
+
+
+setRequired_ : Required.IsRequired -> FieldProperties a -> FieldProperties a
+setRequired_ required field =
+    { field | required = required }
+
+
+setLabel_ : String -> FieldProperties a -> FieldProperties a
+setLabel_ label field =
+    { field | label = label }
+
+
+setWidth_ : Width.Width -> FieldProperties a -> FieldProperties a
+setWidth_ width field =
+    { field | width = width }
+
+
+setEnabledBy_ : Maybe String -> FieldProperties a -> FieldProperties a
+setEnabledBy_ enabledBy field =
+    { field | enabledBy = enabledBy }
+
+
+setOrder_ : Int -> FieldProperties a -> FieldProperties a
+setOrder_ order field =
+    { field | order = order }
+
+
+setDisabled_ : Bool -> FieldProperties a -> FieldProperties a
+setDisabled_ disabled field =
+    { field | disabled = disabled }
+
+
+setHidden_ : Bool -> FieldProperties a -> FieldProperties a
+setHidden_ hidden field =
+    { field | hidden = hidden }
+
+
+setUnhiddenBy_ : Maybe String -> FieldProperties a -> FieldProperties a
+setUnhiddenBy_ unhiddenBy field =
+    { field | unhiddenBy = unhiddenBy }
+
+
+
+-- SIMPLEFIELDPROPERTIES
+
+
+setRegexValidation_ : List RegexValidation.RegexValidation -> SimpleFieldProperties -> SimpleFieldProperties
+setRegexValidation_ regexValidation field =
+    { field | regexValidation = regexValidation }
+
+
+setForbiddenEmailDomains_ : List EmailFormat.ForbiddenDomain -> SimpleFieldProperties -> SimpleFieldProperties
+setForbiddenEmailDomains_ forbiddenDomains field =
+    { field
+        | regexValidation =
+            RegexValidation.fromSuffixConstraints <|
+                List.map
+                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                    forbiddenDomains
+    }
+
+
+setTipe_ : FieldType.SimpleFieldType -> SimpleFieldProperties -> SimpleFieldProperties
+setTipe_ tipe field =
+    { field | tipe = tipe }
+
+
+
+-- STRINGFIELDPROPERTIES
+
+
+setStringFieldValue_ : String -> StringFieldProperties a -> StringFieldProperties a
+setStringFieldValue_ value field =
+    { field | value = value }
+
+
+
+-- DEFAULTS
+
+
+simpleFieldDefaults : SimpleFieldProperties
+simpleFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , regexValidation = []
+    , tipe = FieldType.Text
+    , value = ""
+    }
+
+
+mkText : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkText setters =
+    simpleFieldDefaults
+        |> setters
+        |> StringField_
+        << SimpleField
+
+
+mkEmail : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkEmail setters =
+    simpleFieldDefaults
+        |> setTipe_ FieldType.Email
+        << setters
+        |> StringField_
+        << SimpleField
+
+
+mkPhone : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkPhone setters =
+    simpleFieldDefaults
+        |> setTipe_ FieldType.Phone
+        << setters
+        |> StringField_
+        << SimpleField
+
+
+mkUrl : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkUrl setters =
+    simpleFieldDefaults
+        |> setTipe_ FieldType.Url
+        << setters
+        |> StringField_
+        << SimpleField
+
+
+mkTextArea : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+mkTextArea setters =
+    simpleFieldDefaults
+        |> setTipe_ FieldType.TextArea
+        << setters
+        |> StringField_
+        << SimpleField
+
+
+
+-- textSample : Field
+-- textSample =
+--     mkText <|
+--         setLabel_ "Text"
+--             >> setRegexValidation_ []
+--             >> setOrder_ 123
+--             >> setWidth_ Width.HalfSize
+--             >> setStringFieldValue_ "test"
+-- emailSample : Field
+-- emailSample =
+--     mkEmail <|
+--         setLabel_ "Email"
+--             >> setForbiddenEmailDomains_ [ { domain = "test.com", message = "No work emails" } ]
+--             >> setOrder_ 123
+--             >> setWidth_ Width.HalfSize
+--             >> setStringFieldValue_ "test"
+-- END
 
 
 {-| -}
