@@ -65,234 +65,7 @@ import Time
 
 
 
--- FIELDPROPERTIES A
--- DEFAULTS
-
-
-simpleFieldDefaults : SimpleFieldProperties
-simpleFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , regexValidation = []
-    , tipe = FieldType.Text
-    , value = ""
-    }
-
-
-dateFieldDefaults : DateFieldProperties
-dateFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , tipe = FieldType.DatePast
-    , value = ""
-    , parsedDate = Nothing
-    }
-
-
-tagFieldDefaults : TagFieldProperties
-tagFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Set.empty
-    , inputBar = ""
-    , placeholder = Nothing
-    }
-
-
-checkboxFieldDefaults : CheckboxFieldProperties
-checkboxFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = False
-    , tipe = FieldType.Checkbox
-    }
-
-
-radioBoolFieldDefaults : RadioBoolFieldProperties
-radioBoolFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Nothing
-    }
-
-
-radioEnumFieldDefaults : RadioEnumFieldProperties
-radioEnumFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Nothing
-    , default = Nothing
-    , options = []
-    }
-
-
-selectFieldDefaults : SelectFieldProperties
-selectFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = ""
-    , default = Nothing
-    , options = []
-    , placeholder = ""
-    , hasSelectablePlaceholder = False
-    }
-
-
-httpSelectFieldDefaults : HttpSelectFieldProperties
-httpSelectFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = ""
-    , url = ""
-    , default = Nothing
-    , options = RemoteData.NotAsked
-    , placeholder = ""
-    , hasSelectablePlaceholder = False
-    }
-
-
-multiSelectFieldDefaults : MultiSelectFieldProperties {}
-multiSelectFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Set.empty
-    , options = []
-    , placeholder = ""
-    , showDropdown = False
-    }
-
-
-searchableMultiSelectFieldDefaults : SearchableMultiSelectFieldProperties
-searchableMultiSelectFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Set.empty
-    , options = []
-    , placeholder = ""
-    , showDropdown = False
-    , searchableOptions = []
-    , searchInput = ""
-    }
-
-
-multiHttpSelectFieldDefaults : MultiHttpSelectFieldProperties
-multiHttpSelectFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Set.empty
-    , options = RemoteData.NotAsked
-    , placeholder = ""
-    , showDropdown = False
-    , url = ""
-    }
-
-
-radioFieldDefaults : RadioFieldProperties
-radioFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = ""
-    , default = Nothing
-    , options = []
-    , direction = Direction.Column
-    }
-
-
-ageFieldDefaults : AgeFieldProperties
-ageFieldDefaults =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Nothing
-    }
-
-
-
 -- MAKERS
-
-
-{-| Text input by default, use setEmail\_, setPhone\_, setUrl\_, setTextArea\_ helpers to change
--}
-
-
-
 --TODO: Determine which params need to be mandatory, and need to be passed into mk
 
 
@@ -538,6 +311,229 @@ setDateFuture =
 setDirection : Direction.Direction -> RadioFieldProperties -> RadioFieldProperties
 setDirection direction field =
     { field | direction = direction }
+
+
+
+-- DEFAULTS
+
+
+simpleFieldDefaults : SimpleFieldProperties
+simpleFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , regexValidation = []
+    , tipe = FieldType.Text
+    , value = ""
+    }
+
+
+dateFieldDefaults : DateFieldProperties
+dateFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , tipe = FieldType.DatePast
+    , value = ""
+    , parsedDate = Nothing
+    }
+
+
+tagFieldDefaults : TagFieldProperties
+tagFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , inputBar = ""
+    , placeholder = Nothing
+    }
+
+
+checkboxFieldDefaults : CheckboxFieldProperties
+checkboxFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = False
+    , tipe = FieldType.Checkbox
+    }
+
+
+radioBoolFieldDefaults : RadioBoolFieldProperties
+radioBoolFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+radioEnumFieldDefaults : RadioEnumFieldProperties
+radioEnumFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , default = Nothing
+    , options = []
+    }
+
+
+selectFieldDefaults : SelectFieldProperties
+selectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
+
+
+httpSelectFieldDefaults : HttpSelectFieldProperties
+httpSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , url = ""
+    , default = Nothing
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
+
+
+multiSelectFieldDefaults : MultiSelectFieldProperties {}
+multiSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    }
+
+
+searchableMultiSelectFieldDefaults : SearchableMultiSelectFieldProperties
+searchableMultiSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    , searchableOptions = []
+    , searchInput = ""
+    }
+
+
+multiHttpSelectFieldDefaults : MultiHttpSelectFieldProperties
+multiHttpSelectFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , showDropdown = False
+    , url = ""
+    }
+
+
+radioFieldDefaults : RadioFieldProperties
+radioFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , direction = Direction.Column
+    }
+
+
+ageFieldDefaults : AgeFieldProperties
+ageFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+
+-- TYPES
 
 
 {-| -}
