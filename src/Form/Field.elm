@@ -129,7 +129,12 @@ setForbiddenEmailDomains_ forbiddenDomains field =
 
 
 
--- these are type constrained by the defaults and mk functions
+-- TAGFIELDPROPERTIES
+
+
+setTagsInputBar_ : String -> TagFieldProperties -> TagFieldProperties
+setTagsInputBar_ inputBar field =
+    { field | inputBar = inputBar }
 
 
 setTipe_ : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
@@ -140,6 +145,11 @@ setTipe_ tipe field =
 setValue_ : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
 setValue_ value field =
     { field | value = value }
+
+
+setPlaceholder_ : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
+setPlaceholder_ placeholder field =
+    { field | placeholder = placeholder }
 
 
 
@@ -175,6 +185,22 @@ dateFieldDefaults =
     , tipe = FieldType.DatePast
     , value = ""
     , parsedDate = Nothing
+    }
+
+
+tagFieldDefaults : TagFieldProperties
+tagFieldDefaults =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , inputBar = ""
+    , placeholder = Nothing
     }
 
 
@@ -226,6 +252,14 @@ setDateFuture_ =
     setTipe_ FieldType.DateFuture
 
 
+mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
+mkTag setters =
+    tagFieldDefaults
+        |> setters
+        |> MultiStringField_
+        << TagField
+
+
 
 -- textSample : Field
 -- textSample =
@@ -267,7 +301,7 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
 
 
 {-| -}
-tag : TagFieldProperties {} -> Field
+tag : TagFieldProperties -> Field
 tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, placeholder } =
     MultiStringField_ <|
         TagField
@@ -528,7 +562,7 @@ type MultiStringField
     = MultiSelectField (MultiSelectFieldProperties {})
     | SearchableMultiSelectField SearchableMultiSelectFieldProperties
     | MultiHttpSelectField MultiHttpSelectFieldProperties
-    | TagField (TagFieldProperties {})
+    | TagField TagFieldProperties
 
 
 {-| -}
@@ -559,11 +593,10 @@ type alias StringFieldProperties a =
 
 
 {-| -}
-type alias TagFieldProperties a =
+type alias TagFieldProperties =
     MultiStringFieldProperties
-        { a
-            | inputBar : String
-            , placeholder : Maybe String
+        { inputBar : String
+        , placeholder : Maybe String
         }
 
 

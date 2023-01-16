@@ -191,7 +191,7 @@ textarea key field =
         []
 
 
-tag : String -> Field.TagFieldProperties {} -> Html.Html Msg.Msg
+tag : String -> Field.TagFieldProperties -> Html.Html Msg.Msg
 tag key field =
     let
         addMsg : Msg.Msg
