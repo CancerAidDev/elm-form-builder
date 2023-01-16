@@ -1,7 +1,7 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
-    , mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag
+    , age, checkbox, date, httpSelect, input, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
     , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setUnhiddenBy, setUrl, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
@@ -25,7 +25,7 @@ module Form.Field exposing
 
 # Constructors
 
-@docs mkAgeField, mkCheckbox, mkDate, mkHttpSelect, mkInput, mkMultiHttpSelect, mkMultiSelect, mkRadio, mkRadioBool, mkRadioEnum, mkSearchableMultiSelect, mkSelect, mkTag
+@docs age, checkbox, date, httpSelect, input, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
 
 
 # Construction Property Setters
@@ -103,8 +103,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkInput : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-mkInput setters =
+input : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+input setters =
     simpleFieldDefaults
         |> setters
         |> StringField_
@@ -130,8 +130,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkDate : (DateFieldProperties -> DateFieldProperties) -> Field
-mkDate setters =
+date : (DateFieldProperties -> DateFieldProperties) -> Field
+date setters =
     dateFieldDefaults
         |> setters
         |> StringField_
@@ -152,8 +152,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkAgeField : (AgeFieldProperties -> AgeFieldProperties) -> Field
-mkAgeField setters =
+age : (AgeFieldProperties -> AgeFieldProperties) -> Field
+age setters =
     ageFieldDefaults
         |> setters
         |> NumericField_
@@ -179,8 +179,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkTag : (TagFieldProperties -> TagFieldProperties) -> Field
-mkTag setters =
+tag : (TagFieldProperties -> TagFieldProperties) -> Field
+tag setters =
     tagFieldDefaults
         |> setters
         |> MultiStringField_
@@ -201,8 +201,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkCheckbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
-mkCheckbox setters =
+checkbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
+checkbox setters =
     checkboxFieldDefaults
         |> setters
         |> BoolField_
@@ -231,8 +231,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkRadio : List Option.Option -> (RadioFieldProperties -> RadioFieldProperties) -> Field
-mkRadio options setters =
+radio : List Option.Option -> (RadioFieldProperties -> RadioFieldProperties) -> Field
+radio options setters =
     radioFieldDefaults
         |> setters
         << setOptions options
@@ -254,8 +254,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkRadioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
-mkRadioBool setters =
+radioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
+radioBool setters =
     radioBoolFieldDefaults
         |> setters
         |> BoolField_
@@ -281,8 +281,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkRadioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
-mkRadioEnum setters =
+radioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
+radioEnum setters =
     radioEnumFieldDefaults
         |> setters
         |> BoolField_
@@ -312,8 +312,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkSelect : List Option.Option -> (SelectFieldProperties -> SelectFieldProperties) -> Field
-mkSelect options setters =
+select : List Option.Option -> (SelectFieldProperties -> SelectFieldProperties) -> Field
+select options setters =
     selectFieldDefaults
         |> setters
         << setOptions options
@@ -343,8 +343,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkHttpSelect : String -> (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
-mkHttpSelect url_ setters =
+httpSelect : String -> (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
+httpSelect url_ setters =
     httpSelectFieldDefaults
         |> setters
         << setRemoteUrl url_
@@ -373,8 +373,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkMultiSelect : List Option.Option -> (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
-mkMultiSelect options setters =
+multiSelect : List Option.Option -> (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
+multiSelect options setters =
     multiSelectFieldDefaults
         |> setters
         << setOptions options
@@ -402,8 +402,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkSearchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
-mkSearchableMultiSelect setters =
+searchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
+searchableMultiSelect setters =
     searchableMultiSelectFieldDefaults
         |> setters
         |> MultiStringField_
@@ -430,8 +430,8 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-mkMultiHttpSelect : String -> (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
-mkMultiHttpSelect url_ setters =
+multiHttpSelect : String -> (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
+multiHttpSelect url_ setters =
     multiHttpSelectFieldDefaults
         |> setters
         << setRemoteUrl url_
@@ -1231,10 +1231,10 @@ updateMultiStringOption option checked field =
 
 {-| -}
 updateSearchableMultiselectInput : String -> Field -> Field
-updateSearchableMultiselectInput input field =
+updateSearchableMultiselectInput input_ field =
     case field of
         MultiStringField_ (SearchableMultiSelectField properties) ->
-            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
+            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input_ })
 
         _ ->
             field
@@ -1418,10 +1418,10 @@ updateTagsValue addTag value field =
 
 {-| -}
 updateTagsInputBarValue : String -> Field -> Field
-updateTagsInputBarValue input field =
+updateTagsInputBarValue input_ field =
     case field of
         MultiStringField_ (TagField properties) ->
-            MultiStringField_ (TagField { properties | inputBar = input })
+            MultiStringField_ (TagField { properties | inputBar = input_ })
 
         _ ->
             field

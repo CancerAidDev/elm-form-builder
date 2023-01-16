@@ -14,14 +14,14 @@ fields : FormFields.Fields
 fields =
     [ \order ->
         ( "Uneditable"
-        , FormField.mkInput <|
+        , FormField.input <|
             FormField.setLabel "Uneditable Field"
                 >> FormField.setOrder order
                 >> FormField.setDisabled
         )
     , \order ->
         ( "not a valid email field"
-        , FormField.mkInput <|
+        , FormField.input <|
             FormField.setEmail
                 >> FormField.setLabel "Not relevant Email Address"
                 >> FormField.setOrder order
@@ -31,7 +31,7 @@ fields =
         ( "name"
         , case Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" of
             Nothing ->
-                FormField.mkInput <|
+                FormField.input <|
                     FormField.setIsRequired IsRequired.Yes
                         >> FormField.setLabel "Full Name"
                         >> FormField.setOrder order
@@ -39,7 +39,7 @@ fields =
                         >> FormField.setDisabled
 
             Just regex ->
-                FormField.mkInput <|
+                FormField.input <|
                     FormField.setIsRequired IsRequired.Yes
                         >> FormField.setLabel "Full Name"
                         >> FormField.setOrder order
@@ -52,7 +52,7 @@ fields =
     , \order ->
         ( "email"
           -- forbid emails from bigcompany.com or bigorganisation.org
-        , FormField.mkInput <|
+        , FormField.input <|
             FormField.setEmail
                 >> FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Email Address"
@@ -68,7 +68,7 @@ fields =
         )
     , \order ->
         ( "secondaryEmail"
-        , FormField.mkInput <|
+        , FormField.input <|
             FormField.setEmail
                 >> FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Secondary Email Address"
@@ -76,7 +76,7 @@ fields =
         )
     , \order ->
         ( "phone"
-        , FormField.mkInput <|
+        , FormField.input <|
             FormField.setPhone
                 >> FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Phone"
@@ -84,14 +84,14 @@ fields =
         )
     , \order ->
         ( "age"
-        , FormField.mkAgeField <|
+        , FormField.age <|
             FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Age"
                 >> FormField.setOrder order
         )
     , \order ->
         ( "dateOfBirth"
-        , FormField.mkDate <|
+        , FormField.date <|
             FormField.setDateOfBirth
                 >> FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Date of Birth"
@@ -99,14 +99,14 @@ fields =
         )
     , \order ->
         ( "datePast"
-        , FormField.mkDate <|
+        , FormField.date <|
             FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Claim Started"
                 >> FormField.setOrder order
         )
     , \order ->
         ( "dateFuture"
-        , FormField.mkDate <|
+        , FormField.date <|
             FormField.setDateFuture
                 >> FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Start Date"
@@ -114,7 +114,7 @@ fields =
         )
     , \order ->
         ( "something"
-        , FormField.mkSelect
+        , FormField.select
             [ { label = Nothing, value = "One" }
             , { label = Nothing, value = "Two" }
             ]
@@ -138,7 +138,7 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
           in
-          FormField.mkSelect options <|
+          FormField.select options <|
             FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "State"
                 >> FormField.setOrder order
@@ -155,7 +155,7 @@ fields =
                 , { label = Nothing, value = "Cycle" }
                 ]
           in
-          FormField.mkMultiSelect options <|
+          FormField.multiSelect options <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "What modes of transport do you use?"
                 >> FormField.setOrder order
@@ -163,7 +163,7 @@ fields =
         )
     , \order ->
         ( "workdays"
-        , FormField.mkSearchableMultiSelect <|
+        , FormField.searchableMultiSelect <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "What days of the week do you work?"
                 >> FormField.setOrder order
@@ -189,7 +189,7 @@ fields =
                 , { label = Nothing, value = "Unsure" }
                 ]
           in
-          FormField.mkRadio options <|
+          FormField.radio options <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Are you up to date with your updates?"
                 >> FormField.setOrder order
@@ -197,14 +197,14 @@ fields =
         )
     , \order ->
         ( "newsletter"
-        , FormField.mkRadioBool <|
+        , FormField.radioBool <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Would you like to sign up to our newsletter?"
                 >> FormField.setOrder order
         )
     , \order ->
         ( "newsletterFreq"
-        , FormField.mkRadioBool <|
+        , FormField.radioBool <|
             FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "How often would you like to receive our newsletter?"
                 >> FormField.setOrder order
@@ -212,7 +212,7 @@ fields =
         )
     , \order ->
         ( "NewsletterTags"
-        , FormField.mkTag <|
+        , FormField.tag <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Newsletter Tags"
                 >> FormField.setOrder order

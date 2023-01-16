@@ -15,13 +15,13 @@ suite =
             \initialString updateString ->
                 let
                     field =
-                        Field.mkInput <|
+                        Field.input <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue initialString
                 in
                 Field.updateStringValue updateString field
                     |> Expect.equal
-                        (Field.mkInput <|
+                        (Field.input <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue updateString
                         )
@@ -29,7 +29,7 @@ suite =
             \option1 option2 ->
                 let
                     field =
-                        Field.mkRadio
+                        Field.radio
                             [ { label = Nothing, value = option1 }
                             , { label = Nothing, value = option2 }
                             ]
@@ -40,7 +40,7 @@ suite =
                 in
                 Field.updateStringValue option2 field
                     |> Expect.equal
-                        (Field.mkRadio
+                        (Field.radio
                             [ { label = Nothing, value = option1 }
                             , { label = Nothing, value = option2 }
                             ]
@@ -53,7 +53,7 @@ suite =
             \option1 option2 ->
                 let
                     field =
-                        Field.mkRadio
+                        Field.radio
                             [ { label = Nothing, value = option1 }
                             , { label = Nothing, value = option2 }
                             ]
@@ -64,7 +64,7 @@ suite =
                 in
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
-                        (Field.mkRadio
+                        (Field.radio
                             [ { label = Nothing, value = option1 }
                             , { label = Nothing, value = option2 }
                             ]
