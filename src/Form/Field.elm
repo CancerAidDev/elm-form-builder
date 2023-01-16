@@ -153,7 +153,7 @@ mkCheckbox setters =
         << CheckboxField
 
 
-{-| Makes a radio field. Initialises without options - make sure to add these using setOptions.
+{-| Makes a radio field.
 
 In addition to the common builders, the following are available:
 
@@ -161,11 +161,14 @@ In addition to the common builders, the following are available:
   - `setOptions (List Option.Option)`
   - `setDirection Direction.Direction`
 
+A list of options needs to be passed in, but setters passed in will override these.
+
 -}
-mkRadio : (RadioFieldProperties -> RadioFieldProperties) -> Field
-mkRadio setters =
+mkRadio : List Option.Option -> (RadioFieldProperties -> RadioFieldProperties) -> Field
+mkRadio options setters =
     radioFieldDefaults
         |> setters
+        << setOptions options
         |> StringField_
         << RadioField
 
@@ -180,7 +183,7 @@ mkRadioBool setters =
         << RadioBoolField
 
 
-{-| Makes a radio field for selection of Yes/No/N/A enums. Initialises without options - make sure to add these using setOptions.
+{-| Makes a radio field for selection of Yes/No/N/A enums, with all three as an option by default. Override with setOptions.
 
 In addition to the common builders, the following are available:
 
@@ -196,7 +199,7 @@ mkRadioEnum setters =
         << RadioEnumField
 
 
-{-| Makes a drop-down select field. Initialises without options - make sure to add these using setOptions.
+{-| Makes a drop-down select field from a list of options.
 
 In addition to the common builders, the following are available:
 
@@ -205,51 +208,58 @@ In addition to the common builders, the following are available:
   - `setPlaceholder String`
   - `setSelectablePlaceholder`
 
+A list of options needs to be passed in, but setters passed in will override these.
+
 -}
-mkSelect : (SelectFieldProperties -> SelectFieldProperties) -> Field
-mkSelect setters =
+mkSelect : List Option.Option -> (SelectFieldProperties -> SelectFieldProperties) -> Field
+mkSelect options setters =
     selectFieldDefaults
         |> setters
+        << setOptions options
         |> StringField_
         << SelectField
 
 
-{-| Makes a remotely fetched drop-down select field. Make sure to set the remote URL.
+{-| Makes a remotely fetched drop-down select field.
 
 In addition to the common builders, the following are available:
 
   - `setDefault String`
   - `setOptions (RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option))`
   - `setPlaceholder String`
-  - `setUrl String`
+  - `setRemoteUrl String`
   - `setSelectablePlaceholder`
 
 -}
-mkHttpSelect : (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
-mkHttpSelect setters =
+mkHttpSelect : String -> (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
+mkHttpSelect url_ setters =
     httpSelectFieldDefaults
         |> setters
+        << setRemoteUrl url_
         |> StringField_
         << HttpSelectField
 
 
-{-| Makes a multi select field. Make sure to set options.
+{-| Makes a multi select field from a list of options.
 
 In addition to the common builders, the following are available:
 
   - `setOptions (List Option.Option)`
   - `setPlaceholder String`
 
+A list of options needs to be passed in, but setters passed in will override these.
+
 -}
-mkMultiSelect : (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
-mkMultiSelect setters =
+mkMultiSelect : List Option.Option -> (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
+mkMultiSelect options setters =
     multiSelectFieldDefaults
         |> setters
+        << setOptions options
         |> MultiStringField_
         << MultiSelectField
 
 
-{-| Makes a searchable multi select field. Make sure to set the options and searchable options if required.
+{-| Makes a searchable multi select field, with two categories of options: searchable and non-searchable. Neither category is mandatory, so make sure to set at least one for the field to be useful.
 
 In addition to the common builders, the following are available:
 
@@ -266,19 +276,20 @@ mkSearchableMultiSelect setters =
         << SearchableMultiSelectField
 
 
-{-| Makes a remotely fetched multi select field. Make sure to set the remote URL.
+{-| Makes a remotely fetched multi select field.
 
 In addition to the common builders, the following are available:
 
   - `setOptions (List Option.Option)`
   - `setPlaceholder String`
-  - `setUrl String`
+  - `setRemoteUrl String`
 
 -}
-mkMultiHttpSelect : (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
-mkMultiHttpSelect setters =
+mkMultiHttpSelect : String -> (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
+mkMultiHttpSelect url_ setters =
     multiHttpSelectFieldDefaults
         |> setters
+        << setRemoteUrl url_
         |> MultiStringField_
         << MultiHttpSelectField
 
@@ -543,7 +554,7 @@ radioEnumFieldDefaults =
     , unhiddenBy = Nothing
     , value = Nothing
     , default = Nothing
-    , options = []
+    , options = [ RadioEnum.Yes, RadioEnum.No, RadioEnum.NA ]
     }
 
 

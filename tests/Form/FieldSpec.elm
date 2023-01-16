@@ -29,36 +29,48 @@ suite =
             \option1 option2 ->
                 let
                     field =
-                        Field.mkRadio <|
+                        Field.mkRadio
+                            [ { label = Nothing, value = option1 }
+                            , { label = Nothing, value = option2 }
+                            ]
+                        <|
                             Field.setValue option1
                                 >> Field.setWidth Width.HalfSize
                                 >> Field.setDirection Direction.Row
-                                >> Field.setOptions [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ]
                 in
                 Field.updateStringValue option2 field
                     |> Expect.equal
-                        (Field.mkRadio <|
+                        (Field.mkRadio
+                            [ { label = Nothing, value = option1 }
+                            , { label = Nothing, value = option2 }
+                            ]
+                         <|
                             Field.setValue option2
                                 >> Field.setWidth Width.HalfSize
                                 >> Field.setDirection Direction.Row
-                                >> Field.setOptions [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ]
                         )
         , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio " <|
             \option1 option2 ->
                 let
                     field =
-                        Field.mkRadio <|
+                        Field.mkRadio
+                            [ { label = Nothing, value = option1 }
+                            , { label = Nothing, value = option2 }
+                            ]
+                        <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue option1
                                 >> Field.setDirection Direction.Row
-                                >> Field.setOptions [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ]
                 in
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
-                        (Field.mkRadio <|
+                        (Field.mkRadio
+                            [ { label = Nothing, value = option1 }
+                            , { label = Nothing, value = option2 }
+                            ]
+                         <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue option2
                                 >> Field.setDirection Direction.Row
-                                >> Field.setOptions [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ]
                         )
         ]

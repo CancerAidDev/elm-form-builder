@@ -114,47 +114,51 @@ fields =
         )
     , \order ->
         ( "something"
-        , FormField.mkSelect <|
+        , FormField.mkSelect
+            [ { label = Nothing, value = "One" }
+            , { label = Nothing, value = "Two" }
+            ]
+          <|
             FormField.setLabel "Something"
                 >> FormField.setOrder order
-                >> FormField.setOptions
-                    [ { label = Nothing, value = "One" }
-                    , { label = Nothing, value = "Two" }
-                    ]
                 >> FormField.setDisabled True
                 >> FormField.setSelectablePlaceholder
         )
     , \order ->
         ( "state"
-        , FormField.mkSelect <|
+        , let
+            options =
+                [ { label = Nothing, value = "Australian Capital Territory" }
+                , { label = Nothing, value = "New South Wales" }
+                , { label = Nothing, value = "Northern Territory" }
+                , { label = Nothing, value = "Queensland" }
+                , { label = Nothing, value = "South Australian" }
+                , { label = Nothing, value = "Tasmania" }
+                , { label = Nothing, value = "Victorian" }
+                , { label = Nothing, value = "Western Australia" }
+                ]
+          in
+          FormField.mkSelect options <|
             FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "State"
                 >> FormField.setOrder order
-                >> FormField.setOptions
-                    [ { label = Nothing, value = "Australian Capital Territory" }
-                    , { label = Nothing, value = "New South Wales" }
-                    , { label = Nothing, value = "Northern Territory" }
-                    , { label = Nothing, value = "Queensland" }
-                    , { label = Nothing, value = "South Australian" }
-                    , { label = Nothing, value = "Tasmania" }
-                    , { label = Nothing, value = "Victorian" }
-                    , { label = Nothing, value = "Western Australia" }
-                    ]
                 >> FormField.setPlaceholder "State"
         )
     , \order ->
         ( "modes"
-        , FormField.mkMultiSelect <|
+        , let
+            options =
+                [ { label = Nothing, value = "Car" }
+                , { label = Nothing, value = "Tram" }
+                , { label = Nothing, value = "Bus" }
+                , { label = Nothing, value = "Train" }
+                , { label = Nothing, value = "Cycle" }
+                ]
+          in
+          FormField.mkMultiSelect options <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "What modes of transport do you use?"
                 >> FormField.setOrder order
-                >> FormField.setOptions
-                    [ { label = Nothing, value = "Car" }
-                    , { label = Nothing, value = "Tram" }
-                    , { label = Nothing, value = "Bus" }
-                    , { label = Nothing, value = "Train" }
-                    , { label = Nothing, value = "Cycle" }
-                    ]
                 >> FormField.setPlaceholder "Mode"
         )
     , \order ->
@@ -178,15 +182,17 @@ fields =
         )
     , \order ->
         ( "updates"
-        , FormField.mkRadio <|
+        , let
+            options =
+                [ { label = Nothing, value = "Yes" }
+                , { label = Nothing, value = "No" }
+                , { label = Nothing, value = "Unsure" }
+                ]
+          in
+          FormField.mkRadio options <|
             FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Are you up to date with your updates?"
                 >> FormField.setOrder order
-                >> FormField.setOptions
-                    [ { label = Nothing, value = "Yes" }
-                    , { label = Nothing, value = "No" }
-                    , { label = Nothing, value = "Unsure" }
-                    ]
                 >> FormField.setDirection Direction.Row
         )
     , \order ->
