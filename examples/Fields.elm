@@ -14,112 +14,123 @@ fields : FormFields.Fields
 fields =
     [ \order ->
         ( "Uneditable"
-        , FormField.text <|
-            FormField.setLabel "Uneditable Field"
-                >> FormField.setOrder order
-                >> FormField.setDisabled
+        , FormField.textDefault
+            |> FormField.setLabel "Uneditable Field"
+            |> FormField.setOrder order
+            |> FormField.setDisabled
+            |> FormField.text
         )
     , \order ->
         ( "not a valid email field"
-        , FormField.email <|
-            FormField.setLabel "Not relevant Email Address"
-                >> FormField.setOrder order
-                >> FormField.setDisabled
+        , FormField.emailDefault
+            |> FormField.setLabel "Not relevant Email Address"
+            |> FormField.setOrder order
+            |> FormField.setDisabled
+            |> FormField.email
         )
     , \order ->
         ( "name"
         , case Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" of
             Nothing ->
-                FormField.text <|
-                    FormField.setIsRequired IsRequired.Yes
-                        >> FormField.setLabel "Full Name"
-                        >> FormField.setOrder order
-                        >> FormField.setValue "Regex does not compile"
-                        >> FormField.setDisabled
+                FormField.textDefault
+                    |> FormField.setIsRequired IsRequired.Yes
+                    |> FormField.setLabel "Full Name"
+                    |> FormField.setOrder order
+                    |> FormField.setValue "Regex does not compile"
+                    |> FormField.setDisabled
+                    |> FormField.text
 
             Just regex ->
-                FormField.text <|
-                    FormField.setIsRequired IsRequired.Yes
-                        >> FormField.setLabel "Full Name"
-                        >> FormField.setOrder order
-                        >> FormField.setRegexValidation
-                            [ { pattern = regex
-                              , message = "Please enter your full name"
-                              }
-                            ]
+                FormField.textDefault
+                    |> FormField.setIsRequired IsRequired.Yes
+                    |> FormField.setLabel "Full Name"
+                    |> FormField.setOrder order
+                    |> FormField.setRegexValidation
+                        [ { pattern = regex
+                          , message = "Please enter your full name"
+                          }
+                        ]
+                    |> FormField.text
         )
     , \order ->
         ( "email"
           -- forbid emails from bigcompany.com or bigorganisation.org
-        , FormField.email <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "Email Address"
-                >> FormField.setOrder order
-                >> FormField.setForbiddenEmailDomains
-                    [ { domain = "bigcompany.com"
-                      , message = "Please don't use the company email address"
-                      }
-                    , { domain = "bigorganisation.org"
-                      , message = "Please don't use the organisation email address"
-                      }
-                    ]
+        , FormField.emailDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Email Address"
+            |> FormField.setOrder order
+            |> FormField.setForbiddenEmailDomains
+                [ { domain = "bigcompany.com"
+                  , message = "Please don't use the company email address"
+                  }
+                , { domain = "bigorganisation.org"
+                  , message = "Please don't use the organisation email address"
+                  }
+                ]
+            |> FormField.email
         )
     , \order ->
         ( "secondaryEmail"
-        , FormField.email <|
-            FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "Secondary Email Address"
-                >> FormField.setOrder order
+        , FormField.emailDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Secondary Email Address"
+            |> FormField.setOrder order
+            |> FormField.email
         )
     , \order ->
         ( "phone"
-        , FormField.phone <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "Phone"
-                >> FormField.setOrder order
+        , FormField.phoneDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Phone"
+            |> FormField.setOrder order
+            |> FormField.phone
         )
     , \order ->
         ( "age"
-        , FormField.age <|
-            FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "Age"
-                >> FormField.setOrder order
+        , FormField.ageDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Age"
+            |> FormField.setOrder order
+            |> FormField.age
         )
     , \order ->
         ( "dateOfBirth"
-        , FormField.date <|
-            FormField.setDateOfBirth
-                >> FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "Date of Birth"
-                >> FormField.setOrder order
+        , FormField.dateDefault
+            |> FormField.setDateOfBirth
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Date of Birth"
+            |> FormField.setOrder order
+            |> FormField.date
         )
     , \order ->
         ( "datePast"
-        , FormField.date <|
-            FormField.setDatePast
-                >> FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "Claim Started"
-                >> FormField.setOrder order
+        , FormField.dateDefault
+            |> FormField.setDatePast
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Claim Started"
+            |> FormField.setOrder order
+            |> FormField.date
         )
     , \order ->
         ( "dateFuture"
-        , FormField.date <|
-            FormField.setDateFuture
-                >> FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "Start Date"
-                >> FormField.setOrder order
+        , FormField.dateDefault
+            |> FormField.setDateFuture
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Start Date"
+            |> FormField.setOrder order
+            |> FormField.date
         )
     , \order ->
         ( "something"
-        , FormField.select
-            [ { label = Nothing, value = "One" }
-            , { label = Nothing, value = "Two" }
-            ]
-          <|
-            FormField.setLabel "Something"
-                >> FormField.setOrder order
-                >> FormField.setDisabled
-                >> FormField.setSelectablePlaceholder
+        , FormField.selectDefault
+            |> FormField.setLabel "Something"
+            |> FormField.setOrder order
+            |> FormField.setDisabled
+            |> FormField.setSelectablePlaceholder
+            |> FormField.select
+                [ { label = Nothing, value = "One" }
+                , { label = Nothing, value = "Two" }
+                ]
         )
     , \order ->
         ( "state"
@@ -135,11 +146,12 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
           in
-          FormField.select options <|
-            FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "State"
-                >> FormField.setOrder order
-                >> FormField.setPlaceholder "State"
+          FormField.selectDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "State"
+            |> FormField.setOrder order
+            |> FormField.setPlaceholder "State"
+            |> FormField.select options
         )
     , \order ->
         ( "modes"
@@ -152,30 +164,32 @@ fields =
                 , { label = Nothing, value = "Cycle" }
                 ]
           in
-          FormField.multiSelect options <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "What modes of transport do you use?"
-                >> FormField.setOrder order
-                >> FormField.setPlaceholder "Mode"
+          FormField.multiSelectDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "What modes of transport do you use?"
+            |> FormField.setOrder order
+            |> FormField.setPlaceholder "Mode"
+            |> FormField.multiSelect options
         )
     , \order ->
         ( "workdays"
-        , FormField.searchableMultiSelect <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "What days of the week do you work?"
-                >> FormField.setOrder order
-                >> FormField.setOptions
-                    [ { label = Just "Saturday", value = "Sat" }
-                    , { label = Just "Sunday", value = "Sun" }
-                    ]
-                >> FormField.setSearchableOptions
-                    [ { label = Just "Monday", value = "Mon" }
-                    , { label = Just "Tuesday", value = "Tue" }
-                    , { label = Just "Wednesday", value = "Wed" }
-                    , { label = Just "Thursday", value = "Thu" }
-                    , { label = Just "Friday", value = "Fri" }
-                    ]
-                >> FormField.setPlaceholder "Workdays"
+        , FormField.searchableMultiSelectDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "What days of the week do you work?"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                [ { label = Just "Saturday", value = "Sat" }
+                , { label = Just "Sunday", value = "Sun" }
+                ]
+            |> FormField.setSearchableOptions
+                [ { label = Just "Monday", value = "Mon" }
+                , { label = Just "Tuesday", value = "Tue" }
+                , { label = Just "Wednesday", value = "Wed" }
+                , { label = Just "Thursday", value = "Thu" }
+                , { label = Just "Friday", value = "Fri" }
+                ]
+            |> FormField.setPlaceholder "Workdays"
+            |> FormField.searchableMultiSelect
         )
     , \order ->
         ( "updates"
@@ -186,35 +200,39 @@ fields =
                 , { label = Nothing, value = "Unsure" }
                 ]
           in
-          FormField.radio options <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "Are you up to date with your updates?"
-                >> FormField.setOrder order
-                >> FormField.setDirection Direction.Row
+          FormField.radioDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Are you up to date with your updates?"
+            |> FormField.setOrder order
+            |> FormField.setDirection Direction.Row
+            |> FormField.radio options
         )
     , \order ->
         ( "newsletter"
-        , FormField.radioBool <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "Would you like to sign up to our newsletter?"
-                >> FormField.setOrder order
+        , FormField.radioBoolDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Would you like to sign up to our newsletter?"
+            |> FormField.setOrder order
+            |> FormField.radioBool
         )
     , \order ->
         ( "newsletterFreq"
-        , FormField.radioBool <|
-            FormField.setIsRequired IsRequired.Nullable
-                >> FormField.setLabel "How often would you like to receive our newsletter?"
-                >> FormField.setOrder order
-                >> FormField.setUnhiddenBy "newsletter"
+        , FormField.radioBoolDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "How often would you like to receive our newsletter?"
+            |> FormField.setOrder order
+            |> FormField.setUnhiddenBy "newsletter"
+            |> FormField.radioBool
         )
     , \order ->
         ( "NewsletterTags"
-        , FormField.tag <|
-            FormField.setIsRequired IsRequired.Yes
-                >> FormField.setLabel "Newsletter Tags"
-                >> FormField.setOrder order
-                >> FormField.setPlaceholder (Just "Add new tag...")
-                >> FormField.setValue (Set.fromList [ "Hello", "Goodbye", "Beta" ])
+        , FormField.tagDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Newsletter Tags"
+            |> FormField.setOrder order
+            |> FormField.setPlaceholder (Just "Add new tag...")
+            |> FormField.setValue (Set.fromList [ "Hello", "Goodbye", "Beta" ])
+            |> FormField.tag
         )
     ]
         |> List.indexedMap (\index field -> field index)

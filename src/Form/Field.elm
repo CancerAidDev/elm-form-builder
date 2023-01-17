@@ -1,6 +1,7 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+    , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag, url, phone, textArea, email
     , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
@@ -21,6 +22,11 @@ module Form.Field exposing
 # Properties
 
 @docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+
+
+# Default Properties
+
+@docs ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
@@ -98,12 +104,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-text : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-text setters =
-    simpleFieldDefaults
-        |> setters
-        |> StringField_
-        << SimpleField
+text : SimpleFieldProperties -> Field
+text =
+    StringField_ << SimpleField
 
 
 {-| Makes an email input field.
@@ -124,13 +127,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-email : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-email setters =
-    simpleFieldDefaults
-        |> setters
-        << setTipe FieldType.Email
-        |> StringField_
-        << SimpleField
+email : SimpleFieldProperties -> Field
+email =
+    StringField_ << SimpleField << setTipe FieldType.Email
 
 
 {-| Makes a phone field.
@@ -151,13 +150,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-phone : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-phone setters =
-    simpleFieldDefaults
-        |> setters
-        << setTipe FieldType.Phone
-        |> StringField_
-        << SimpleField
+phone : SimpleFieldProperties -> Field
+phone =
+    StringField_ << SimpleField << setTipe FieldType.Phone
 
 
 {-| Makes a url field.
@@ -178,13 +173,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-url : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-url setters =
-    simpleFieldDefaults
-        |> setters
-        << setTipe FieldType.Url
-        |> StringField_
-        << SimpleField
+url : SimpleFieldProperties -> Field
+url =
+    StringField_ << SimpleField << setTipe FieldType.Url
 
 
 {-| Makes a multiline text area field.
@@ -205,13 +196,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-textArea : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-textArea setters =
-    simpleFieldDefaults
-        |> setters
-        << setTipe FieldType.TextArea
-        |> StringField_
-        << SimpleField
+textArea : SimpleFieldProperties -> Field
+textArea =
+    StringField_ << SimpleField << setTipe FieldType.TextArea
 
 
 {-| Makes a date input field. By default, dates 100 years from the start of the Unix epoch (00:00:00 UTC on 1 January 1970) are allowed. Use setters to customise this.
@@ -236,12 +223,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-date : (DateFieldProperties -> DateFieldProperties) -> Field
-date setters =
-    dateFieldDefaults
-        |> setters
-        |> StringField_
-        << DateField
+date : DateFieldProperties -> Field
+date =
+    StringField_ << DateField
 
 
 {-| Makes an age input field.
@@ -258,12 +242,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-age : (AgeFieldProperties -> AgeFieldProperties) -> Field
-age setters =
-    ageFieldDefaults
-        |> setters
-        |> NumericField_
-        << AgeField
+age : AgeFieldProperties -> Field
+age =
+    NumericField_ << AgeField
 
 
 {-| Makes a tag field.
@@ -285,12 +266,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-tag : (TagFieldProperties -> TagFieldProperties) -> Field
-tag setters =
-    tagFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << TagField
+tag : TagFieldProperties -> Field
+tag =
+    MultiStringField_ << TagField
 
 
 {-| Makes a checkbox field.
@@ -307,12 +285,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-checkbox : (CheckboxFieldProperties -> CheckboxFieldProperties) -> Field
-checkbox setters =
-    checkboxFieldDefaults
-        |> setters
-        |> BoolField_
-        << CheckboxField
+checkbox : CheckboxFieldProperties -> Field
+checkbox =
+    BoolField_ << CheckboxField
 
 
 {-| Makes a radio field.
@@ -337,13 +312,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-radio : List Option.Option -> (RadioFieldProperties -> RadioFieldProperties) -> Field
-radio options setters =
-    radioFieldDefaults
-        |> setters
-        << setOptions options
-        |> StringField_
-        << RadioField
+radio : List Option.Option -> RadioFieldProperties -> Field
+radio options =
+    StringField_ << RadioField << setOptions options
 
 
 {-| Makes a boolean radio field.
@@ -360,12 +331,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-radioBool : (RadioBoolFieldProperties -> RadioBoolFieldProperties) -> Field
-radioBool setters =
-    radioBoolFieldDefaults
-        |> setters
-        |> BoolField_
-        << RadioBoolField
+radioBool : RadioBoolFieldProperties -> Field
+radioBool =
+    BoolField_ << RadioBoolField
 
 
 {-| Makes a radio field for selection of Yes/No/N/A enums, with all three as an option by default. Override with setOptions.
@@ -387,12 +355,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-radioEnum : (RadioEnumFieldProperties -> RadioEnumFieldProperties) -> Field
-radioEnum setters =
-    radioEnumFieldDefaults
-        |> setters
-        |> BoolField_
-        << RadioEnumField
+radioEnum : RadioEnumFieldProperties -> Field
+radioEnum =
+    BoolField_ << RadioEnumField
 
 
 {-| Makes a drop-down select field from a list of options.
@@ -418,13 +383,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-select : List Option.Option -> (SelectFieldProperties -> SelectFieldProperties) -> Field
-select options setters =
-    selectFieldDefaults
-        |> setters
-        << setOptions options
-        |> StringField_
-        << SelectField
+select : List Option.Option -> SelectFieldProperties -> Field
+select options =
+    StringField_ << SelectField << setOptions options
 
 
 {-| Makes a remotely fetched drop-down select field.
@@ -449,13 +410,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-httpSelect : String -> (HttpSelectFieldProperties -> HttpSelectFieldProperties) -> Field
-httpSelect url_ setters =
-    httpSelectFieldDefaults
-        |> setters
-        << setRemoteUrl url_
-        |> StringField_
-        << HttpSelectField
+httpSelect : String -> HttpSelectFieldProperties -> Field
+httpSelect url_ =
+    StringField_ << HttpSelectField << setRemoteUrl url_
 
 
 {-| Makes a multi select field from a list of options.
@@ -479,13 +436,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-multiSelect : List Option.Option -> (MultiSelectFieldProperties {} -> MultiSelectFieldProperties {}) -> Field
-multiSelect options setters =
-    multiSelectFieldDefaults
-        |> setters
-        << setOptions options
-        |> MultiStringField_
-        << MultiSelectField
+multiSelect : List Option.Option -> MultiSelectFieldProperties {} -> Field
+multiSelect options =
+    MultiStringField_ << MultiSelectField << setOptions options
 
 
 {-| Makes a searchable multi select field, with two categories of options: searchable and non-searchable. Neither category is mandatory, so make sure to set at least one for the field to be useful.
@@ -508,12 +461,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-searchableMultiSelect : (SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties) -> Field
-searchableMultiSelect setters =
-    searchableMultiSelectFieldDefaults
-        |> setters
-        |> MultiStringField_
-        << SearchableMultiSelectField
+searchableMultiSelect : SearchableMultiSelectFieldProperties -> Field
+searchableMultiSelect =
+    MultiStringField_ << SearchableMultiSelectField
 
 
 {-| Makes a remotely fetched multi select field.
@@ -536,13 +486,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-multiHttpSelect : String -> (MultiHttpSelectFieldProperties -> MultiHttpSelectFieldProperties) -> Field
-multiHttpSelect url_ setters =
-    multiHttpSelectFieldDefaults
-        |> setters
-        << setRemoteUrl url_
-        |> MultiStringField_
-        << MultiHttpSelectField
+multiHttpSelect : String -> MultiHttpSelectFieldProperties -> Field
+multiHttpSelect url_ =
+    MultiStringField_ << MultiHttpSelectField << setRemoteUrl url_
 
 
 
@@ -717,11 +663,11 @@ setDirection direction field =
 
 
 
--- DEFAULTS
+-- DEFAULT
 
 
-simpleFieldDefaults : SimpleFieldProperties
-simpleFieldDefaults =
+simpleDefault : SimpleFieldProperties
+simpleDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -736,8 +682,111 @@ simpleFieldDefaults =
     }
 
 
-dateFieldDefaults : DateFieldProperties
-dateFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Text
+, value = ""
+}`
+-}
+textDefault : SimpleFieldProperties
+textDefault =
+    simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Email
+, value = ""
+}`
+-}
+emailDefault : SimpleFieldProperties
+emailDefault =
+    setTipe FieldType.Email <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Url
+, value = ""
+}`
+-}
+urlDefault : SimpleFieldProperties
+urlDefault =
+    setTipe FieldType.Url <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Phone
+, value = ""
+}`
+-}
+phoneDefault : SimpleFieldProperties
+phoneDefault =
+    setTipe FieldType.Phone <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.TextArea
+, value = ""
+}`
+-}
+textAreaDefault : SimpleFieldProperties
+textAreaDefault =
+    setTipe FieldType.TextArea <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
+, value = ""
+, parsedDate = Nothing
+}`
+-}
+dateDefault : DateFieldProperties
+dateDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -752,8 +801,21 @@ dateFieldDefaults =
     }
 
 
-tagFieldDefaults : TagFieldProperties
-tagFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, inputBar = ""
+, placeholder = Nothing
+}`
+-}
+tagDefault : TagFieldProperties
+tagDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -768,8 +830,20 @@ tagFieldDefaults =
     }
 
 
-checkboxFieldDefaults : CheckboxFieldProperties
-checkboxFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = False
+, tipe = FieldType.Checkbox
+}`
+-}
+checkboxDefault : CheckboxFieldProperties
+checkboxDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -783,8 +857,19 @@ checkboxFieldDefaults =
     }
 
 
-radioBoolFieldDefaults : RadioBoolFieldProperties
-radioBoolFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+}`
+-}
+radioBoolDefault : RadioBoolFieldProperties
+radioBoolDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -797,8 +882,21 @@ radioBoolFieldDefaults =
     }
 
 
-radioEnumFieldDefaults : RadioEnumFieldProperties
-radioEnumFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, default = Nothing
+, options = [ RadioEnum.Yes, RadioEnum.No, RadioEnum.NA ]
+}`
+-}
+radioEnumDefault : RadioEnumFieldProperties
+radioEnumDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -813,8 +911,23 @@ radioEnumFieldDefaults =
     }
 
 
-selectFieldDefaults : SelectFieldProperties
-selectFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, default = Nothing
+, options = []
+, placeholder = ""
+, hasSelectablePlaceholder = False
+}`
+-}
+selectDefault : SelectFieldProperties
+selectDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -831,8 +944,24 @@ selectFieldDefaults =
     }
 
 
-httpSelectFieldDefaults : HttpSelectFieldProperties
-httpSelectFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, url = ""
+, default = Nothing
+, options = RemoteData.NotAsked
+, placeholder = ""
+, hasSelectablePlaceholder = False
+}`
+-}
+httpSelectDefault : HttpSelectFieldProperties
+httpSelectDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -850,8 +979,22 @@ httpSelectFieldDefaults =
     }
 
 
-multiSelectFieldDefaults : MultiSelectFieldProperties {}
-multiSelectFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = []
+, placeholder = ""
+, showDropdown = False
+}`
+-}
+multiSelectDefault : MultiSelectFieldProperties {}
+multiSelectDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -867,8 +1010,24 @@ multiSelectFieldDefaults =
     }
 
 
-searchableMultiSelectFieldDefaults : SearchableMultiSelectFieldProperties
-searchableMultiSelectFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = []
+, placeholder = ""
+, showDropdown = False
+, searchableOptions = []
+, searchInput = ""
+}`
+-}
+searchableMultiSelectDefault : SearchableMultiSelectFieldProperties
+searchableMultiSelectDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -886,8 +1045,23 @@ searchableMultiSelectFieldDefaults =
     }
 
 
-multiHttpSelectFieldDefaults : MultiHttpSelectFieldProperties
-multiHttpSelectFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = RemoteData.NotAsked
+, placeholder = ""
+, showDropdown = False
+, url = ""
+}`
+-}
+multiHttpSelectDefault : MultiHttpSelectFieldProperties
+multiHttpSelectDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -904,8 +1078,22 @@ multiHttpSelectFieldDefaults =
     }
 
 
-radioFieldDefaults : RadioFieldProperties
-radioFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, default = Nothing
+, options = []
+, direction = Direction.Column
+}`
+-}
+radioDefault : RadioFieldProperties
+radioDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
@@ -921,8 +1109,19 @@ radioFieldDefaults =
     }
 
 
-ageFieldDefaults : AgeFieldProperties
-ageFieldDefaults =
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+}`
+-}
+ageDefault : AgeFieldProperties
+ageDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize

@@ -15,62 +15,64 @@ suite =
             \initialString updateString ->
                 let
                     field =
-                        Field.text <|
-                            Field.setWidth Width.HalfSize
-                                >> Field.setValue initialString
+                        Field.textDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue initialString
+                            |> Field.text
                 in
                 Field.updateStringValue updateString field
                     |> Expect.equal
-                        (Field.text <|
-                            Field.setWidth Width.HalfSize
-                                >> Field.setValue updateString
+                        (Field.textDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue updateString
+                            |> Field.text
                         )
         , Test.fuzz2 Fuzz.string Fuzz.string "Update Radio " <|
             \option1 option2 ->
                 let
                     field =
-                        Field.radio
-                            [ { label = Nothing, value = option1 }
-                            , { label = Nothing, value = option2 }
-                            ]
-                        <|
-                            Field.setValue option1
-                                >> Field.setWidth Width.HalfSize
-                                >> Field.setDirection Direction.Row
+                        Field.radioDefault
+                            |> Field.setValue option1
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                 in
                 Field.updateStringValue option2 field
                     |> Expect.equal
-                        (Field.radio
-                            [ { label = Nothing, value = option1 }
-                            , { label = Nothing, value = option2 }
-                            ]
-                         <|
-                            Field.setValue option2
-                                >> Field.setWidth Width.HalfSize
-                                >> Field.setDirection Direction.Row
+                        (Field.radioDefault
+                            |> Field.setValue option2
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                         )
         , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio " <|
             \option1 option2 ->
                 let
                     field =
-                        Field.radio
-                            [ { label = Nothing, value = option1 }
-                            , { label = Nothing, value = option2 }
-                            ]
-                        <|
-                            Field.setWidth Width.HalfSize
-                                >> Field.setValue option1
-                                >> Field.setDirection Direction.Row
+                        Field.radioDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue option1
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                 in
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
-                        (Field.radio
-                            [ { label = Nothing, value = option1 }
-                            , { label = Nothing, value = option2 }
-                            ]
-                         <|
-                            Field.setWidth Width.HalfSize
-                                >> Field.setValue option2
-                                >> Field.setDirection Direction.Row
+                        (Field.radioDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue option2
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                         )
         ]
