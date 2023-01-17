@@ -1,8 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..), ListStringFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toType
-    , dateFuture, dateOfBirth, datePast
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
     )
 
 {-| Field Type
@@ -20,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
 
 -}
 
@@ -94,16 +93,19 @@ type DateFieldType
     | DateOffset ( TimeExtra.Interval, Int ) ( TimeExtra.Interval, Int )
 
 
+{-| -}
 dateOfBirth : DateFieldType
 dateOfBirth =
     DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Year, 0 )
 
 
+{-| -}
 dateFuture : DateFieldType
 dateFuture =
     DateOffset ( TimeExtra.Day, 1 ) ( TimeExtra.Year, 10 )
 
 
+{-| -}
 datePast : DateFieldType
 datePast =
     DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Day, -1 )

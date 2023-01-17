@@ -1,14 +1,13 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
-    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
-    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag, url, phone, textArea, email
+    , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
-    , email, phone, setDateBounds, setDateOffset, setDatePast, textArea, url
     )
 
 {-| Field type and helper functions
@@ -26,12 +25,12 @@ module Form.Field exposing
 
 # Constructors
 
-@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
+@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag, url, phone, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setUnhiddenBy, setUrl, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
