@@ -48,7 +48,7 @@ view time submitted locale fields key field =
     HtmlExtra.viewIf shown <|
         Html.fieldset
             [ HtmlAttributes.class "column"
-            , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+            , HtmlAttributes.class <| Width.toStyle (Field.getProperties field).width
             , HtmlAttributes.disabled disabled
             , HtmlAttributes.id key
             ]

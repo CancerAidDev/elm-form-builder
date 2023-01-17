@@ -4,9 +4,9 @@ module Form.Field exposing
     , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag, url, phone, textArea, email
     , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
-    , isCheckbox, isColumn, isNumericField, isRequired
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
+    , isCheckbox, isRequired
     , encode
     , metadataKey
     )
@@ -41,17 +41,17 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
+@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
 
 
 # Predicates
 
-@docs isCheckbox, isColumn, isNumericField, isRequired
+@docs isCheckbox, isRequired
 
 
 # Encode
@@ -1475,35 +1475,33 @@ maybeUpdateStringValue maybeValue field =
 
 {-| -}
 updateStringValue : String -> Field -> Field
-updateStringValue value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringValue_ value field
-
-        _ ->
-            field
+updateStringValue =
+    genericUpdateStringField updateStringValue_
 
 
 {-| -}
 updateStringDisabled : Bool -> Field -> Field
-updateStringDisabled value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringDisabled_ value field
+updateStringDisabled =
+    let
+        updateStringDisabled_ : Bool -> StringField -> StringField
+        updateStringDisabled_ value field =
+            case field of
+                SimpleField properties ->
+                    SimpleField { properties | disabled = value }
 
-        _ ->
-            field
+                DateField properties ->
+                    DateField { properties | disabled = value }
 
+                SelectField properties ->
+                    SelectField { properties | disabled = value }
 
-{-| -}
-updateStringHidden : Bool -> Field -> Field
-updateStringHidden value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringHidden_ value field
+                HttpSelectField properties ->
+                    HttpSelectField { properties | disabled = value }
 
-        _ ->
-            field
+                RadioField properties ->
+                    RadioField { properties | disabled = value }
+    in
+    genericUpdateStringField updateStringDisabled_
 
 
 {-| -}
@@ -1530,9 +1528,29 @@ genericUpdateStringField f value field =
 {-| -}
 updateMultiStringOption : Option.Option -> Bool -> Field -> Field
 updateMultiStringOption option checked field =
+    let
+        update properties =
+            { properties
+                | value =
+                    if checked then
+                        Set.insert option.value properties.value
+
+                    else
+                        Set.remove option.value properties.value
+            }
+    in
     case field of
-        MultiStringField_ multiStringField ->
-            MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
+        MultiStringField_ (MultiSelectField properties) ->
+            MultiStringField_ <| MultiSelectField (update properties)
+
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ <| SearchableMultiSelectField (update properties)
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            MultiStringField_ <| MultiHttpSelectField (update properties)
+
+        MultiStringField_ (TagField properties) ->
+            MultiStringField_ <| TagField (update properties)
 
         _ ->
             field
@@ -1553,16 +1571,11 @@ updateSearchableMultiselectInput input_ field =
 getBoolProperties : Field -> Maybe Bool
 getBoolProperties field =
     case field of
-        BoolField_ f ->
-            case f of
-                CheckboxField { value } ->
-                    Just value
+        BoolField_ (CheckboxField { value }) ->
+            Just value
 
-                RadioBoolField { value } ->
-                    value
-
-                _ ->
-                    Nothing
+        BoolField_ (RadioBoolField { value }) ->
+            value
 
         _ ->
             Nothing
@@ -1572,102 +1585,44 @@ getBoolProperties field =
 resetValueToDefault : Field -> Field
 resetValueToDefault field =
     case field of
-        StringField_ stringField ->
-            StringField_ (resetStringFieldValueToDefault stringField)
+        StringField_ (HttpSelectField properties) ->
+            StringField_ <| HttpSelectField { properties | value = properties.default |> Maybe.withDefault httpSelectDefault.value }
 
-        MultiStringField_ multiStringField ->
-            MultiStringField_ (resetMultiStringFieldValueToDefault multiStringField)
-
-        BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | value = False })
-
-        BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | value = Nothing })
-
-        BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | value = properties.default })
-
-        NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | value = Nothing })
-
-
-resetStringFieldValueToDefault : StringField -> StringField
-resetStringFieldValueToDefault field =
-    case field of
-        HttpSelectField properties ->
-            HttpSelectField { properties | value = properties.default |> Maybe.withDefault "" }
-
-        SimpleField properties ->
-            SimpleField { properties | value = "" }
-
-        DateField properties ->
-            DateField { properties | value = "", parsedDate = Nothing }
-
-        SelectField properties ->
-            SelectField { properties | value = properties.default |> Maybe.withDefault "" }
-
-        RadioField properties ->
-            RadioField { properties | value = properties.default |> Maybe.withDefault "" }
-
-
-resetMultiStringFieldValueToDefault : MultiStringField -> MultiStringField
-resetMultiStringFieldValueToDefault field =
-    case field of
-        MultiHttpSelectField properties ->
-            MultiHttpSelectField { properties | value = Set.empty }
-
-        MultiSelectField properties ->
-            MultiSelectField { properties | value = Set.empty }
-
-        SearchableMultiSelectField properties ->
-            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
-
-        TagField properties ->
-            TagField { properties | value = Set.empty, inputBar = "" }
-
-
-{-| -}
-setRequired : Required.IsRequired -> Field -> Field
-setRequired required field =
-    case field of
         StringField_ (SimpleField properties) ->
-            StringField_ (SimpleField { properties | required = required })
+            StringField_ <| SimpleField { properties | value = simpleDefault.value }
 
         StringField_ (DateField properties) ->
-            StringField_ (DateField { properties | required = required })
+            StringField_ <| DateField { properties | value = dateDefault.value, parsedDate = dateDefault.parsedDate }
 
         StringField_ (SelectField properties) ->
-            StringField_ (SelectField { properties | required = required })
-
-        StringField_ (HttpSelectField properties) ->
-            StringField_ (HttpSelectField { properties | required = required })
+            StringField_ <| SelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (RadioField properties) ->
-            StringField_ (RadioField { properties | required = required })
+            StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
 
         MultiStringField_ (MultiHttpSelectField properties) ->
-            MultiStringField_ (MultiHttpSelectField { properties | required = required })
+            MultiStringField_ <| MultiHttpSelectField { properties | value = multiHttpSelectDefault.value }
 
         MultiStringField_ (MultiSelectField properties) ->
-            MultiStringField_ (MultiSelectField { properties | required = required })
+            MultiStringField_ <| MultiSelectField { properties | value = multiSelectDefault.value }
 
         MultiStringField_ (SearchableMultiSelectField properties) ->
-            MultiStringField_ (SearchableMultiSelectField { properties | required = required })
+            MultiStringField_ <| SearchableMultiSelectField { properties | value = searchableMultiSelectDefault.value, searchInput = searchableMultiSelectDefault.searchInput }
 
         MultiStringField_ (TagField properties) ->
-            MultiStringField_ (TagField { properties | required = required })
+            MultiStringField_ <| TagField { properties | value = tagDefault.value, inputBar = tagDefault.inputBar }
 
         BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | required = required })
+            BoolField_ (CheckboxField { properties | value = checkboxDefault.value })
 
         BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | required = required })
+            BoolField_ (RadioBoolField { properties | value = radioBoolDefault.value })
 
         BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | required = required })
+            BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
         NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | required = required })
+            NumericField_ (AgeField { properties | value = ageDefault.value })
 
 
 {-| -}
@@ -1771,73 +1726,6 @@ updateStringValue_ value field =
 
         RadioField properties ->
             RadioField { properties | value = value }
-
-
-{-| -}
-updateStringDisabled_ : Bool -> StringField -> StringField
-updateStringDisabled_ value field =
-    case field of
-        SimpleField properties ->
-            SimpleField { properties | disabled = value }
-
-        DateField properties ->
-            DateField { properties | disabled = value }
-
-        SelectField properties ->
-            SelectField { properties | disabled = value }
-
-        HttpSelectField properties ->
-            HttpSelectField { properties | disabled = value }
-
-        RadioField properties ->
-            RadioField { properties | disabled = value }
-
-
-{-| -}
-updateStringHidden_ : Bool -> StringField -> StringField
-updateStringHidden_ value field =
-    case field of
-        SimpleField properties ->
-            SimpleField { properties | hidden = value }
-
-        DateField properties ->
-            DateField { properties | hidden = value }
-
-        SelectField properties ->
-            SelectField { properties | hidden = value }
-
-        HttpSelectField properties ->
-            HttpSelectField { properties | hidden = value }
-
-        RadioField properties ->
-            RadioField { properties | hidden = value }
-
-
-updateMultiStringOption_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
-updateMultiStringOption_ option checked field =
-    let
-        update properties =
-            { properties
-                | value =
-                    if checked then
-                        Set.insert option.value properties.value
-
-                    else
-                        Set.remove option.value properties.value
-            }
-    in
-    case field of
-        MultiSelectField properties ->
-            MultiSelectField (update properties)
-
-        SearchableMultiSelectField properties ->
-            SearchableMultiSelectField (update properties)
-
-        MultiHttpSelectField properties ->
-            MultiHttpSelectField (update properties)
-
-        TagField properties ->
-            TagField (update properties)
 
 
 {-| -}
@@ -2029,28 +1917,6 @@ getType field =
 
 
 {-| -}
-isNumericField : Field -> Bool
-isNumericField field =
-    case field of
-        NumericField_ _ ->
-            True
-
-        _ ->
-            False
-
-
-{-| -}
-isColumn : Field -> Bool
-isColumn field =
-    case field of
-        StringField_ (RadioField { direction }) ->
-            direction == Direction.Column
-
-        _ ->
-            True
-
-
-{-| -}
 getStringType : StringField -> FieldType.StringFieldType
 getStringType field =
     case field of
@@ -2070,7 +1936,6 @@ getStringType field =
             FieldType.Radio
 
 
-{-| -}
 getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType
 getMultiStringType field =
     case field of
@@ -2091,12 +1956,6 @@ getMultiStringType field =
 getOrder : Field -> Int
 getOrder =
     getProperties >> .order
-
-
-{-| -}
-getWidth : Field -> Width.Width
-getWidth =
-    getProperties >> .width
 
 
 {-| -}
