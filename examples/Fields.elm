@@ -14,16 +14,15 @@ fields : FormFields.Fields
 fields =
     [ \order ->
         ( "Uneditable"
-        , FormField.input <|
+        , FormField.text <|
             FormField.setLabel "Uneditable Field"
                 >> FormField.setOrder order
                 >> FormField.setDisabled
         )
     , \order ->
         ( "not a valid email field"
-        , FormField.input <|
-            FormField.setEmail
-                >> FormField.setLabel "Not relevant Email Address"
+        , FormField.email <|
+            FormField.setLabel "Not relevant Email Address"
                 >> FormField.setOrder order
                 >> FormField.setDisabled
         )
@@ -31,7 +30,7 @@ fields =
         ( "name"
         , case Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" of
             Nothing ->
-                FormField.input <|
+                FormField.text <|
                     FormField.setIsRequired IsRequired.Yes
                         >> FormField.setLabel "Full Name"
                         >> FormField.setOrder order
@@ -39,7 +38,7 @@ fields =
                         >> FormField.setDisabled
 
             Just regex ->
-                FormField.input <|
+                FormField.text <|
                     FormField.setIsRequired IsRequired.Yes
                         >> FormField.setLabel "Full Name"
                         >> FormField.setOrder order
@@ -52,9 +51,8 @@ fields =
     , \order ->
         ( "email"
           -- forbid emails from bigcompany.com or bigorganisation.org
-        , FormField.input <|
-            FormField.setEmail
-                >> FormField.setIsRequired IsRequired.Yes
+        , FormField.email <|
+            FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Email Address"
                 >> FormField.setOrder order
                 >> FormField.setForbiddenEmailDomains
@@ -68,17 +66,15 @@ fields =
         )
     , \order ->
         ( "secondaryEmail"
-        , FormField.input <|
-            FormField.setEmail
-                >> FormField.setIsRequired IsRequired.Nullable
+        , FormField.email <|
+            FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Secondary Email Address"
                 >> FormField.setOrder order
         )
     , \order ->
         ( "phone"
-        , FormField.input <|
-            FormField.setPhone
-                >> FormField.setIsRequired IsRequired.Yes
+        , FormField.phone <|
+            FormField.setIsRequired IsRequired.Yes
                 >> FormField.setLabel "Phone"
                 >> FormField.setOrder order
         )
@@ -100,7 +96,8 @@ fields =
     , \order ->
         ( "datePast"
         , FormField.date <|
-            FormField.setIsRequired IsRequired.Nullable
+            FormField.setDatePast
+                >> FormField.setIsRequired IsRequired.Nullable
                 >> FormField.setLabel "Claim Started"
                 >> FormField.setOrder order
         )

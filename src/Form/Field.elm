@@ -1,13 +1,14 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
-    , age, checkbox, date, httpSelect, input, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
-    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEmail, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPhone, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setTextArea, setUnhiddenBy, setUrl, setValue, setWidth
+    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
+    , setDateFuture, setDateOfBirth, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , email, phone, setDateBounds, setDateOffset, setDatePast, textArea, url
     )
 
 {-| Field type and helper functions
@@ -25,7 +26,7 @@ module Form.Field exposing
 
 # Constructors
 
-@docs age, checkbox, date, httpSelect, input, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
+@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableMultiSelect, select, tag
 
 
 # Construction Property Setters
@@ -73,6 +74,7 @@ import Json.Encode.Extra as EncodeExtra
 import RemoteData
 import Set
 import Time
+import Time.Extra as TimeExtra
 
 
 
@@ -84,12 +86,6 @@ import Time
 In addition to the common builders, the following are available:
 
   - `setRegexValidation (List RegexValidation.RegexValidation)`
-  - `setEmail`
-  - `setPhone`
-  - `setUrl`
-  - `setTextArea`
-
-If setEmail is used, `setForbiddenEmailDomains` can additionally be used in lieu of `setRegexValidation` for convenience.
 
 Common builders:
 
@@ -103,10 +99,118 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-input : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
-input setters =
+text : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+text setters =
     simpleFieldDefaults
         |> setters
+        |> StringField_
+        << SimpleField
+
+
+{-| Makes an email input field.
+
+In addition to the common builders, the following are available:
+
+  - `setForbiddenEmailDomains (List EmailFormat.ForbiddenDomain)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+email : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+email setters =
+    simpleFieldDefaults
+        |> setters
+        << setTipe FieldType.Email
+        |> StringField_
+        << SimpleField
+
+
+{-| Makes a phone field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+phone : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+phone setters =
+    simpleFieldDefaults
+        |> setters
+        << setTipe FieldType.Phone
+        |> StringField_
+        << SimpleField
+
+
+{-| Makes a url field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+url : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+url setters =
+    simpleFieldDefaults
+        |> setters
+        << setTipe FieldType.Url
+        |> StringField_
+        << SimpleField
+
+
+{-| Makes a multiline text area field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+textArea : (SimpleFieldProperties -> SimpleFieldProperties) -> Field
+textArea setters =
+    simpleFieldDefaults
+        |> setters
+        << setTipe FieldType.TextArea
         |> StringField_
         << SimpleField
 
@@ -565,39 +669,33 @@ setSearchableOptions searchableOptions field =
 
 
 {-| -}
-setEmail : SimpleFieldProperties -> SimpleFieldProperties
-setEmail =
-    setTipe FieldType.Email
-
-
-{-| -}
-setPhone : SimpleFieldProperties -> SimpleFieldProperties
-setPhone =
-    setTipe FieldType.Phone
-
-
-{-| -}
-setUrl : SimpleFieldProperties -> SimpleFieldProperties
-setUrl =
-    setTipe FieldType.Url
-
-
-{-| -}
-setTextArea : SimpleFieldProperties -> SimpleFieldProperties
-setTextArea =
-    setTipe FieldType.TextArea
-
-
-{-| -}
 setDateOfBirth : DateFieldProperties -> DateFieldProperties
 setDateOfBirth =
-    setTipe FieldType.DateOfBirth
+    setTipe FieldType.dateOfBirth
 
 
 {-| -}
 setDateFuture : DateFieldProperties -> DateFieldProperties
 setDateFuture =
-    setTipe FieldType.DateFuture
+    setTipe FieldType.dateFuture
+
+
+{-| -}
+setDatePast : DateFieldProperties -> DateFieldProperties
+setDatePast =
+    setTipe FieldType.datePast
+
+
+{-| -}
+setDateOffset : ( TimeExtra.Interval, Int ) -> ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
+setDateOffset minOffset maxOffset =
+    setTipe (FieldType.DateOffset minOffset maxOffset)
+
+
+{-| -}
+setDateBounds : Time.Posix -> Time.Posix -> DateFieldProperties -> DateFieldProperties
+setDateBounds minBound maxBound =
+    setTipe (FieldType.DateAbsolute minBound maxBound)
 
 
 {-| -}
@@ -636,7 +734,7 @@ dateFieldDefaults =
     , disabled = False
     , hidden = False
     , unhiddenBy = Nothing
-    , tipe = FieldType.DatePast
+    , tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
     , value = ""
     , parsedDate = Nothing
     }

@@ -2,6 +2,7 @@ module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..), ListStringFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType
+    , dateFuture, dateOfBirth, datePast
     )
 
 {-| Field Type
@@ -27,6 +28,7 @@ import Form.Lib.Time as LibTime
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Time
+import Time.Extra as TimeExtra
 
 
 {-| -}
@@ -88,9 +90,23 @@ type MultiStringFieldType
 
 {-| -}
 type DateFieldType
-    = DatePast
-    | DateOfBirth
-    | DateFuture
+    = DateAbsolute Time.Posix Time.Posix
+    | DateOffset ( TimeExtra.Interval, Int ) ( TimeExtra.Interval, Int )
+
+
+dateOfBirth : DateFieldType
+dateOfBirth =
+    DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Year, 0 )
+
+
+dateFuture : DateFieldType
+dateFuture =
+    DateOffset ( TimeExtra.Day, 1 ) ( TimeExtra.Year, 10 )
+
+
+datePast : DateFieldType
+datePast =
+    DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Day, -1 )
 
 
 {-| -}
@@ -104,13 +120,13 @@ fromString str =
             Just (StringType (SimpleType Email))
 
         "date_birth" ->
-            Just (StringType (DateType DateOfBirth))
+            Just (StringType (DateType dateOfBirth))
 
         "date_past" ->
-            Just (StringType (DateType DatePast))
+            Just (StringType (DateType datePast))
 
         "date_future" ->
-            Just (StringType (DateType DateFuture))
+            Just (StringType (DateType dateFuture))
 
         "phone" ->
             Just (StringType (SimpleType Phone))
@@ -205,21 +221,15 @@ toMaxLength fieldType =
 toMin : Time.Posix -> FieldType -> Maybe String
 toMin time fieldType =
     case fieldType of
-        StringType (DateType DateOfBirth) ->
-            time
-                |> LibTime.offsetYear -120
+        StringType (DateType (DateAbsolute minDate _)) ->
+            minDate
                 |> LibTime.toDateString
                 |> Just
 
-        StringType (DateType DatePast) ->
+        StringType (DateType (DateOffset ( offsetUnit, offset ) _)) ->
             time
-                |> LibTime.offsetYear -120
-                |> LibTime.toDateString
-                |> Just
-
-        StringType (DateType DateFuture) ->
-            time
-                |> LibTime.offsetDay 1
+                |> TimeExtra.add offsetUnit offset Time.utc
+                |> TimeExtra.floor offsetUnit Time.utc
                 |> LibTime.toDateString
                 |> Just
 
@@ -234,15 +244,15 @@ toMin time fieldType =
 toMax : Time.Posix -> FieldType -> Maybe String
 toMax time fieldType =
     case fieldType of
-        StringType (DateType DateOfBirth) ->
-            Just (LibTime.toDateString time)
+        StringType (DateType (DateAbsolute _ maxDate)) ->
+            maxDate
+                |> LibTime.toDateString
+                |> Just
 
-        StringType (DateType DatePast) ->
-            Just (LibTime.toDateString time)
-
-        StringType (DateType DateFuture) ->
+        StringType (DateType (DateOffset _ ( offsetUnit, offset ))) ->
             time
-                |> LibTime.offsetYear 10
+                |> TimeExtra.add offsetUnit offset Time.utc
+                |> TimeExtra.floor offsetUnit Time.utc
                 |> LibTime.toDateString
                 |> Just
 

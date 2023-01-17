@@ -15,13 +15,13 @@ suite =
             \initialString updateString ->
                 let
                     field =
-                        Field.input <|
+                        Field.text <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue initialString
                 in
                 Field.updateStringValue updateString field
                     |> Expect.equal
-                        (Field.input <|
+                        (Field.text <|
                             Field.setWidth Width.HalfSize
                                 >> Field.setValue updateString
                         )
