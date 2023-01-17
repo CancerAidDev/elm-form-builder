@@ -214,12 +214,15 @@ textArea setters =
         << SimpleField
 
 
-{-| Makes a date input field, defaulting to a DatePast type.
+{-| Makes a date input field. By default, dates 100 years from the start of the Unix epoch (00:00:00 UTC on 1 January 1970) are allowed. Use setters to customise this.
 
 In addition to the common builders, the following are available:
 
   - `setDateOfBirth`
   - `setDateFuture`
+  - `setDatePast`
+  - `setDateBounds Time.Posix Time.Posix`
+  - `setDateOffset ( TimeExtra.Interval, Int ) ( TimeExtra.Interval, Int )`
 
 Common builders:
 
@@ -667,31 +670,41 @@ setSearchableOptions searchableOptions field =
     { field | searchableOptions = searchableOptions }
 
 
-{-| -}
+{-| Sets the selectable date range to be the last 120 years.
+-}
 setDateOfBirth : DateFieldProperties -> DateFieldProperties
 setDateOfBirth =
     setTipe FieldType.dateOfBirth
 
 
-{-| -}
+{-| Sets the selectable date range to be the next 10 years.
+-}
 setDateFuture : DateFieldProperties -> DateFieldProperties
 setDateFuture =
     setTipe FieldType.dateFuture
 
 
-{-| -}
+{-| Sets the selectable date range to be the last 120 years.
+-}
 setDatePast : DateFieldProperties -> DateFieldProperties
 setDatePast =
     setTipe FieldType.datePast
 
 
-{-| -}
+{-| Sets the selectable date range to be based on intervals relative to the current date.
+
+For example, to select a date between 2 years ago and 5 years from now, use:
+
+    `setDateOffset ( TimeExtra.Year, -2 ) ( TimeExtra.Year, 5 )`
+
+-}
 setDateOffset : ( TimeExtra.Interval, Int ) -> ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
 setDateOffset minOffset maxOffset =
     setTipe (FieldType.DateOffset minOffset maxOffset)
 
 
-{-| -}
+{-| Sets the selectable date range to absolute dates in POSIX time.
+-}
 setDateBounds : Time.Posix -> Time.Posix -> DateFieldProperties -> DateFieldProperties
 setDateBounds minBound maxBound =
     setTipe (FieldType.DateAbsolute minBound maxBound)
