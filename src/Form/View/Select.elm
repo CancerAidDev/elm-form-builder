@@ -1,4 +1,7 @@
-module Form.View.Select exposing (select, searchableSelect, httpSelect)
+module Form.View.Select exposing
+    ( select, httpSelect
+    , searchableSelect
+    )
 
 {-| View Select Fields
 
@@ -123,23 +126,6 @@ searchableDropdownMenu key properties =
                 [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
                 ]
-
-        filteredOptions : List Option.Option
-        filteredOptions =
-            let
-                caseInsensitiveContains : String -> String -> Bool
-                caseInsensitiveContains s1 s2 =
-                    String.contains (String.toLower s1) (String.toLower s2)
-
-                takeOption : String -> Option.Option -> Bool
-                takeOption searchString option =
-                    List.any (caseInsensitiveContains searchString) (option.value :: List.filterMap identity [ option.label ])
-
-                filterSearchable : String -> List Option.Option -> List Option.Option
-                filterSearchable searchString options =
-                    List.filter (takeOption searchString) options
-            in
-            filterSearchable properties.searchInput properties.options
     in
     Html.div []
         [ SearchableSelect.overlay key
@@ -164,7 +150,7 @@ searchableDropdownMenu key properties =
                         ]
                     ]
                  ]
-                    ++ optionSection filteredOptions
+                    ++ (optionSection <| SearchableSelect.filteredOptions properties.searchInput properties.options)
                 )
             ]
         ]

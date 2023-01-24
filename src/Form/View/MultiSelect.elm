@@ -114,21 +114,8 @@ searchableDropdownMenu key properties =
                 ]
 
         filteredOptions : List Option.Option
-        filteredOptions =
-            let
-                caseInsensitiveContains : String -> String -> Bool
-                caseInsensitiveContains s1 s2 =
-                    String.contains (String.toLower s1) (String.toLower s2)
-
-                takeOption : String -> Option.Option -> Bool
-                takeOption searchString option =
-                    List.any (caseInsensitiveContains searchString) (option.value :: List.filterMap identity [ option.label ])
-
-                filterSearchable : String -> List Option.Option -> List Option.Option
-                filterSearchable searchString options =
-                    List.filter (takeOption searchString) options
-            in
-            filterSearchable properties.searchInput properties.searchableOptions
+        filteredOptions = 
+            SearchableSelect.filteredOptions properties.searchInput properties.options
     in
     Html.div []
         [ SearchableSelect.overlay key
