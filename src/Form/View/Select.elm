@@ -116,12 +116,12 @@ searchableDropdownMenu key properties =
 
             else
                 let
-                    optionItem : List (Html.Html Msg.Msg)
-                    optionItem =
+                    optionItems : List (Html.Html Msg.Msg)
+                    optionItems =
                         List.map (\option -> viewSearchableOption key properties option) options
                 in
                 [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItems
                 ]
 
         filteredOptions : List Option.Option
@@ -172,7 +172,7 @@ searchableDropdownMenu key properties =
 viewSearchableOption : String -> Field.SelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
 viewSearchableOption key properties option =
     HtmlExtra.viewIf (not properties.hidden) <|
-        Html.div
+        Html.label
             [ HtmlAttributes.class "dropdown-item mr-2"
             , HtmlEvents.onClick <| Msg.UpdateSearchableSelectField key option.value
             ]
