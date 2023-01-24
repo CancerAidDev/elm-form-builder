@@ -236,6 +236,35 @@ fields =
             }
         )
     , \order ->
+        ( "searchableState"
+        , FormField.searchableSelect
+            { required = IsRequired.Nullable
+            , label = "Searchable State"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , default = Nothing
+            , options =
+                [ { label = Nothing, value = "Australian Capital Territory" }
+                , { label = Nothing, value = "New South Wales" }
+                , { label = Nothing, value = "Northern Territory" }
+                , { label = Nothing, value = "Queensland" }
+                , { label = Nothing, value = "South Australian" }
+                , { label = Nothing, value = "Tasmania" }
+                , { label = Nothing, value = "Victorian" }
+                , { label = Nothing, value = "Western Australia" }
+                ]
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            , placeholder = "Searchable State"
+            , hasSelectablePlaceholder = False
+            , showDropdown = False
+            , searchInput = ""
+            }
+        )
+    , \order ->
         ( "modes"
         , FormField.multiSelect
             { required = IsRequired.Yes

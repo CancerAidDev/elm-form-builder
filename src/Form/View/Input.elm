@@ -90,6 +90,9 @@ control time (Locale.Locale _ code) key field =
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
 
+        Field.StringField_ (Field.SearchableSelectField properties) ->
+            Select.searchableSelect key properties
+
         Field.StringField_ (Field.HttpSelectField properties) ->
             Select.httpSelect key properties
 

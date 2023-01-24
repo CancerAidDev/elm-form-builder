@@ -1,8 +1,8 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
-    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
+    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
@@ -13,12 +13,12 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
 
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
 
 
 # Getters
@@ -28,7 +28,7 @@ module Form.Field exposing
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableMultiselectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
+@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
 
 
 # Predicates
@@ -273,9 +273,15 @@ radioEnum =
 
 
 {-| -}
-select : SelectFieldProperties -> Field
+select : SelectFieldProperties {} -> Field
 select =
     StringField_ << SelectField
+
+
+{-| -}
+searchableSelect : SearchableSelectFieldProperties -> Field
+searchableSelect =
+    StringField_ << SearchableSelectField
 
 
 {-| -}
@@ -326,7 +332,8 @@ type Field
 type StringField
     = SimpleField SimpleFieldProperties
     | DateField DateFieldProperties
-    | SelectField SelectFieldProperties
+    | SelectField (SelectFieldProperties {})
+    | SearchableSelectField SearchableSelectFieldProperties
     | HttpSelectField HttpSelectFieldProperties
     | RadioField RadioFieldProperties
 
@@ -404,12 +411,21 @@ type alias DateFieldProperties =
 
 
 {-| -}
-type alias SelectFieldProperties =
+type alias SelectFieldProperties a =
     StringFieldProperties
-        { default : Maybe String
-        , options : List Option.Option
-        , placeholder : String
-        , hasSelectablePlaceholder : Bool
+        { a
+            | default : Maybe String
+            , options : List Option.Option
+            , placeholder : String
+            , hasSelectablePlaceholder : Bool
+        }
+
+
+{-| -}
+type alias SearchableSelectFieldProperties =
+    SelectFieldProperties
+        { showDropdown : Bool
+        , searchInput : String
         }
 
 
@@ -576,6 +592,18 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        SearchableSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
         RadioField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
@@ -716,9 +744,12 @@ updateMultiStringOption option checked field =
 
 
 {-| -}
-updateSearchableMultiselectInput : String -> Field -> Field
-updateSearchableMultiselectInput input field =
+updateSearchableSelectInput : String -> Field -> Field
+updateSearchableSelectInput input field =
     case field of
+        StringField_ (SearchableSelectField properties) ->
+            StringField_ (SearchableSelectField { properties | searchInput = input })
+
         MultiStringField_ (SearchableMultiSelectField properties) ->
             MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
 
@@ -783,6 +814,9 @@ resetStringFieldValueToDefault field =
         SelectField properties ->
             SelectField { properties | value = properties.default |> Maybe.withDefault "" }
 
+        SearchableSelectField properties ->
+            SearchableSelectField { properties | value = properties.default |> Maybe.withDefault "" }
+
         RadioField properties ->
             RadioField { properties | value = properties.default |> Maybe.withDefault "" }
 
@@ -815,6 +849,9 @@ setRequired required field =
 
         StringField_ (SelectField properties) ->
             StringField_ (SelectField { properties | required = required })
+
+        StringField_ (SearchableSelectField properties) ->
+            StringField_ (SearchableSelectField { properties | required = required })
 
         StringField_ (HttpSelectField properties) ->
             StringField_ (HttpSelectField { properties | required = required })
@@ -917,6 +954,9 @@ updateTagsInputBarValue input field =
 updateShowDropdown : Bool -> Field -> Field
 updateShowDropdown showDropdown field =
     case field of
+        StringField_ (SearchableSelectField properties) ->
+            StringField_ (SearchableSelectField { properties | showDropdown = showDropdown })
+
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | showDropdown = showDropdown })
 
@@ -943,6 +983,9 @@ updateStringValue_ value field =
         SelectField properties ->
             SelectField { properties | value = value }
 
+        SearchableSelectField properties ->
+            SearchableSelectField { properties | value = value }
+
         HttpSelectField properties ->
             HttpSelectField { properties | value = value }
 
@@ -963,6 +1006,9 @@ updateStringDisabled_ value field =
         SelectField properties ->
             SelectField { properties | disabled = value }
 
+        SearchableSelectField properties ->
+            SearchableSelectField { properties | disabled = value }
+
         HttpSelectField properties ->
             HttpSelectField { properties | disabled = value }
 
@@ -982,6 +1028,9 @@ updateStringHidden_ value field =
 
         SelectField properties ->
             SelectField { properties | hidden = value }
+
+        SearchableSelectField properties ->
+            SearchableSelectField { properties | hidden = value }
 
         HttpSelectField properties ->
             HttpSelectField { properties | hidden = value }
@@ -1239,6 +1288,9 @@ getStringType field =
 
         SelectField _ ->
             FieldType.Select
+
+        SearchableSelectField _ ->
+            FieldType.SearchableSelect
 
         HttpSelectField _ ->
             FieldType.HttpSelect

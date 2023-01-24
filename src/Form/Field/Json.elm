@@ -30,6 +30,7 @@ type JsonField
     | JsonEmailField JsonEmailFieldProperties
     | JsonDateField JsonDateFieldProperties
     | JsonSelectField JsonSelectFieldProperties
+    | JsonSearchableSelectField JsonSearchableSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
     | JsonMultiSelectField JsonMultiSelectFieldProperties
     | JsonSearchableMultiSelectField JsonSearchableMultiSelectFieldProperties
@@ -111,6 +112,24 @@ type alias JsonSelectFieldProperties =
     , unhiddenBy : Maybe String
     , placeholder : String
     , hasSelectablePlaceholder : Bool
+    }
+
+
+type alias JsonSearchableSelectFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , default : Maybe String
+    , options : List Option.Option
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , placeholder : String
+    , hasSelectablePlaceholder : Bool
+    , showDropdown : Bool
+    , searchInput : String
     }
 
 
@@ -268,6 +287,9 @@ decoderForType fieldType =
         FieldType.StringType FieldType.Select ->
             Decode.map JsonSelectField decoderSelectJson
 
+        FieldType.StringType FieldType.SearchableSelect ->
+            Decode.map JsonSearchableSelectField decoderSearchableSelectJson
+
         FieldType.StringType FieldType.HttpSelect ->
             Decode.map JsonHttpSelectField decoderHttpSelectJson
 
@@ -394,6 +416,28 @@ toField time order field =
                     , unhiddenBy = unhiddenBy
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
+                    }
+            )
+
+        JsonSearchableSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput } ->
+            ( key
+            , Field.StringField_ <|
+                Field.SearchableSelectField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , default = default
+                    , options = options
+                    , value = Maybe.withDefault "" default
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , placeholder = placeholder
+                    , hasSelectablePlaceholder = hasSelectablePlaceholder
+                    , showDropdown = showDropdown
+                    , searchInput = searchInput
                     }
             )
 
@@ -639,6 +683,25 @@ decoderSelectJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
+
+
+decoderSearchableSelectJson : Decode.Decoder JsonSearchableSelectFieldProperties
+decoderSearchableSelectJson =
+    Decode.succeed JsonSearchableSelectFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
+        |> DecodePipeline.required "options" (Decode.list Option.decoder)
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "placeholder" Decode.string ""
+        |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
+        |> DecodePipeline.hardcoded False
+        |> DecodePipeline.hardcoded ""
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties

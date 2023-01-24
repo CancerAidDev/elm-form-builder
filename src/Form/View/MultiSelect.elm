@@ -6,6 +6,7 @@ import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
 import Form.Msg as Msg
+import Form.View.Dropdown as Dropdown
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
@@ -69,7 +70,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
     Html.div []
-        [ overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -130,7 +131,7 @@ searchableDropdownMenu key properties =
             filterSearchable properties.searchInput properties.searchableOptions
     in
     Html.div []
-        [ overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -179,20 +180,6 @@ searchableDropdownMenu key properties =
                 )
             ]
         ]
-
-
-overlay : String -> Html.Html Msg.Msg
-overlay key =
-    Html.div
-        [ HtmlAttributes.style "position" "fixed"
-        , HtmlAttributes.style "width" "100%"
-        , HtmlAttributes.style "height" "100%"
-        , HtmlAttributes.style "left" "0"
-        , HtmlAttributes.style "top" "0"
-        , HtmlAttributes.style "z-index" "1"
-        , HtmlEvents.onClick <| Msg.UpdateShowDropdown key False
-        ]
-        []
 
 
 viewCheckbox : String -> Field.MultiSelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
