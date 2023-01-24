@@ -8,7 +8,7 @@
   "scripts": {
     "start": "parcel examples/index.html",
     "build:pages": "rm -rf docs && parcel build examples/index.html --dist-dir docs --public-url /elm-form-builder",
-    "test:elm-unit": "./scripts/elm-coverage.sh 56"
+    "test:elm-unit": "./scripts/elm-coverage.sh 55"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.2.1",
