@@ -21,9 +21,6 @@ update msg fields =
         Msg.UpdateStringField key value ->
             ( Fields.updateStringField key value fields, Cmd.none )
 
-        Msg.UpdateSearchableSelectField key value ->
-            ( Fields.updateSearchableSelectField key value fields, Cmd.none )
-
         Msg.UpdateMultiStringField key value checked ->
             ( Fields.updateMultiStringOptionField key value checked fields, Cmd.none )
 

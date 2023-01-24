@@ -24,7 +24,7 @@ import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
 import RemoteData
-
+import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
@@ -91,20 +91,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             , Aria.controls [ "dropdown-menu" ]
             ]
             [ Html.span [] [ Html.text selectPlaceholder ]
-            , Html.span
-                [ HtmlAttributes.class "icon mx-3"
-                ]
-                [ Html.i
-                    [ HtmlAttributes.class
-                        (if showDropdown then
-                            "fa-solid fa-angle-up fa-lg"
-
-                         else
-                            "fa-solid fa-angle-down fa-lg"
-                        )
-                    ]
-                    []
-                ]
+            , SearchableSelect.dropdownIcon showDropdown
             ]
         ]
 
@@ -112,20 +99,8 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
 searchableDropdownMenu key properties =
     let
-        optionSection : List Option.Option -> List (Html.Html Msg.Msg)
-        optionSection options =
-            if List.isEmpty options then
-                []
-
-            else
-                let
-                    optionItem : List (Html.Html Msg.Msg)
-                    optionItem =
-                        List.map (\option -> viewSearchableOption key properties option) options
-                in
-                [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItem
-                ]
+        filteredOptions = 
+            SearchableSelect.filteredOptions properties.searchInput properties.options
     in
     Html.div []
         [ SearchableSelect.overlay key
@@ -136,21 +111,11 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                ([ Html.div [ HtmlAttributes.class "dropdown-item" ]
-                    [ Html.div [ HtmlAttributes.class "field" ]
-                        [ Html.span [ HtmlAttributes.class "control" ]
-                            [ Html.input
-                                [ HtmlAttributes.class "input is-small"
-                                , HtmlAttributes.placeholder "Search"
-                                , HtmlEvents.onInput <| Msg.UpdateSearchbar key
-                                , HtmlAttributes.value <| properties.searchInput
-                                ]
-                                []
-                            ]
-                        ]
-                    ]
-                 ]
-                    ++ (optionSection <| SearchableSelect.filteredOptions properties.searchInput properties.options)
+                ([ SearchableSelect.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ]
+                    <| List.map (viewSearchableOption key properties) filteredOptions
+                ]
                 )
             ]
         ]
@@ -161,9 +126,9 @@ viewSearchableOption key properties option =
     HtmlExtra.viewIf (not properties.hidden) <|
         Html.div
             [ HtmlAttributes.class "dropdown-item mr-2"
-            , HtmlEvents.onClick <| Msg.UpdateSearchableSelectField key option.value
+            , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
             ]
-            [ Html.text (option.label |> Maybe.withDefault option.value)
+            [ Html.p [HtmlAttributes.class "is-clickable"] [Html.text  (option.label |> Maybe.withDefault option.value) ]
             ]
 
 

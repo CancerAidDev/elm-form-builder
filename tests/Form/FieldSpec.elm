@@ -37,7 +37,7 @@ suite =
                     |> Expect.equal
                         (Field.text { fieldValues | value = updateString })
         , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update StringField without value" <|
-            \initialString updateString ->
+            \initialString _ ->
                 let
                     fieldValues =
                         { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, regexValidation = [] }
