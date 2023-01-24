@@ -1,9 +1,8 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updateTags, updateTagInput
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateSearchableSelectField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updateTags, updateTagInput
     , hasCheckboxConsentField, isEnabled, isShown
-    , updateSearchableSelectField
     )
 
 {-| Fields.
