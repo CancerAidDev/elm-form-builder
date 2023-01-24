@@ -1,7 +1,4 @@
-module Form.View.Select exposing
-    ( select, httpSelect
-    , searchableSelect
-    )
+module Form.View.Select exposing (select, searchableSelect, httpSelect)
 
 {-| View Select Fields
 
@@ -25,6 +22,7 @@ import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
 import RemoteData
 import Set
+
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
@@ -99,7 +97,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
 searchableDropdownMenu key properties =
     let
-        filteredOptions = 
+        filteredOptions =
             SearchableSelect.filteredOptions properties.searchInput properties.options
     in
     Html.div []
@@ -111,12 +109,11 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                ([ SearchableSelect.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                [ SearchableSelect.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ]
-                    <| List.map (viewSearchableOption key properties) filteredOptions
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
+                    List.map (viewSearchableOption key properties) filteredOptions
                 ]
-                )
             ]
         ]
 
@@ -128,7 +125,7 @@ viewSearchableOption key properties option =
             [ HtmlAttributes.class "dropdown-item mr-2"
             , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
             ]
-            [ Html.p [HtmlAttributes.class "is-clickable"] [Html.text  (option.label |> Maybe.withDefault option.value) ]
+            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
             ]
 
 

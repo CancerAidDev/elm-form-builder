@@ -22,6 +22,7 @@ multiSelect key properties =
         , HtmlExtra.viewIf properties.showDropdown <| dropdownMenu key properties
         ]
 
+
 {-| -}
 searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
 searchableMultiSelect key properties =
@@ -51,6 +52,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             ]
         ]
 
+
 multiSelectReset : String -> Int -> List (Html.Html Msg.Msg)
 multiSelectReset key selected =
     [ Html.div [] [ Html.text <| String.fromInt selected ++ " Selected" ]
@@ -60,6 +62,7 @@ multiSelectReset key selected =
         ]
         [ Html.text "Reset" ]
     ]
+
 
 dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
@@ -74,7 +77,9 @@ dropdownMenu key properties =
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
                 [ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
-                    <| multiSelectReset key <| Set.size properties.value
+                  <|
+                    multiSelectReset key <|
+                        Set.size properties.value
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ]
                     (List.map (\option -> viewCheckbox key properties option) properties.options)
@@ -89,12 +94,12 @@ searchableDropdownMenu key properties =
         optionSection : List Option.Option -> List (Html.Html Msg.Msg)
         optionSection options =
             [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-            , Html.div [ HtmlAttributes.class "dropdown-items" ]
-                <| List.map (viewCheckbox key properties) options
+            , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
+                List.map (viewCheckbox key properties) options
             ]
 
         filteredOptions : List Option.Option
-        filteredOptions = 
+        filteredOptions =
             SearchableSelect.filteredOptions properties.searchInput properties.searchableOptions
     in
     Html.div []
@@ -108,7 +113,9 @@ searchableDropdownMenu key properties =
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
                 ([ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
-                    <| multiSelectReset key <| Set.size properties.value
+                   <|
+                    multiSelectReset key <|
+                        Set.size properties.value
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                  , SearchableSelect.searchBar key properties.searchInput properties.value filteredOptions
                  ]

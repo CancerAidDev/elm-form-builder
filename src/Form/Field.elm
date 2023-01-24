@@ -742,10 +742,10 @@ updateMultiStringOption option checked field =
     case field of
         MultiStringField_ multiStringField ->
             MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
-        
+
         StringField_ stringfield ->
             StringField_ (updateStringValue_ option.value stringfield)
-                |> updateShowDropdown False 
+                |> updateShowDropdown False
 
         _ ->
             field
