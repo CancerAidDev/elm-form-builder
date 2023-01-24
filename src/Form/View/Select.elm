@@ -8,7 +8,7 @@ module Form.View.Select exposing
 
 # Select
 
-@docs select, httpSelect
+@docs select, searchableSelect, httpSelect
 
 -}
 
