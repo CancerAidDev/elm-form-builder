@@ -1,4 +1,4 @@
-module Form.View.SearchableSelect exposing (overlay)
+module Form.View.Dropdown exposing (overlay)
 
 import Form.Msg as Msg
 import Html

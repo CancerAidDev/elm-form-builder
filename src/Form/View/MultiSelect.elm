@@ -6,7 +6,7 @@ import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
 import Form.Msg as Msg
-import Form.View.SearchableSelect as SearchableSelect
+import Form.View.Dropdown as Dropdown
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
@@ -70,7 +70,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -131,7 +131,7 @@ searchableDropdownMenu key properties =
             filterSearchable properties.searchInput properties.searchableOptions
     in
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"

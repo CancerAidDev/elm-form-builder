@@ -15,7 +15,7 @@ import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Field.Required as Required
 import Form.Msg as Msg
-import Form.View.SearchableSelect as SearchableSelect
+import Form.View.Dropdown as Dropdown
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
@@ -142,7 +142,7 @@ searchableDropdownMenu key properties =
             filterSearchable properties.searchInput properties.options
     in
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -150,7 +150,7 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                ([ Html.div [ HtmlAttributes.class "dropdown-item" ]
+                (Html.div [ HtmlAttributes.class "dropdown-item" ]
                     [ Html.div [ HtmlAttributes.class "field" ]
                         [ Html.span [ HtmlAttributes.class "control" ]
                             [ Html.input
@@ -163,8 +163,7 @@ searchableDropdownMenu key properties =
                             ]
                         ]
                     ]
-                 ]
-                    ++ optionSection filteredOptions
+                    :: optionSection filteredOptions
                 )
             ]
         ]
