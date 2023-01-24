@@ -109,6 +109,22 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
 searchableDropdownMenu key properties =
     let
+        searchItem : Html.Html Msg.Msg
+        searchItem =
+            Html.div [ HtmlAttributes.class "dropdown-item" ]
+                [ Html.div [ HtmlAttributes.class "field" ]
+                    [ Html.span [ HtmlAttributes.class "control" ]
+                        [ Html.input
+                            [ HtmlAttributes.class "input is-small"
+                            , HtmlAttributes.placeholder "Search"
+                            , HtmlEvents.onInput <| Msg.UpdateSearchbar key
+                            , HtmlAttributes.value <| properties.searchInput
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+
         optionSection : List Option.Option -> List (Html.Html Msg.Msg)
         optionSection options =
             if List.isEmpty options then
@@ -120,9 +136,7 @@ searchableDropdownMenu key properties =
                     optionItems =
                         List.map (\option -> viewSearchableOption key properties option) options
                 in
-                [ Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ] optionItems
-                ]
+                Html.hr [ HtmlAttributes.class "dropdown-divider" ] [] :: optionItems
 
         filteredOptions : List Option.Option
         filteredOptions =
@@ -150,21 +164,7 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                (Html.div [ HtmlAttributes.class "dropdown-item" ]
-                    [ Html.div [ HtmlAttributes.class "field" ]
-                        [ Html.span [ HtmlAttributes.class "control" ]
-                            [ Html.input
-                                [ HtmlAttributes.class "input is-small"
-                                , HtmlAttributes.placeholder "Search"
-                                , HtmlEvents.onInput <| Msg.UpdateSearchbar key
-                                , HtmlAttributes.value <| properties.searchInput
-                                ]
-                                []
-                            ]
-                        ]
-                    ]
-                    :: optionSection filteredOptions
-                )
+                (searchItem :: optionSection filteredOptions)
             ]
         ]
 
@@ -172,7 +172,7 @@ searchableDropdownMenu key properties =
 viewSearchableOption : String -> Field.SelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
 viewSearchableOption key properties option =
     HtmlExtra.viewIf (not properties.hidden) <|
-        Html.label
+        Html.div
             [ HtmlAttributes.class "dropdown-item mr-2"
             , HtmlEvents.onClick <| Msg.UpdateSearchableSelectField key option.value
             ]
