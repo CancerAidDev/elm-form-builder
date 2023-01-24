@@ -46,6 +46,9 @@ formatForSubmission (Locale.Locale _ code) field =
         Field.SelectField _ ->
             value
 
+        Field.SearchableSelectField _ ->
+            value
+
         Field.HttpSelectField _ ->
             value
 

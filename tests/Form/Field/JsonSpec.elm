@@ -156,6 +156,20 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
+            , Test.test "Simple field decoder with searchable select type" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "name",
+                                "label": "Full Name",
+                                "type": "searchable_select",
+                                "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
             , Test.test "Simple field decoder with incorrect simple type" <|
                 \_ ->
                     let
@@ -278,6 +292,59 @@ suite =
                                     )
                                 )
                             )
+            , Test.test "Searchable select field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.pet",
+                            "label": "Pet",
+                            "type": "searchable_select",
+                            "width": "50%",
+                            "default": "Dog",
+                            "options": [
+                                { "value": "Dog" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ]
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "metadata.pet"
+                                , Field.StringField_
+                                    (Field.SearchableSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , label = "Pet"
+                                        , default = Just "Dog"
+                                        , options =
+                                            [ { label = Nothing
+                                              , value = "Dog"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Cat"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Parrot"
+                                              }
+                                            ]
+                                        , value = "Dog"
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , showDropdown = False
+                                        , searchInput = ""
+                                        }
+                                    )
+                                )
+                            )
             , Test.test "Select field decoder with http select type" <|
                 \_ ->
                     let
@@ -306,6 +373,24 @@ suite =
                             "key": "metadata.pet",
                             "label": "Pet",
                             "width": "50%",
+                            "options": [
+                                { "value": "Dog" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ]
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Searchable select field decoder with missing field" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.pet",
+                            "type": "searchable_select",
+                            "label": "Pet",
                             "options": [
                                 { "value": "Dog" },
                                 { "value": "Cat" },
@@ -710,6 +795,46 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
+                                            }
+                                  )
+                                ]
+                    in
+                    Encode.encode 0 (encode testDict)
+                        |> Expect.equal
+                            """{"metadata":{"pet":"Dog"}}"""
+            , Test.test "Metadata encoding with a metadata searchable select form element" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "metadata.pet"
+                                  , Field.StringField_ <|
+                                        Field.SearchableSelectField
+                                            { required = Required.Yes
+                                            , label = "Pet"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , value = "Dog"
+                                            , default = Nothing
+                                            , options =
+                                                [ { label = Nothing
+                                                  , value = "Dog"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Cat"
+                                                  }
+                                                , { label = Nothing
+                                                  , value = "Parrot"
+                                                  }
+                                                ]
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , placeholder = ""
+                                            , hasSelectablePlaceholder = True
+                                            , showDropdown = False
+                                            , searchInput = ""
                                             }
                                   )
                                 ]

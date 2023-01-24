@@ -3,6 +3,7 @@ module Form.Fields exposing
     , decoder, encode
     , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updateTags, updateTagInput
     , hasCheckboxConsentField, isEnabled, isShown
+    , updateSearchableSelectField
     )
 
 {-| Fields.
@@ -89,6 +90,14 @@ updateStringField : String -> String -> Fields -> Fields
 updateStringField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value))
         >> updateEnabledByFields
+
+
+{-| -}
+updateSearchableSelectField : String -> String -> Fields -> Fields
+updateSearchableSelectField key value =
+    Dict.update key (Maybe.map (Field.updateStringValue value))
+        >> updateEnabledByFields
+        >> updateShowDropdown key False
 
 
 {-| -}
@@ -195,7 +204,7 @@ updateShowDropdown key showDropdown =
 {-| -}
 updateSearchbar : String -> String -> Fields -> Fields
 updateSearchbar key value =
-    Dict.update key (Maybe.map (Field.updateSearchableMultiselectInput value))
+    Dict.update key (Maybe.map (Field.updateSearchableSelectInput value))
         >> updateEnabledByFields
 
 
