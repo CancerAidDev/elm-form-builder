@@ -15,7 +15,7 @@ import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Field.Required as Required
 import Form.Msg as Msg
-import Form.View.SearchableSelect as SearchableSelect
+import Form.View.Dropdown as Dropdown
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
@@ -89,7 +89,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             , Aria.controls [ "dropdown-menu" ]
             ]
             [ Html.span [] [ Html.text selectPlaceholder ]
-            , SearchableSelect.dropdownIcon showDropdown
+            , Dropdown.dropdownIcon showDropdown
             ]
         ]
 
@@ -98,10 +98,10 @@ searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html
 searchableDropdownMenu key properties =
     let
         filteredOptions =
-            SearchableSelect.filteredOptions properties.searchInput properties.options
+            Dropdown.filteredOptions properties.searchInput properties.options
     in
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -109,7 +109,7 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ SearchableSelect.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                [ Dropdown.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
                     List.map (viewSearchableOption key properties) filteredOptions

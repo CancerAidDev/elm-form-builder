@@ -5,7 +5,7 @@ import Accessibility.Key as Key
 import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Msg as Msg
-import Form.View.SearchableSelect as SearchableSelect
+import Form.View.Dropdown as Dropdown
 import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
@@ -48,7 +48,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
                 , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
                 ]
                 [ Html.text <| String.fromInt (Set.size value) ]
-            , SearchableSelect.dropdownIcon showDropdown
+            , Dropdown.dropdownIcon showDropdown
             ]
         ]
 
@@ -67,7 +67,7 @@ multiSelectReset key selected =
 dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -100,10 +100,10 @@ searchableDropdownMenu key properties =
 
         filteredOptions : List Option.Option
         filteredOptions =
-            SearchableSelect.filteredOptions properties.searchInput properties.searchableOptions
+            Dropdown.filteredOptions properties.searchInput properties.searchableOptions
     in
     Html.div []
-        [ SearchableSelect.overlay key
+        [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
@@ -117,7 +117,7 @@ searchableDropdownMenu key properties =
                     multiSelectReset key <|
                         Set.size properties.value
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                 , SearchableSelect.searchBar key properties.searchInput properties.value filteredOptions
+                 , Dropdown.searchBar key properties.searchInput properties.value filteredOptions
                  ]
                     ++ optionSection properties.options
                     ++ optionSection filteredOptions
