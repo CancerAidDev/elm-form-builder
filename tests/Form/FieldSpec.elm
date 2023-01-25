@@ -24,30 +24,6 @@ suite =
                 Field.updateStringValue updateString field
                     |> Expect.equal
                         (Field.text { fieldValues | value = updateString })
-        , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update StringField with value" <|
-            \initialString updateString ->
-                let
-                    fieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, regexValidation = [] }
-
-                    field =
-                        Field.text fieldValues
-                in
-                Field.maybeUpdateStringValue (Just updateString) field
-                    |> Expect.equal
-                        (Field.text { fieldValues | value = updateString })
-        , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update StringField without value" <|
-            \initialString _ ->
-                let
-                    fieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, regexValidation = [] }
-
-                    field =
-                        Field.text fieldValues
-                in
-                Field.maybeUpdateStringValue Nothing field
-                    |> Expect.equal
-                        (Field.text { fieldValues | value = initialString })
         , Test.fuzz2 Fuzz.string Fuzz.string "Update Radio " <|
             \option1 option2 ->
                 let
