@@ -36,7 +36,7 @@ suite =
                 Field.updateStringValue option2 field
                     |> Expect.equal
                         (Field.radio { radioFieldValues | value = option2 })
-        , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio with value" <|
+        , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio" <|
             \option1 option2 ->
                 let
                     radioFieldValues =

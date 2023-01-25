@@ -1,4 +1,4 @@
-module Form.View.Dropdown exposing (overlay, filteredOptions, searchBar, dropdownIcon)
+module Form.View.Dropdown exposing (dropdownIcon, filteredOptions, overlay, searchBar)
 
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
