@@ -21,6 +21,7 @@ import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
 import RemoteData
+import Set
 
 
 {-| -}
@@ -88,20 +89,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             , Aria.controls [ "dropdown-menu" ]
             ]
             [ Html.span [] [ Html.text selectPlaceholder ]
-            , Html.span
-                [ HtmlAttributes.class "icon mx-3"
-                ]
-                [ Html.i
-                    [ HtmlAttributes.class
-                        (if showDropdown then
-                            "fa-solid fa-angle-up fa-lg"
-
-                         else
-                            "fa-solid fa-angle-down fa-lg"
-                        )
-                    ]
-                    []
-                ]
+            , Dropdown.dropdownIcon showDropdown
             ]
         ]
 
@@ -109,51 +97,8 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
 searchableDropdownMenu key properties =
     let
-        searchItem : Html.Html Msg.Msg
-        searchItem =
-            Html.div [ HtmlAttributes.class "dropdown-item" ]
-                [ Html.div [ HtmlAttributes.class "field" ]
-                    [ Html.span [ HtmlAttributes.class "control" ]
-                        [ Html.input
-                            [ HtmlAttributes.class "input is-small"
-                            , HtmlAttributes.placeholder "Search"
-                            , HtmlEvents.onInput <| Msg.UpdateSearchbar key
-                            , HtmlAttributes.value <| properties.searchInput
-                            ]
-                            []
-                        ]
-                    ]
-                ]
-
-        optionSection : List Option.Option -> List (Html.Html Msg.Msg)
-        optionSection options =
-            if List.isEmpty options then
-                []
-
-            else
-                let
-                    optionItems : List (Html.Html Msg.Msg)
-                    optionItems =
-                        List.map (\option -> viewSearchableOption key properties option) options
-                in
-                Html.hr [ HtmlAttributes.class "dropdown-divider" ] [] :: optionItems
-
-        filteredOptions : List Option.Option
         filteredOptions =
-            let
-                caseInsensitiveContains : String -> String -> Bool
-                caseInsensitiveContains s1 s2 =
-                    String.contains (String.toLower s1) (String.toLower s2)
-
-                takeOption : String -> Option.Option -> Bool
-                takeOption searchString option =
-                    List.any (caseInsensitiveContains searchString) (option.value :: List.filterMap identity [ option.label ])
-
-                filterSearchable : String -> List Option.Option -> List Option.Option
-                filterSearchable searchString options =
-                    List.filter (takeOption searchString) options
-            in
-            filterSearchable properties.searchInput properties.options
+            Dropdown.filteredOptions properties.searchInput properties.options
     in
     Html.div []
         [ Dropdown.overlay key
@@ -164,7 +109,11 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                (searchItem :: optionSection filteredOptions)
+                [ Dropdown.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
+                    List.map (viewSearchableOption key properties) filteredOptions
+                ]
             ]
         ]
 
@@ -174,9 +123,9 @@ viewSearchableOption key properties option =
     HtmlExtra.viewIf (not properties.hidden) <|
         Html.div
             [ HtmlAttributes.class "dropdown-item mr-2"
-            , HtmlEvents.onClick <| Msg.UpdateSearchableSelectField key option.value
+            , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
             ]
-            [ Html.text (option.label |> Maybe.withDefault option.value)
+            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
             ]
 
 

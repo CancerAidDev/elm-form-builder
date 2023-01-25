@@ -725,6 +725,10 @@ updateParsedDateValue value stringField =
 genericUpdateStringField : (a -> StringField -> StringField) -> a -> Field -> Field
 genericUpdateStringField f value field =
     case field of
+        StringField_ (SearchableSelectField properties) ->
+            StringField_ (f value (SearchableSelectField properties))
+                |> updateShowDropdown False
+
         StringField_ stringField ->
             StringField_ <| f value stringField
 
@@ -738,6 +742,10 @@ updateMultiStringOption option checked field =
     case field of
         MultiStringField_ multiStringField ->
             MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
+
+        StringField_ stringfield ->
+            StringField_ (updateStringValue_ option.value stringfield)
+                |> updateShowDropdown False
 
         _ ->
             field
