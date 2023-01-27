@@ -353,11 +353,12 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = (
+                    , value =
                         if value == "" then
                             FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
-                        else value
-                    )
+
+                        else
+                            value
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
