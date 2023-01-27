@@ -83,6 +83,7 @@ type alias JsonEmailFieldProperties =
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
     , forbiddenDomains : List EmailFormat.ForbiddenDomain
+    , value : String
     }
 
 
@@ -342,7 +343,7 @@ toField time order field =
                     }
             )
 
-        JsonEmailField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, forbiddenDomains } ->
+        JsonEmailField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, forbiddenDomains, value } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -352,7 +353,11 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
+                    , value = (
+                        if value == "" then
+                            FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
+                        else value
+                    )
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -638,6 +643,7 @@ decoderEmailJson =
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "forbidden_domains" (Decode.list EmailFormat.decoderForbiddenDomain) []
+        |> DecodePipeline.optional "value" Decode.string ""
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties
