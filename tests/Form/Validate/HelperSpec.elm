@@ -106,7 +106,7 @@ simpleField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , rounded = True
+        , rounded = False
         , regexValidation = []
         }
 
@@ -124,7 +124,7 @@ regexNonEmployeeEmailField { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , rounded = True
+        , rounded = False
         , regexValidation =
             RegexValidation.fromSuffixConstraints <|
                 List.map
@@ -153,5 +153,5 @@ dateField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , rounded = True
+        , rounded = False
         }

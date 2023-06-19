@@ -16,7 +16,7 @@ suite =
             \initialString updateString ->
                 let
                     fieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, rounded = True, regexValidation = [] }
+                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, rounded = False, regexValidation = [] }
 
                     field =
                         Field.text fieldValues

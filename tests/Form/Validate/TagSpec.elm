@@ -25,7 +25,7 @@ suite =
                     , disabled = False
                     , hidden = False
                     , unhiddenBy = Nothing
-                    , rounded = True
+                    , rounded = False
                     , placeholder = Nothing
                     }
     in
@@ -46,7 +46,7 @@ suite =
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
-                            , rounded = True
+                            , rounded = False
                             , placeholder = Nothing
                             }
                     )
@@ -68,7 +68,7 @@ suite =
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
-                            , rounded = True
+                            , rounded = False
                             , placeholder = Nothing
                             }
                     )
@@ -90,7 +90,7 @@ suite =
                             , disabled = False
                             , hidden = False
                             , unhiddenBy = Nothing
-                            , rounded = True
+                            , rounded = False
                             , placeholder = Nothing
                             }
                     )
