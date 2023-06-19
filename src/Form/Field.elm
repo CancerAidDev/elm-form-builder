@@ -46,6 +46,11 @@ module Form.Field exposing
 
 @docs metadataKey
 
+
+# Rounded Class
+
+@docs roundedClass
+
 -}
 
 import Form.Field.Direction as Direction
@@ -1407,6 +1412,7 @@ metadataKey string =
             Nothing
 
 
+{-| -}
 roundedClass : Bool -> String
 roundedClass rounded =
     if rounded then
