@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , roundedClass
     )
 
 {-| Field type and helper functions
@@ -68,8 +69,8 @@ import Time
 
 
 {-| -}
-text : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
+text : StringFieldProperties { rounded : Bool, regexValidation : List RegexValidation.RegexValidation } -> Field
+text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -82,13 +83,14 @@ text { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , regexValidation = regexValidation
             }
 
 
 {-| -}
 tag : TagFieldProperties {} -> Field
-tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, placeholder } =
+tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, rounded, placeholder } =
     MultiStringField_ <|
         TagField
             { required = required
@@ -101,13 +103,14 @@ tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidde
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , placeholder = placeholder
             }
 
 
 {-| -}
-email : StringFieldProperties { forbiddenDomains : List EmailFormat.ForbiddenDomain } -> Field
-email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, forbiddenDomains } =
+email : StringFieldProperties { rounded : Bool, forbiddenDomains : List EmailFormat.ForbiddenDomain } -> Field
+email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded, forbiddenDomains } =
     StringField_ <|
         SimpleField
             { required = required
@@ -120,6 +123,7 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , regexValidation =
                 RegexValidation.fromSuffixConstraints <|
                     List.map
@@ -129,8 +133,8 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
 
 
 {-| -}
-dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
+dateOfBirth : StringFieldProperties { rounded : Bool } -> Field
+dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded } =
     StringField_ <|
         DateField
             { required = required
@@ -144,12 +148,13 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden,
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             }
 
 
 {-| -}
-datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
+datePast : StringFieldProperties { rounded : Bool } -> Field
+datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded } =
     StringField_ <|
         DateField
             { required = required
@@ -163,12 +168,13 @@ datePast { required, label, width, enabledBy, order, value, disabled, hidden, un
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             }
 
 
 {-| -}
-dateFuture : StringFieldProperties {} -> Field
-dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
+dateFuture : StringFieldProperties { rounded : Bool } -> Field
+dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded } =
     StringField_ <|
         DateField
             { required = required
@@ -182,12 +188,13 @@ dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, 
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             }
 
 
 {-| -}
-phone : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
+phone : StringFieldProperties { rounded : Bool, regexValidation : List RegexValidation.RegexValidation } -> Field
+phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -200,13 +207,14 @@ phone { required, label, width, enabledBy, order, value, disabled, hidden, unhid
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , regexValidation = regexValidation
             }
 
 
 {-| -}
-url : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
+url : StringFieldProperties { rounded : Bool, regexValidation : List RegexValidation.RegexValidation } -> Field
+url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -219,13 +227,14 @@ url { required, label, width, enabledBy, order, value, disabled, hidden, unhidde
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , regexValidation = regexValidation
             }
 
 
 {-| -}
-textarea : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
+textarea : StringFieldProperties { rounded : Bool, regexValidation : List RegexValidation.RegexValidation } -> Field
+textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, rounded, regexValidation } =
     StringField_ <|
         SimpleField
             { required = required
@@ -238,6 +247,7 @@ textarea { required, label, width, enabledBy, order, value, disabled, hidden, un
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
+            , rounded = rounded
             , regexValidation = regexValidation
             }
 
@@ -398,6 +408,7 @@ type alias TagFieldProperties a =
 type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
+        , rounded : Bool
         , regexValidation : List RegexValidation.RegexValidation
         }
 
@@ -407,6 +418,7 @@ type alias DateFieldProperties =
     StringFieldProperties
         { tipe : FieldType.DateFieldType
         , parsedDate : Maybe Time.Posix
+        , rounded : Bool
         }
 
 
@@ -418,6 +430,7 @@ type alias SelectFieldProperties a =
             , options : List Option.Option
             , placeholder : String
             , hasSelectablePlaceholder : Bool
+            , rounded : Bool
         }
 
 
@@ -426,6 +439,7 @@ type alias SearchableSelectFieldProperties =
     SelectFieldProperties
         { showDropdown : Bool
         , searchInput : String
+        , rounded : Bool
         }
 
 
@@ -437,12 +451,13 @@ type alias HttpSelectFieldProperties =
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         , placeholder : String
         , hasSelectablePlaceholder : Bool
+        , rounded : Bool
         }
 
 
 {-| -}
 type alias MultiStringFieldProperties a =
-    FieldProperties { a | value : Set.Set String }
+    FieldProperties { a | value : Set.Set String, rounded : Bool }
 
 
 {-| -}
@@ -500,7 +515,7 @@ type alias RadioBoolFieldProperties =
 
 {-| -}
 type alias AgeFieldProperties =
-    FieldProperties { value : Maybe Int }
+    FieldProperties { value : Maybe Int, rounded : Bool }
 
 
 {-| -}
@@ -1390,3 +1405,12 @@ metadataKey string =
 
         _ ->
             Nothing
+
+
+roundedClass : Bool -> String
+roundedClass rounded =
+    if rounded then
+        " is-rounded"
+
+    else
+        ""

@@ -26,9 +26,9 @@ import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder, rounded } =
     HtmlExtra.viewIf (not hidden) <|
-        Html.div [ HtmlAttributes.class "select is-fullwidth" ]
+        Html.div [ HtmlAttributes.class <| "select is-fullwidth" ++ Field.roundedClass rounded ]
             [ Html.select
                 [ HtmlAttributes.name key
                 , HtmlAttributes.required (required == Required.Yes)
@@ -71,7 +71,7 @@ searchableSelect key properties =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown } =
+dropdownTrigger key { placeholder, value, showDropdown, rounded } =
     let
         selectPlaceholder =
             if value == "" then
@@ -82,7 +82,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
         [ Html.button
-            [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
+            [ HtmlAttributes.class <| "button pl-4 pr-0 is-fullwidth is-justify-content-space-between" ++ Field.roundedClass rounded
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
@@ -109,7 +109,7 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ Dropdown.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                [ Dropdown.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions properties.rounded
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
                     List.map (viewSearchableOption key properties) filteredOptions
@@ -147,6 +147,7 @@ httpSelect key properties =
                 , disabled = properties.disabled
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
+                , rounded = properties.rounded
                 , placeholder = properties.placeholder
                 , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
                 }

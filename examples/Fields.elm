@@ -24,6 +24,23 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
+            , regexValidation = []
+            }
+        )
+    , \order ->
+        ( "textarea"
+        , FormField.textarea
+            { required = IsRequired.No
+            , label = "Textarea"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            , rounded = True
             , regexValidation = []
             }
         )
@@ -39,6 +56,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , forbiddenDomains = []
             }
         )
@@ -56,6 +74,7 @@ fields =
                     , disabled = True
                     , hidden = False
                     , unhiddenBy = Nothing
+                    , rounded = True
                     , regexValidation =
                         []
                     }
@@ -71,6 +90,7 @@ fields =
                     , disabled = False
                     , hidden = False
                     , unhiddenBy = Nothing
+                    , rounded = True
                     , regexValidation =
                         [ { pattern = regex
                           , message = "Please enter your full name"
@@ -91,6 +111,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , forbiddenDomains =
                 [ { domain = "bigcompany.com"
                   , message = "Please don't use the company email address"
@@ -113,6 +134,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , forbiddenDomains = []
             }
         )
@@ -128,6 +150,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , regexValidation = []
             }
         )
@@ -143,6 +166,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -157,6 +181,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -171,6 +196,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -185,6 +211,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -204,6 +231,7 @@ fields =
             , disabled = True
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , placeholder = ""
             , hasSelectablePlaceholder = True
             }
@@ -231,6 +259,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , placeholder = "State"
             , hasSelectablePlaceholder = False
             }
@@ -258,6 +287,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , placeholder = "Searchable State"
             , hasSelectablePlaceholder = False
             , showDropdown = False
@@ -285,6 +315,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -313,6 +344,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             }
         )
     , \order ->
@@ -377,6 +409,7 @@ fields =
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
+            , rounded = True
             , placeholder = Just "Add new tag..."
             }
         )

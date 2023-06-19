@@ -52,6 +52,7 @@ type alias JsonTagFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , placeholder : Maybe String
     , value : String
     , tags : List String
@@ -68,6 +69,7 @@ type alias JsonSimpleFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , regexValidation : List RegexValidation.RegexValidation
     }
 
@@ -82,6 +84,7 @@ type alias JsonEmailFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , forbiddenDomains : List EmailFormat.ForbiddenDomain
     , value : String
     }
@@ -97,6 +100,7 @@ type alias JsonDateFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     }
 
 
@@ -111,6 +115,7 @@ type alias JsonSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , placeholder : String
     , hasSelectablePlaceholder : Bool
     }
@@ -127,6 +132,7 @@ type alias JsonSearchableSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , placeholder : String
     , hasSelectablePlaceholder : Bool
     , showDropdown : Bool
@@ -145,6 +151,7 @@ type alias JsonHttpSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , placeholder : String
     , hasSelectablePlaceholder : Bool
     }
@@ -162,6 +169,7 @@ type alias JsonMultiSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     }
 
 
@@ -177,6 +185,7 @@ type alias JsonSearchableMultiSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     , searchInput : String
     , searchableOptions : List Option.Option
     }
@@ -194,6 +203,7 @@ type alias JsonMultiHttpSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     }
 
 
@@ -260,6 +270,7 @@ type alias JsonAgeFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , rounded : Bool
     }
 
 
@@ -325,7 +336,7 @@ decoderForType fieldType =
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
 toField time order field =
     case field of
-        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, regexValidation } ->
+        JsonSimpleField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, rounded, regexValidation } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -339,11 +350,12 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , regexValidation = regexValidation
                     }
             )
 
-        JsonEmailField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, forbiddenDomains, value } ->
+        JsonEmailField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, rounded, forbiddenDomains, value } ->
             ( key
             , Field.StringField_ <|
                 Field.SimpleField
@@ -362,6 +374,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , regexValidation =
                         RegexValidation.fromSuffixConstraints <|
                             List.map
@@ -370,7 +383,7 @@ toField time order field =
                     }
             )
 
-        JsonDateField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonDateField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, rounded } ->
             ( key
             , Field.StringField_ <|
                 Field.DateField
@@ -385,6 +398,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     }
             )
 
@@ -405,7 +419,7 @@ toField time order field =
                     }
             )
 
-        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder } ->
+        JsonSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, rounded, placeholder, hasSelectablePlaceholder } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -420,12 +434,13 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
                     }
             )
 
-        JsonSearchableSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput } ->
+        JsonSearchableSelectField { required, key, label, width, default, enabledBy, options, disabled, hidden, unhiddenBy, rounded, placeholder, hasSelectablePlaceholder, showDropdown, searchInput } ->
             ( key
             , Field.StringField_ <|
                 Field.SearchableSelectField
@@ -440,6 +455,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
                     , showDropdown = showDropdown
@@ -447,7 +463,7 @@ toField time order field =
                     }
             )
 
-        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder } ->
+        JsonHttpSelectField { required, key, label, width, default, enabledBy, url, disabled, hidden, unhiddenBy, rounded, placeholder, hasSelectablePlaceholder } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -463,6 +479,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
                     }
@@ -487,7 +504,7 @@ toField time order field =
                     }
             )
 
-        JsonAgeField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonAgeField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, rounded } ->
             ( key
             , Field.NumericField_ <|
                 Field.AgeField
@@ -500,6 +517,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     }
             )
 
@@ -537,7 +555,7 @@ toField time order field =
                     }
             )
 
-        JsonMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy } ->
+        JsonMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy, rounded } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.MultiSelectField
@@ -553,10 +571,11 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     }
             )
 
-        JsonSearchableMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy, searchableOptions, searchInput } ->
+        JsonSearchableMultiSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, options, disabled, hidden, unhiddenBy, rounded, searchableOptions, searchInput } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.SearchableMultiSelectField
@@ -572,12 +591,13 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , searchInput = searchInput
                     , searchableOptions = searchableOptions
                     }
             )
 
-        JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url, disabled, hidden, unhiddenBy } ->
+        JsonMultiHttpSelectField { required, key, label, width, placeholder, showDropdown, enabledBy, url, disabled, hidden, unhiddenBy, rounded } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.MultiHttpSelectField
@@ -594,10 +614,11 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     }
             )
 
-        JsonTagField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonTagField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, rounded } ->
             ( key
             , Field.MultiStringField_ <|
                 Field.TagField
@@ -611,6 +632,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , rounded = rounded
                     , placeholder = Nothing
                     }
             )
@@ -628,6 +650,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "regex_validation" (Decode.list RegexValidation.decoder) []
 
 
@@ -643,6 +666,7 @@ decoderEmailJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "forbidden_domains" (Decode.list EmailFormat.decoderForbiddenDomain) []
         |> DecodePipeline.optional "value" Decode.string ""
 
@@ -659,6 +683,7 @@ decoderDateJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
 
 
 decoderCheckboxJson : FieldType.CheckboxFieldType -> Decode.Decoder JsonCheckboxFieldProperties
@@ -688,6 +713,7 @@ decoderSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
 
@@ -705,6 +731,7 @@ decoderSearchableSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
         |> DecodePipeline.hardcoded False
@@ -724,6 +751,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
 
@@ -742,6 +770,7 @@ decoderMultiSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
 
 
 decoderSearchableMultiSelectJson : Decode.Decoder JsonSearchableMultiSelectFieldProperties
@@ -758,6 +787,7 @@ decoderSearchableMultiSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.hardcoded ""
         |> DecodePipeline.required "searchableOptions" (Decode.list Option.decoder)
 
@@ -776,6 +806,7 @@ decoderMultiHttpSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
 
 
 decoderRadioJson : Decode.Decoder JsonRadioFieldProperties
@@ -833,6 +864,7 @@ decoderAgeJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
 
 
 decoderTagJson : Decode.Decoder JsonTagFieldProperties
@@ -846,6 +878,7 @@ decoderTagJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rounded" Decode.bool False
         |> DecodePipeline.optional "placeholder" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.required "inputBar" Decode.string
         |> DecodePipeline.required "value" (Decode.list Decode.string)

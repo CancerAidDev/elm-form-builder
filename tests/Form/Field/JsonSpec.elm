@@ -62,6 +62,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , regexValidation = []
                                         }
                                 )
@@ -97,6 +98,7 @@ suite =
                                                 , disabled = False
                                                 , hidden = False
                                                 , unhiddenBy = Nothing
+                                                , rounded = True
                                                 , regexValidation = [ { pattern = regex, message = "Only letters allowed" } ]
                                                 }
                                         )
@@ -135,6 +137,7 @@ suite =
                                                 , disabled = False
                                                 , hidden = False
                                                 , unhiddenBy = Nothing
+                                                , rounded = True
                                                 , regexValidation = [ { pattern = regex, message = "Don't use company email" } ]
                                                 }
                                         )
@@ -286,6 +289,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
                                         }
@@ -337,6 +341,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
@@ -431,6 +436,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
                                         }
@@ -615,6 +621,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , showDropdown = False
                                         }
                                     )
@@ -670,6 +677,7 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
+                                        , rounded = True
                                         , showDropdown = False
                                         , searchInput = ""
                                         , searchableOptions =
@@ -704,6 +712,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , regexValidation = []
                                             }
                                   )
@@ -730,6 +739,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , placeholder = Nothing
                                             }
                                   )
@@ -756,6 +766,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , regexValidation = []
                                             }
                                   )
@@ -793,6 +804,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
                                             }
@@ -831,6 +843,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
                                             , showDropdown = False
@@ -862,6 +875,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
                                             }
@@ -901,6 +915,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             }
                                   )
                                 ]
@@ -943,6 +958,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             }
                                   )
                                 ]
@@ -991,6 +1007,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             }
                                   )
                                 ]
@@ -1023,6 +1040,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             }
                                   )
                                 , ( "metadata.dateFuture"
@@ -1039,6 +1057,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             }
                                   )
                                 , ( "metadata.email"
@@ -1054,6 +1073,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , regexValidation = []
                                             }
                                   )
@@ -1070,6 +1090,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , regexValidation = []
                                             }
                                   )
@@ -1086,6 +1107,7 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , rounded = True
                                             , placeholder = Nothing
                                             }
                                   )

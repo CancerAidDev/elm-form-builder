@@ -1,5 +1,6 @@
 module Form.View.Dropdown exposing (dropdownIcon, filteredOptions, overlay, searchBar)
 
+import Form.Field as Field
 import Form.Field.Option as Option
 import Form.Lib.Events as LibEvents
 import Form.Msg as Msg
@@ -37,13 +38,15 @@ filteredOptions searchString options =
     List.filter takeOption options
 
 
-searchBar : String -> String -> Set.Set String -> List Option.Option -> Html.Html Msg.Msg
-searchBar key searchInput values options =
+searchBar : String -> String -> Set.Set String -> List Option.Option -> Bool -> Html.Html Msg.Msg
+searchBar key searchInput values options rounded =
     Html.div [ HtmlAttributes.class "dropdown-item" ]
         [ Html.div [ HtmlAttributes.class "field" ]
             [ Html.span [ HtmlAttributes.class "control" ]
                 [ Html.input
-                    ([ HtmlAttributes.class "input is-small"
+                    ([ HtmlAttributes.class <|
+                        "input is-small"
+                            ++ Field.roundedClass rounded
                      , HtmlAttributes.placeholder "Search"
                      , HtmlEvents.onInput <| Msg.UpdateSearchbar key
                      , HtmlAttributes.value <| searchInput

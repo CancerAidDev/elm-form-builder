@@ -76,7 +76,7 @@ control time (Locale.Locale _ code) key field =
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
                 FieldType.Phone ->
-                    phone time code key field
+                    phone time code key properties.rounded field
 
                 FieldType.TextArea ->
                     textarea key properties
@@ -130,7 +130,9 @@ input time code key field =
         renderInput fieldType properties =
             Html.input
                 [ HtmlAttributes.name key
-                , HtmlAttributes.class (FieldType.toClass fieldType)
+                , HtmlAttributes.class <|
+                    FieldType.toClass fieldType
+                        ++ Field.roundedClass properties.rounded
                 , HtmlAttributes.type_ (FieldType.toType fieldType)
                 , HtmlAttributes.value properties.value
                 , HtmlAttributes.required (properties.required == Required.Yes)
@@ -160,7 +162,7 @@ input time code key field =
         Field.NumericField_ (Field.AgeField properties) ->
             Html.input
                 [ HtmlAttributes.name key
-                , HtmlAttributes.class "input"
+                , HtmlAttributes.class <| "input" ++ Field.roundedClass properties.rounded
                 , HtmlAttributes.type_ "number"
                 , HtmlAttributes.pattern "\\d*"
                 , HtmlAttributes.style "width" "6em"
@@ -186,6 +188,11 @@ textarea key field =
     Html.textarea
         [ HtmlAttributes.name key
         , HtmlAttributes.class "textarea"
+        , if field.rounded then
+            HtmlAttributes.style "border-radius" "10px"
+
+          else
+            HtmlAttributesExtra.empty
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
         , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
@@ -206,7 +213,7 @@ tag key field =
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
                     [ HtmlAttributes.name key
-                    , HtmlAttributes.class "input"
+                    , HtmlAttributes.class <| "input" ++ Field.roundedClass field.rounded
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
                     , LibEvents.onEnter (Msg.UpdateTags key field.inputBar True)
@@ -216,22 +223,22 @@ tag key field =
                 ]
             , Html.p [ HtmlAttributes.class "control" ]
                 [ Html.a
-                    [ HtmlAttributes.class "button is-link"
+                    [ HtmlAttributes.class <| "button is-link" ++ Field.roundedClass field.rounded
                     , HtmlEvents.onClick addMsg
                     ]
                     [ Html.text "Add" ]
                 ]
             ]
-        , viewTags key field.value
+        , viewTags key field.value field.rounded
         ]
 
 
-viewTags : String -> Set.Set String -> Html.Html Msg.Msg
-viewTags key tags =
+viewTags : String -> Set.Set String -> Bool -> Html.Html Msg.Msg
+viewTags key tags rounded =
     Html.div []
         (List.map
             (\t ->
-                Html.span [ HtmlAttributes.class "tag is-link mr-1" ]
+                Html.span [ HtmlAttributes.class <| "tag is-link mr-1" ++ Field.roundedClass rounded ]
                     [ Html.text t
                     , Html.button
                         [ HtmlAttributes.class "delete is-small"
@@ -244,11 +251,11 @@ viewTags key tags =
         )
 
 
-phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
-phone time code key field =
+phone : Time.Posix -> CountryCode.CountryCode -> String -> Bool -> Field.Field -> Html.Html Msg.Msg
+phone time code key rounded field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
+            [ Html.a [ HtmlAttributes.class <| "button is-static" ++ Field.roundedClass rounded ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
             [ input time (Just code) key field ]
         ]

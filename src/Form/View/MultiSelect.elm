@@ -33,10 +33,10 @@ searchableMultiSelect key properties =
 
 
 dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown } =
+dropdownTrigger key { placeholder, value, showDropdown, rounded } =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
-            [ HtmlAttributes.class "button pl-4 pr-0"
+            [ HtmlAttributes.class <| "button pl-4 pr-0" ++ Field.roundedClass rounded
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
@@ -44,7 +44,7 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             ]
             [ Html.span [] [ Html.text placeholder ]
             , Html.span
-                [ HtmlAttributes.class "tag is-link ml-2"
+                [ HtmlAttributes.class <| "tag is-link ml-2" ++ Field.roundedClass rounded
                 , HtmlAttributes.style "font-variant-numeric" "tabular-nums"
                 ]
                 [ Html.text <| String.fromInt (Set.size value) ]
@@ -53,11 +53,11 @@ dropdownTrigger key { placeholder, value, showDropdown } =
         ]
 
 
-multiSelectReset : String -> Int -> List (Html.Html Msg.Msg)
-multiSelectReset key selected =
+multiSelectReset : String -> Bool -> Int -> List (Html.Html Msg.Msg)
+multiSelectReset key rounded selected =
     [ Html.div [] [ Html.text <| String.fromInt selected ++ " Selected" ]
     , Html.button
-        [ HtmlAttributes.class "button is-small"
+        [ HtmlAttributes.class <| "button is-small" ++ Field.roundedClass rounded
         , HtmlEvents.onClick <| Msg.ResetField key
         ]
         [ Html.text "Reset" ]
@@ -78,7 +78,7 @@ dropdownMenu key properties =
                 [ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                   <|
-                    multiSelectReset key <|
+                    multiSelectReset key properties.rounded <|
                         Set.size properties.value
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ]
@@ -114,10 +114,10 @@ searchableDropdownMenu key properties =
                 ([ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                    <|
-                    multiSelectReset key <|
+                    multiSelectReset key properties.rounded <|
                         Set.size properties.value
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                 , Dropdown.searchBar key properties.searchInput properties.value filteredOptions
+                 , Dropdown.searchBar key properties.searchInput properties.value filteredOptions properties.rounded
                  ]
                     ++ optionSection properties.options
                     ++ optionSection filteredOptions
@@ -162,6 +162,7 @@ multiHttpSelect key properties =
                 , disabled = properties.disabled
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
+                , rounded = properties.rounded
                 }
         )
         properties.options
