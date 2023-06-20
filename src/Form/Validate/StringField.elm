@@ -77,6 +77,9 @@ validate locale field =
                 Field.SelectField { options } ->
                     Options.optionsValidator options locale field
 
+                Field.SearchableSelectField { options } ->
+                    Options.optionsValidator options locale field
+
                 Field.HttpSelectField { options } ->
                     Options.remoteOptionsValidator options locale field
 

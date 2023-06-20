@@ -172,6 +172,25 @@ fields =
             |> FormField.multiSelect options
         )
     , \order ->
+        ( "searchableState"
+        , FormField.searchableSelectDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Searchable State"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                [ { label = Nothing, value = "Australian Capital Territory" }
+                , { label = Nothing, value = "New South Wales" }
+                , { label = Nothing, value = "Northern Territory" }
+                , { label = Nothing, value = "Queensland" }
+                , { label = Nothing, value = "South Australian" }
+                , { label = Nothing, value = "Tasmania" }
+                , { label = Nothing, value = "Victorian" }
+                , { label = Nothing, value = "Western Australia" }
+                ]
+            |> FormField.setPlaceholder "Searchable State"
+            |> FormField.searchableSelect
+        )
+    , \order ->
         ( "workdays"
         , FormField.searchableMultiSelectDefault
             |> FormField.setIsRequired IsRequired.Yes

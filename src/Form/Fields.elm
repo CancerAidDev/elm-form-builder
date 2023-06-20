@@ -195,7 +195,7 @@ updateShowDropdown key showDropdown =
 {-| -}
 updateSearchbar : String -> String -> Fields -> Fields
 updateSearchbar key value =
-    Dict.update key (Maybe.map (Field.updateSearchableMultiselectInput value))
+    Dict.update key (Maybe.map (Field.updateSearchableSelectInput value))
         >> updateEnabledByFields
 
 

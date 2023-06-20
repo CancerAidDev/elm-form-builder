@@ -43,6 +43,7 @@ type StringFieldType
     = SimpleType SimpleFieldType
     | DateType DateFieldType
     | Select
+    | SearchableSelect
     | HttpSelect
     | Radio
 
@@ -153,6 +154,9 @@ fromString str =
 
         "select" ->
             Just (StringType Select)
+
+        "searchable_select" ->
+            Just (StringType SearchableSelect)
 
         "httpSelect" ->
             Just (StringType HttpSelect)

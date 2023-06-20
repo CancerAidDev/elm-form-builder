@@ -40,7 +40,7 @@ yarn install
 ```
 yarn elm-format --validate src tests
 yarn elm-review
-yarn elm-test
+yarn elm-test-rs
 yarn elm make
 ```
 

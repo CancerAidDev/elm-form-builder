@@ -44,4 +44,4 @@ jobs:
 
       - run: yarn elm-review
 
-      - run: yarn test:unit
+      - run: yarn elm-test-rs

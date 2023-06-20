@@ -108,6 +108,17 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType FieldType.Select))
+        , Test.test "SearchableSelect field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "searchable_select"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.StringType FieldType.SearchableSelect))
         , Test.test "Http select field type" <|
             \_ ->
                 let
