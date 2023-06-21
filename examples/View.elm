@@ -15,7 +15,8 @@ import Msg
 view : Model.Model -> Html.Html Msg.Msg
 view model =
     Html.div
-        [ HtmlAttributes.class "container p-5" ]
+        [ HtmlAttributes.class "container p-5",
+        HtmlAttributes.style "background-color" "#f7f0e1" ]
         [ Html.h1
             [ HtmlAttributes.class "is-size-3 has-text-weight-bold" ]
             [ Html.text "Add Person" ]
