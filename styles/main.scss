@@ -25,11 +25,12 @@
   }
 
 .select select, .textarea, .input, .button {
-    border-color: #fff;
     border: 0;
     border-radius: 0.5rem;
     box-shadow: none;
     height: 4.0975rem;
+    font-family: "Gotham";
+    padding: 1.33rem;
 }
 
 .label {
