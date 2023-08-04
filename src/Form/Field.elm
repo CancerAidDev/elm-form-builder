@@ -1,6 +1,6 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
-    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
+    , AgeFieldProperties, NumericTextFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
     , isCheckbox, isColumn, isNumericField, isRequired
@@ -13,12 +13,12 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
 
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+@docs AgeFieldProperties, NumericTextFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
 
 
 # Getters
@@ -321,6 +321,12 @@ age =
 
 
 {-| -}
+numericText : NumericTextFieldProperties -> Field
+numericText =
+    NumericField_ << NumericTextField
+
+
+{-| -}
 type Field
     = StringField_ StringField
     | MultiStringField_ MultiStringField
@@ -348,6 +354,7 @@ type BoolField
 {-| -}
 type NumericField
     = AgeField AgeFieldProperties
+    | NumericTextField NumericTextFieldProperties
 
 
 {-| -}
@@ -504,6 +511,11 @@ type alias AgeFieldProperties =
 
 
 {-| -}
+type alias NumericTextFieldProperties =
+    FieldProperties { value : Maybe Int }
+
+
+{-| -}
 getProperties : Field -> CommonFieldProperties
 getProperties field =
     case field of
@@ -525,6 +537,9 @@ getProperties field =
             getCommonProperties properties
 
         NumericField_ (AgeField properties) ->
+            getCommonProperties properties
+
+        NumericField_ (NumericTextField properties) ->
             getCommonProperties properties
 
 
@@ -806,6 +821,9 @@ resetValueToDefault field =
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | value = Nothing })
 
+        NumericField_ (NumericTextField properties) ->
+            NumericField_ (NumericTextField { properties | value = Nothing })
+
 
 resetStringFieldValueToDefault : StringField -> StringField
 resetStringFieldValueToDefault field =
@@ -890,6 +908,9 @@ setRequired required field =
 
         NumericField_ (AgeField properties) ->
             NumericField_ (AgeField { properties | required = required })
+
+        NumericField_ (NumericTextField properties) ->
+            NumericField_ (NumericTextField { properties | required = required })
 
 
 {-| -}
@@ -1126,8 +1147,13 @@ updateRadioEnumValue_ value field =
 
 {-| -}
 updateNumericValue_ : Maybe Int -> NumericField -> NumericField
-updateNumericValue_ value (AgeField properties) =
-    AgeField { properties | value = value }
+updateNumericValue_ value field =
+    case field of
+        AgeField properties ->
+            AgeField { properties | value = value }
+
+        NumericTextField properties ->
+            NumericTextField { properties | value = value }
 
 
 {-| -}
@@ -1261,6 +1287,9 @@ getType field =
         NumericField_ (AgeField _) ->
             FieldType.NumericType FieldType.Age
 
+        NumericField_ (NumericTextField _) ->
+            FieldType.NumericType FieldType.NumericText
+
 
 {-| -}
 isNumericField : Field -> Bool
@@ -1378,6 +1407,9 @@ encode field =
             EncodeExtra.maybe Encode.bool value
 
         NumericField_ (AgeField { value }) ->
+            EncodeExtra.maybe Encode.int value
+
+        NumericField_ (NumericTextField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

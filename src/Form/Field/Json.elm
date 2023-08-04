@@ -40,6 +40,7 @@ type JsonField
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
     | JsonAgeField JsonAgeFieldProperties
+    | JsonNumericTextField JsonNumericTextFieldProperties
     | JsonTagField JsonTagFieldProperties
 
 
@@ -263,6 +264,18 @@ type alias JsonAgeFieldProperties =
     }
 
 
+type alias JsonNumericTextFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    }
+
+
 {-| -}
 decoder : Time.Posix -> Int -> Decode.Decoder ( String, Field.Field )
 decoder time order =
@@ -320,6 +333,9 @@ decoderForType fieldType =
 
         FieldType.NumericType FieldType.Age ->
             Decode.map JsonAgeField decoderAgeJson
+
+        FieldType.NumericType FieldType.NumericText ->
+            Decode.map JsonNumericTextField decoderNumericTextJson
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -491,6 +507,22 @@ toField time order field =
             ( key
             , Field.NumericField_ <|
                 Field.AgeField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = Nothing
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    }
+            )
+
+        JsonNumericTextField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+            ( key
+            , Field.NumericField_ <|
+                Field.NumericTextField
                     { required = required
                     , label = label
                     , width = width
@@ -824,6 +856,19 @@ decoderRadioEnumJson =
 
 decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
 decoderAgeJson =
+    Decode.succeed JsonAgeFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderNumericTextJson : Decode.Decoder JsonNumericTextFieldProperties
+decoderNumericTextJson =
     Decode.succeed JsonAgeFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string

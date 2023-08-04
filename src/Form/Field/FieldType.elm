@@ -77,6 +77,7 @@ type SimpleFieldType
 {-| -}
 type NumericFieldType
     = Age
+    | NumericText
 
 
 {-| -}
@@ -161,6 +162,9 @@ fromString str =
         "age" ->
             Just (NumericType Age)
 
+        "numericText" ->
+            Just (NumericType NumericText)
+
         "tags" ->
             Just (MultiStringType Tags)
 
@@ -229,6 +233,9 @@ toMin time fieldType =
 
         NumericType Age ->
             Just "18"
+
+        NumericType NumericText ->
+            Just "0"
 
         _ ->
             Nothing
