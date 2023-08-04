@@ -93,6 +93,7 @@ type DateFieldType
     = DatePast
     | DateOfBirth
     | DateFuture
+    | DatePastFuture
 
 
 {-| -}
@@ -113,6 +114,9 @@ fromString str =
 
         "date_future" ->
             Just (StringType (DateType DateFuture))
+
+        "date_past_future" ->
+            Just (StringType (DateType DatePastFuture))
 
         "phone" ->
             Just (StringType (SimpleType Phone))
@@ -231,6 +235,12 @@ toMin time fieldType =
                 |> LibTime.toDateString
                 |> Just
 
+        StringType (DateType DatePastFuture) ->
+            time
+                |> LibTime.offsetYear -120
+                |> LibTime.toDateString
+                |> Just
+
         NumericType Age ->
             Just "18"
 
@@ -252,6 +262,12 @@ toMax time fieldType =
             Just (LibTime.toDateString time)
 
         StringType (DateType DateFuture) ->
+            time
+                |> LibTime.offsetYear 10
+                |> LibTime.toDateString
+                |> Just
+
+        StringType (DateType DatePastFuture) ->
             time
                 |> LibTime.offsetYear 10
                 |> LibTime.toDateString
