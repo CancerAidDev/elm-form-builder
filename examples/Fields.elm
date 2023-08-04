@@ -201,7 +201,7 @@ fields =
             , unhiddenBy = Nothing
             }
         )
-     , \order ->
+    , \order ->
         ( "datePastFuture"
         , FormField.datePastFuture
             { required = IsRequired.Nullable
