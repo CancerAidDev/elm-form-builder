@@ -201,6 +201,20 @@ fields =
             , unhiddenBy = Nothing
             }
         )
+     , \order ->
+        ( "datePastFuture"
+        , FormField.datePastFuture
+            { required = IsRequired.Nullable
+            , label = "Claim End Date"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            }
+        )
     , \order ->
         ( "something"
         , FormField.select
