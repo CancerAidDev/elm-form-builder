@@ -136,7 +136,21 @@ fields =
         , FormField.age
             { required = IsRequired.Nullable
             , label = "Age"
-            , width = Width.FullSize
+            , width = Width.HalfSize
+            , enabledBy = Nothing
+            , order = order
+            , value = Nothing
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            }
+        )
+    , \order ->
+        ( "counter"
+        , FormField.numericText
+            { required = IsRequired.Yes
+            , label = "Headcount"
+            , width = Width.HalfSize
             , enabledBy = Nothing
             , order = order
             , value = Nothing
