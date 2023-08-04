@@ -1,6 +1,6 @@
 module Form.Validate exposing
     ( validate, validateField, Error
-    , isValid, isValidAgeInput
+    , isValid, isValidNumericInput
     , errorToMessage
     )
 
@@ -14,7 +14,7 @@ module Form.Validate exposing
 
 # Predicates
 
-@docs isValid, isValidAgeInput
+@docs isValid, isValidNumericInput
 
 
 # Errors
@@ -154,38 +154,63 @@ validateRadioEnumField properties =
 
 
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
-validateNumericField (Field.AgeField properties) =
-    if properties.required == Required.Yes then
+validateNumericField field =
+    case field of
+        Field.AgeField properties ->
+            validateRegex properties.required properties.value "^(1[89]|[2-9][0-9])$" InvalidAge
+
+        Field.NumericTextField properties ->
+            validateRegex properties.required properties.value "^(0|[1-9][0-9]*)$" InvalidNumericText
+
+
+validateRegex : Required.IsRequired -> Maybe Int -> String -> NumericError -> Result NumericError (Maybe Int)
+validateRegex isRequired value regexStr errorType =
+    if isRequired == Required.Yes then
         let
             regex =
-                "^(1[89]|[2-9][0-9])$"
+                regexStr
                     |> Regex.fromString
                     |> Maybe.withDefault Regex.never
         in
-        if Regex.contains regex (LibString.fromMaybeInt properties.value) then
-            Ok properties.value
+        if Regex.contains regex (LibString.fromMaybeInt value) then
+            Ok value
 
         else
-            Err InvalidAge
+            Err errorType
 
     else
-        Ok properties.value
+        Ok value
 
 
 {-| -}
-isValidAgeInput : Maybe Int -> Bool
-isValidAgeInput age =
-    let
-        regex =
-            "^(|[1-9]|1[89]|[2-9][0-9])$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    if Regex.contains regex (LibString.fromMaybeInt age) then
-        True
+isValidNumericInput : FieldType.NumericFieldType -> Maybe Int -> Bool
+isValidNumericInput fieldType value =
+    case fieldType of
+        FieldType.Age ->
+            let
+                regex =
+                    "^(|[1-9]|1[89]|[2-9][0-9])$"
+                        |> Regex.fromString
+                        |> Maybe.withDefault Regex.never
+            in
+            if Regex.contains regex (LibString.fromMaybeInt value) then
+                True
 
-    else
-        False
+            else
+                False
+
+        FieldType.NumericText ->
+            let
+                regex =
+                    "^(|[0-9][0-9]*)$"
+                        |> Regex.fromString
+                        |> Maybe.withDefault Regex.never
+            in
+            if Regex.contains regex (LibString.fromMaybeInt value) then
+                True
+
+            else
+                False
 
 
 {-| -}
@@ -217,6 +242,7 @@ type BoolError
 
 type NumericError
     = InvalidAge
+    | InvalidNumericText
 
 
 {-| -}
@@ -245,3 +271,6 @@ errorToMessage locale error =
 
         NumericError_ InvalidAge ->
             "Age must be 18-99"
+
+        NumericError_ InvalidNumericText ->
+            "Value must be greater than or equal to 0"

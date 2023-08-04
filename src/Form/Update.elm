@@ -36,8 +36,8 @@ update msg fields =
         Msg.UpdateRadioEnumField key value ->
             ( Fields.updateRadioEnumField key value fields, Cmd.none )
 
-        Msg.UpdateNumericField key value ->
-            if Validate.isValidAgeInput (String.toInt value) then
+        Msg.UpdateNumericField key fieldType value ->
+            if Validate.isValidNumericInput fieldType (String.toInt value) then
                 ( Fields.updateNumericField key value fields, Cmd.none )
 
             else

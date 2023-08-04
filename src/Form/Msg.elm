@@ -9,6 +9,7 @@ module Form.Msg exposing (Msg(..))
 
 -}
 
+import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 
@@ -21,7 +22,7 @@ type Msg
     | UpdateBoolField String Bool
     | UpdateRadioBoolField String Bool
     | UpdateRadioEnumField String RadioEnum.Value
-    | UpdateNumericField String String
+    | UpdateNumericField String FieldType.NumericFieldType String
     | ResetField String
     | UpdateShowDropdown String Bool
     | UpdateSearchbar String String

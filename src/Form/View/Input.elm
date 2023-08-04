@@ -123,6 +123,9 @@ control time (Locale.Locale _ code) key field =
         Field.NumericField_ (Field.AgeField _) ->
             input time Nothing key field
 
+        Field.NumericField_ (Field.NumericTextField _) ->
+            input time Nothing key field
+
 
 input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
 input time code key field =
@@ -139,6 +142,20 @@ input time code key field =
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
+                ]
+                []
+
+        renderNumericInput fieldType properties =
+            Html.input
+                [ HtmlAttributes.name key
+                , HtmlAttributes.class "input"
+                , HtmlAttributes.type_ "number"
+                , HtmlAttributes.pattern "\\d*"
+                , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
+                , HtmlAttributes.required (properties.required == Required.Yes)
+                , HtmlEvents.onInput <| Msg.UpdateNumericField key fieldType
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
+                    (FieldType.toMin time (FieldType.NumericType fieldType))
                 ]
                 []
     in
@@ -158,21 +175,10 @@ input time code key field =
             renderInput fieldType properties
 
         Field.NumericField_ (Field.AgeField properties) ->
-            Html.input
-                [ HtmlAttributes.name key
-                , HtmlAttributes.class "input"
-                , HtmlAttributes.type_ "number"
-                , HtmlAttributes.pattern "\\d*"
-                , HtmlAttributes.style "width" "6em"
-                , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
-                , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlEvents.onInput <| Msg.UpdateNumericField key
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.NumericType FieldType.Age))
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time (FieldType.NumericType FieldType.Age))
-                ]
-                []
+            renderNumericInput FieldType.Age properties
+
+        Field.NumericField_ (Field.NumericTextField properties) ->
+            renderNumericInput FieldType.NumericText properties
 
         Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties
