@@ -132,6 +132,21 @@ fields =
             }
         )
     , \order ->
+        ( "time"
+        , FormField.time
+            { required = IsRequired.Yes
+            , label = "Time"
+            , width = Width.FullSize
+            , enabledBy = Nothing
+            , order = order
+            , value = ""
+            , disabled = False
+            , hidden = False
+            , unhiddenBy = Nothing
+            , regexValidation = []
+            }
+        )
+    , \order ->
         ( "age"
         , FormField.age
             { required = IsRequired.Nullable

@@ -72,7 +72,7 @@ label field disabled shown =
 
 control : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
 control time (Locale.Locale _ code) key field =
-    case field of
+    case Debug.log "" field of
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
                 FieldType.Phone ->

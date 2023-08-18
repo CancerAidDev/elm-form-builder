@@ -72,6 +72,7 @@ type SimpleFieldType
     | Phone
     | Url
     | TextArea
+    | Time
 
 
 {-| -}
@@ -115,6 +116,9 @@ fromString str =
 
         "phone" ->
             Just (StringType (SimpleType Phone))
+
+        "time" ->
+            Just (StringType (SimpleType Time))
 
         "url" ->
             Just (StringType (SimpleType Url))
@@ -180,6 +184,9 @@ toType fieldType =
 
         StringType (SimpleType Phone) ->
             "tel"
+
+        StringType (SimpleType Time) ->
+            "time"
 
         StringType (SimpleType Url) ->
             "url"
