@@ -185,6 +185,7 @@ dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, 
             }
 
 
+{-| -}
 time : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
 time { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
     StringField_ <|
