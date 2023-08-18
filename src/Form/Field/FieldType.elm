@@ -166,7 +166,7 @@ fromString str =
         "age" ->
             Just (NumericType Age)
 
-        "numericText" ->
+        "numeric_text" ->
             Just (NumericType NumericText)
 
         "tags" ->
