@@ -2,6 +2,7 @@ module Form.Lib.Time exposing
     ( toDateString
     , offsetYear
     , offsetDay
+    , initTime
     )
 
 {-| Helper functions for working with elm/time
@@ -14,6 +15,8 @@ module Form.Lib.Time exposing
 @docs offsetYear
 
 @docs offsetDay
+
+@docs initTime
 
 -}
 
@@ -45,3 +48,18 @@ offsetDay offset time =
     time
         |> TimeExtra.add TimeExtra.Day offset Time.utc
         |> TimeExtra.floor TimeExtra.Day Time.utc
+
+
+{-| Converts a a date string "YYYY-MM-DD to a Time.Posix timestamp"
+-}
+initTime : String -> Time.Posix
+initTime =
+    Iso8601.toTime >> Result.withDefault default
+
+
+{-| Set a default timestamp
+-}
+default : Time.Posix
+default =
+    TimeExtra.partsToPosix Time.utc <|
+        TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
