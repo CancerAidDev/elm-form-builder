@@ -6,9 +6,9 @@ import Form.Field.Direction as Direction
 import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
+import Form.Lib.Time as LibTime
 import Regex
 import Set
-import Form.Lib.Time as LibTime 
 import Time
 
 
@@ -203,7 +203,7 @@ fields =
             , order = order
             , value = ""
             , minDate = Just (LibTime.initTime "2023-08-21")
-            , maxDate = Nothing 
+            , maxDate = Nothing
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
@@ -219,7 +219,7 @@ fields =
             , order = order
             , value = ""
             , minDate = Nothing
-            , maxDate = Nothing 
+            , maxDate = Nothing
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
