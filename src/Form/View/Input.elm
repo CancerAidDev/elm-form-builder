@@ -130,7 +130,7 @@ control time (Locale.Locale _ code) key field =
 input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
 input time code key field =
     let
-        renderInput fieldType properties =
+        renderInput minDate maxDate fieldType properties =
             Html.input
                 [ HtmlAttributes.name key
                 , HtmlAttributes.class (FieldType.toClass fieldType)
@@ -139,8 +139,8 @@ input time code key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin minDate time fieldType)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax maxDate time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
                 ]
                 []
@@ -155,7 +155,7 @@ input time code key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateNumericField key fieldType
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.NumericType fieldType))
+                    (FieldType.toMin Nothing time (FieldType.NumericType fieldType))
                 ]
                 []
     in
@@ -165,14 +165,14 @@ input time code key field =
                 fieldType =
                     FieldType.StringType (FieldType.SimpleType properties.tipe)
             in
-            renderInput fieldType properties
+            renderInput Nothing Nothing fieldType properties
 
         Field.StringField_ (Field.DateField properties) ->
             let
                 fieldType =
-                    FieldType.StringType (FieldType.DateType properties.tipe)
+                    FieldType.StringType FieldType.DateType
             in
-            renderInput fieldType properties
+            renderInput properties.minDate properties.maxDate fieldType properties
 
         Field.NumericField_ (Field.AgeField properties) ->
             renderNumericInput FieldType.Age properties
