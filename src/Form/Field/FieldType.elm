@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), ListStringFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType
     )
@@ -40,7 +40,7 @@ type FieldType
 {-| -}
 type StringFieldType
     = SimpleType SimpleFieldType
-    | DateType DateFieldType
+    | DateType
     | Select
     | SearchableSelect
     | HttpSelect
@@ -89,14 +89,6 @@ type MultiStringFieldType
 
 
 {-| -}
-type DateFieldType
-    = DatePast
-    | DateOfBirth
-    | DateFuture
-    | DatePastFuture
-
-
-{-| -}
 fromString : String -> Maybe FieldType
 fromString str =
     case str of
@@ -106,17 +98,8 @@ fromString str =
         "email" ->
             Just (StringType (SimpleType Email))
 
-        "date_birth" ->
-            Just (StringType (DateType DateOfBirth))
-
-        "date_past" ->
-            Just (StringType (DateType DatePast))
-
-        "date_future" ->
-            Just (StringType (DateType DateFuture))
-
-        "date_past_future" ->
-            Just (StringType (DateType DatePastFuture))
+        "date" ->
+            Just (StringType DateType)
 
         "phone" ->
             Just (StringType (SimpleType Phone))
@@ -195,7 +178,7 @@ toType fieldType =
         StringType (SimpleType TextArea) ->
             "textarea"
 
-        StringType (DateType _) ->
+        StringType DateType ->
             "date"
 
         _ ->
@@ -206,7 +189,7 @@ toType fieldType =
 toMaxLength : FieldType -> Maybe Int
 toMaxLength fieldType =
     case fieldType of
-        StringType (DateType _) ->
+        StringType DateType ->
             Just 10
 
         _ ->
@@ -214,32 +197,21 @@ toMaxLength fieldType =
 
 
 {-| -}
-toMin : Time.Posix -> FieldType -> Maybe String
-toMin time fieldType =
+toMin : Maybe Time.Posix -> Time.Posix -> FieldType -> Maybe String
+toMin minDate time fieldType =
     case fieldType of
-        StringType (DateType DateOfBirth) ->
-            time
-                |> LibTime.offsetYear -120
-                |> LibTime.toDateString
-                |> Just
+        StringType DateType ->
+            case minDate of
+                Just date ->
+                    date
+                        |> LibTime.toDateString
+                        |> Just
 
-        StringType (DateType DatePast) ->
-            time
-                |> LibTime.offsetYear -120
-                |> LibTime.toDateString
-                |> Just
-
-        StringType (DateType DateFuture) ->
-            time
-                |> LibTime.offsetDay 1
-                |> LibTime.toDateString
-                |> Just
-
-        StringType (DateType DatePastFuture) ->
-            time
-                |> LibTime.offsetYear -120
-                |> LibTime.toDateString
-                |> Just
+                Nothing ->
+                    time
+                        |> LibTime.offsetYear -120
+                        |> LibTime.toDateString
+                        |> Just
 
         NumericType Age ->
             Just "18"
@@ -252,26 +224,21 @@ toMin time fieldType =
 
 
 {-| -}
-toMax : Time.Posix -> FieldType -> Maybe String
-toMax time fieldType =
+toMax : Maybe Time.Posix -> Time.Posix -> FieldType -> Maybe String
+toMax maxDate time fieldType =
     case fieldType of
-        StringType (DateType DateOfBirth) ->
-            Just (LibTime.toDateString time)
+        StringType DateType ->
+            case maxDate of
+                Just date ->
+                    date
+                        |> LibTime.toDateString
+                        |> Just
 
-        StringType (DateType DatePast) ->
-            Just (LibTime.toDateString time)
-
-        StringType (DateType DateFuture) ->
-            time
-                |> LibTime.offsetYear 10
-                |> LibTime.toDateString
-                |> Just
-
-        StringType (DateType DatePastFuture) ->
-            time
-                |> LibTime.offsetYear 10
-                |> LibTime.toDateString
-                |> Just
+                Nothing ->
+                    time
+                        |> LibTime.offsetYear 120
+                        |> LibTime.toDateString
+                        |> Just
 
         NumericType Age ->
             Just "99"
@@ -284,7 +251,7 @@ toMax time fieldType =
 defaultValue : Time.Posix -> FieldType -> Maybe String
 defaultValue time fieldType =
     case fieldType of
-        StringType (DateType _) ->
+        StringType DateType ->
             time
                 |> LibTime.offsetYear -40
                 |> LibTime.toDateString
@@ -304,7 +271,7 @@ toClass fieldType =
         StringType (SimpleType _) ->
             "input"
 
-        StringType (DateType _) ->
+        StringType DateType ->
             "input"
 
         _ ->
