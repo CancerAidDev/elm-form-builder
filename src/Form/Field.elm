@@ -1,5 +1,5 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, datePastFuture, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, date, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
     , AgeFieldProperties, NumericTextFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
     , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
@@ -13,7 +13,7 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, datePastFuture, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, date, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, numericText, tag
 
 
 # Properties
@@ -129,8 +129,8 @@ email { required, label, width, enabledBy, order, value, disabled, hidden, unhid
 
 
 {-| -}
-dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
+date : StringFieldProperties { minDate : Maybe Time.Posix, maxDate : Maybe Time.Posix } -> Field
+date { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, minDate, maxDate } =
     StringField_ <|
         DateField
             { required = required
@@ -138,66 +138,10 @@ dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden,
             , width = width
             , enabledBy = enabledBy
             , order = order
-            , tipe = FieldType.DateOfBirth
             , value = value
             , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
-
-
-{-| -}
-datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DatePast
-            , value = value
-            , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
-
-
-{-| -}
-datePastFuture : StringFieldProperties {} -> Field
-datePastFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DatePastFuture
-            , value = value
-            , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
-
-
-{-| -}
-dateFuture : StringFieldProperties {} -> Field
-dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DateFuture
-            , value = value
-            , parsedDate = Nothing
+            , minDate = minDate
+            , maxDate = maxDate
             , disabled = disabled
             , hidden = hidden
             , unhiddenBy = unhiddenBy
@@ -431,8 +375,9 @@ type alias SimpleFieldProperties =
 {-| -}
 type alias DateFieldProperties =
     StringFieldProperties
-        { tipe : FieldType.DateFieldType
-        , parsedDate : Maybe Time.Posix
+        { parsedDate : Maybe Time.Posix
+        , minDate : Maybe Time.Posix
+        , maxDate : Maybe Time.Posix
         }
 
 
@@ -1339,8 +1284,8 @@ getStringType field =
         SimpleField properties ->
             FieldType.SimpleType properties.tipe
 
-        DateField properties ->
-            FieldType.DateType properties.tipe
+        DateField _ ->
+            FieldType.DateType
 
         SelectField _ ->
             FieldType.Select
