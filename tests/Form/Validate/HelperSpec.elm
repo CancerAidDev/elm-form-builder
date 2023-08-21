@@ -137,8 +137,8 @@ regexNonEmployeeEmailField { required, value } =
         }
 
 
-dateField : FieldType.DateFieldType -> NewStringField
-dateField tipe { required, value } =
+dateField : NewStringField
+dateField { required, value } =
     Field.DateField
         { required = required
         , label = "Field"
@@ -147,7 +147,8 @@ dateField tipe { required, value } =
         , order = 1
         , value = value
         , parsedDate = Nothing
-        , tipe = tipe
+        , minDate = Nothing
+        , maxDate = Nothing
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing

@@ -1016,26 +1016,11 @@ suite =
                                             , label = "Date"
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
-                                            , tipe = FieldType.DatePast
                                             , order = 1
                                             , value = "2022-01-01"
                                             , parsedDate = Nothing
-                                            , disabled = False
-                                            , hidden = False
-                                            , unhiddenBy = Nothing
-                                            }
-                                  )
-                                , ( "metadata.dateFuture"
-                                  , Field.StringField_ <|
-                                        Field.DateField
-                                            { required = Required.Yes
-                                            , label = "Date"
-                                            , width = Width.HalfSize
-                                            , enabledBy = Nothing
-                                            , tipe = FieldType.DateFuture
-                                            , order = 1
-                                            , value = "2023-01-01"
-                                            , parsedDate = Nothing
+                                            , minDate = Nothing
+                                            , maxDate = Nothing
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
@@ -1093,6 +1078,6 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"date":"2022-01-01","dateFuture":"2023-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
+                            """{"metadata":{"date":"2022-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
             ]
         ]

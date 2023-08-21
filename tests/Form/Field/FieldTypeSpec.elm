@@ -36,34 +36,12 @@ suite =
                 let
                     json =
                         """
-                            "date_birth"
+                            "date"
                         """
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.DateType FieldType.DateOfBirth)))
-        , Test.test "Date past field type" <|
-            \_ ->
-                let
-                    json =
-                        """
-                            "date_past"
-                        """
-                in
-                Decode.decodeString FieldType.decoder json
-                    |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.DateType FieldType.DatePast)))
-        , Test.test "Date future field type" <|
-            \_ ->
-                let
-                    json =
-                        """
-                            "date_future"
-                        """
-                in
-                Decode.decodeString FieldType.decoder json
-                    |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.DateType FieldType.DateFuture)))
+                        (Ok (FieldType.StringType FieldType.DateType))
         , Test.test "Phone field type" <|
             \_ ->
                 let

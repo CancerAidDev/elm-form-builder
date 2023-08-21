@@ -11,21 +11,9 @@ suite : Test.Test
 suite =
     Test.describe "Form.Validate.Date"
         [ Test.describe "validate"
-            [ HelperSpec.simpleFieldTest (FieldType.DateType FieldType.DatePast)
-                (HelperSpec.dateField FieldType.DatePast)
+            [ HelperSpec.simpleFieldTest FieldType.DateType
+                HelperSpec.dateField
                 { valid = [ { value = "2022-05-30", name = "Simple date" } ]
-                , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
-                , locale = Locale.enAU
-                }
-            , HelperSpec.simpleFieldTest (FieldType.DateType FieldType.DateOfBirth)
-                (HelperSpec.dateField FieldType.DateOfBirth)
-                { valid = [ { value = "2022-05-30", name = "Simple date" } ]
-                , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
-                , locale = Locale.enAU
-                }
-            , HelperSpec.simpleFieldTest (FieldType.DateType FieldType.DateFuture)
-                (HelperSpec.dateField FieldType.DateFuture)
-                { valid = [ { value = "2025-05-30", name = "Simple date" } ]
                 , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
                 , locale = Locale.enAU
                 }
