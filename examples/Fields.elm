@@ -8,6 +8,8 @@ import Form.Field.Width as Width
 import Form.Fields as FormFields
 import Regex
 import Set
+import Form.Lib.Time as LibTime 
+import Time
 
 
 fields : FormFields.Fields
@@ -161,13 +163,15 @@ fields =
         )
     , \order ->
         ( "dateOfBirth"
-        , FormField.dateOfBirth
+        , FormField.date
             { required = IsRequired.Nullable
             , label = "Date of Birth"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , minDate = Nothing
+            , maxDate = Just (LibTime.initTime "2023-08-21")
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
@@ -175,13 +179,15 @@ fields =
         )
     , \order ->
         ( "datePast"
-        , FormField.datePast
+        , FormField.date
             { required = IsRequired.Nullable
             , label = "Claim Started"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , minDate = Nothing
+            , maxDate = Just (LibTime.initTime "2023-08-20")
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
@@ -189,27 +195,31 @@ fields =
         )
     , \order ->
         ( "dateFuture"
-        , FormField.dateFuture
+        , FormField.date
             { required = IsRequired.Nullable
             , label = "Start Date"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , minDate = Just (LibTime.initTime "2023-08-21")
+            , maxDate = Nothing 
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
             }
         )
     , \order ->
-        ( "datePastFuture"
-        , FormField.datePastFuture
+        ( "date"
+        , FormField.date
             { required = IsRequired.Nullable
             , label = "Claim End Date"
             , width = Width.FullSize
             , enabledBy = Nothing
             , order = order
             , value = ""
+            , minDate = Nothing
+            , maxDate = Nothing 
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
