@@ -94,7 +94,6 @@ type alias JsonDateFieldProperties =
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , tipe : FieldType.DateFieldType
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
@@ -295,8 +294,8 @@ decoderForType fieldType =
                 _ ->
                     Decode.map JsonSimpleField (decoderSimpleJson simpleType)
 
-        FieldType.StringType (FieldType.DateType dateType) ->
-            Decode.map JsonDateField (decoderDateJson dateType)
+        FieldType.StringType FieldType.DateType ->
+            Decode.map JsonDateField decoderDateJson
 
         FieldType.StringType FieldType.Select ->
             Decode.map JsonSelectField decoderSelectJson
@@ -386,18 +385,19 @@ toField time order field =
                     }
             )
 
-        JsonDateField { tipe, required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonDateField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.StringField_ <|
                 Field.DateField
                     { required = required
                     , label = label
                     , width = width
-                    , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.DateType tipe)) |> Maybe.withDefault ""
+                    , value = FieldType.defaultValue time (FieldType.StringType FieldType.DateType) |> Maybe.withDefault ""
                     , parsedDate = Nothing
+                    , minDate = Nothing
+                    , maxDate = Nothing
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -679,15 +679,14 @@ decoderEmailJson =
         |> DecodePipeline.optional "value" Decode.string ""
 
 
-decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties
-decoderDateJson tipe =
+decoderDateJson : Decode.Decoder JsonDateFieldProperties
+decoderDateJson =
     Decode.succeed JsonDateFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
