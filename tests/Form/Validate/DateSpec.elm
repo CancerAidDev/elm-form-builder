@@ -11,8 +11,14 @@ suite : Test.Test
 suite =
     Test.describe "Form.Validate.Date"
         [ Test.describe "validate"
-            [ HelperSpec.simpleFieldTest FieldType.DateType
-                HelperSpec.dateField
+            [ HelperSpec.simpleFieldTest (FieldType.DateType FieldType.Date)
+                (HelperSpec.dateField FieldType.Date)
+                { valid = [ { value = "2022-05-30", name = "Simple date" } ]
+                , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
+                , locale = Locale.enAU
+                }
+            , HelperSpec.simpleFieldTest (FieldType.DateType FieldType.DateOfBirth)
+                (HelperSpec.dateField FieldType.DateOfBirth)
                 { valid = [ { value = "2022-05-30", name = "Simple date" } ]
                 , invalid = [ { value = "asdf", error = Types.InvalidDate, name = "Text as date" } ]
                 , locale = Locale.enAU

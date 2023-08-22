@@ -1024,8 +1024,27 @@ suite =
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
+                                            , tipe = FieldType.Date
                                             }
                                   )
+                                    ( "metadata.dateOfBirth"
+                                    , Field.StringField_ <|
+                                        Field.DateField FieldType.DateOfBirth
+                                            { required = Required.Yes
+                                            , label = "Date"
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = 1
+                                            , value = "1989-04-25"
+                                            , parsedDate = Nothing
+                                            , minDate = Nothing
+                                            , maxDate = Nothing
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , tipe = FieldType.DateOfBirth
+                                            }
+                                    )
                                 , ( "metadata.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
@@ -1078,6 +1097,6 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"date":"2022-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
+                            """{"metadata":{"date":"2022-01-01","dateOfBirth":"1989-04-25","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
             ]
         ]
