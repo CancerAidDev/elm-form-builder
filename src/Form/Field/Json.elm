@@ -11,7 +11,7 @@ module Form.Field.Json exposing (decoder)
 
 import Form.Field as Field
 import Form.Field.Direction as Direction
-import Form.Field.FieldType as FieldType exposing (StringFieldType(..))
+import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required

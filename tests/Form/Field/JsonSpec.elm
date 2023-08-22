@@ -1027,9 +1027,9 @@ suite =
                                             , tipe = FieldType.Date
                                             }
                                   )
-                                    ( "metadata.dateOfBirth"
-                                    , Field.StringField_ <|
-                                        Field.DateField FieldType.DateOfBirth
+                                , ( "metadata.dateOfBirth"
+                                  , Field.StringField_ <|
+                                        Field.DateField
                                             { required = Required.Yes
                                             , label = "Date"
                                             , width = Width.HalfSize
@@ -1044,7 +1044,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , tipe = FieldType.DateOfBirth
                                             }
-                                    )
+                                  )
                                 , ( "metadata.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
