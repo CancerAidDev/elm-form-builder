@@ -6,6 +6,7 @@ module Form.Field exposing
     , isCheckbox, isColumn, isNumericField, isRequired
     , encode
     , metadataKey
+    , dateOfBirth
     )
 
 {-| Field type and helper functions
@@ -138,6 +139,28 @@ date { required, label, width, enabledBy, order, value, disabled, hidden, unhidd
             , width = width
             , enabledBy = enabledBy
             , order = order
+            , tipe = FieldType.Date
+            , value = value
+            , parsedDate = Nothing
+            , minDate = minDate
+            , maxDate = maxDate
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
+
+{-| -}
+dateOfBirth : StringFieldProperties { minDate : Maybe Time.Posix, maxDate : Maybe Time.Posix } -> Field
+dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, minDate, maxDate } =
+    StringField_ <|
+        DateField
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , tipe = FieldType.DateOfBirth
             , value = value
             , parsedDate = Nothing
             , minDate = minDate
@@ -375,7 +398,8 @@ type alias SimpleFieldProperties =
 {-| -}
 type alias DateFieldProperties =
     StringFieldProperties
-        { parsedDate : Maybe Time.Posix
+        { tipe : FieldType.DateFieldType
+        , parsedDate : Maybe Time.Posix
         , minDate : Maybe Time.Posix
         , maxDate : Maybe Time.Posix
         }
@@ -1284,8 +1308,8 @@ getStringType field =
         SimpleField properties ->
             FieldType.SimpleType properties.tipe
 
-        DateField _ ->
-            FieldType.DateType
+        DateField properties ->
+            FieldType.DateType properties.tipe
 
         SelectField _ ->
             FieldType.Select
