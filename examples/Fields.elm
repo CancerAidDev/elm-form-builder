@@ -163,7 +163,7 @@ fields =
         )
     , \order ->
         ( "dateOfBirth"
-        , FormField.date
+        , FormField.dateOfBirth
             { required = IsRequired.Nullable
             , label = "Date of Birth"
             , width = Width.FullSize
@@ -171,7 +171,7 @@ fields =
             , order = order
             , value = ""
             , minDate = Nothing
-            , maxDate = Just (LibTime.initTime "2023-08-21")
+            , maxDate = Nothing
             , disabled = False
             , hidden = False
             , unhiddenBy = Nothing
