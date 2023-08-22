@@ -170,7 +170,7 @@ input time code key field =
         Field.StringField_ (Field.DateField properties) ->
             let
                 fieldType =
-                    FieldType.StringType FieldType.DateType
+                    FieldType.StringType (FieldType.DateType properties.tipe)
             in
             renderInput properties.minDate properties.maxDate fieldType properties
 
