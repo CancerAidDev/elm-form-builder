@@ -67,6 +67,9 @@ validate locale field =
 
                                 FieldType.TextArea ->
                                     Ok valField
+
+                                FieldType.Time ->
+                                    Ok valField
                     in
                     simpleFieldValidator field
                         |> Result.andThen (RegexValidator.regexValidator regexValidation)

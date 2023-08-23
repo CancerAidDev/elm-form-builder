@@ -86,6 +86,14 @@ fields =
             |> FormField.phone
         )
     , \order ->
+        ( "time"
+        , FormField.timeDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Time"
+            |> FormField.setOrder order
+            |> FormField.time
+        )
+    , \order ->
         ( "age"
         , FormField.ageDefault
             |> FormField.setIsRequired IsRequired.Nullable
