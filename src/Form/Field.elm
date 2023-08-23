@@ -1,8 +1,8 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
-    , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, textArea, email
+    , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -26,12 +26,12 @@ module Form.Field exposing
 
 # Default Properties
 
-@docs ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, textArea, email
+@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
@@ -130,6 +130,29 @@ Common builders:
 email : SimpleFieldProperties -> Field
 email =
     StringField_ << SimpleField << setTipe FieldType.Email
+
+
+{-| Makes a time field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+time : SimpleFieldProperties -> Field
+time =
+    StringField_ << SimpleField << setTipe FieldType.Time
 
 
 {-| Makes a phone field.
@@ -778,6 +801,24 @@ urlDefault =
 phoneDefault : SimpleFieldProperties
 phoneDefault =
     setTipe FieldType.Phone <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Time
+, value = ""
+}`
+-}
+timeDefault : SimpleFieldProperties
+timeDefault =
+    setTipe FieldType.Time <| simpleDefault
 
 
 {-| `{ required = Required.No

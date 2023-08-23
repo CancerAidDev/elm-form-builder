@@ -38,6 +38,9 @@ formatForSubmission (Locale.Locale _ code) field =
                 FieldType.TextArea ->
                     value
 
+                FieldType.Time ->
+                    value
+
         Field.DateField _ ->
             Field.getParsedDateValue_ field
                 |> Maybe.map (Date.formatForSubmission code)
