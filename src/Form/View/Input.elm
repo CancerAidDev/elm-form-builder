@@ -48,7 +48,7 @@ view time submitted locale fields key field =
     HtmlExtra.viewIf shown <|
         Html.fieldset
             [ HtmlAttributes.class "column"
-            , HtmlAttributes.class <| Width.toStyle (Field.getWidth field)
+            , HtmlAttributes.class <| Width.toStyle (Field.getProperties field).width
             , HtmlAttributes.disabled disabled
             , HtmlAttributes.id key
             ]
@@ -194,7 +194,7 @@ textarea key field =
         []
 
 
-tag : String -> Field.TagFieldProperties {} -> Html.Html Msg.Msg
+tag : String -> Field.TagFieldProperties -> Html.Html Msg.Msg
 tag key field =
     let
         addMsg : Msg.Msg

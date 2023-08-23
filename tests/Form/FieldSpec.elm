@@ -3,7 +3,6 @@ module Form.FieldSpec exposing (suite)
 import Expect
 import Form.Field as Field
 import Form.Field.Direction as Direction
-import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Fuzz
 import Test
@@ -15,37 +14,65 @@ suite =
         [ Test.fuzz2 Fuzz.string Fuzz.string "Update StringField " <|
             \initialString updateString ->
                 let
-                    fieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = initialString, disabled = False, hidden = False, unhiddenBy = Nothing, regexValidation = [] }
-
                     field =
-                        Field.text fieldValues
+                        Field.textDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue initialString
+                            |> Field.text
                 in
                 Field.updateStringValue updateString field
                     |> Expect.equal
-                        (Field.text { fieldValues | value = updateString })
+                        (Field.textDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue updateString
+                            |> Field.text
+                        )
         , Test.fuzz2 Fuzz.string Fuzz.string "Update Radio " <|
             \option1 option2 ->
                 let
-                    radioFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False, hidden = False, unhiddenBy = Nothing }
-
                     field =
-                        Field.radio radioFieldValues
+                        Field.radioDefault
+                            |> Field.setValue option1
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                 in
                 Field.updateStringValue option2 field
                     |> Expect.equal
-                        (Field.radio { radioFieldValues | value = option2 })
+                        (Field.radioDefault
+                            |> Field.setValue option2
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
+                        )
         , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio " <|
             \option1 option2 ->
                 let
-                    radioFieldValues =
-                        { required = Required.No, label = "", width = Width.HalfSize, enabledBy = Nothing, order = 0, value = option1, default = Nothing, direction = Direction.Row, options = [ { label = Nothing, value = option1 }, { label = Nothing, value = option2 } ], disabled = False, hidden = False, unhiddenBy = Nothing }
-
                     field =
-                        Field.radio radioFieldValues
+                        Field.radioDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue option1
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
                 in
                 Field.maybeUpdateStringValue (Just option2) field
                     |> Expect.equal
-                        (Field.radio { radioFieldValues | value = option2 })
+                        (Field.radioDefault
+                            |> Field.setWidth Width.HalfSize
+                            |> Field.setValue option2
+                            |> Field.setDirection Direction.Row
+                            |> Field.radio
+                                [ { label = Nothing, value = option1 }
+                                , { label = Nothing, value = option2 }
+                                ]
+                        )
         ]

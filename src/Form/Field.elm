@@ -1,9 +1,12 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..), text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
-    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
-    , resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
-    , isCheckbox, isColumn, isNumericField, isRequired
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
+    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+    , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, textArea, email
+    , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
+    , isCheckbox, isRequired
     , encode
     , metadataKey
     )
@@ -13,27 +16,42 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField, text, email, dateOfBirth, datePast, dateFuture, phone, url, textarea, checkbox, radioBool, radioEnum, select, searchableSelect, httpSelect, multiSelect, searchableMultiSelect, multiHttpSelect, radio, age, tag
+@docs Field, StringField, MultiStringField, BoolField, NumericField
 
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties
+@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+
+
+# Default Properties
+
+@docs ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+
+
+# Constructors
+
+@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, textArea, email
+
+
+# Construction Property Setters
+
+@docs setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getWidth
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
 
 
 # Setters
 
-@docs resetValueToDefault, setRequired, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateStringHidden, updateMultiStringOption, updateStringValue_, updateStringDisabled_, updateStringHidden_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateSearchableSelectInput, updateTagsInputBarValue, updateTagsValue, updateTagsValue_
+@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
 
 
 # Predicates
 
-@docs isCheckbox, isColumn, isNumericField, isRequired
+@docs isCheckbox, isRequired
 
 
 # Encode
@@ -61,263 +79,1125 @@ import Json.Encode.Extra as EncodeExtra
 import RemoteData
 import Set
 import Time
+import Time.Extra as TimeExtra
 
 
 
--- change these to use a list of regexvalidations instead
+-- MAKERS
 
 
-{-| -}
-text : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-text { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
-    StringField_ <|
-        SimpleField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.Text
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , regexValidation = regexValidation
-            }
+{-| Makes an input field, defaulting to text input.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+text : SimpleFieldProperties -> Field
+text =
+    StringField_ << SimpleField
 
 
-{-| -}
-tag : TagFieldProperties {} -> Field
-tag { required, label, width, enabledBy, order, value, inputBar, disabled, hidden, unhiddenBy, placeholder } =
-    MultiStringField_ <|
-        TagField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , value = value
-            , inputBar = inputBar
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , placeholder = placeholder
-            }
+{-| Makes an email input field.
+
+In addition to the common builders, the following are available:
+
+  - `setForbiddenEmailDomains (List EmailFormat.ForbiddenDomain)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+email : SimpleFieldProperties -> Field
+email =
+    StringField_ << SimpleField << setTipe FieldType.Email
 
 
-{-| -}
-email : StringFieldProperties { forbiddenDomains : List EmailFormat.ForbiddenDomain } -> Field
-email { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, forbiddenDomains } =
-    StringField_ <|
-        SimpleField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.Email
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , regexValidation =
-                RegexValidation.fromSuffixConstraints <|
-                    List.map
-                        (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
-                        forbiddenDomains
-            }
+{-| Makes a phone field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+phone : SimpleFieldProperties -> Field
+phone =
+    StringField_ << SimpleField << setTipe FieldType.Phone
 
 
-{-| -}
-dateOfBirth : StringFieldProperties {} -> Field
-dateOfBirth { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DateOfBirth
-            , value = value
-            , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
+{-| Makes a url field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+url : SimpleFieldProperties -> Field
+url =
+    StringField_ << SimpleField << setTipe FieldType.Url
 
 
-{-| -}
-datePast : StringFieldProperties {} -> Field
-datePast { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DatePast
-            , value = value
-            , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
+{-| Makes a multiline text area field.
+
+In addition to the common builders, the following are available:
+
+  - `setRegexValidation (List RegexValidation.RegexValidation)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+textArea : SimpleFieldProperties -> Field
+textArea =
+    StringField_ << SimpleField << setTipe FieldType.TextArea
 
 
-{-| -}
-dateFuture : StringFieldProperties {} -> Field
-dateFuture { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    StringField_ <|
-        DateField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.DateFuture
-            , value = value
-            , parsedDate = Nothing
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
+{-| Makes a date input field. By default, dates 100 years from the start of the Unix epoch (00:00:00 UTC on 1 January 1970) are allowed. Use setters to customise this.
+
+In addition to the common builders, the following are available:
+
+  - `setDateOfBirth`
+  - `setDateFuture`
+  - `setDatePast`
+  - `setDateBounds Time.Posix Time.Posix`
+  - `setDateOffset ( TimeExtra.Interval, Int ) ( TimeExtra.Interval, Int )`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+date : DateFieldProperties -> Field
+date =
+    StringField_ << DateField
 
 
-{-| -}
-phone : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-phone { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
-    StringField_ <|
-        SimpleField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.Phone
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , regexValidation = regexValidation
-            }
+{-| Makes an age input field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+age : AgeFieldProperties -> Field
+age =
+    NumericField_ << AgeField
 
 
-{-| -}
-url : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-url { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
-    StringField_ <|
-        SimpleField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.Url
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , regexValidation = regexValidation
-            }
+{-| Makes a tag field.
+
+In addition to the common builders, the following are available:
+
+  - `setTagsInputBar String`
+  - `setPlaceholder (Maybe String)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+tag : TagFieldProperties -> Field
+tag =
+    MultiStringField_ << TagField
 
 
-{-| -}
-textarea : StringFieldProperties { regexValidation : List RegexValidation.RegexValidation } -> Field
-textarea { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy, regexValidation } =
-    StringField_ <|
-        SimpleField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.TextArea
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            , regexValidation = regexValidation
-            }
+{-| Makes a checkbox field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+checkbox : CheckboxFieldProperties -> Field
+checkbox =
+    BoolField_ << CheckboxField
 
 
-{-| -}
-checkbox : BoolFieldProperties {} -> Field
-checkbox { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } =
-    BoolField_ <|
-        CheckboxField
-            { required = required
-            , label = label
-            , width = width
-            , enabledBy = enabledBy
-            , order = order
-            , tipe = FieldType.Checkbox
-            , value = value
-            , disabled = disabled
-            , hidden = hidden
-            , unhiddenBy = unhiddenBy
-            }
+{-| Makes a radio field.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (List Option.Option)`
+  - `setDirection Direction.Direction`
+
+A list of options needs to be passed in, but setters passed in will override these.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+radio : List Option.Option -> RadioFieldProperties -> Field
+radio options =
+    StringField_ << RadioField << setOptions options
 
 
-{-| -}
+{-| Makes a boolean radio field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
 radioBool : RadioBoolFieldProperties -> Field
 radioBool =
     BoolField_ << RadioBoolField
 
 
-{-| -}
+{-| Makes a radio field for selection of Yes/No/N/A enums, with all three as an option by default. Override with setOptions.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault RadioEnum.Value`
+  - `setOptions (List RadioEnum.Value)`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
 radioEnum : RadioEnumFieldProperties -> Field
 radioEnum =
     BoolField_ << RadioEnumField
 
 
-{-| -}
-select : SelectFieldProperties {} -> Field
-select =
-    StringField_ << SelectField
+{-| Makes a drop-down select field from a list of options.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+  - `setSelectablePlaceholder`
+
+A list of options needs to be passed in, but setters passed in will override these.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+select : List Option.Option -> SelectFieldProperties {} -> Field
+select options =
+    StringField_ << SelectField << setOptions options
 
 
-{-| -}
+{-| Makes a remotely fetched drop-down select field.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option))`
+  - `setPlaceholder String`
+  - `setRemoteUrl String`
+  - `setSelectablePlaceholder`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+httpSelect : String -> HttpSelectFieldProperties -> Field
+httpSelect url_ =
+    StringField_ << HttpSelectField << setRemoteUrl url_
+
+
+{-| Makes a searchable select field, with options that are searchable.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - \`setOptions (List Option.Option)
+  - `setPlaceholder String`
+  - `setSelectablePlaceholder`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
 searchableSelect : SearchableSelectFieldProperties -> Field
 searchableSelect =
     StringField_ << SearchableSelectField
 
 
-{-| -}
-httpSelect : HttpSelectFieldProperties -> Field
-httpSelect =
-    StringField_ << HttpSelectField
+{-| Makes a multi select field from a list of options.
+
+In addition to the common builders, the following are available:
+
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+
+A list of options needs to be passed in, but setters passed in will override these.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+multiSelect : List Option.Option -> MultiSelectFieldProperties {} -> Field
+multiSelect options =
+    MultiStringField_ << MultiSelectField << setOptions options
 
 
-{-| -}
-multiSelect : MultiSelectFieldProperties {} -> Field
-multiSelect =
-    MultiStringField_ << MultiSelectField
+{-| Makes a searchable multi select field, with two categories of options: searchable and non-searchable. Neither category is mandatory, so make sure to set at least one for the field to be useful.
 
+In addition to the common builders, the following are available:
 
-{-| -}
+  - `setOptions (List Option.Option)`
+  - `setSearchableOptions (List Option.Option)`
+  - `setPlaceholder String`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
 searchableMultiSelect : SearchableMultiSelectFieldProperties -> Field
 searchableMultiSelect =
     MultiStringField_ << SearchableMultiSelectField
 
 
-{-| -}
-multiHttpSelect : MultiHttpSelectFieldProperties -> Field
-multiHttpSelect =
-    MultiStringField_ << MultiHttpSelectField
+{-| Makes a remotely fetched multi select field.
+
+In addition to the common builders, the following are available:
+
+  - `setOptions (List Option.Option)`
+  - `setPlaceholder String`
+  - `setRemoteUrl String`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+multiHttpSelect : String -> MultiHttpSelectFieldProperties -> Field
+multiHttpSelect url_ =
+    MultiStringField_ << MultiHttpSelectField << setRemoteUrl url_
+
+
+
+-- SETTERS
 
 
 {-| -}
-radio : RadioFieldProperties -> Field
-radio =
-    StringField_ << RadioField
+setIsRequired : Required.IsRequired -> FieldProperties a -> FieldProperties a
+setIsRequired required field =
+    { field | required = required }
 
 
 {-| -}
-age : AgeFieldProperties -> Field
-age =
-    NumericField_ << AgeField
+setLabel : String -> FieldProperties a -> FieldProperties a
+setLabel label field =
+    { field | label = label }
+
+
+{-| -}
+setWidth : Width.Width -> FieldProperties a -> FieldProperties a
+setWidth width field =
+    { field | width = width }
+
+
+{-| -}
+setEnabledBy : String -> FieldProperties a -> FieldProperties a
+setEnabledBy enabledBy field =
+    { field | enabledBy = Just enabledBy }
+
+
+{-| -}
+setOrder : Int -> FieldProperties a -> FieldProperties a
+setOrder order field =
+    { field | order = order }
+
+
+{-| -}
+setDisabled : FieldProperties a -> FieldProperties a
+setDisabled field =
+    { field | disabled = True }
+
+
+{-| -}
+setHidden : FieldProperties a -> FieldProperties a
+setHidden field =
+    { field | hidden = True }
+
+
+{-| -}
+setUnhiddenBy : String -> FieldProperties a -> FieldProperties a
+setUnhiddenBy unhiddenBy field =
+    { field | unhiddenBy = Just unhiddenBy }
+
+
+{-| -}
+setRegexValidation : List RegexValidation.RegexValidation -> SimpleFieldProperties -> SimpleFieldProperties
+setRegexValidation regexValidation field =
+    { field | regexValidation = regexValidation }
+
+
+{-| -}
+setForbiddenEmailDomains : List EmailFormat.ForbiddenDomain -> SimpleFieldProperties -> SimpleFieldProperties
+setForbiddenEmailDomains forbiddenDomains field =
+    { field
+        | regexValidation =
+            RegexValidation.fromSuffixConstraints <|
+                List.map
+                    (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
+                    forbiddenDomains
+    }
+
+
+{-| -}
+setTagsInputBar : String -> TagFieldProperties -> TagFieldProperties
+setTagsInputBar inputBar field =
+    { field | inputBar = inputBar }
+
+
+{-| This shouldn't be exposed for safety purposes - make custom builders instead.
+-}
+setTipe : t -> FieldProperties { a | tipe : t } -> FieldProperties { a | tipe : t }
+setTipe tipe field =
+    { field | tipe = tipe }
+
+
+{-| -}
+setValue : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
+setValue value field =
+    { field | value = value }
+
+
+{-| -}
+setDefault : d -> FieldProperties { a | default : Maybe d } -> FieldProperties { a | default : Maybe d }
+setDefault default field =
+    { field | default = Just default }
+
+
+{-| -}
+setOptions : o -> FieldProperties { a | options : o } -> FieldProperties { a | options : o }
+setOptions options field =
+    { field | options = options }
+
+
+{-| -}
+setPlaceholder : p -> FieldProperties { a | placeholder : p } -> FieldProperties { a | placeholder : p }
+setPlaceholder placeholder field =
+    { field | placeholder = placeholder }
+
+
+{-| -}
+setSelectablePlaceholder : FieldProperties { a | hasSelectablePlaceholder : Bool } -> FieldProperties { a | hasSelectablePlaceholder : Bool }
+setSelectablePlaceholder field =
+    { field | hasSelectablePlaceholder = True }
+
+
+{-| -}
+setRemoteUrl : String -> FieldProperties { a | url : String } -> FieldProperties { a | url : String }
+setRemoteUrl url_ field =
+    { field | url = url_ }
+
+
+{-| -}
+setSearchableOptions : List Option.Option -> SearchableMultiSelectFieldProperties -> SearchableMultiSelectFieldProperties
+setSearchableOptions searchableOptions field =
+    { field | searchableOptions = searchableOptions }
+
+
+{-| Sets the selectable date range to be the last 120 years.
+-}
+setDateOfBirth : DateFieldProperties -> DateFieldProperties
+setDateOfBirth =
+    setTipe FieldType.dateOfBirth
+
+
+{-| Sets the selectable date range to be the next 10 years.
+-}
+setDateFuture : DateFieldProperties -> DateFieldProperties
+setDateFuture =
+    setTipe FieldType.dateFuture
+
+
+{-| Sets the selectable date range to be the last 120 years.
+-}
+setDatePast : DateFieldProperties -> DateFieldProperties
+setDatePast =
+    setTipe FieldType.datePast
+
+
+{-| Sets the selectable date range to be based on intervals relative to the current date.
+
+For example, to select a date between 2 years ago and 5 years from now, use:
+
+    `setDateOffset ( TimeExtra.Year, -2 ) ( TimeExtra.Year, 5 )`
+
+-}
+setDateOffset : ( TimeExtra.Interval, Int ) -> ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
+setDateOffset minOffset maxOffset =
+    setTipe (FieldType.DateOffset minOffset maxOffset)
+
+
+{-| Sets the selectable date range to absolute dates in POSIX time.
+-}
+setDateBounds : Time.Posix -> Time.Posix -> DateFieldProperties -> DateFieldProperties
+setDateBounds minBound maxBound =
+    setTipe (FieldType.DateAbsolute minBound maxBound)
+
+
+{-| -}
+setDirection : Direction.Direction -> RadioFieldProperties -> RadioFieldProperties
+setDirection direction field =
+    { field | direction = direction }
+
+
+
+-- DEFAULT
+
+
+simpleDefault : SimpleFieldProperties
+simpleDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , regexValidation = []
+    , tipe = FieldType.Text
+    , value = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Text
+, value = ""
+}`
+-}
+textDefault : SimpleFieldProperties
+textDefault =
+    simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Email
+, value = ""
+}`
+-}
+emailDefault : SimpleFieldProperties
+emailDefault =
+    setTipe FieldType.Email <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Url
+, value = ""
+}`
+-}
+urlDefault : SimpleFieldProperties
+urlDefault =
+    setTipe FieldType.Url <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.Phone
+, value = ""
+}`
+-}
+phoneDefault : SimpleFieldProperties
+phoneDefault =
+    setTipe FieldType.Phone <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, regexValidation = []
+, tipe = FieldType.TextArea
+, value = ""
+}`
+-}
+textAreaDefault : SimpleFieldProperties
+textAreaDefault =
+    setTipe FieldType.TextArea <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
+, value = ""
+, parsedDate = Nothing
+}`
+-}
+dateDefault : DateFieldProperties
+dateDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
+    , value = ""
+    , parsedDate = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, inputBar = ""
+, placeholder = Nothing
+}`
+-}
+tagDefault : TagFieldProperties
+tagDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , inputBar = ""
+    , placeholder = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = False
+, tipe = FieldType.Checkbox
+}`
+-}
+checkboxDefault : CheckboxFieldProperties
+checkboxDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = False
+    , tipe = FieldType.Checkbox
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+}`
+-}
+radioBoolDefault : RadioBoolFieldProperties
+radioBoolDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, default = Nothing
+, options = [ RadioEnum.Yes, RadioEnum.No, RadioEnum.NA ]
+}`
+-}
+radioEnumDefault : RadioEnumFieldProperties
+radioEnumDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , default = Nothing
+    , options = [ RadioEnum.Yes, RadioEnum.No, RadioEnum.NA ]
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, default = Nothing
+, options = []
+, placeholder = ""
+, hasSelectablePlaceholder = False
+}`
+-}
+selectDefault : SelectFieldProperties {}
+selectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, url = ""
+, default = Nothing
+, options = RemoteData.NotAsked
+, placeholder = ""
+, hasSelectablePlaceholder = False
+}`
+-}
+httpSelectDefault : HttpSelectFieldProperties
+httpSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , url = ""
+    , default = Nothing
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = []
+, placeholder = ""
+, showDropdown = False
+}`
+-}
+multiSelectDefault : MultiSelectFieldProperties {}
+multiSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = []
+, placeholder = ""
+, showDropdown = False
+, searchableOptions = []
+, searchInput = ""
+}`
+-}
+searchableSelectDefault : SearchableSelectFieldProperties
+searchableSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    , showDropdown = False
+    , searchInput = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = []
+, placeholder = ""
+, showDropdown = False
+, searchableOptions = []
+, searchInput = ""
+}`
+-}
+searchableMultiSelectDefault : SearchableMultiSelectFieldProperties
+searchableMultiSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = []
+    , placeholder = ""
+    , showDropdown = False
+    , searchableOptions = []
+    , searchInput = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Set.empty
+, options = RemoteData.NotAsked
+, placeholder = ""
+, showDropdown = False
+, url = ""
+}`
+-}
+multiHttpSelectDefault : MultiHttpSelectFieldProperties
+multiHttpSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Set.empty
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , showDropdown = False
+    , url = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, default = Nothing
+, options = []
+, direction = Direction.Column
+}`
+-}
+radioDefault : RadioFieldProperties
+radioDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , default = Nothing
+    , options = []
+    , direction = Direction.Column
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+}`
+-}
+ageDefault : AgeFieldProperties
+ageDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+
+-- TYPES
 
 
 {-| -}
@@ -355,7 +1235,7 @@ type MultiStringField
     = MultiSelectField (MultiSelectFieldProperties {})
     | SearchableMultiSelectField SearchableMultiSelectFieldProperties
     | MultiHttpSelectField MultiHttpSelectFieldProperties
-    | TagField (TagFieldProperties {})
+    | TagField TagFieldProperties
 
 
 {-| -}
@@ -386,11 +1266,10 @@ type alias StringFieldProperties a =
 
 
 {-| -}
-type alias TagFieldProperties a =
+type alias TagFieldProperties =
     MultiStringFieldProperties
-        { a
-            | inputBar : String
-            , placeholder : Maybe String
+        { inputBar : String
+        , placeholder : Maybe String
         }
 
 
@@ -680,35 +1559,36 @@ maybeUpdateStringValue maybeValue field =
 
 {-| -}
 updateStringValue : String -> Field -> Field
-updateStringValue value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringValue_ value field
-
-        _ ->
-            field
+updateStringValue =
+    genericUpdateStringField updateStringValue_
 
 
 {-| -}
 updateStringDisabled : Bool -> Field -> Field
-updateStringDisabled value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringDisabled_ value field
+updateStringDisabled =
+    let
+        updateStringDisabled_ : Bool -> StringField -> StringField
+        updateStringDisabled_ value field =
+            case field of
+                SimpleField properties ->
+                    SimpleField { properties | disabled = value }
 
-        _ ->
-            field
+                DateField properties ->
+                    DateField { properties | disabled = value }
 
+                SelectField properties ->
+                    SelectField { properties | disabled = value }
 
-{-| -}
-updateStringHidden : Bool -> Field -> Field
-updateStringHidden value field =
-    case field of
-        StringField_ _ ->
-            genericUpdateStringField updateStringHidden_ value field
+                SearchableSelectField properties ->
+                    SearchableSelectField { properties | disabled = value }
 
-        _ ->
-            field
+                HttpSelectField properties ->
+                    HttpSelectField { properties | disabled = value }
+
+                RadioField properties ->
+                    RadioField { properties | disabled = value }
+    in
+    genericUpdateStringField updateStringDisabled_
 
 
 {-| -}
@@ -739,9 +1619,29 @@ genericUpdateStringField f value field =
 {-| -}
 updateMultiStringOption : Option.Option -> Bool -> Field -> Field
 updateMultiStringOption option checked field =
+    let
+        update properties =
+            { properties
+                | value =
+                    if checked then
+                        Set.insert option.value properties.value
+
+                    else
+                        Set.remove option.value properties.value
+            }
+    in
     case field of
-        MultiStringField_ multiStringField ->
-            MultiStringField_ <| updateMultiStringOption_ option checked multiStringField
+        MultiStringField_ (MultiSelectField properties) ->
+            MultiStringField_ <| MultiSelectField (update properties)
+
+        MultiStringField_ (SearchableMultiSelectField properties) ->
+            MultiStringField_ <| SearchableMultiSelectField (update properties)
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            MultiStringField_ <| MultiHttpSelectField (update properties)
+
+        MultiStringField_ (TagField properties) ->
+            MultiStringField_ <| TagField (update properties)
 
         StringField_ stringfield ->
             StringField_ (updateStringValue_ option.value stringfield)
@@ -753,13 +1653,13 @@ updateMultiStringOption option checked field =
 
 {-| -}
 updateSearchableSelectInput : String -> Field -> Field
-updateSearchableSelectInput input field =
+updateSearchableSelectInput input_ field =
     case field of
         StringField_ (SearchableSelectField properties) ->
-            StringField_ (SearchableSelectField { properties | searchInput = input })
+            StringField_ (SearchableSelectField { properties | searchInput = input_ })
 
         MultiStringField_ (SearchableMultiSelectField properties) ->
-            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input })
+            MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input_ })
 
         _ ->
             field
@@ -769,16 +1669,11 @@ updateSearchableSelectInput input field =
 getBoolProperties : Field -> Maybe Bool
 getBoolProperties field =
     case field of
-        BoolField_ f ->
-            case f of
-                CheckboxField { value } ->
-                    Just value
+        BoolField_ (CheckboxField { value }) ->
+            Just value
 
-                RadioBoolField { value } ->
-                    value
-
-                _ ->
-                    Nothing
+        BoolField_ (RadioBoolField { value }) ->
+            value
 
         _ ->
             Nothing
@@ -788,108 +1683,47 @@ getBoolProperties field =
 resetValueToDefault : Field -> Field
 resetValueToDefault field =
     case field of
-        StringField_ stringField ->
-            StringField_ (resetStringFieldValueToDefault stringField)
+        StringField_ (HttpSelectField properties) ->
+            StringField_ <| HttpSelectField { properties | value = properties.default |> Maybe.withDefault httpSelectDefault.value }
 
-        MultiStringField_ multiStringField ->
-            MultiStringField_ (resetMultiStringFieldValueToDefault multiStringField)
-
-        BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | value = False })
-
-        BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | value = Nothing })
-
-        BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | value = properties.default })
-
-        NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | value = Nothing })
-
-
-resetStringFieldValueToDefault : StringField -> StringField
-resetStringFieldValueToDefault field =
-    case field of
-        HttpSelectField properties ->
-            HttpSelectField { properties | value = properties.default |> Maybe.withDefault "" }
-
-        SimpleField properties ->
-            SimpleField { properties | value = "" }
-
-        DateField properties ->
-            DateField { properties | value = "", parsedDate = Nothing }
-
-        SelectField properties ->
-            SelectField { properties | value = properties.default |> Maybe.withDefault "" }
-
-        SearchableSelectField properties ->
-            SearchableSelectField { properties | value = properties.default |> Maybe.withDefault "" }
-
-        RadioField properties ->
-            RadioField { properties | value = properties.default |> Maybe.withDefault "" }
-
-
-resetMultiStringFieldValueToDefault : MultiStringField -> MultiStringField
-resetMultiStringFieldValueToDefault field =
-    case field of
-        MultiHttpSelectField properties ->
-            MultiHttpSelectField { properties | value = Set.empty }
-
-        MultiSelectField properties ->
-            MultiSelectField { properties | value = Set.empty }
-
-        SearchableMultiSelectField properties ->
-            SearchableMultiSelectField { properties | value = Set.empty, searchInput = "" }
-
-        TagField properties ->
-            TagField { properties | value = Set.empty, inputBar = "" }
-
-
-{-| -}
-setRequired : Required.IsRequired -> Field -> Field
-setRequired required field =
-    case field of
         StringField_ (SimpleField properties) ->
-            StringField_ (SimpleField { properties | required = required })
+            StringField_ <| SimpleField { properties | value = simpleDefault.value }
 
         StringField_ (DateField properties) ->
-            StringField_ (DateField { properties | required = required })
+            StringField_ <| DateField { properties | value = dateDefault.value, parsedDate = dateDefault.parsedDate }
 
         StringField_ (SelectField properties) ->
-            StringField_ (SelectField { properties | required = required })
+            StringField_ <| SelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (SearchableSelectField properties) ->
-            StringField_ (SearchableSelectField { properties | required = required })
-
-        StringField_ (HttpSelectField properties) ->
-            StringField_ (HttpSelectField { properties | required = required })
+            StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (RadioField properties) ->
-            StringField_ (RadioField { properties | required = required })
+            StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
 
         MultiStringField_ (MultiHttpSelectField properties) ->
-            MultiStringField_ (MultiHttpSelectField { properties | required = required })
+            MultiStringField_ <| MultiHttpSelectField { properties | value = multiHttpSelectDefault.value }
 
         MultiStringField_ (MultiSelectField properties) ->
-            MultiStringField_ (MultiSelectField { properties | required = required })
+            MultiStringField_ <| MultiSelectField { properties | value = multiSelectDefault.value }
 
         MultiStringField_ (SearchableMultiSelectField properties) ->
-            MultiStringField_ (SearchableMultiSelectField { properties | required = required })
+            MultiStringField_ <| SearchableMultiSelectField { properties | value = searchableMultiSelectDefault.value, searchInput = searchableMultiSelectDefault.searchInput }
 
         MultiStringField_ (TagField properties) ->
-            MultiStringField_ (TagField { properties | required = required })
+            MultiStringField_ <| TagField { properties | value = tagDefault.value, inputBar = tagDefault.inputBar }
 
         BoolField_ (CheckboxField properties) ->
-            BoolField_ (CheckboxField { properties | required = required })
+            BoolField_ (CheckboxField { properties | value = checkboxDefault.value })
 
         BoolField_ (RadioBoolField properties) ->
-            BoolField_ (RadioBoolField { properties | required = required })
+            BoolField_ (RadioBoolField { properties | value = radioBoolDefault.value })
 
         BoolField_ (RadioEnumField properties) ->
-            BoolField_ (RadioEnumField { properties | required = required })
+            BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
         NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | required = required })
+            NumericField_ (AgeField { properties | value = ageDefault.value })
 
 
 {-| -}
@@ -949,10 +1783,10 @@ updateTagsValue addTag value field =
 
 {-| -}
 updateTagsInputBarValue : String -> Field -> Field
-updateTagsInputBarValue input field =
+updateTagsInputBarValue input_ field =
     case field of
         MultiStringField_ (TagField properties) ->
-            MultiStringField_ (TagField { properties | inputBar = input })
+            MultiStringField_ (TagField { properties | inputBar = input_ })
 
         _ ->
             field
@@ -999,79 +1833,6 @@ updateStringValue_ value field =
 
         RadioField properties ->
             RadioField { properties | value = value }
-
-
-{-| -}
-updateStringDisabled_ : Bool -> StringField -> StringField
-updateStringDisabled_ value field =
-    case field of
-        SimpleField properties ->
-            SimpleField { properties | disabled = value }
-
-        DateField properties ->
-            DateField { properties | disabled = value }
-
-        SelectField properties ->
-            SelectField { properties | disabled = value }
-
-        SearchableSelectField properties ->
-            SearchableSelectField { properties | disabled = value }
-
-        HttpSelectField properties ->
-            HttpSelectField { properties | disabled = value }
-
-        RadioField properties ->
-            RadioField { properties | disabled = value }
-
-
-{-| -}
-updateStringHidden_ : Bool -> StringField -> StringField
-updateStringHidden_ value field =
-    case field of
-        SimpleField properties ->
-            SimpleField { properties | hidden = value }
-
-        DateField properties ->
-            DateField { properties | hidden = value }
-
-        SelectField properties ->
-            SelectField { properties | hidden = value }
-
-        SearchableSelectField properties ->
-            SearchableSelectField { properties | hidden = value }
-
-        HttpSelectField properties ->
-            HttpSelectField { properties | hidden = value }
-
-        RadioField properties ->
-            RadioField { properties | hidden = value }
-
-
-updateMultiStringOption_ : Option.Option -> Bool -> MultiStringField -> MultiStringField
-updateMultiStringOption_ option checked field =
-    let
-        update properties =
-            { properties
-                | value =
-                    if checked then
-                        Set.insert option.value properties.value
-
-                    else
-                        Set.remove option.value properties.value
-            }
-    in
-    case field of
-        MultiSelectField properties ->
-            MultiSelectField (update properties)
-
-        SearchableMultiSelectField properties ->
-            SearchableMultiSelectField (update properties)
-
-        MultiHttpSelectField properties ->
-            MultiHttpSelectField (update properties)
-
-        TagField properties ->
-            TagField (update properties)
 
 
 {-| -}
@@ -1263,28 +2024,6 @@ getType field =
 
 
 {-| -}
-isNumericField : Field -> Bool
-isNumericField field =
-    case field of
-        NumericField_ _ ->
-            True
-
-        _ ->
-            False
-
-
-{-| -}
-isColumn : Field -> Bool
-isColumn field =
-    case field of
-        StringField_ (RadioField { direction }) ->
-            direction == Direction.Column
-
-        _ ->
-            True
-
-
-{-| -}
 getStringType : StringField -> FieldType.StringFieldType
 getStringType field =
     case field of
@@ -1307,7 +2046,6 @@ getStringType field =
             FieldType.Radio
 
 
-{-| -}
 getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType
 getMultiStringType field =
     case field of
@@ -1328,12 +2066,6 @@ getMultiStringType field =
 getOrder : Field -> Int
 getOrder =
     getProperties >> .order
-
-
-{-| -}
-getWidth : Field -> Width.Width
-getWidth =
-    getProperties >> .width
 
 
 {-| -}

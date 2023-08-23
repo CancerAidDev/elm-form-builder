@@ -27,4 +27,4 @@ view time submitted locale fields =
         |> Dict.toList
         |> List.sortBy (\( _, field ) -> Field.getOrder field)
         |> List.map (\( k, v ) -> Input.view time submitted locale fields k v)
-        |> Html.div [ HtmlAttributes.class "mx-0 mt-5 columns is-multiline input-field" ]
+        |> Html.div [ HtmlAttributes.class "m-0 columns is-multiline input-field" ]
