@@ -120,7 +120,7 @@ control time (Locale.Locale _ code) key field =
         Field.BoolField_ (Field.RadioEnumField properties) ->
             Radio.radioEnum key properties
 
-        Field.NumericField_ (Field.AgeField _) ->
+        Field.NumericField_ (Field.NumericField _) ->
             input time Nothing key field
 
 
@@ -157,7 +157,7 @@ input time code key field =
             in
             renderInput fieldType properties
 
-        Field.NumericField_ (Field.AgeField properties) ->
+        Field.NumericField_ (Field.NumericField properties) ->
             Html.input
                 [ HtmlAttributes.name key
                 , HtmlAttributes.class "input"
@@ -277,7 +277,7 @@ checkbox key field =
 error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
 error submitted locale fields field =
     case field of
-        Field.NumericField_ (Field.AgeField properties) ->
+        Field.NumericField_ (Field.NumericField properties) ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
                 [ if submitted then
                     validateForm locale fields field

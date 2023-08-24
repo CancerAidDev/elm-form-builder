@@ -1,8 +1,8 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
-    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
-    , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, NumericFieldProperties
+    , ageDefault, integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , numeric, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -21,17 +21,17 @@ module Form.Field exposing
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, NumericFieldProperties
 
 
 # Default Properties
 
-@docs ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs ageDefault, integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs numeric, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
@@ -265,9 +265,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-age : AgeFieldProperties -> Field
-age =
-    NumericField_ << AgeField
+numeric : NumericFieldProperties -> Field
+numeric =
+    NumericField_ << NumericField
 
 
 {-| Makes a tag field.
@@ -1229,6 +1229,7 @@ radioDefault =
 , label = ""
 , width = Width.FullSize
 , enabledBy = Nothing
+, tipe = FieldType.Integer
 , order = 0
 , disabled = False
 , hidden = False
@@ -1236,12 +1237,40 @@ radioDefault =
 , value = Nothing
 }`
 -}
-ageDefault : AgeFieldProperties
+integerDefault : NumericFieldProperties
+integerDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , tipe = FieldType.Integer
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, tipe = FieldType.Age
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+}`
+-}
+ageDefault : NumericFieldProperties
 ageDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
     , enabledBy = Nothing
+    , tipe = FieldType.Age
     , order = 0
     , disabled = False
     , hidden = False
@@ -1281,7 +1310,7 @@ type BoolField
 
 {-| -}
 type NumericField
-    = AgeField AgeFieldProperties
+    = NumericField NumericFieldProperties
 
 
 {-| -}
@@ -1432,8 +1461,8 @@ type alias RadioBoolFieldProperties =
 
 
 {-| -}
-type alias AgeFieldProperties =
-    FieldProperties { value : Maybe Int }
+type alias NumericFieldProperties =
+    FieldProperties { tipe : FieldType.NumericFieldType, value : Maybe Int }
 
 
 {-| -}
@@ -1457,7 +1486,7 @@ getProperties field =
         BoolField_ (RadioEnumField properties) ->
             getCommonProperties properties
 
-        NumericField_ (AgeField properties) ->
+        NumericField_ (NumericField properties) ->
             getCommonProperties properties
 
 
@@ -1776,8 +1805,8 @@ resetValueToDefault field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
-        NumericField_ (AgeField properties) ->
-            NumericField_ (AgeField { properties | value = ageDefault.value })
+        NumericField_ (NumericField properties) ->
+            NumericField_ (NumericField { properties | value = ageDefault.value })
 
 
 {-| -}
@@ -1941,8 +1970,8 @@ updateRadioEnumValue_ value field =
 
 {-| -}
 updateNumericValue_ : Maybe Int -> NumericField -> NumericField
-updateNumericValue_ value (AgeField properties) =
-    AgeField { properties | value = value }
+updateNumericValue_ value (NumericField properties) =
+    NumericField { properties | value = value }
 
 
 {-| -}
@@ -2030,7 +2059,7 @@ getStringValue field =
 getNumericValue : Field -> Maybe Int
 getNumericValue field =
     case field of
-        NumericField_ (AgeField { value }) ->
+        NumericField_ (NumericField { value }) ->
             value
 
         _ ->
@@ -2073,8 +2102,8 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        NumericField_ (AgeField _) ->
-            FieldType.NumericType FieldType.Age
+        NumericField_ (NumericField { tipe }) ->
+            FieldType.NumericType tipe
 
 
 {-| -}
@@ -2163,7 +2192,7 @@ encode field =
         BoolField_ (RadioBoolField { value }) ->
             EncodeExtra.maybe Encode.bool value
 
-        NumericField_ (AgeField { value }) ->
+        NumericField_ (NumericField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

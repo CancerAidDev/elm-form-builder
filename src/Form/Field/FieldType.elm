@@ -78,7 +78,8 @@ type SimpleFieldType
 
 {-| -}
 type NumericFieldType
-    = Age
+    = Integer
+    | Age
 
 
 {-| -}

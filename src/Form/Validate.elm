@@ -154,7 +154,7 @@ validateRadioEnumField properties =
 
 
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
-validateNumericField (Field.AgeField properties) =
+validateNumericField (Field.NumericField properties) =
     if properties.required == Required.Yes then
         let
             regex =

@@ -99,7 +99,7 @@ fields =
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Age"
             |> FormField.setOrder order
-            |> FormField.age
+            |> FormField.numeric
         )
     , \order ->
         ( "dateOfBirth"
