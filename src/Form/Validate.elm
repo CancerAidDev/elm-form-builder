@@ -156,17 +156,22 @@ validateRadioEnumField properties =
 validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
 validateNumericField (Field.NumericField properties) =
     if properties.required == Required.Yes then
-        let
-            regex =
-                "^(1[89]|[2-9][0-9])$"
-                    |> Regex.fromString
-                    |> Maybe.withDefault Regex.never
-        in
-        if Regex.contains regex (LibString.fromMaybeInt properties.value) then
-            Ok properties.value
+        case properties.tipe of
+            FieldType.Age ->
+                let
+                    regex =
+                        "^(1[89]|[2-9][0-9])$"
+                            |> Regex.fromString
+                            |> Maybe.withDefault Regex.never
+                in
+                if Regex.contains regex (LibString.fromMaybeInt properties.value) then
+                    Ok properties.value
 
-        else
-            Err InvalidAge
+                else
+                    Err InvalidAge
+
+            FieldType.Integer ->
+                Ok properties.value
 
     else
         Ok properties.value
