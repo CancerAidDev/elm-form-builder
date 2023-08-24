@@ -129,6 +129,14 @@ fields =
             |> FormField.date
         )
     , \order ->
+        ( "date"
+        , FormField.dateDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Event Date"
+            |> FormField.setOrder order
+            |> FormField.date
+        )
+    , \order ->
         ( "something"
         , FormField.selectDefault
             |> FormField.setLabel "Something"

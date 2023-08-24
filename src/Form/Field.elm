@@ -3,7 +3,7 @@ module Form.Field exposing
     , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
     , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired
@@ -36,7 +36,7 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
@@ -686,23 +686,36 @@ setDatePast =
     setTipe FieldType.datePast
 
 
-{-| Sets the selectable date range to be based on intervals relative to the current date.
-
-For example, to select a date between 2 years ago and 5 years from now, use:
-
-    `setDateOffset ( TimeExtra.Year, -2 ) ( TimeExtra.Year, 5 )`
-
+{-| Sets the max selectable date range to specified absolute date in POSIX time.
 -}
-setDateOffset : ( TimeExtra.Interval, Int ) -> ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
-setDateOffset minOffset maxOffset =
-    setTipe (FieldType.DateOffset minOffset maxOffset)
+setMaxDate : Time.Posix -> DateFieldProperties -> DateFieldProperties
+setMaxDate maxTime ({ tipe } as field) =
+    setTipe { tipe | max = Just (FieldType.DateAbsolute maxTime) } field
 
 
-{-| Sets the selectable date range to absolute dates in POSIX time.
+{-| Sets the max selectable date range to specified interval relative to the current date.
+For example, to select a max date 5 years from now, use:
+`setMaxDateOffset ( TimeExtra.Year, 5 )`
 -}
-setDateBounds : Time.Posix -> Time.Posix -> DateFieldProperties -> DateFieldProperties
-setDateBounds minBound maxBound =
-    setTipe (FieldType.DateAbsolute minBound maxBound)
+setMaxDateOffset : ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
+setMaxDateOffset offset ({ tipe } as field) =
+    setTipe { tipe | max = Just (FieldType.DateOffset offset) } field
+
+
+{-| Sets the max selectable date range to specified absolute date in POSIX time.
+-}
+setMinDate : Time.Posix -> DateFieldProperties -> DateFieldProperties
+setMinDate minTime ({ tipe } as field) =
+    setTipe { tipe | min = Just (FieldType.DateAbsolute minTime) } field
+
+
+{-| Sets the max selectable date range to specified interval relative to the current date.
+For example, to select a min date of 2 years ago, use:
+`setMinDateOffset ( TimeExtra.Year, 2 )`
+-}
+setMinDateOffset : ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
+setMinDateOffset offset ({ tipe } as field) =
+    setTipe { tipe | min = Just (FieldType.DateOffset offset) } field
 
 
 {-| -}
@@ -847,7 +860,7 @@ textAreaDefault =
 , disabled = False
 , hidden = False
 , unhiddenBy = Nothing
-, tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
+, tipe = { min = Nothing, max = Nothing }
 , value = ""
 , parsedDate = Nothing
 }`
@@ -862,7 +875,7 @@ dateDefault =
     , disabled = False
     , hidden = False
     , unhiddenBy = Nothing
-    , tipe = FieldType.DateAbsolute (Time.millisToPosix 0) (Time.millisToPosix 3155720400000)
+    , tipe = { min = Nothing, max = Nothing }
     , value = ""
     , parsedDate = Nothing
     }
