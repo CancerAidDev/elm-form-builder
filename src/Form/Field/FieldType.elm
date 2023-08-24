@@ -89,6 +89,7 @@ type MultiStringFieldType
     | Tags
 
 
+{-| -}
 type alias DateFieldType =
     { min : Maybe DateConfig, max : Maybe DateConfig }
 
