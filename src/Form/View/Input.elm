@@ -276,29 +276,13 @@ checkbox key field =
 
 error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
 error submitted locale fields field =
-    case field of
-        Field.IntegerField_ (Field.IntegerField properties) ->
-            Html.p [ HtmlAttributes.class "help is-danger" ]
-                [ if submitted then
-                    validateForm locale fields field
+    Html.p [ HtmlAttributes.class "help is-danger" ]
+        [ if submitted then
+            validateForm locale fields field
 
-                  else
-                    case properties.value of
-                        Nothing ->
-                            HtmlExtra.nothing
-
-                        Just _ ->
-                            validateForm locale fields field
-                ]
-
-        _ ->
-            Html.p [ HtmlAttributes.class "help is-danger" ]
-                [ if submitted then
-                    validateForm locale fields field
-
-                  else
-                    HtmlExtra.nothing
-                ]
+          else
+            HtmlExtra.nothing
+        ]
 
 
 validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
