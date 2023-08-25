@@ -21,7 +21,7 @@ type Msg
     | UpdateBoolField String Bool
     | UpdateRadioBoolField String Bool
     | UpdateRadioEnumField String RadioEnum.Value
-    | UpdateNumericField String String
+    | UpdateIntegerField String String
     | ResetField String
     | UpdateShowDropdown String Bool
     | UpdateSearchbar String String

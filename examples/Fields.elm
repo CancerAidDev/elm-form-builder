@@ -95,11 +95,13 @@ fields =
         )
     , \order ->
         ( "age"
-        , FormField.ageDefault
+        , FormField.integerDefault
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Age"
+            |> FormField.setMin 0
+            |> FormField.setMax 100
             |> FormField.setOrder order
-            |> FormField.age
+            |> FormField.integer
         )
     , \order ->
         ( "dateOfBirth"
@@ -125,6 +127,14 @@ fields =
             |> FormField.setDateFuture
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Start Date"
+            |> FormField.setOrder order
+            |> FormField.date
+        )
+    , \order ->
+        ( "date"
+        , FormField.dateDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Event Date"
             |> FormField.setOrder order
             |> FormField.date
         )
