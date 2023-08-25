@@ -11,7 +11,6 @@ module Form.Update exposing (update)
 
 import Form.Fields as Fields
 import Form.Msg as Msg
-import Form.Validate as Validate
 
 
 {-| -}
@@ -36,12 +35,8 @@ update msg fields =
         Msg.UpdateRadioEnumField key value ->
             ( Fields.updateRadioEnumField key value fields, Cmd.none )
 
-        Msg.UpdateNumericField key value ->
-            if Validate.isValidAgeInput (String.toInt value) then
-                ( Fields.updateNumericField key value fields, Cmd.none )
-
-            else
-                ( fields, Cmd.none )
+        Msg.UpdateIntegerField key value ->
+            ( Fields.updateIntegerField key value fields, Cmd.none )
 
         Msg.ResetField key ->
             ( Fields.resetValueToDefault key fields, Cmd.none )

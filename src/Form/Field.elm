@@ -1,11 +1,11 @@
 module Form.Field exposing
-    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, NumericFieldProperties
-    , ageDefault, integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , numeric, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
-    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
+    ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
+    , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired
     , encode
     , metadataKey
@@ -16,37 +16,37 @@ module Form.Field exposing
 
 # Field
 
-@docs Field, StringField, MultiStringField, BoolField, NumericField
+@docs Field, StringField, MultiStringField, BoolField, IntegerField
 
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, NumericFieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
 
 
 # Default Properties
 
-@docs ageDefault, integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs numeric, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
 
 
 # Setters
 
-@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
+@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
 
 
 # Predicates
@@ -265,9 +265,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-numeric : NumericFieldProperties -> Field
-numeric =
-    NumericField_ << NumericField
+integer : IntegerFieldProperties -> Field
+integer =
+    IntegerField_ << IntegerField
 
 
 {-| Makes a tag field.
@@ -716,6 +716,20 @@ For example, to select a min date of 2 years ago, use:
 setMinDateOffset : ( TimeExtra.Interval, Int ) -> DateFieldProperties -> DateFieldProperties
 setMinDateOffset offset ({ tipe } as field) =
     setTipe { tipe | min = Just (FieldType.DateOffset offset) } field
+
+
+{-| Sets the max integer value.
+-}
+setMax : Int -> IntegerFieldProperties -> IntegerFieldProperties
+setMax max ({ tipe } as field) =
+    setTipe { tipe | max = Just max } field
+
+
+{-| Sets the min integer value.
+-}
+setMin : Int -> IntegerFieldProperties -> IntegerFieldProperties
+setMin min ({ tipe } as field) =
+    setTipe { tipe | min = Just min } field
 
 
 {-| -}
@@ -1229,7 +1243,7 @@ radioDefault =
 , label = ""
 , width = Width.FullSize
 , enabledBy = Nothing
-, tipe = FieldType.Integer
+, tipe = { min = Nothing, max = Nothing }
 , order = 0
 , disabled = False
 , hidden = False
@@ -1237,40 +1251,13 @@ radioDefault =
 , value = Nothing
 }`
 -}
-integerDefault : NumericFieldProperties
+integerDefault : IntegerFieldProperties
 integerDefault =
     { required = Required.No
     , label = ""
     , width = Width.FullSize
     , enabledBy = Nothing
-    , tipe = FieldType.Integer
-    , order = 0
-    , disabled = False
-    , hidden = False
-    , unhiddenBy = Nothing
-    , value = Nothing
-    }
-
-
-{-| `{ required = Required.No
-, label = ""
-, width = Width.FullSize
-, enabledBy = Nothing
-, tipe = FieldType.Age
-, order = 0
-, disabled = False
-, hidden = False
-, unhiddenBy = Nothing
-, value = Nothing
-}`
--}
-ageDefault : NumericFieldProperties
-ageDefault =
-    { required = Required.No
-    , label = ""
-    , width = Width.FullSize
-    , enabledBy = Nothing
-    , tipe = FieldType.Age
+    , tipe = { min = Nothing, max = Nothing }
     , order = 0
     , disabled = False
     , hidden = False
@@ -1288,7 +1275,7 @@ type Field
     = StringField_ StringField
     | MultiStringField_ MultiStringField
     | BoolField_ BoolField
-    | NumericField_ NumericField
+    | IntegerField_ IntegerField
 
 
 {-| -}
@@ -1309,8 +1296,8 @@ type BoolField
 
 
 {-| -}
-type NumericField
-    = NumericField NumericFieldProperties
+type IntegerField
+    = IntegerField IntegerFieldProperties
 
 
 {-| -}
@@ -1461,8 +1448,8 @@ type alias RadioBoolFieldProperties =
 
 
 {-| -}
-type alias NumericFieldProperties =
-    FieldProperties { tipe : FieldType.NumericFieldType, value : Maybe Int }
+type alias IntegerFieldProperties =
+    FieldProperties { tipe : FieldType.IntegerFieldType, value : Maybe Int }
 
 
 {-| -}
@@ -1486,7 +1473,7 @@ getProperties field =
         BoolField_ (RadioEnumField properties) ->
             getCommonProperties properties
 
-        NumericField_ (NumericField properties) ->
+        IntegerField_ (IntegerField properties) ->
             getCommonProperties properties
 
 
@@ -1805,8 +1792,8 @@ resetValueToDefault field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
-        NumericField_ (NumericField properties) ->
-            NumericField_ (NumericField { properties | value = ageDefault.value })
+        IntegerField_ (IntegerField properties) ->
+            IntegerField_ (IntegerField { properties | value = integerDefault.value })
 
 
 {-| -}
@@ -1843,11 +1830,11 @@ updateRadioBoolValue value field =
 
 
 {-| -}
-updateNumericValue : String -> Field -> Field
-updateNumericValue value field =
+updateIntegerValue : String -> Field -> Field
+updateIntegerValue value field =
     case field of
-        NumericField_ numericField ->
-            NumericField_ <| updateNumericValue_ (String.toInt value) numericField
+        IntegerField_ integerField ->
+            IntegerField_ <| updateIntegerValue_ (String.toInt value) integerField
 
         _ ->
             field
@@ -1969,9 +1956,9 @@ updateRadioEnumValue_ value field =
 
 
 {-| -}
-updateNumericValue_ : Maybe Int -> NumericField -> NumericField
-updateNumericValue_ value (NumericField properties) =
-    NumericField { properties | value = value }
+updateIntegerValue_ : Maybe Int -> IntegerField -> IntegerField
+updateIntegerValue_ value (IntegerField properties) =
+    IntegerField { properties | value = value }
 
 
 {-| -}
@@ -2056,10 +2043,10 @@ getStringValue field =
 
 
 {-| -}
-getNumericValue : Field -> Maybe Int
-getNumericValue field =
+getIntegerValue : Field -> Maybe Int
+getIntegerValue field =
     case field of
-        NumericField_ (NumericField { value }) ->
+        IntegerField_ (IntegerField { value }) ->
             value
 
         _ ->
@@ -2102,8 +2089,8 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        NumericField_ (NumericField { tipe }) ->
-            FieldType.NumericType tipe
+        IntegerField_ (IntegerField { tipe }) ->
+            FieldType.IntegerType tipe
 
 
 {-| -}
@@ -2192,7 +2179,7 @@ encode field =
         BoolField_ (RadioBoolField { value }) ->
             EncodeExtra.maybe Encode.bool value
 
-        NumericField_ (NumericField { value }) ->
+        IntegerField_ (IntegerField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

@@ -39,7 +39,7 @@ type JsonField
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
-    | JsonNumericField JsonNumericFieldProperties
+    | JsonIntegerField JsonIntegerFieldProperties
     | JsonTagField JsonTagFieldProperties
 
 
@@ -251,13 +251,13 @@ type alias JsonRadioEnumFieldProperties =
     }
 
 
-type alias JsonNumericFieldProperties =
+type alias JsonIntegerFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
-    , tipe : FieldType.NumericFieldType
+    , tipe : FieldType.IntegerFieldType
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
@@ -319,8 +319,8 @@ decoderForType fieldType =
         FieldType.BoolType FieldType.RadioEnum ->
             Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-        FieldType.NumericType numericType ->
-            Decode.map JsonNumericField (decoderNumericJson numericType)
+        FieldType.IntegerType integerType ->
+            Decode.map JsonIntegerField (decoderIntegerJson integerType)
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -488,10 +488,10 @@ toField time order field =
                     }
             )
 
-        JsonNumericField { required, key, label, width, enabledBy, tipe, disabled, hidden, unhiddenBy } ->
+        JsonIntegerField { required, key, label, width, enabledBy, tipe, disabled, hidden, unhiddenBy } ->
             ( key
-            , Field.NumericField_ <|
-                Field.NumericField
+            , Field.IntegerField_ <|
+                Field.IntegerField
                     { required = required
                     , label = label
                     , width = width
@@ -824,9 +824,9 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
-decoderNumericJson : FieldType.NumericFieldType -> Decode.Decoder JsonNumericFieldProperties
-decoderNumericJson tipe =
-    Decode.succeed JsonNumericFieldProperties
+decoderIntegerJson : FieldType.IntegerFieldType -> Decode.Decoder JsonIntegerFieldProperties
+decoderIntegerJson tipe =
+    Decode.succeed JsonIntegerFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string

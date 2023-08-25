@@ -1,6 +1,6 @@
 module Form.Validate exposing
     ( validate, validateField, Error
-    , isValid, isValidAgeInput
+    , isValid
     , errorToMessage
     )
 
@@ -14,7 +14,7 @@ module Form.Validate exposing
 
 # Predicates
 
-@docs isValid, isValidAgeInput
+@docs isValid
 
 
 # Errors
@@ -30,12 +30,10 @@ import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
 import Form.Fields as Fields
 import Form.Format.ForSubmission as ForSubmission
-import Form.Lib.String as LibString
 import Form.Locale as Locale
 import Form.Validate.StringField as ValidateStringField
 import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
-import Regex
 import Set
 
 
@@ -95,13 +93,13 @@ validateField locale fields field =
                     )
                 |> Result.mapError BoolError_
 
-        Field.NumericField_ numericField ->
-            validateNumericField numericField
+        Field.IntegerField_ properties ->
+            validateIntegerField properties
                 |> Result.map
                     (\updatedValue ->
-                        Field.NumericField_ (Field.updateNumericValue_ updatedValue numericField)
+                        Field.IntegerField_ (Field.updateIntegerValue_ updatedValue properties)
                     )
-                |> Result.mapError NumericError_
+                |> Result.mapError IntegerError_
 
 
 validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
@@ -153,44 +151,41 @@ validateRadioEnumField properties =
         Ok properties.value
 
 
-validateNumericField : Field.NumericField -> Result NumericError (Maybe Int)
-validateNumericField (Field.NumericField properties) =
-    if properties.required == Required.Yes then
-        case properties.tipe of
-            FieldType.Age ->
-                let
-                    regex =
-                        "^(1[89]|[2-9][0-9])$"
-                            |> Regex.fromString
-                            |> Maybe.withDefault Regex.never
-                in
-                if Regex.contains regex (LibString.fromMaybeInt properties.value) then
+validateIntegerField : Field.IntegerField -> Result IntegerError (Maybe Int)
+validateIntegerField (Field.IntegerField properties) =
+    case properties.value of
+        Just value ->
+            case ( properties.tipe.min, properties.tipe.max ) of
+                ( Just min, Just max ) ->
+                    if min <= value && value <= max then
+                        Ok properties.value
+
+                    else
+                        Err (GreaterThanMaxOrLessThanMin min max)
+
+                ( Just min, Nothing ) ->
+                    if min <= value then
+                        Ok properties.value
+
+                    else
+                        Err (LessThanMin min)
+
+                ( Nothing, Just max ) ->
+                    if value <= max then
+                        Ok properties.value
+
+                    else
+                        Err (GreaterThanMax max)
+
+                ( Nothing, Nothing ) ->
                     Ok properties.value
 
-                else
-                    Err InvalidAge
+        Nothing ->
+            if properties.required == Required.Yes then
+                Err EmptyIntegerError
 
-            FieldType.Integer ->
+            else
                 Ok properties.value
-
-    else
-        Ok properties.value
-
-
-{-| -}
-isValidAgeInput : Maybe Int -> Bool
-isValidAgeInput age =
-    let
-        regex =
-            "^(|[1-9]|1[89]|[2-9][0-9])$"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    if Regex.contains regex (LibString.fromMaybeInt age) then
-        True
-
-    else
-        False
 
 
 {-| -}
@@ -220,8 +215,11 @@ type BoolError
     | EmptyBoolError
 
 
-type NumericError
-    = InvalidAge
+type IntegerError
+    = GreaterThanMax Int
+    | LessThanMin Int
+    | GreaterThanMaxOrLessThanMin Int Int
+    | EmptyIntegerError
 
 
 {-| -}
@@ -229,7 +227,7 @@ type Error
     = StringError_ Field.StringField StringFieldTypes.StringFieldError
     | MultiStringError_ MultiStringError
     | BoolError_ BoolError
-    | NumericError_ NumericError
+    | IntegerError_ IntegerError
 
 
 {-| -}
@@ -248,5 +246,14 @@ errorToMessage locale error =
         BoolError_ EmptyBoolError ->
             "Field is required"
 
-        NumericError_ InvalidAge ->
-            "Age must be 18-99"
+        IntegerError_ (GreaterThanMax max) ->
+            "Must be less than " ++ String.fromInt max
+
+        IntegerError_ (LessThanMin min) ->
+            "Must be greater than " ++ String.fromInt min
+
+        IntegerError_ (GreaterThanMaxOrLessThanMin min max) ->
+            "Must be between " ++ String.fromInt min ++ " and " ++ String.fromInt max
+
+        IntegerError_ EmptyIntegerError ->
+            "Field is required"

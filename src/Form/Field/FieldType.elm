@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
     )
@@ -9,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
 
 
 # Decoder
@@ -35,7 +35,7 @@ type FieldType
     = StringType StringFieldType
     | MultiStringType MultiStringFieldType
     | BoolType BoolFieldType
-    | NumericType NumericFieldType
+    | IntegerType IntegerFieldType
 
 
 {-| -}
@@ -77,9 +77,8 @@ type SimpleFieldType
 
 
 {-| -}
-type NumericFieldType
-    = Integer
-    | Age
+type alias IntegerFieldType =
+    { min : Maybe Int, max : Maybe Int }
 
 
 {-| -}
@@ -205,9 +204,6 @@ fromString str =
         "radio" ->
             Just (StringType Radio)
 
-        "age" ->
-            Just (NumericType Age)
-
         "tags" ->
             Just (MultiStringType Tags)
 
@@ -262,8 +258,8 @@ toMin time fieldType =
         StringType (DateType { min }) ->
             min |> Maybe.map (dateConfigToString time)
 
-        NumericType Age ->
-            Just "18"
+        IntegerType { min } ->
+            min |> Maybe.map String.fromInt
 
         _ ->
             Nothing
@@ -276,8 +272,8 @@ toMax time fieldType =
         StringType (DateType { max }) ->
             max |> Maybe.map (dateConfigToString time)
 
-        NumericType Age ->
-            Just "99"
+        IntegerType { max } ->
+            max |> Maybe.map String.fromInt
 
         _ ->
             Nothing

@@ -120,7 +120,7 @@ control time (Locale.Locale _ code) key field =
         Field.BoolField_ (Field.RadioEnumField properties) ->
             Radio.radioEnum key properties
 
-        Field.NumericField_ (Field.NumericField _) ->
+        Field.IntegerField_ (Field.IntegerField _) ->
             input time Nothing key field
 
 
@@ -157,7 +157,7 @@ input time code key field =
             in
             renderInput fieldType properties
 
-        Field.NumericField_ (Field.NumericField properties) ->
+        Field.IntegerField_ (Field.IntegerField properties) ->
             Html.input
                 [ HtmlAttributes.name key
                 , HtmlAttributes.class "input"
@@ -166,11 +166,11 @@ input time code key field =
                 , HtmlAttributes.style "width" "6em"
                 , HtmlAttributes.value (LibString.fromMaybeInt properties.value)
                 , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlEvents.onInput <| Msg.UpdateNumericField key
+                , HtmlEvents.onInput <| Msg.UpdateIntegerField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.NumericType FieldType.Age))
+                    (FieldType.toMin time (FieldType.IntegerType properties.tipe))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time (FieldType.NumericType FieldType.Age))
+                    (FieldType.toMax time (FieldType.IntegerType properties.tipe))
                 ]
                 []
 
@@ -277,7 +277,7 @@ checkbox key field =
 error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
 error submitted locale fields field =
     case field of
-        Field.NumericField_ (Field.NumericField properties) ->
+        Field.IntegerField_ (Field.IntegerField properties) ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
                 [ if submitted then
                     validateForm locale fields field

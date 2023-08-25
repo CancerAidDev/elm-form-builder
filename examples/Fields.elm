@@ -95,11 +95,13 @@ fields =
         )
     , \order ->
         ( "age"
-        , FormField.ageDefault
+        , FormField.integerDefault
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Age"
+            |> FormField.setMin 0
+            |> FormField.setMax 100
             |> FormField.setOrder order
-            |> FormField.numeric
+            |> FormField.integer
         )
     , \order ->
         ( "dateOfBirth"
