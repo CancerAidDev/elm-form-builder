@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, phoneField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -19,7 +19,7 @@ type alias NewStringField =
 type alias TestSuite =
     { valid : List { value : String, name : String }
     , invalid : List { value : String, error : Types.StringFieldError, name : String }
-    , locale : Locale.Locale
+    , locale : Maybe Locale.Locale
     }
 
 
@@ -33,7 +33,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                     Test.test ("valid - " ++ name) <|
                         \_ ->
                             field { required = required, value = value }
-                                |> StringField.validate locale
+                                |> StringField.validate
                                 |> Expect.ok
                 )
                 valid
@@ -45,7 +45,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                     Test.test ("invalid - " ++ name ++ " " ++ Debug.toString error) <|
                         \_ ->
                             field { required = required, value = value }
-                                |> StringField.validate locale
+                                |> StringField.validate
                                 |> Expect.equal (Err error)
                 )
                 invalid
@@ -66,7 +66,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                 [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
-                            |> StringField.validate Locale.enAU
+                            |> StringField.validate
                             |> Expect.equal (Err Types.RequiredError)
                 , nonemptyTest { required = required }
                 ]
@@ -82,12 +82,12 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                 [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
-                            |> StringField.validate Locale.enAU
+                            |> StringField.validate
                             |> Expect.ok
                 , nonemptyTest { required = required }
                 ]
     in
-    Test.describe (Debug.toString tipe ++ " - " ++ Locale.toString locale)
+    Test.describe (Debug.toString tipe ++ " - " ++ (Maybe.map Locale.toString locale |> Maybe.withDefault "no locale"))
         [ requiredFieldTest
         , optionalFieldTest
         ]
@@ -107,6 +107,32 @@ simpleField tipe { required, value } =
         , hidden = False
         , unhiddenBy = Nothing
         , regexValidation = []
+        }
+
+
+phoneField : Maybe Locale.Locale -> NewStringField
+phoneField locale { required, value } =
+    let
+        code =
+            case locale of
+                Just (Locale.Locale _ c) ->
+                    Just c
+
+                _ ->
+                    Nothing
+    in
+    Field.PhoneField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , locale = locale
+        , countryCodeDropdown = { value = code, showDropdown = False, searchInput = "" }
         }
 
 

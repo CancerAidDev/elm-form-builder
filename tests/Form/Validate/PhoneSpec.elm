@@ -2,6 +2,8 @@ module Form.Validate.PhoneSpec exposing (suite)
 
 import Form.Field.FieldType as FieldType
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
+import Form.Locale.LanguageCode as LanguageCode
 import Form.Validate.HelperSpec as HelperSpec
 import Form.Validate.Types as Types
 import Test
@@ -11,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "Form.Validate.Phone"
         [ Test.describe "validate"
-            [ HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
-                (HelperSpec.simpleField FieldType.Phone)
+            [ HelperSpec.simpleFieldTest FieldType.Phone
+                (HelperSpec.phoneField (Just Locale.enAU))
                 { valid = [ { value = "432432432", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123456789", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 4" }
@@ -20,10 +22,10 @@ suite =
                     , { value = "42345678", error = Types.InvalidPhoneNumber, name = "< 9 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
                     ]
-                , locale = Locale.enAU
+                , locale = Just Locale.enAU
                 }
-            , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
-                (HelperSpec.simpleField FieldType.Phone)
+            , HelperSpec.simpleFieldTest FieldType.Phone
+                (HelperSpec.phoneField (Just Locale.enNZ))
                 { valid =
                     [ { value = "21234567", name = "Correct format and length 8" }
                     , { value = "212345678", name = "Correct format and length 9" }
@@ -35,10 +37,10 @@ suite =
                     , { value = "23456789012", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
                     ]
-                , locale = Locale.enNZ
+                , locale = Just Locale.enNZ
                 }
-            , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
-                (HelperSpec.simpleField FieldType.Phone)
+            , HelperSpec.simpleFieldTest FieldType.Phone
+                (HelperSpec.phoneField (Just Locale.enUS))
                 { valid = [ { value = "2342340000", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
@@ -46,7 +48,24 @@ suite =
                     , { value = "234234000", error = Types.InvalidMobilePhoneNumber, name = "< 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "Doesn't begin with 2" }
                     ]
-                , locale = Locale.enUS
+                , locale = Just Locale.enUS
+                }
+            , HelperSpec.simpleFieldTest FieldType.Phone
+                (HelperSpec.phoneField Nothing)
+                { valid = []
+                , invalid =
+                    [ { value = "123123000", error = Types.InvalidPhoneNumber, name = "Invalid without a locale" }
+                    ]
+                , locale = Nothing
+                }
+            , HelperSpec.simpleFieldTest FieldType.Phone
+                (HelperSpec.phoneField (Just <| Locale.Locale LanguageCode.ES CountryCode.ES))
+                { valid = [ { value = "123456789", name = "Correct format and length" } ]
+                , invalid =
+                    [ { value = "123456", error = Types.InvalidMobilePhoneNumber, name = "<7 digits" }
+                    , { value = "1234567890123456", error = Types.InvalidMobilePhoneNumber, name = ">15 digits" }
+                    ]
+                , locale = Just <| Locale.Locale LanguageCode.ES CountryCode.ES
                 }
             ]
         ]

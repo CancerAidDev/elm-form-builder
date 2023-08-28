@@ -1,7 +1,6 @@
 module Form.Validate.TextSpec exposing (suite)
 
 import Form.Field.FieldType as FieldType
-import Form.Locale as Locale
 import Form.Validate.HelperSpec as HelperSpec
 import Test
 
@@ -14,13 +13,13 @@ suite =
                 (HelperSpec.simpleField FieldType.Text)
                 { valid = [ { value = "asdf", name = "Simple text" } ]
                 , invalid = []
-                , locale = Locale.enAU
+                , locale = Nothing
                 }
             , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.TextArea)
                 (HelperSpec.simpleField FieldType.TextArea)
                 { valid = [ { value = "asdf", name = "Simple text" } ]
                 , invalid = []
-                , locale = Locale.enAU
+                , locale = Nothing
                 }
             ]
         ]
