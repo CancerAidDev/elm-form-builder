@@ -39,7 +39,7 @@ formatForSubmission field =
                     value
 
         Field.PhoneField _ ->
-            Phone.formatForSubmission (Maybe.withDefault CountryCode.AU <| Field.getCode (Field.StringField_ field)) (Field.getStringValue_ field)
+            Phone.formatForSubmission (Maybe.withDefault CountryCode.AU <| Field.getCountryCode (Field.StringField_ field)) (Field.getStringValue_ field)
 
         Field.DateField _ ->
             Field.getParsedDateValue_ field

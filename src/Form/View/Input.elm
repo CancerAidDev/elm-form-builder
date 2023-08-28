@@ -16,7 +16,6 @@ import Form.Field.Width as Width
 import Form.Fields as Fields
 import Form.Lib.Events as LibEvents
 import Form.Lib.String as LibString
-import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Locale.Phone as Phone
 import Form.Msg as Msg
@@ -82,7 +81,7 @@ control time key field =
                     input time key field
 
         Field.StringField_ (Field.PhoneField properties) ->
-            phone time properties.locale key field
+            phone time properties.countryCode key field
 
         Field.StringField_ (Field.DateField _) ->
             input time key field
@@ -157,13 +156,13 @@ input time key field =
                 fieldType =
                     FieldType.StringType FieldType.Phone
             in
-            case properties.locale of
+            case properties.countryCode of
                 Nothing ->
                     renderInput fieldType
                         properties
                         [ HtmlAttributes.id <|
                             "phoneWithoutLocale"
-                                ++ (case Field.getCode field of
+                                ++ (case Field.getCountryCode field of
                                         Nothing ->
                                             ""
 
@@ -269,11 +268,11 @@ viewTags key tags =
         )
 
 
-phone : Time.Posix -> Maybe Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
-phone time locale key field =
+phone : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
+phone time code key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ case locale of
+            [ case code of
                 Nothing ->
                     case field of
                         Field.StringField_ (Field.PhoneField _) ->
@@ -282,8 +281,8 @@ phone time locale key field =
                         _ ->
                             Html.text ""
 
-                Just (Locale.Locale _ code) ->
-                    Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ]
+                Just c ->
+                    Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix c) ]
             ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
             [ input time key field ]

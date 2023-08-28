@@ -11,7 +11,6 @@ module Form.Validate.Phone exposing (phoneValidator, mobileErrorToMessage)
 
 import Form.Field as Field
 import Form.Format.Phone as Phone
-import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Validate.Types as ValidatorTypes
 import Regex
@@ -21,17 +20,12 @@ import Regex
 -}
 phoneValidator : ValidatorTypes.Validator
 phoneValidator field =
-    case Field.getLocale_ field of
-        Just (Locale.Locale _ code) ->
+    case Field.getCountryCode (Field.StringField_ field) of
+        Just code ->
             validateWithCode code field
 
         Nothing ->
-            case Field.getCountryCodeValue_ field of
-                Just code ->
-                    validateWithCode code field
-
-                _ ->
-                    Err ValidatorTypes.InvalidPhoneNumber
+            Err ValidatorTypes.InvalidMobilePhoneNumber
 
 
 validateWithCode : CountryCode.CountryCode -> ValidatorTypes.Validator
@@ -54,9 +48,9 @@ validateWithCode code field =
 -}
 mobileErrorToMessage : Field.StringField -> String
 mobileErrorToMessage field =
-    case Field.getCode (Field.StringField_ field) of
+    case Field.getCountryCode (Field.StringField_ field) of
         Nothing ->
-            "Invalid mobile number"
+            "Invalid mobile number (must specify a country code)"
 
         Just code ->
             case code of

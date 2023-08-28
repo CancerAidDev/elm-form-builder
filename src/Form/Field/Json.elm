@@ -18,7 +18,6 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
-import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
@@ -99,7 +98,7 @@ type alias JsonPhoneFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , locale : Maybe Locale.Locale
+    , countryCode : Maybe CountryCode.CountryCode
     , countryCodeDropdown : Field.CountryCodeDropdown
     }
 
@@ -391,7 +390,7 @@ toField time order field =
                     }
             )
 
-        JsonPhoneField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, locale, countryCodeDropdown } ->
+        JsonPhoneField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, countryCode, countryCodeDropdown } ->
             ( key
             , Field.StringField_ <|
                 Field.PhoneField
@@ -404,7 +403,7 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , locale = locale
+                    , countryCode = countryCode
                     , countryCodeDropdown = countryCodeDropdown
                     }
             )
@@ -698,7 +697,7 @@ decoderPhoneJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "locale" (Decode.map Just Locale.decoder) Nothing
+        |> DecodePipeline.optional "countryCode" (Decode.map Just CountryCode.decoder) Nothing
         |> DecodePipeline.required "countryCodeDropdown" countryCodeDropdownDecoder
 
 

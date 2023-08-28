@@ -8,7 +8,6 @@ module Form.Placeholder.Placeholder exposing (toPlaceholder)
 
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
-import Form.Locale as Locale
 import Form.Placeholder.Phone as Phone
 
 
@@ -26,8 +25,8 @@ toPlaceholder field =
                     ""
 
         Field.StringField_ (Field.PhoneField properties) ->
-            case properties.locale of
-                Just (Locale.Locale _ code) ->
+            case properties.countryCode of
+                Just code ->
                     Phone.toMobilePlaceholder code
 
                 Nothing ->

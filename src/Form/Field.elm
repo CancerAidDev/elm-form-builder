@@ -3,8 +3,8 @@ module Form.Field exposing
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, PhoneFieldProperties, CountryCodeDropdown
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setLocale, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getLocale_, getCountryCodeValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCode
+    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setCountryCode, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCountryCode
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput, updatePhoneSearchInput
     , isCheckbox, isRequired
     , encode
@@ -36,12 +36,12 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setLocale, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setCountryCode, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getLocale_, getCountryCodeValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCode
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCountryCode
 
 
 # Setters
@@ -73,7 +73,6 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
-import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
@@ -184,7 +183,7 @@ phone =
 
 In addition to the common builders, the following are available:
 
-  - `setLocale (Maybe Locale.Locale)`
+  - `setCountryCode (Maybe CountryCode.CountryCode)`
 
 Common builders:
 
@@ -613,9 +612,9 @@ setForbiddenEmailDomains forbiddenDomains field =
 
 
 {-| -}
-setLocale : Maybe Locale.Locale -> PhoneFieldProperties -> PhoneFieldProperties
-setLocale locale field =
-    { field | locale = locale }
+setCountryCode : Maybe CountryCode.CountryCode -> PhoneFieldProperties -> PhoneFieldProperties
+setCountryCode countryCode field =
+    { field | countryCode = countryCode }
 
 
 {-| -}
@@ -831,7 +830,8 @@ urlDefault =
 , regexValidation = []
 , tipe = FieldType.Phone
 , value = ""
-, locale = Nothing
+, countryCode = Nothing
+, countryCodeDropdown = { searchInput = "", value = Nothing, showDropdown = False}
 }`
 -}
 phoneDefault : PhoneFieldProperties
@@ -845,7 +845,7 @@ phoneDefault =
     , hidden = False
     , unhiddenBy = Nothing
     , value = ""
-    , locale = Nothing
+    , countryCode = Nothing
     , countryCodeDropdown = { searchInput = "", value = Nothing, showDropdown = False }
     }
 
@@ -1380,7 +1380,7 @@ type alias CountryCodeDropdown =
 {-| -}
 type alias PhoneFieldProperties =
     StringFieldProperties
-        { locale : Maybe Locale.Locale
+        { countryCode : Maybe CountryCode.CountryCode
         , countryCodeDropdown : CountryCodeDropdown
         }
 
@@ -2115,28 +2115,6 @@ getStringValue_ =
 
 
 {-| -}
-getLocale_ : StringField -> Maybe Locale.Locale
-getLocale_ field =
-    case field of
-        PhoneField props ->
-            props.locale
-
-        _ ->
-            Nothing
-
-
-{-| -}
-getCountryCodeValue_ : StringField -> Maybe CountryCode.CountryCode
-getCountryCodeValue_ field =
-    case field of
-        PhoneField props ->
-            props.countryCodeDropdown.value
-
-        _ ->
-            Nothing
-
-
-{-| -}
 getParsedDateValue_ : StringField -> Maybe Time.Posix
 getParsedDateValue_ field =
     case field of
@@ -2275,12 +2253,12 @@ getUrl field =
 
 
 {-| -}
-getCode : Field -> Maybe CountryCode.CountryCode
-getCode field =
+getCountryCode : Field -> Maybe CountryCode.CountryCode
+getCountryCode field =
     case field of
         StringField_ (PhoneField properties) ->
-            case properties.locale of
-                Just (Locale.Locale _ code) ->
+            case properties.countryCode of
+                Just code ->
                     Just code
 
                 Nothing ->

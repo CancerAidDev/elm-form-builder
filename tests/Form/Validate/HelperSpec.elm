@@ -7,6 +7,7 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
 import Test
@@ -110,17 +111,8 @@ simpleField tipe { required, value } =
         }
 
 
-phoneField : Maybe Locale.Locale -> NewStringField
-phoneField locale { required, value } =
-    let
-        code =
-            case locale of
-                Just (Locale.Locale _ c) ->
-                    Just c
-
-                _ ->
-                    Nothing
-    in
+phoneField : Maybe CountryCode.CountryCode -> NewStringField
+phoneField countryCode { required, value } =
     Field.PhoneField
         { required = required
         , label = "Field"
@@ -131,8 +123,8 @@ phoneField locale { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
-        , locale = locale
-        , countryCodeDropdown = { value = code, showDropdown = False, searchInput = "" }
+        , countryCode = countryCode
+        , countryCodeDropdown = { value = countryCode, showDropdown = False, searchInput = "" }
         }
 
 

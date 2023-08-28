@@ -6,7 +6,7 @@ import Form.Field.Direction as Direction
 import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
-import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Regex
 import Set
 
@@ -84,7 +84,7 @@ fields =
             |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Phone"
             |> FormField.setOrder order
-            |> FormField.setLocale (Just Locale.enAU)
+            |> FormField.setCountryCode (Just CountryCode.AU)
             |> FormField.phone
         )
     , \order ->

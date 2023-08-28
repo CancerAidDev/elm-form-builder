@@ -14,7 +14,7 @@ suite =
     Test.describe "Form.Validate.Phone"
         [ Test.describe "validate"
             [ HelperSpec.simpleFieldTest FieldType.Phone
-                (HelperSpec.phoneField (Just Locale.enAU))
+                (HelperSpec.phoneField (Just CountryCode.AU))
                 { valid = [ { value = "432432432", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123456789", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 4" }
@@ -25,7 +25,7 @@ suite =
                 , locale = Just Locale.enAU
                 }
             , HelperSpec.simpleFieldTest FieldType.Phone
-                (HelperSpec.phoneField (Just Locale.enNZ))
+                (HelperSpec.phoneField (Just CountryCode.NZ))
                 { valid =
                     [ { value = "21234567", name = "Correct format and length 8" }
                     , { value = "212345678", name = "Correct format and length 9" }
@@ -40,7 +40,7 @@ suite =
                 , locale = Just Locale.enNZ
                 }
             , HelperSpec.simpleFieldTest FieldType.Phone
-                (HelperSpec.phoneField (Just Locale.enUS))
+                (HelperSpec.phoneField (Just CountryCode.US))
                 { valid = [ { value = "2342340000", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
@@ -54,12 +54,12 @@ suite =
                 (HelperSpec.phoneField Nothing)
                 { valid = []
                 , invalid =
-                    [ { value = "123123000", error = Types.InvalidPhoneNumber, name = "Invalid without a locale" }
+                    [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Invalid without a locale" }
                     ]
                 , locale = Nothing
                 }
             , HelperSpec.simpleFieldTest FieldType.Phone
-                (HelperSpec.phoneField (Just <| Locale.Locale LanguageCode.ES CountryCode.ES))
+                (HelperSpec.phoneField (Just CountryCode.ES))
                 { valid = [ { value = "123456789", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123456", error = Types.InvalidMobilePhoneNumber, name = "<7 digits" }
