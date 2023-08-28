@@ -90,8 +90,8 @@ control time key field =
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
 
-        Field.StringField_ (Field.SearchableSelectField properties) ->
-            Select.searchableSelect key properties
+        Field.StringField_ (Field.SearchableSelectField _) ->
+            Select.searchableSelect key field
 
         Field.StringField_ (Field.HttpSelectField properties) ->
             Select.httpSelect key properties
@@ -276,8 +276,8 @@ phone time locale key field =
             [ case locale of
                 Nothing ->
                     case field of
-                        Field.StringField_ (Field.PhoneField properties) ->
-                            Select.countryCodeSearchableSelect key properties
+                        Field.StringField_ (Field.PhoneField _) ->
+                            Select.searchableSelect key field
 
                         _ ->
                             Html.text ""

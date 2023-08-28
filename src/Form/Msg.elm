@@ -25,8 +25,7 @@ type Msg
     | UpdateNumericField String String
     | ResetField String
     | UpdateShowDropdown FieldType.FieldType String Bool
-    | UpdatePhoneShowDropdown String Bool
-    | UpdatePhoneDropdownValue String String
+    | UpdateSelectedDropdownValue FieldType.FieldType String String
     | UpdateSearchbar FieldType.FieldType String String
     | UpdateTags String String Bool
     | UpdateTagInput String String

@@ -1,7 +1,4 @@
-module Form.View.Select exposing
-    ( select, searchableSelect, httpSelect
-    , countryCodeSearchableSelect
-    )
+module Form.View.Select exposing (select, searchableSelect, httpSelect)
 
 {-| View Select Fields
 
@@ -68,82 +65,35 @@ viewOption selectedValue option =
 
 
 {-| -}
-searchableSelect : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-searchableSelect key properties =
-    Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
-        [ dropdownTrigger key properties
-        , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
-        ]
-
-
-countryCodeSearchableSelect : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
-countryCodeSearchableSelect key properties =
-    Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
-        [ countryCodeDropdownTrigger key properties
-        , HtmlExtra.viewIf properties.countryCodeDropdown.showDropdown <| countryCodeDropdownMenu key properties
-        ]
-
-
-countryCodeDropdownTrigger : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
-countryCodeDropdownTrigger key { countryCodeDropdown } =
-    Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
-        [ Html.button
-            [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
-            , HtmlEvents.onClick <| Msg.UpdatePhoneShowDropdown key (not countryCodeDropdown.showDropdown)
-            , Key.onKeyDown [ Key.escape <| Msg.UpdatePhoneShowDropdown key False ]
-            , Aria.hasMenuPopUp
-            , Aria.controls [ "dropdown-menu" ]
-            ]
-            [ Html.span [] [ Html.text <| Maybe.withDefault "" <| Maybe.map Phone.phonePrefix countryCodeDropdown.value ]
-            , Dropdown.dropdownIcon countryCodeDropdown.showDropdown
-            ]
-        ]
-
-
-countryCodeDropdownMenu : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
-countryCodeDropdownMenu key properties =
-    let
-        filteredOptions =
-            Dropdown.filteredOptions properties.countryCodeDropdown.searchInput
-                (List.map
-                    (\code ->
-                        { label = Just <| CountryCode.toCountryName code ++ " (" ++ Phone.phonePrefix code ++ ")", value = CountryCode.toString code }
-                    )
-                    CountryCode.allCountryCodes
-                )
-
-        fieldType =
-            FieldType.StringType FieldType.Phone
-    in
-    Html.div []
-        [ Dropdown.overlay fieldType key
-        , Html.div
-            [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id "dropdown-menu"
-            , Aria.roleDescription "menu"
-            , Key.onKeyDown [ Key.escape <| Msg.UpdatePhoneShowDropdown key False ]
-            ]
-            [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ Dropdown.searchBar fieldType key properties.countryCodeDropdown.searchInput (Set.singleton properties.value) filteredOptions
-                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
-                    List.map
-                        (\option ->
-                            Html.div
-                                [ HtmlAttributes.class "dropdown-item mr-2"
-                                , HtmlEvents.onClick <| Msg.UpdatePhoneDropdownValue key option.value
-                                ]
-                                [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
-                                ]
-                        )
-                        filteredOptions
+searchableSelect : String -> Field.Field -> Html.Html Msg.Msg
+searchableSelect key field =
+    case field of
+        Field.StringField_ (Field.SearchableSelectField properties) ->
+            Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
+                [ dropdownTrigger key (FieldType.StringType FieldType.SearchableSelect) { placeholder = properties.placeholder, value = properties.value, showDropdown = properties.showDropdown }
+                , HtmlExtra.viewIf (properties.showDropdown && not properties.hidden) <| searchableDropdownMenu key (FieldType.StringType FieldType.SearchableSelect) { searchInput = properties.searchInput, options = properties.options, value = properties.value }
                 ]
-            ]
-        ]
+
+        Field.StringField_ (Field.PhoneField { countryCodeDropdown }) ->
+            let
+                options =
+                    List.map
+                        (\code ->
+                            { label = Just <| CountryCode.toCountryName code ++ " (" ++ Phone.phonePrefix code ++ ")", value = CountryCode.toString code }
+                        )
+                        CountryCode.allCountryCodes
+            in
+            Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
+                [ dropdownTrigger key (FieldType.StringType FieldType.Phone) { placeholder = "", value = Maybe.withDefault "" <| Maybe.map Phone.phonePrefix countryCodeDropdown.value, showDropdown = countryCodeDropdown.showDropdown }
+                , HtmlExtra.viewIf countryCodeDropdown.showDropdown <| searchableDropdownMenu key (FieldType.StringType FieldType.Phone) { searchInput = countryCodeDropdown.searchInput, options = options, value = Maybe.withDefault "" <| Maybe.map CountryCode.toString countryCodeDropdown.value }
+                ]
+
+        _ ->
+            HtmlExtra.nothing
 
 
-dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown } =
+dropdownTrigger : String -> FieldType.FieldType -> { placeholder : String, value : String, showDropdown : Bool } -> Html.Html Msg.Msg
+dropdownTrigger key fieldType { placeholder, value, showDropdown } =
     let
         selectPlaceholder =
             if value == "" then
@@ -151,9 +101,6 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 
             else
                 value
-
-        fieldType =
-            FieldType.StringType FieldType.SearchableSelect
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
         [ Html.button
@@ -169,14 +116,11 @@ dropdownTrigger key { placeholder, value, showDropdown } =
         ]
 
 
-searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-searchableDropdownMenu key properties =
+searchableDropdownMenu : String -> FieldType.FieldType -> { searchInput : String, options : List Option.Option, value : String } -> Html.Html Msg.Msg
+searchableDropdownMenu key fieldType { searchInput, options, value } =
     let
         filteredOptions =
-            Dropdown.filteredOptions properties.searchInput properties.options
-
-        fieldType =
-            FieldType.StringType FieldType.SearchableSelect
+            Dropdown.filteredOptions searchInput options
     in
     Html.div []
         [ Dropdown.overlay fieldType key
@@ -187,24 +131,23 @@ searchableDropdownMenu key properties =
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ Dropdown.searchBar (FieldType.StringType FieldType.SearchableSelect) key properties.searchInput (Set.singleton properties.value) filteredOptions
+                [ Dropdown.searchBar fieldType key searchInput (Set.singleton value) filteredOptions
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
-                    List.map (viewSearchableOption key properties) filteredOptions
+                    List.map (viewSearchableOption key fieldType) filteredOptions
                 ]
             ]
         ]
 
 
-viewSearchableOption : String -> Field.SelectFieldProperties a -> Option.Option -> Html.Html Msg.Msg
-viewSearchableOption key properties option =
-    HtmlExtra.viewIf (not properties.hidden) <|
-        Html.div
-            [ HtmlAttributes.class "dropdown-item mr-2"
-            , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
-            ]
-            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
-            ]
+viewSearchableOption : String -> FieldType.FieldType -> Option.Option -> Html.Html Msg.Msg
+viewSearchableOption key fieldType option =
+    Html.div
+        [ HtmlAttributes.class "dropdown-item mr-2"
+        , HtmlEvents.onClick <| Msg.UpdateSelectedDropdownValue fieldType key option.value
+        ]
+        [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
+        ]
 
 
 {-| -}

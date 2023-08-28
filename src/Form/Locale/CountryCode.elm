@@ -1,14 +1,11 @@
-module Form.Locale.CountryCode exposing
-    ( CountryCode(..), fromString, toString, toCountryName, decoder
-    , allCountryCodes
-    )
+module Form.Locale.CountryCode exposing (CountryCode(..), fromString, toString, toCountryName, decoder, allCountryCodes)
 
 {-| Best effort at supporting [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166).
 
 
 # CountryCode
 
-@docs CountryCode, fromString, toString, toCountryName, decoder
+@docs CountryCode, fromString, toString, toCountryName, decoder, allCountryCodes
 
 -}
 
@@ -2468,6 +2465,7 @@ toCountryName code =
             "Zimbabwe"
 
 
+{-| -}
 allCountryCodes : List CountryCode
 allCountryCodes =
     [ AD

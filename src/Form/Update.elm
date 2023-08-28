@@ -55,11 +55,13 @@ update msg fields =
                 _ ->
                     ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
 
-        Msg.UpdatePhoneShowDropdown key showDropdown ->
-            ( Fields.updatePhoneShowDropdown key showDropdown fields, Cmd.none )
+        Msg.UpdateSelectedDropdownValue fieldType key value ->
+            case fieldType of
+                FieldType.StringType FieldType.Phone ->
+                    ( Fields.updatePhoneDropdown key value fields, Cmd.none )
 
-        Msg.UpdatePhoneDropdownValue key searchInput ->
-            ( Fields.updatePhoneDropdown key searchInput fields, Cmd.none )
+                _ ->
+                    ( Fields.updateStringField key value fields, Cmd.none )
 
         Msg.UpdateSearchbar fieldType key value ->
             case fieldType of
