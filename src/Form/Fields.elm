@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
+    , updateBoolField, updateFieldRemoteOptions, updateIntegerField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
     , hasCheckboxConsentField, isEnabled, isShown
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
+@docs updateBoolField, updateFieldRemoteOptions, updateIntegerField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
 
 
 # Predicates
@@ -160,9 +160,9 @@ updateFieldRequired fields field =
 
 
 {-| -}
-updateNumericField : String -> String -> Fields -> Fields
-updateNumericField key value =
-    Dict.update key (Maybe.map (Field.updateNumericValue value))
+updateIntegerField : String -> String -> Fields -> Fields
+updateIntegerField key value =
+    Dict.update key (Maybe.map (Field.updateIntegerValue value))
 
 
 {-| -}

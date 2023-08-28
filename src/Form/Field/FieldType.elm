@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), NumericFieldType(..), MultiStringFieldType(..), DateFieldType(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
     , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
     )
@@ -9,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, NumericFieldType, MultiStringFieldType, DateFieldType, ListStringFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
 
 
 # Decoder
@@ -35,7 +35,7 @@ type FieldType
     = StringType StringFieldType
     | MultiStringType MultiStringFieldType
     | BoolType BoolFieldType
-    | NumericType NumericFieldType
+    | IntegerType IntegerFieldType
 
 
 {-| -}
@@ -77,8 +77,8 @@ type SimpleFieldType
 
 
 {-| -}
-type NumericFieldType
-    = Age
+type alias IntegerFieldType =
+    { min : Maybe Int, max : Maybe Int }
 
 
 {-| -}
@@ -90,27 +90,51 @@ type MultiStringFieldType
 
 
 {-| -}
-type DateFieldType
-    = DateAbsolute Time.Posix Time.Posix
-    | DateOffset ( TimeExtra.Interval, Int ) ( TimeExtra.Interval, Int )
+type alias DateFieldType =
+    { min : Maybe DateConfig, max : Maybe DateConfig }
+
+
+{-| -}
+type DateConfig
+    = DateAbsolute Time.Posix
+    | DateOffset ( TimeExtra.Interval, Int )
+
+
+dateConfigToString : Time.Posix -> DateConfig -> String
+dateConfigToString time config =
+    case config of
+        DateAbsolute maxDate ->
+            LibTime.toDateString maxDate
+
+        DateOffset ( offsetUnit, offset ) ->
+            time
+                |> TimeExtra.add offsetUnit offset Time.utc
+                |> TimeExtra.floor offsetUnit Time.utc
+                |> LibTime.toDateString
 
 
 {-| -}
 dateOfBirth : DateFieldType
 dateOfBirth =
-    DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Year, 0 )
+    { min = Just (DateOffset ( TimeExtra.Year, -120 ))
+    , max = Just (DateOffset ( TimeExtra.Year, 0 ))
+    }
 
 
 {-| -}
 dateFuture : DateFieldType
 dateFuture =
-    DateOffset ( TimeExtra.Day, 1 ) ( TimeExtra.Year, 10 )
+    { min = Just (DateOffset ( TimeExtra.Day, 1 ))
+    , max = Just (DateOffset ( TimeExtra.Year, 10 ))
+    }
 
 
 {-| -}
 datePast : DateFieldType
 datePast =
-    DateOffset ( TimeExtra.Year, -120 ) ( TimeExtra.Day, -1 )
+    { min = Just (DateOffset ( TimeExtra.Year, -120 ))
+    , max = Just (DateOffset ( TimeExtra.Day, -1 ))
+    }
 
 
 {-| -}
@@ -180,9 +204,6 @@ fromString str =
         "radio" ->
             Just (StringType Radio)
 
-        "age" ->
-            Just (NumericType Age)
-
         "tags" ->
             Just (MultiStringType Tags)
 
@@ -234,20 +255,11 @@ toMaxLength fieldType =
 toMin : Time.Posix -> FieldType -> Maybe String
 toMin time fieldType =
     case fieldType of
-        StringType (DateType (DateAbsolute minDate _)) ->
-            minDate
-                |> LibTime.toDateString
-                |> Just
+        StringType (DateType { min }) ->
+            min |> Maybe.map (dateConfigToString time)
 
-        StringType (DateType (DateOffset ( offsetUnit, offset ) _)) ->
-            time
-                |> TimeExtra.add offsetUnit offset Time.utc
-                |> TimeExtra.floor offsetUnit Time.utc
-                |> LibTime.toDateString
-                |> Just
-
-        NumericType Age ->
-            Just "18"
+        IntegerType { min } ->
+            min |> Maybe.map String.fromInt
 
         _ ->
             Nothing
@@ -257,20 +269,11 @@ toMin time fieldType =
 toMax : Time.Posix -> FieldType -> Maybe String
 toMax time fieldType =
     case fieldType of
-        StringType (DateType (DateAbsolute _ maxDate)) ->
-            maxDate
-                |> LibTime.toDateString
-                |> Just
+        StringType (DateType { max }) ->
+            max |> Maybe.map (dateConfigToString time)
 
-        StringType (DateType (DateOffset _ ( offsetUnit, offset ))) ->
-            time
-                |> TimeExtra.add offsetUnit offset Time.utc
-                |> TimeExtra.floor offsetUnit Time.utc
-                |> LibTime.toDateString
-                |> Just
-
-        NumericType Age ->
-            Just "99"
+        IntegerType { max } ->
+            max |> Maybe.map String.fromInt
 
         _ ->
             Nothing

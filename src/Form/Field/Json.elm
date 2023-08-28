@@ -42,7 +42,7 @@ type JsonField
     | JsonCheckboxField JsonCheckboxFieldProperties
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
-    | JsonAgeField JsonAgeFieldProperties
+    | JsonIntegerField JsonIntegerFieldProperties
     | JsonTagField JsonTagFieldProperties
 
 
@@ -268,12 +268,13 @@ type alias JsonRadioEnumFieldProperties =
     }
 
 
-type alias JsonAgeFieldProperties =
+type alias JsonIntegerFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
     , width : Width.Width
     , enabledBy : Maybe String
+    , tipe : FieldType.IntegerFieldType
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
@@ -338,8 +339,8 @@ decoderForType fieldType =
         FieldType.BoolType FieldType.RadioEnum ->
             Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-        FieldType.NumericType FieldType.Age ->
-            Decode.map JsonAgeField decoderAgeJson
+        FieldType.IntegerType integerType ->
+            Decode.map JsonIntegerField (decoderIntegerJson integerType)
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -525,10 +526,10 @@ toField time order field =
                     }
             )
 
-        JsonAgeField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy } ->
+        JsonIntegerField { required, key, label, width, enabledBy, tipe, disabled, hidden, unhiddenBy } ->
             ( key
-            , Field.NumericField_ <|
-                Field.AgeField
+            , Field.IntegerField_ <|
+                Field.IntegerField
                     { required = required
                     , label = label
                     , width = width
@@ -536,6 +537,7 @@ toField time order field =
                     , order = order
                     , value = Nothing
                     , disabled = Maybe.withDefault False disabled
+                    , tipe = tipe
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
                     }
@@ -883,14 +885,15 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
-decoderAgeJson : Decode.Decoder JsonAgeFieldProperties
-decoderAgeJson =
-    Decode.succeed JsonAgeFieldProperties
+decoderIntegerJson : FieldType.IntegerFieldType -> Decode.Decoder JsonIntegerFieldProperties
+decoderIntegerJson tipe =
+    Decode.succeed JsonIntegerFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing

@@ -55,7 +55,6 @@ export function groupDigitsListener(event, countryCode) {
     if (target.id.includes("phoneWithoutLocale")) {
       c = target.id.split("-")[1];
     }
-    console.log(c);
     const start = target.selectionStart ?? undefined;
     const before = target.value.slice(0, start);
     const after = target.value.slice(start);

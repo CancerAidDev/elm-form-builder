@@ -185,17 +185,6 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.BoolType FieldType.RadioEnum))
-        , Test.test "Numeric field type" <|
-            \_ ->
-                let
-                    json =
-                        """
-                            "age"
-                        """
-                in
-                Decode.decodeString FieldType.decoder json
-                    |> Expect.equal
-                        (Ok (FieldType.NumericType FieldType.Age))
         , Test.test "Non-existing field type" <|
             \_ ->
                 let

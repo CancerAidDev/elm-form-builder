@@ -22,7 +22,7 @@ type Msg
     | UpdateBoolField String Bool
     | UpdateRadioBoolField String Bool
     | UpdateRadioEnumField String RadioEnum.Value
-    | UpdateNumericField String String
+    | UpdateIntegerField String String
     | ResetField String
     | UpdateShowDropdown FieldType.FieldType String Bool
     | UpdateSelectedDropdownValue FieldType.FieldType String String
