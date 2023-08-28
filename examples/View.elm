@@ -20,11 +20,11 @@ view model =
             [ HtmlAttributes.class "is-size-3 has-text-weight-bold" ]
             [ Html.text "Add Person" ]
         , Html.div []
-            [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted model.locale model.form)
+            [ Html.map Msg.FormMsg (FormView.view model.startTime model.submitted model.form)
             , Html.div [ HtmlAttributes.class "is-flex is-justify-content-center pt-4" ]
                 [ Html.button
                     [ HtmlAttributes.class "button is-link"
-                    , HtmlAttributes.disabled (model.submitted && not (FormValidate.isValid model.locale model.form))
+                    , HtmlAttributes.disabled (model.submitted && not (FormValidate.isValid model.form))
                     , HtmlEvents.onClick Msg.SubmitForm
                     ]
                     [ Html.text "Create" ]

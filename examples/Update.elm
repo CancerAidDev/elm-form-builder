@@ -29,7 +29,7 @@ update msg model =
                         }
             in
             model.form
-                |> Validate.validate model.locale
+                |> Validate.validate
                 |> Maybe.map (\fields -> ( { model | dialog = Just newDialog, form = fields }, Cmd.none ))
                 |> Maybe.withDefault ( { model | submitted = True }, Cmd.none )
 
