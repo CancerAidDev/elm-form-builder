@@ -1,7 +1,7 @@
 module Form.Fields exposing
     ( Fields
     , decoder, encode
-    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updateTags, updateTagInput
+    , updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
     , hasCheckboxConsentField, isEnabled, isShown
     )
 
@@ -20,7 +20,7 @@ module Form.Fields exposing
 
 # Update helpers
 
-@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updateShowDropdown, resetValueToDefault, updateSearchbar, updateTags, updateTagInput
+@docs updateBoolField, updateFieldRemoteOptions, updateNumericField, updateOptionField, updateRadioBoolField, updateRadioEnumField, updateStringField, updateMultiStringOptionField, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, resetValueToDefault, updateSearchbar, updatePhoneSearchbar, updateTags, updateTagInput
 
 
 # Predicates
@@ -193,9 +193,30 @@ updateShowDropdown key showDropdown =
 
 
 {-| -}
+updatePhoneShowDropdown : String -> Bool -> Fields -> Fields
+updatePhoneShowDropdown key showDropdown =
+    Dict.update key (Maybe.map (Field.updatePhoneShowDropdown showDropdown))
+        >> updateEnabledByFields
+
+
+{-| -}
+updatePhoneDropdown : String -> String -> Fields -> Fields
+updatePhoneDropdown key searchInput =
+    Dict.update key (Maybe.map (Field.updatePhoneDropdown searchInput))
+        >> updateEnabledByFields
+
+
+{-| -}
 updateSearchbar : String -> String -> Fields -> Fields
 updateSearchbar key value =
     Dict.update key (Maybe.map (Field.updateSearchableSelectInput value))
+        >> updateEnabledByFields
+
+
+{-| -}
+updatePhoneSearchbar : String -> String -> Fields -> Fields
+updatePhoneSearchbar key value =
+    Dict.update key (Maybe.map (Field.updatePhoneSearchInput value))
         >> updateEnabledByFields
 
 

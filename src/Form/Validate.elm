@@ -31,7 +31,6 @@ import Form.Field.Required as Required
 import Form.Fields as Fields
 import Form.Format.ForSubmission as ForSubmission
 import Form.Lib.String as LibString
-import Form.Locale as Locale
 import Form.Validate.StringField as ValidateStringField
 import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
@@ -40,14 +39,14 @@ import Set
 
 
 {-| -}
-validateField : Locale.Locale -> Fields.Fields -> Field.Field -> Result Error Field.Field
-validateField locale fields field =
+validateField : Fields.Fields -> Field.Field -> Result Error Field.Field
+validateField fields field =
     case field of
         Field.StringField_ stringField ->
-            ValidateStringField.validate locale stringField
+            ValidateStringField.validate stringField
                 |> Result.map
                     (\validField ->
-                        Field.StringField_ (Field.updateStringValue_ (ForSubmission.formatForSubmission locale validField) stringField)
+                        Field.StringField_ (Field.updateStringValue_ (ForSubmission.formatForSubmission validField) stringField)
                     )
                 |> Result.mapError (StringError_ stringField)
 
@@ -189,21 +188,21 @@ isValidAgeInput age =
 
 
 {-| -}
-validate : Locale.Locale -> Fields.Fields -> Maybe Fields.Fields
-validate locale fields =
+validate : Fields.Fields -> Maybe Fields.Fields
+validate fields =
     fields
         |> Dict.foldl
             (\key field acc ->
-                Result.toMaybe (validateField locale fields field)
+                Result.toMaybe (validateField fields field)
                     |> Maybe.andThen (\value -> Maybe.map (Dict.insert key value) acc)
             )
             (Just Dict.empty)
 
 
 {-| -}
-isValid : Locale.Locale -> Fields.Fields -> Bool
-isValid locale =
-    validate locale >> MaybeExtra.isJust
+isValid : Fields.Fields -> Bool
+isValid =
+    validate >> MaybeExtra.isJust
 
 
 type MultiStringError
@@ -228,11 +227,11 @@ type Error
 
 
 {-| -}
-errorToMessage : Locale.Locale -> Error -> String
-errorToMessage locale error =
+errorToMessage : Error -> String
+errorToMessage error =
     case error of
         StringError_ field err ->
-            ValidateStringField.errorToMessage locale field err
+            ValidateStringField.errorToMessage field err
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"

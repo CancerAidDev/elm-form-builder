@@ -10,17 +10,17 @@ import Form.Locale.CountryCode as CountryCode
 
 
 {-| -}
-toMobilePlaceholder : Maybe CountryCode.CountryCode -> String
+toMobilePlaceholder : CountryCode.CountryCode -> String
 toMobilePlaceholder code =
     case code of
-        Just CountryCode.US ->
+        CountryCode.US ->
             "212 200 0000"
 
-        Just CountryCode.NZ ->
+        CountryCode.NZ ->
             "20 000 0000"
 
-        Just _ ->
+        CountryCode.AU ->
             "400 000 000"
 
-        Nothing ->
+        _ ->
             ""

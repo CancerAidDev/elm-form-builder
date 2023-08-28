@@ -3,6 +3,7 @@ module Form.View.MultiSelect exposing (multiHttpSelect, multiSelect, searchableM
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
 import Form.Field as Field
+import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Msg as Msg
 import Form.View.Dropdown as Dropdown
@@ -34,11 +35,15 @@ searchableMultiSelect key properties =
 
 dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.Msg
 dropdownTrigger key { placeholder, value, showDropdown } =
+    let
+        fieldType =
+            FieldType.MultiStringType FieldType.MultiSelect
+    in
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
             [ HtmlAttributes.class "button pl-4 pr-0"
-            , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
-            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , HtmlEvents.onClick <| Msg.UpdateShowDropdown fieldType key (not showDropdown)
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             , Aria.hasMenuPopUp
             , Aria.controls [ "dropdown-menu" ]
             ]
@@ -66,13 +71,17 @@ multiSelectReset key selected =
 
 dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
 dropdownMenu key properties =
+    let
+        fieldType =
+            FieldType.MultiStringType FieldType.MultiSelect
+    in
     Html.div []
-        [ Dropdown.overlay key
+        [ Dropdown.overlay fieldType key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
             , Aria.roleDescription "menu"
-            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
                 [ Html.div
@@ -101,14 +110,17 @@ searchableDropdownMenu key properties =
         filteredOptions : List Option.Option
         filteredOptions =
             Dropdown.filteredOptions properties.searchInput properties.searchableOptions
+
+        fieldType =
+            FieldType.MultiStringType FieldType.SearchableMultiSelect
     in
     Html.div []
-        [ Dropdown.overlay key
+        [ Dropdown.overlay fieldType key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
             , Aria.roleDescription "menu"
-            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
                 ([ Html.div
@@ -117,7 +129,7 @@ searchableDropdownMenu key properties =
                     multiSelectReset key <|
                         Set.size properties.value
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
-                 , Dropdown.searchBar key properties.searchInput properties.value filteredOptions
+                 , Dropdown.searchBar fieldType key properties.searchInput properties.value filteredOptions
                  ]
                     ++ optionSection properties.options
                     ++ optionSection filteredOptions

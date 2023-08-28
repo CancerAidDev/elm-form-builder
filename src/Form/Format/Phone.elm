@@ -45,7 +45,7 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
         _ ->
-            "^\\d.*$"
+            "^\\d{7,15}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
@@ -68,21 +68,21 @@ landlineRejectRegex code =
 
 {-| -}
 formatForSubmission : CountryCode.CountryCode -> String -> String
-formatForSubmission code =
-    String.words
-        >> String.concat
-        >> (\phone -> Phone.phonePrefix code ++ phone)
+formatForSubmission code phone =
+    String.words phone
+        |> String.concat
+        |> (\p -> Phone.phonePrefix code ++ p)
 
 
 {-| The groupings of digits for phone numbers
 -}
 formatForDisplay : CountryCode.CountryCode -> String -> String
-formatForDisplay code =
-    StringExtra.rightOf (Phone.phonePrefix code)
-        >> String.toList
-        >> ListExtra.groupsOfVarying (formatGroups code)
-        >> List.map String.fromList
-        >> String.join " "
+formatForDisplay code phone =
+    StringExtra.rightOf (Phone.phonePrefix code) phone
+        |> String.toList
+        |> ListExtra.groupsOfVarying (formatGroups code)
+        |> List.map String.fromList
+        |> String.join " "
 
 
 formatGroups : CountryCode.CountryCode -> List Int
@@ -94,5 +94,8 @@ formatGroups code =
         CountryCode.US ->
             [ 3, 3, 4 ]
 
-        _ ->
+        CountryCode.AU ->
             [ 3, 3, 3 ]
+
+        _ ->
+            []

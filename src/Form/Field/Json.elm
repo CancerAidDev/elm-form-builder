@@ -18,6 +18,8 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
+import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData
@@ -29,6 +31,7 @@ type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
     | JsonEmailField JsonEmailFieldProperties
     | JsonDateField JsonDateFieldProperties
+    | JsonPhoneField JsonPhoneFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonSearchableSelectField JsonSearchableSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
@@ -84,6 +87,20 @@ type alias JsonEmailFieldProperties =
     , unhiddenBy : Maybe String
     , forbiddenDomains : List EmailFormat.ForbiddenDomain
     , value : String
+    }
+
+
+type alias JsonPhoneFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , locale : Maybe Locale.Locale
+    , countryCodeDropdown : Field.CountryCodeDropdown
     }
 
 
@@ -285,6 +302,9 @@ decoderForType fieldType =
         FieldType.StringType (FieldType.DateType dateType) ->
             Decode.map JsonDateField (decoderDateJson dateType)
 
+        FieldType.StringType FieldType.Phone ->
+            Decode.map JsonPhoneField decoderPhoneJson
+
         FieldType.StringType FieldType.Select ->
             Decode.map JsonSelectField decoderSelectJson
 
@@ -367,6 +387,24 @@ toField time order field =
                             List.map
                                 (\forbiddenDomain -> ( forbiddenDomain.domain, forbiddenDomain.message ))
                                 forbiddenDomains
+                    }
+            )
+
+        JsonPhoneField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, locale, countryCodeDropdown } ->
+            ( key
+            , Field.StringField_ <|
+                Field.PhoneField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = ""
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , locale = locale
+                    , countryCodeDropdown = countryCodeDropdown
                     }
             )
 
@@ -645,6 +683,29 @@ decoderEmailJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "forbidden_domains" (Decode.list EmailFormat.decoderForbiddenDomain) []
         |> DecodePipeline.optional "value" Decode.string ""
+
+
+decoderPhoneJson : Decode.Decoder JsonPhoneFieldProperties
+decoderPhoneJson =
+    Decode.succeed JsonPhoneFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "locale" (Decode.map Just Locale.decoder) Nothing
+        |> DecodePipeline.required "countryCodeDropdown" countryCodeDropdownDecoder
+
+
+countryCodeDropdownDecoder : Decode.Decoder Field.CountryCodeDropdown
+countryCodeDropdownDecoder =
+    Decode.succeed Field.CountryCodeDropdown
+        |> DecodePipeline.required "searchInput" Decode.string
+        |> DecodePipeline.optional "value" (Decode.map Just CountryCode.decoder) Nothing
+        |> DecodePipeline.required "showDropdown" Decode.bool
 
 
 decoderDateJson : FieldType.DateFieldType -> Decode.Decoder JsonDateFieldProperties

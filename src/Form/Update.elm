@@ -9,6 +9,7 @@ module Form.Update exposing (update)
 
 -}
 
+import Form.Field.FieldType as FieldType
 import Form.Fields as Fields
 import Form.Msg as Msg
 import Form.Validate as Validate
@@ -46,11 +47,27 @@ update msg fields =
         Msg.ResetField key ->
             ( Fields.resetValueToDefault key fields, Cmd.none )
 
-        Msg.UpdateShowDropdown key showDropdown ->
-            ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
+        Msg.UpdateShowDropdown fieldType key showDropdown ->
+            case fieldType of
+                FieldType.StringType FieldType.Phone ->
+                    ( Fields.updatePhoneShowDropdown key showDropdown fields, Cmd.none )
 
-        Msg.UpdateSearchbar key value ->
-            ( Fields.updateSearchbar key value fields, Cmd.none )
+                _ ->
+                    ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
+
+        Msg.UpdatePhoneShowDropdown key showDropdown ->
+            ( Fields.updatePhoneShowDropdown key showDropdown fields, Cmd.none )
+
+        Msg.UpdatePhoneDropdownValue key searchInput ->
+            ( Fields.updatePhoneDropdown key searchInput fields, Cmd.none )
+
+        Msg.UpdateSearchbar fieldType key value ->
+            case fieldType of
+                FieldType.StringType FieldType.Phone ->
+                    ( Fields.updatePhoneSearchbar key value fields, Cmd.none )
+
+                _ ->
+                    ( Fields.updateSearchbar key value fields, Cmd.none )
 
         Msg.UpdateTags key value addTag ->
             ( Fields.updateTags addTag key value fields, Cmd.none )

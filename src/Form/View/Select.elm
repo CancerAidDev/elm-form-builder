@@ -1,4 +1,7 @@
-module Form.View.Select exposing (select, searchableSelect, httpSelect)
+module Form.View.Select exposing
+    ( select, searchableSelect, httpSelect
+    , countryCodeSearchableSelect
+    )
 
 {-| View Select Fields
 
@@ -12,8 +15,11 @@ module Form.View.Select exposing (select, searchableSelect, httpSelect)
 import Accessibility.Aria as Aria
 import Accessibility.Key as Key
 import Form.Field as Field
+import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.Required as Required
+import Form.Locale.CountryCode as CountryCode
+import Form.Locale.Phone as Phone
 import Form.Msg as Msg
 import Form.View.Dropdown as Dropdown
 import Html
@@ -70,6 +76,72 @@ searchableSelect key properties =
         ]
 
 
+countryCodeSearchableSelect : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
+countryCodeSearchableSelect key properties =
+    Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
+        [ countryCodeDropdownTrigger key properties
+        , HtmlExtra.viewIf properties.countryCodeDropdown.showDropdown <| countryCodeDropdownMenu key properties
+        ]
+
+
+countryCodeDropdownTrigger : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
+countryCodeDropdownTrigger key { countryCodeDropdown } =
+    Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
+        [ Html.button
+            [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
+            , HtmlEvents.onClick <| Msg.UpdatePhoneShowDropdown key (not countryCodeDropdown.showDropdown)
+            , Key.onKeyDown [ Key.escape <| Msg.UpdatePhoneShowDropdown key False ]
+            , Aria.hasMenuPopUp
+            , Aria.controls [ "dropdown-menu" ]
+            ]
+            [ Html.span [] [ Html.text <| Maybe.withDefault "" <| Maybe.map Phone.phonePrefix countryCodeDropdown.value ]
+            , Dropdown.dropdownIcon countryCodeDropdown.showDropdown
+            ]
+        ]
+
+
+countryCodeDropdownMenu : String -> Field.PhoneFieldProperties -> Html.Html Msg.Msg
+countryCodeDropdownMenu key properties =
+    let
+        filteredOptions =
+            Dropdown.filteredOptions properties.countryCodeDropdown.searchInput
+                (List.map
+                    (\code ->
+                        { label = Just <| CountryCode.toCountryName code ++ " (" ++ Phone.phonePrefix code ++ ")", value = CountryCode.toString code }
+                    )
+                    CountryCode.allCountryCodes
+                )
+
+        fieldType =
+            FieldType.StringType FieldType.Phone
+    in
+    Html.div []
+        [ Dropdown.overlay fieldType key
+        , Html.div
+            [ HtmlAttributes.class "dropdown-menu"
+            , HtmlAttributes.id "dropdown-menu"
+            , Aria.roleDescription "menu"
+            , Key.onKeyDown [ Key.escape <| Msg.UpdatePhoneShowDropdown key False ]
+            ]
+            [ Html.div [ HtmlAttributes.class "dropdown-content" ]
+                [ Dropdown.searchBar fieldType key properties.countryCodeDropdown.searchInput (Set.singleton properties.value) filteredOptions
+                , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
+                , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
+                    List.map
+                        (\option ->
+                            Html.div
+                                [ HtmlAttributes.class "dropdown-item mr-2"
+                                , HtmlEvents.onClick <| Msg.UpdatePhoneDropdownValue key option.value
+                                ]
+                                [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
+                                ]
+                        )
+                        filteredOptions
+                ]
+            ]
+        ]
+
+
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
 dropdownTrigger key { placeholder, value, showDropdown } =
     let
@@ -79,12 +151,15 @@ dropdownTrigger key { placeholder, value, showDropdown } =
 
             else
                 value
+
+        fieldType =
+            FieldType.StringType FieldType.SearchableSelect
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
         [ Html.button
             [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
-            , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
-            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , HtmlEvents.onClick <| Msg.UpdateShowDropdown fieldType key (not showDropdown)
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             , Aria.hasMenuPopUp
             , Aria.controls [ "dropdown-menu" ]
             ]
@@ -99,17 +174,20 @@ searchableDropdownMenu key properties =
     let
         filteredOptions =
             Dropdown.filteredOptions properties.searchInput properties.options
+
+        fieldType =
+            FieldType.StringType FieldType.SearchableSelect
     in
     Html.div []
-        [ Dropdown.overlay key
+        [ Dropdown.overlay fieldType key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
             , Aria.roleDescription "menu"
-            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
+            , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown fieldType key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
-                [ Dropdown.searchBar key properties.searchInput (Set.singleton properties.value) filteredOptions
+                [ Dropdown.searchBar (FieldType.StringType FieldType.SearchableSelect) key properties.searchInput (Set.singleton properties.value) filteredOptions
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ] <|
                     List.map (viewSearchableOption key properties) filteredOptions

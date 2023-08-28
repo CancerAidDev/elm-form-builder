@@ -33,10 +33,10 @@ import Form.Validate.UrlValidator as UrlValidator
 {-| Validator API for a StringField being valid.
 -}
 validate : Types.Validator
-validate locale field =
+validate field =
     let
         requiredResult =
-            Required.requiredValidator locale field
+            Required.requiredValidator field
     in
     case requiredResult of
         Err err ->
@@ -54,13 +54,10 @@ validate locale field =
                         simpleFieldValidator valField =
                             case tipe of
                                 FieldType.Email ->
-                                    Email.emailValidator locale valField
-
-                                FieldType.Phone ->
-                                    Phone.phoneValidator locale valField
+                                    Email.emailValidator valField
 
                                 FieldType.Url ->
-                                    UrlValidator.urlValidator locale valField
+                                    UrlValidator.urlValidator valField
 
                                 FieldType.Text ->
                                     Ok valField
@@ -74,26 +71,29 @@ validate locale field =
                     simpleFieldValidator field
                         |> Result.andThen (RegexValidator.regexValidator regexValidation)
 
+                Field.PhoneField _ ->
+                    Phone.phoneValidator field
+
                 Field.DateField _ ->
-                    Date.dateValidator locale field
+                    Date.dateValidator field
 
                 Field.SelectField { options } ->
-                    Options.optionsValidator options locale field
+                    Options.optionsValidator options field
 
                 Field.SearchableSelectField { options } ->
-                    Options.optionsValidator options locale field
+                    Options.optionsValidator options field
 
                 Field.HttpSelectField { options } ->
-                    Options.remoteOptionsValidator options locale field
+                    Options.remoteOptionsValidator options field
 
                 Field.RadioField { options } ->
-                    Options.optionsValidator options locale field
+                    Options.optionsValidator options field
 
 
 {-| Localised error message API for a StringField error.
 -}
 errorToMessage : Types.ErrorToMessage
-errorToMessage locale field error =
+errorToMessage field error =
     case error of
         Types.RequiredError ->
             "Field is required"
@@ -102,7 +102,7 @@ errorToMessage locale field error =
             "Invalid option"
 
         Types.InvalidMobilePhoneNumber ->
-            Phone.mobileErrorToMessage locale field
+            Phone.mobileErrorToMessage field
 
         Types.InvalidPhoneNumber ->
             "Invalid phone number"

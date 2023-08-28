@@ -8,7 +8,7 @@ import Url
 {-| Validator API for a value being URL.
 -}
 urlValidator : ValidateTypes.Validator
-urlValidator _ field =
+urlValidator field =
     case Url.fromString (Field.getStringValue_ field) of
         Just _ ->
             Ok field

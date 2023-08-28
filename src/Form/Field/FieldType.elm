@@ -42,6 +42,7 @@ type FieldType
 type StringFieldType
     = SimpleType SimpleFieldType
     | DateType DateFieldType
+    | Phone
     | Select
     | SearchableSelect
     | HttpSelect
@@ -70,7 +71,6 @@ type CheckboxFieldType
 type SimpleFieldType
     = Text
     | Email
-    | Phone
     | Url
     | TextArea
     | Time
@@ -133,7 +133,7 @@ fromString str =
             Just (StringType (DateType dateFuture))
 
         "phone" ->
-            Just (StringType (SimpleType Phone))
+            Just (StringType Phone)
 
         "time" ->
             Just (StringType (SimpleType Time))
@@ -200,9 +200,6 @@ toType fieldType =
         StringType (SimpleType Email) ->
             "email"
 
-        StringType (SimpleType Phone) ->
-            "tel"
-
         StringType (SimpleType Time) ->
             "time"
 
@@ -214,6 +211,9 @@ toType fieldType =
 
         StringType (DateType _) ->
             "date"
+
+        StringType Phone ->
+            "tel"
 
         _ ->
             ""
@@ -298,6 +298,9 @@ toClass fieldType =
             "textarea"
 
         StringType (SimpleType _) ->
+            "input"
+
+        StringType Phone ->
             "input"
 
         StringType (DateType _) ->

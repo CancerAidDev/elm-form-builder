@@ -1,14 +1,15 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), NumericField(..)
-    , AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+    , AgeFieldProperties, CommonFieldProperties, PhoneFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
     , ageDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , age, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
-    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
+    , setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setLocale, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getLocale_, getCountryCodeValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCode
+    , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput, updatePhoneSearchInput
     , isCheckbox, isRequired
     , encode
     , metadataKey
+    , CountryCodeDropdown
     )
 
 {-| Field type and helper functions
@@ -21,7 +22,7 @@ module Form.Field exposing
 
 # Properties
 
-@docs AgeFieldProperties, CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
+@docs AgeFieldProperties, CommonFieldProperties, PhoneFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties
 
 
 # Default Properties
@@ -36,17 +37,17 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDateOffset, setDateBounds, setDatePast, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setLocale, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getNumericValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getLocale_, getCountryCodeValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getCode
 
 
 # Setters
 
-@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
+@docs resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateNumericValue, updateNumericValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updatePhoneShowDropdown, updatePhoneDropdown, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput, updatePhoneSearchInput
 
 
 # Predicates
@@ -73,6 +74,8 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
+import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Http.Detailed as HttpDetailed
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
@@ -173,16 +176,16 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-phone : SimpleFieldProperties -> Field
+phone : PhoneFieldProperties -> Field
 phone =
-    StringField_ << SimpleField << setTipe FieldType.Phone
+    StringField_ << PhoneField
 
 
 {-| Makes a url field.
 
 In addition to the common builders, the following are available:
 
-  - `setRegexValidation (List RegexValidation.RegexValidation)`
+  - `setLocale (Maybe Locale.Locale)`
 
 Common builders:
 
@@ -611,6 +614,12 @@ setForbiddenEmailDomains forbiddenDomains field =
 
 
 {-| -}
+setLocale : Maybe Locale.Locale -> PhoneFieldProperties -> PhoneFieldProperties
+setLocale locale field =
+    { field | locale = locale }
+
+
+{-| -}
 setTagsInputBar : String -> TagFieldProperties -> TagFieldProperties
 setTagsInputBar inputBar field =
     { field | inputBar = inputBar }
@@ -796,11 +805,23 @@ urlDefault =
 , regexValidation = []
 , tipe = FieldType.Phone
 , value = ""
+, locale = Nothing
 }`
 -}
-phoneDefault : SimpleFieldProperties
+phoneDefault : PhoneFieldProperties
 phoneDefault =
-    setTipe FieldType.Phone <| simpleDefault
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , locale = Nothing
+    , countryCodeDropdown = { searchInput = "", value = Nothing, showDropdown = False }
+    }
 
 
 {-| `{ required = Required.No
@@ -1252,6 +1273,7 @@ type Field
 {-| -}
 type StringField
     = SimpleField SimpleFieldProperties
+    | PhoneField PhoneFieldProperties
     | DateField DateFieldProperties
     | SelectField (SelectFieldProperties {})
     | SearchableSelectField SearchableSelectFieldProperties
@@ -1319,6 +1341,18 @@ type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
         , regexValidation : List RegexValidation.RegexValidation
+        }
+
+
+type alias CountryCodeDropdown =
+    { searchInput : String, value : Maybe CountryCode.CountryCode, showDropdown : Bool }
+
+
+{-| -}
+type alias PhoneFieldProperties =
+    StringFieldProperties
+        { locale : Maybe Locale.Locale
+        , countryCodeDropdown : CountryCodeDropdown
         }
 
 
@@ -1488,6 +1522,18 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        PhoneField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
         DateField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
@@ -1614,6 +1660,9 @@ updateStringDisabled =
                 SimpleField properties ->
                     SimpleField { properties | disabled = value }
 
+                PhoneField properties ->
+                    PhoneField { properties | disabled = value }
+
                 DateField properties ->
                     DateField { properties | disabled = value }
 
@@ -1707,6 +1756,21 @@ updateSearchableSelectInput input_ field =
 
 
 {-| -}
+updatePhoneSearchInput : String -> Field -> Field
+updatePhoneSearchInput input_ field =
+    case field of
+        StringField_ (PhoneField properties) ->
+            let
+                dropdown =
+                    properties.countryCodeDropdown
+            in
+            StringField_ (PhoneField { properties | countryCodeDropdown = { dropdown | searchInput = input_ } })
+
+        _ ->
+            field
+
+
+{-| -}
 getBoolProperties : Field -> Maybe Bool
 getBoolProperties field =
     case field of
@@ -1729,6 +1793,9 @@ resetValueToDefault field =
 
         StringField_ (SimpleField properties) ->
             StringField_ <| SimpleField { properties | value = simpleDefault.value }
+
+        StringField_ (PhoneField properties) ->
+            StringField_ <| PhoneField { properties | value = dateDefault.value }
 
         StringField_ (DateField properties) ->
             StringField_ <| DateField { properties | value = dateDefault.value, parsedDate = dateDefault.parsedDate }
@@ -1854,11 +1921,44 @@ updateShowDropdown showDropdown field =
 
 
 {-| -}
+updatePhoneShowDropdown : Bool -> Field -> Field
+updatePhoneShowDropdown showDropdown field =
+    case field of
+        StringField_ (PhoneField properties) ->
+            let
+                dropdown =
+                    properties.countryCodeDropdown
+            in
+            StringField_ (PhoneField { properties | countryCodeDropdown = { dropdown | showDropdown = showDropdown } })
+
+        _ ->
+            field
+
+
+{-| -}
+updatePhoneDropdown : String -> Field -> Field
+updatePhoneDropdown value field =
+    case field of
+        StringField_ (PhoneField properties) ->
+            let
+                dropdown =
+                    properties.countryCodeDropdown
+            in
+            StringField_ (PhoneField { properties | countryCodeDropdown = { dropdown | value = CountryCode.fromString value, showDropdown = False } })
+
+        _ ->
+            field
+
+
+{-| -}
 updateStringValue_ : String -> StringField -> StringField
 updateStringValue_ value field =
     case field of
         SimpleField properties ->
             SimpleField { properties | value = value }
+
+        PhoneField properties ->
+            PhoneField { properties | value = value }
 
         DateField properties ->
             DateField { properties | value = value }
@@ -1986,6 +2086,28 @@ getStringValue_ =
 
 
 {-| -}
+getLocale_ : StringField -> Maybe Locale.Locale
+getLocale_ field =
+    case field of
+        PhoneField props ->
+            props.locale
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getCountryCodeValue_ : StringField -> Maybe CountryCode.CountryCode
+getCountryCodeValue_ field =
+    case field of
+        PhoneField props ->
+            props.countryCodeDropdown.value
+
+        _ ->
+            Nothing
+
+
+{-| -}
 getParsedDateValue_ : StringField -> Maybe Time.Posix
 getParsedDateValue_ field =
     case field of
@@ -2071,6 +2193,9 @@ getStringType field =
         SimpleField properties ->
             FieldType.SimpleType properties.tipe
 
+        PhoneField _ ->
+            FieldType.Phone
+
         DateField properties ->
             FieldType.DateType properties.tipe
 
@@ -2115,6 +2240,22 @@ getUrl field =
     case field of
         StringField_ (HttpSelectField properties) ->
             Just properties.url
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getCode : Field -> Maybe CountryCode.CountryCode
+getCode field =
+    case field of
+        StringField_ (PhoneField properties) ->
+            case properties.locale of
+                Just (Locale.Locale _ code) ->
+                    Just code
+
+                Nothing ->
+                    properties.countryCodeDropdown.value
 
         _ ->
             Nothing

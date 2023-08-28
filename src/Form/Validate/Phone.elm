@@ -20,7 +20,22 @@ import Regex
 {-| Validator API for localised (mobile/cell/landline) phone numbers.
 -}
 phoneValidator : ValidatorTypes.Validator
-phoneValidator (Locale.Locale _ code) field =
+phoneValidator field =
+    case Field.getLocale_ field of
+        Just (Locale.Locale _ code) ->
+            validateWithCode code field
+
+        Nothing ->
+            case Field.getCountryCodeValue_ field of
+                Just code ->
+                    validateWithCode code field
+
+                _ ->
+                    Err ValidatorTypes.InvalidPhoneNumber
+
+
+validateWithCode : CountryCode.CountryCode -> ValidatorTypes.Validator
+validateWithCode code field =
     let
         normalisedValue =
             String.trim (Field.getStringValue_ field) |> String.words |> String.concat
@@ -37,41 +52,46 @@ phoneValidator (Locale.Locale _ code) field =
 
 {-| Error Message API for localised (mobile/cell/landline) phone number validation
 -}
-mobileErrorToMessage : Locale.Locale -> Field.StringField -> String
-mobileErrorToMessage (Locale.Locale _ country) field =
-    case country of
-        CountryCode.AU ->
-            "Invalid mobile number (example: 4XX XXX XXX)"
-
-        CountryCode.NZ ->
-            let
-                stdPrefix =
-                    "2X"
-
-                str =
-                    String.trim (Field.getStringValue_ field)
-
-                firstTwoNumbers =
-                    if String.length str >= 2 then
-                        String.slice 0 2 str
-
-                    else
-                        stdPrefix
-
-                getPrefix i =
-                    if i >= 20 && i <= 29 then
-                        String.fromInt i
-
-                    else
-                        stdPrefix
-
-                mobilePrefix =
-                    String.toInt firstTwoNumbers |> Maybe.map getPrefix |> Maybe.withDefault stdPrefix
-            in
-            "Invalid mobile number (example: " ++ mobilePrefix ++ " XXX XXX[XX])"
-
-        CountryCode.US ->
-            "Invalid mobile number (example: 212 2XX XXXX)"
-
-        _ ->
+mobileErrorToMessage : Field.StringField -> String
+mobileErrorToMessage field =
+    case Field.getCode (Field.StringField_ field) of
+        Nothing ->
             "Invalid mobile number"
+
+        Just code ->
+            case code of
+                CountryCode.AU ->
+                    "Invalid mobile number (example: 4XX XXX XXX)"
+
+                CountryCode.NZ ->
+                    let
+                        stdPrefix =
+                            "2X"
+
+                        str =
+                            String.trim (Field.getStringValue_ field)
+
+                        firstTwoNumbers =
+                            if String.length str >= 2 then
+                                String.slice 0 2 str
+
+                            else
+                                stdPrefix
+
+                        getPrefix i =
+                            if i >= 20 && i <= 29 then
+                                String.fromInt i
+
+                            else
+                                stdPrefix
+
+                        mobilePrefix =
+                            String.toInt firstTwoNumbers |> Maybe.map getPrefix |> Maybe.withDefault stdPrefix
+                    in
+                    "Invalid mobile number (example: " ++ mobilePrefix ++ " XXX XXX[XX])"
+
+                CountryCode.US ->
+                    "Invalid mobile number (example: 212 2XX XXXX)"
+
+                _ ->
+                    "Invalid mobile number"

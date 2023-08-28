@@ -6,7 +6,6 @@ module Form.Format.Email exposing (regex, ForbiddenDomain, decoderForbiddenDomai
 
 -}
 
-import Form.Locale.CountryCode as CountryCode
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import Regex
@@ -28,8 +27,8 @@ type alias ForbiddenDomain =
 
 
 {-| -}
-regex : CountryCode.CountryCode -> Regex.Regex
-regex _ =
+regex : Regex.Regex
+regex =
     "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
         |> Regex.fromString
         |> Maybe.withDefault Regex.never

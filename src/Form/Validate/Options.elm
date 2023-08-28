@@ -9,7 +9,7 @@ import RemoteData
 {-| Validator API for a value being in a list of options.
 -}
 optionsValidator : List Option.Option -> Types.Validator
-optionsValidator options _ field =
+optionsValidator options field =
     let
         value =
             Field.getStringValue_ field
@@ -24,6 +24,6 @@ optionsValidator options _ field =
 {-| Validator API for a value being in a list of remote (retrieved via network) options.
 -}
 remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Types.Validator
-remoteOptionsValidator remoteOptions locale field =
-    RemoteData.map (\o -> optionsValidator o locale field) remoteOptions
+remoteOptionsValidator remoteOptions field =
+    RemoteData.map (\o -> optionsValidator o field) remoteOptions
         |> RemoteData.withDefault (Err Types.InvalidOption)

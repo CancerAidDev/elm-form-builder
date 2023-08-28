@@ -10,12 +10,12 @@ import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Format.Date as Date
 import Form.Format.Phone as Phone
-import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 
 
 {-| -}
-formatForSubmission : Locale.Locale -> Field.StringField -> String
-formatForSubmission (Locale.Locale _ code) field =
+formatForSubmission : Field.StringField -> String
+formatForSubmission field =
     let
         value =
             Field.getStringValue_ field
@@ -25,9 +25,6 @@ formatForSubmission (Locale.Locale _ code) field =
             case tipe of
                 FieldType.Email ->
                     value
-
-                FieldType.Phone ->
-                    Phone.formatForSubmission code (Field.getStringValue_ field)
 
                 FieldType.Url ->
                     value
@@ -41,9 +38,12 @@ formatForSubmission (Locale.Locale _ code) field =
                 FieldType.Time ->
                     value
 
+        Field.PhoneField _ ->
+            Phone.formatForSubmission (Maybe.withDefault CountryCode.AU <| Field.getCode (Field.StringField_ field)) (Field.getStringValue_ field)
+
         Field.DateField _ ->
             Field.getParsedDateValue_ field
-                |> Maybe.map (Date.formatForSubmission code)
+                |> Maybe.map Date.formatForSubmission
                 |> Maybe.withDefault (Field.getStringValue_ field)
 
         Field.SelectField _ ->

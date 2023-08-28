@@ -36,8 +36,8 @@ import Time
 
 
 {-| -}
-view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
-view time submitted locale fields key field =
+view : Time.Posix -> Bool -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
+view time submitted fields key field =
     let
         disabled =
             not (Fields.isEnabled fields field)
@@ -54,8 +54,8 @@ view time submitted locale fields key field =
             ]
             [ Html.div [ HtmlAttributes.class "field" ]
                 [ label field disabled shown
-                , control time locale key field
-                , error submitted locale fields field
+                , control time key field
+                , error submitted fields field
                 ]
             ]
 
@@ -70,22 +70,22 @@ label field disabled shown =
             ]
 
 
-control : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
-control time (Locale.Locale _ code) key field =
+control : Time.Posix -> String -> Field.Field -> Html.Html Msg.Msg
+control time key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
-                FieldType.Phone ->
-                    phone time code key field
-
                 FieldType.TextArea ->
                     textarea key properties
 
                 _ ->
-                    input time (Just code) key field
+                    input time key field
+
+        Field.StringField_ (Field.PhoneField properties) ->
+            phone time properties.locale key field
 
         Field.StringField_ (Field.DateField _) ->
-            input time (Just code) key field
+            input time key field
 
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
@@ -109,7 +109,7 @@ control time (Locale.Locale _ code) key field =
             MultiSelect.multiHttpSelect key properties
 
         Field.MultiStringField_ (Field.TagField _) ->
-            input time Nothing key field
+            input time key field
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties
@@ -121,25 +121,27 @@ control time (Locale.Locale _ code) key field =
             Radio.radioEnum key properties
 
         Field.NumericField_ (Field.AgeField _) ->
-            input time Nothing key field
+            input time key field
 
 
-input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
-input time code key field =
+input : Time.Posix -> String -> Field.Field -> Html.Html Msg.Msg
+input time key field =
     let
-        renderInput fieldType properties =
+        renderInput fieldType properties attributes =
             Html.input
-                [ HtmlAttributes.name key
-                , HtmlAttributes.class (FieldType.toClass fieldType)
-                , HtmlAttributes.type_ (FieldType.toType fieldType)
-                , HtmlAttributes.value properties.value
-                , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
-                , HtmlEvents.onInput <| Msg.UpdateStringField key
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
-                ]
+                ([ HtmlAttributes.name key
+                 , HtmlAttributes.class (FieldType.toClass fieldType)
+                 , HtmlAttributes.type_ (FieldType.toType fieldType)
+                 , HtmlAttributes.value properties.value
+                 , HtmlAttributes.required (properties.required == Required.Yes)
+                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder field)
+                 , HtmlEvents.onInput <| Msg.UpdateStringField key
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
+                 ]
+                    ++ attributes
+                )
                 []
     in
     case field of
@@ -148,14 +150,37 @@ input time code key field =
                 fieldType =
                     FieldType.StringType (FieldType.SimpleType properties.tipe)
             in
-            renderInput fieldType properties
+            renderInput fieldType properties []
+
+        Field.StringField_ (Field.PhoneField properties) ->
+            let
+                fieldType =
+                    FieldType.StringType FieldType.Phone
+            in
+            case properties.locale of
+                Nothing ->
+                    renderInput fieldType
+                        properties
+                        [ HtmlAttributes.id <|
+                            "phoneWithoutLocale"
+                                ++ (case Field.getCode field of
+                                        Nothing ->
+                                            ""
+
+                                        Just c ->
+                                            "-" ++ CountryCode.toString c
+                                   )
+                        ]
+
+                _ ->
+                    renderInput fieldType properties []
 
         Field.StringField_ (Field.DateField properties) ->
             let
                 fieldType =
                     FieldType.StringType (FieldType.DateType properties.tipe)
             in
-            renderInput fieldType properties
+            renderInput fieldType properties []
 
         Field.NumericField_ (Field.AgeField properties) ->
             Html.input
@@ -188,7 +213,7 @@ textarea key field =
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
-        , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
+        , HtmlAttributes.placeholder (Placeholder.toPlaceholder (Field.StringField_ (Field.SimpleField field)))
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
@@ -244,13 +269,24 @@ viewTags key tags =
         )
 
 
-phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
-phone time code key field =
+phone : Time.Posix -> Maybe Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
+phone time locale key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
+            [ case locale of
+                Nothing ->
+                    case field of
+                        Field.StringField_ (Field.PhoneField properties) ->
+                            Select.countryCodeSearchableSelect key properties
+
+                        _ ->
+                            Html.text ""
+
+                Just (Locale.Locale _ code) ->
+                    Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ]
+            ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
-            [ input time (Just code) key field ]
+            [ input time key field ]
         ]
 
 
@@ -274,13 +310,13 @@ checkbox key field =
         ]
 
 
-error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-error submitted locale fields field =
+error : Bool -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
+error submitted fields field =
     case field of
         Field.NumericField_ (Field.AgeField properties) ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
                 [ if submitted then
-                    validateForm locale fields field
+                    validateForm fields field
 
                   else
                     case properties.value of
@@ -288,22 +324,22 @@ error submitted locale fields field =
                             HtmlExtra.nothing
 
                         Just _ ->
-                            validateForm locale fields field
+                            validateForm fields field
                 ]
 
         _ ->
             Html.p [ HtmlAttributes.class "help is-danger" ]
                 [ if submitted then
-                    validateForm locale fields field
+                    validateForm fields field
 
                   else
                     HtmlExtra.nothing
                 ]
 
 
-validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-validateForm locale fields field =
-    Validate.validateField locale fields field
+validateForm : Fields.Fields -> Field.Field -> Html.Html Msg.Msg
+validateForm fields field =
+    Validate.validateField fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage locale)
+            (Html.text << Validate.errorToMessage)
             (always HtmlExtra.nothing)
