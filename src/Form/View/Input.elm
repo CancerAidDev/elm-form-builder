@@ -87,11 +87,14 @@ control time (Locale.Locale _ code) key field =
         Field.StringField_ (Field.DateField _) ->
             input time (Just code) key field
 
+        Field.StringField_ (Field.PhoneUniversalField _) ->
+            phone time code key field
+
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
 
-        Field.StringField_ (Field.SearchableSelectField properties) ->
-            Select.searchableSelect key properties
+        Field.StringField_ (Field.SearchableSelectField _) ->
+            Select.searchableSelect key field
 
         Field.StringField_ (Field.HttpSelectField properties) ->
             Select.httpSelect key properties
@@ -127,19 +130,21 @@ control time (Locale.Locale _ code) key field =
 input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
 input time code key field =
     let
-        renderInput fieldType properties =
+        renderInput fieldType properties attributes =
             Html.input
-                [ HtmlAttributes.name key
-                , HtmlAttributes.class (FieldType.toClass fieldType)
-                , HtmlAttributes.type_ (FieldType.toType fieldType)
-                , HtmlAttributes.value properties.value
-                , HtmlAttributes.required (properties.required == Required.Yes)
-                , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
-                , HtmlEvents.onInput <| Msg.UpdateStringField key
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
-                ]
+                ([ HtmlAttributes.name key
+                 , HtmlAttributes.class (FieldType.toClass fieldType)
+                 , HtmlAttributes.type_ (FieldType.toType fieldType)
+                 , HtmlAttributes.value properties.value
+                 , HtmlAttributes.required (properties.required == Required.Yes)
+                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder field code)
+                 , HtmlEvents.onInput <| Msg.UpdateStringField key
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
+                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
+                 ]
+                    ++ attributes
+                )
                 []
     in
     case field of
@@ -148,14 +153,35 @@ input time code key field =
                 fieldType =
                     FieldType.StringType (FieldType.SimpleType properties.tipe)
             in
-            renderInput fieldType properties
+            renderInput fieldType properties []
 
         Field.StringField_ (Field.DateField properties) ->
             let
                 fieldType =
                     FieldType.StringType (FieldType.DateType properties.tipe)
             in
-            renderInput fieldType properties
+            renderInput fieldType properties []
+
+        Field.StringField_ (Field.PhoneUniversalField properties) ->
+            let
+                fieldType =
+                    FieldType.StringType FieldType.PhoneUniversal
+            in
+            renderInput fieldType
+                properties
+                (case properties.selectedCountryCode of
+                    Just c ->
+                        [ HtmlAttributes.id <|
+                            "phoneUniversal"
+                                ++ "-"
+                                ++ CountryCode.toString c
+                        ]
+
+                    Nothing ->
+                        [ HtmlAttributes.id <|
+                            "phoneUniversal"
+                        ]
+                )
 
         Field.IntegerField_ (Field.IntegerField properties) ->
             Html.input
@@ -188,7 +214,7 @@ textarea key field =
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
-        , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
+        , HtmlAttributes.placeholder (Placeholder.toPlaceholder (Field.StringField_ (Field.SimpleField field)) Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
@@ -248,7 +274,16 @@ phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.H
 phone time code key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
+            [ case field of
+                Field.StringField_ (Field.SimpleField _) ->
+                    Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ]
+
+                Field.StringField_ (Field.PhoneUniversalField _) ->
+                    Select.searchableSelect key field
+
+                _ ->
+                    Html.text ""
+            ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
             [ input time (Just code) key field ]
         ]
@@ -287,7 +322,16 @@ error submitted locale fields field =
 
 validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
 validateForm locale fields field =
+    let
+        code =
+            case field of
+                Field.StringField_ (Field.PhoneUniversalField { selectedCountryCode }) ->
+                    selectedCountryCode
+
+                _ ->
+                    Just (Locale.toCountryCode locale)
+    in
     Validate.validateField locale fields field
         |> ResultExtra.unpack
-            (Html.text << Validate.errorToMessage locale)
+            (Html.text << Validate.errorToMessage code)
             (always HtmlExtra.nothing)

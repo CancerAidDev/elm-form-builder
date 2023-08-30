@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, phoneUniversalField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -7,6 +7,7 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
 import Test
@@ -151,4 +152,22 @@ dateField tipe { required, value } =
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
+        }
+
+
+phoneUniversalField : Maybe CountryCode.CountryCode -> NewStringField
+phoneUniversalField selectedCountryCode { required, value } =
+    Field.PhoneUniversalField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , selectedCountryCode = selectedCountryCode
+        , showDropdown = False
+        , searchInput = ""
         }

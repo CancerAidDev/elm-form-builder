@@ -97,6 +97,17 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.TextArea)))
+        , Test.test "PhoneUniversal field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "phone_universal"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.StringType FieldType.PhoneUniversal))
         , Test.test "Select field type" <|
             \_ ->
                 let

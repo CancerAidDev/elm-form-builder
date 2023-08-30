@@ -18,6 +18,7 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
 import Form.Lib.RegexValidation as RegexValidation
+import Form.Locale.CountryCode as CountryCode
 import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData
@@ -29,6 +30,7 @@ type JsonField
     = JsonSimpleField JsonSimpleFieldProperties
     | JsonEmailField JsonEmailFieldProperties
     | JsonDateField JsonDateFieldProperties
+    | JsonPhoneUniversalField JsonPhoneUniversalFieldProperties
     | JsonSelectField JsonSelectFieldProperties
     | JsonSearchableSelectField JsonSearchableSelectFieldProperties
     | JsonHttpSelectField JsonHttpSelectFieldProperties
@@ -97,6 +99,21 @@ type alias JsonDateFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    }
+
+
+type alias JsonPhoneUniversalFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , showDropdown : Bool
+    , selectedCountryCode : Maybe CountryCode.CountryCode
+    , searchInput : String
     }
 
 
@@ -286,6 +303,9 @@ decoderForType fieldType =
         FieldType.StringType (FieldType.DateType dateType) ->
             Decode.map JsonDateField (decoderDateJson dateType)
 
+        FieldType.StringType FieldType.PhoneUniversal ->
+            Decode.map JsonPhoneUniversalField decoderPhoneUniversalJson
+
         FieldType.StringType FieldType.Select ->
             Decode.map JsonSelectField decoderSelectJson
 
@@ -403,6 +423,25 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    }
+            )
+
+        JsonPhoneUniversalField { required, key, label, width, enabledBy, disabled, hidden, unhiddenBy, showDropdown, selectedCountryCode, searchInput } ->
+            ( key
+            , Field.StringField_ <|
+                Field.PhoneUniversalField
+                    { required = required
+                    , label = label
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = ""
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , showDropdown = showDropdown
+                    , selectedCountryCode = selectedCountryCode
+                    , searchInput = searchInput
                     }
             )
 
@@ -675,6 +714,22 @@ decoderCheckboxJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderPhoneUniversalJson : Decode.Decoder JsonPhoneUniversalFieldProperties
+decoderPhoneUniversalJson =
+    Decode.succeed JsonPhoneUniversalFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "showDropdown" Decode.bool
+        |> DecodePipeline.optional "selectedCountryCode" (Decode.map Just CountryCode.decoder) Nothing
+        |> DecodePipeline.required "searchInput" Decode.string
 
 
 decoderSelectJson : Decode.Decoder JsonSelectFieldProperties

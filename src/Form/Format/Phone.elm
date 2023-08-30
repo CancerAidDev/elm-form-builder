@@ -45,7 +45,7 @@ mobileRegex code =
                 |> Maybe.withDefault Regex.never
 
         _ ->
-            "^\\d.*$"
+            "^\\d{4,12}$"
                 |> Regex.fromString
                 |> Maybe.withDefault Regex.never
 
@@ -94,5 +94,8 @@ formatGroups code =
         CountryCode.US ->
             [ 3, 3, 4 ]
 
-        _ ->
+        CountryCode.AU ->
             [ 3, 3, 3 ]
+
+        _ ->
+            []

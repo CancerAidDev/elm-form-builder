@@ -1,6 +1,6 @@
 module Form.Locale exposing
     ( Locale(..)
-    , fromString, toString, decoder, encode, urlParser, toCountryCodeString
+    , fromString, toString, decoder, encode, urlParser, toCountryCodeString, toCountryCode
     , enAU, enNZ, enUS
     )
 
@@ -14,7 +14,7 @@ module Form.Locale exposing
 
 # Helpers
 
-@docs fromString, toString, decoder, encode, urlParser, toCountryCodeString
+@docs fromString, toString, decoder, encode, urlParser, toCountryCodeString, toCountryCode
 
 
 # Locales
@@ -73,6 +73,12 @@ encode =
 toCountryCodeString : Locale -> String
 toCountryCodeString (Locale _ country) =
     CountryCode.toString country
+
+
+{-| -}
+toCountryCode : Locale -> CountryCode.CountryCode
+toCountryCode (Locale _ country) =
+    country
 
 
 {-| -}

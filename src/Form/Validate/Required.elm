@@ -6,7 +6,7 @@ import Form.Validate.Types as ValidatorTypes
 
 {-| Validator API for a value being required (non-empty).
 -}
-requiredValidator : ValidatorTypes.Validator
+requiredValidator : ValidatorTypes.ValidatorByLocale
 requiredValidator _ field =
     let
         trimmed =

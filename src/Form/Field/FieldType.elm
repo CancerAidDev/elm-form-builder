@@ -42,6 +42,7 @@ type FieldType
 type StringFieldType
     = SimpleType SimpleFieldType
     | DateType DateFieldType
+    | PhoneUniversal
     | Select
     | SearchableSelect
     | HttpSelect
@@ -159,6 +160,9 @@ fromString str =
         "phone" ->
             Just (StringType (SimpleType Phone))
 
+        "phone_universal" ->
+            Just (StringType PhoneUniversal)
+
         "time" ->
             Just (StringType (SimpleType Time))
 
@@ -222,6 +226,9 @@ toType fieldType =
             "email"
 
         StringType (SimpleType Phone) ->
+            "tel"
+
+        StringType PhoneUniversal ->
             "tel"
 
         StringType (SimpleType Time) ->
@@ -304,6 +311,9 @@ toClass fieldType =
             "input"
 
         StringType (DateType _) ->
+            "input"
+
+        StringType PhoneUniversal ->
             "input"
 
         _ ->

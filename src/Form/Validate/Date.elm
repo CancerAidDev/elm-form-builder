@@ -7,7 +7,7 @@ import Iso8601
 
 {-| Validator API for IOS 8601 dates.
 -}
-dateValidator : ValidatorTypes.Validator
+dateValidator : ValidatorTypes.ValidatorByLocale
 dateValidator _ field =
     Iso8601.toTime (Field.getStringValue_ field)
         |> Result.map (\v -> Field.updateParsedDateValue v field)

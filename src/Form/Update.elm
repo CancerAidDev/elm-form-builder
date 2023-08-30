@@ -9,6 +9,7 @@ module Form.Update exposing (update)
 
 -}
 
+import Form.Field.FieldType as FieldType
 import Form.Fields as Fields
 import Form.Msg as Msg
 
@@ -43,6 +44,14 @@ update msg fields =
 
         Msg.UpdateShowDropdown key showDropdown ->
             ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
+
+        Msg.UpdateSelectedDropdownValue fieldType key value ->
+            case fieldType of
+                FieldType.StringType FieldType.PhoneUniversal ->
+                    ( Fields.updateShowDropdown key False fields |> Fields.updateSelectedCountryCode key value, Cmd.none )
+
+                _ ->
+                    ( Fields.updateStringField key value fields, Cmd.none )
 
         Msg.UpdateSearchbar key value ->
             ( Fields.updateSearchbar key value fields, Cmd.none )
