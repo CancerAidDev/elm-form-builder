@@ -3,7 +3,7 @@ module Form.Field exposing
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, PhoneUniversalFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, phoneUniversalDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, phoneUniversal, time, textArea, email
-    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth, setSelectedCountryCode
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getPhoneUniversalCountryCode, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput, updateSelectedCountryCode
     , isCheckbox, isRequired
@@ -36,7 +36,7 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth, setSelectedCountryCode
 
 
 # Getters
@@ -184,8 +184,6 @@ phone =
 In addition to the common builders, the following are available:
 
   - `setSelectedCountryCode CountryCode.CountryCode`
-  - \`setShowDropdown Bool
-  - `setSearchInput String`
 
 A list of options needs to be passed in, but setters passed in will override these.
 
@@ -766,6 +764,12 @@ setDirection direction field =
     { field | direction = direction }
 
 
+{-| -}
+setSelectedCountryCode : CountryCode.CountryCode -> PhoneUniversalFieldProperties -> PhoneUniversalFieldProperties
+setSelectedCountryCode selectedCountryCode field =
+    { field | selectedCountryCode = Just selectedCountryCode }
+
+
 
 -- DEFAULT
 
@@ -869,7 +873,7 @@ phoneDefault =
 , value = ""
 , showDropdown = False
 , selectedCountryCode = Nothing
-, searchInput
+, searchInput = ""
 }`
 -}
 phoneUniversalDefault : PhoneUniversalFieldProperties
