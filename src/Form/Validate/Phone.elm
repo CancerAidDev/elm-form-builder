@@ -11,7 +11,6 @@ module Form.Validate.Phone exposing (phoneValidator, mobileErrorToMessage)
 
 import Form.Field as Field
 import Form.Format.Phone as Phone
-import Form.Locale as Locale
 import Form.Locale.CountryCode as CountryCode
 import Form.Validate.Types as ValidatorTypes
 import Regex
@@ -19,8 +18,8 @@ import Regex
 
 {-| Validator API for localised (mobile/cell/landline) phone numbers.
 -}
-phoneValidator : ValidatorTypes.Validator
-phoneValidator (Locale.Locale _ code) field =
+phoneValidator : ValidatorTypes.ValidatorByCode
+phoneValidator code field =
     let
         normalisedValue =
             String.trim (Field.getStringValue_ field) |> String.words |> String.concat
@@ -37,13 +36,16 @@ phoneValidator (Locale.Locale _ code) field =
 
 {-| Error Message API for localised (mobile/cell/landline) phone number validation
 -}
-mobileErrorToMessage : Locale.Locale -> Field.StringField -> String
-mobileErrorToMessage (Locale.Locale _ country) field =
-    case country of
-        CountryCode.AU ->
+mobileErrorToMessage : Maybe CountryCode.CountryCode -> Field.StringField -> String
+mobileErrorToMessage code field =
+    case code of
+        Nothing ->
+            "Invalid mobile number (must specify a country code)"
+
+        Just CountryCode.AU ->
             "Invalid mobile number (example: 4XX XXX XXX)"
 
-        CountryCode.NZ ->
+        Just CountryCode.NZ ->
             let
                 stdPrefix =
                     "2X"
@@ -70,8 +72,8 @@ mobileErrorToMessage (Locale.Locale _ country) field =
             in
             "Invalid mobile number (example: " ++ mobilePrefix ++ " XXX XXX[XX])"
 
-        CountryCode.US ->
+        Just CountryCode.US ->
             "Invalid mobile number (example: 212 2XX XXXX)"
 
         _ ->
-            "Invalid mobile number"
+            "Invalid mobile number (must specify 4-12 digits)"

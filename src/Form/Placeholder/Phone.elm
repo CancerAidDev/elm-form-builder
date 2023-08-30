@@ -19,8 +19,8 @@ toMobilePlaceholder code =
         Just CountryCode.NZ ->
             "20 000 0000"
 
-        Just _ ->
+        Just CountryCode.AU ->
             "400 000 000"
 
-        Nothing ->
+        _ ->
             ""

@@ -7,7 +7,7 @@ import Form.Validate.Types as ValidatorTypes
 import Regex
 
 
-emailValidator : ValidatorTypes.Validator
+emailValidator : ValidatorTypes.ValidatorByLocale
 emailValidator (Locale.Locale _ code) field =
     if Regex.contains (Email.regex code) (Field.getStringValue_ field) then
         Ok field

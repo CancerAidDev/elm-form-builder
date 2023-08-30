@@ -20,6 +20,7 @@ module Form.Validate.StringField exposing
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
+import Form.Locale as Locale
 import Form.Validate.Date as Date
 import Form.Validate.Email as Email
 import Form.Validate.Options as Options
@@ -32,7 +33,7 @@ import Form.Validate.UrlValidator as UrlValidator
 
 {-| Validator API for a StringField being valid.
 -}
-validate : Types.Validator
+validate : Types.ValidatorByLocale
 validate locale field =
     let
         requiredResult =
@@ -57,7 +58,7 @@ validate locale field =
                                     Email.emailValidator locale valField
 
                                 FieldType.Phone ->
-                                    Phone.phoneValidator locale valField
+                                    Phone.phoneValidator (Locale.toCountryCode locale) valField
 
                                 FieldType.Url ->
                                     UrlValidator.urlValidator locale valField
@@ -77,6 +78,14 @@ validate locale field =
                 Field.DateField _ ->
                     Date.dateValidator locale field
 
+                Field.PhoneUniversalField _ ->
+                    case Field.getPhoneUniversalCountryCode (Field.StringField_ field) of
+                        Nothing ->
+                            Err Types.InvalidMobilePhoneNumber
+
+                        Just c ->
+                            Phone.phoneValidator c field
+
                 Field.SelectField { options } ->
                     Options.optionsValidator options locale field
 
@@ -93,7 +102,7 @@ validate locale field =
 {-| Localised error message API for a StringField error.
 -}
 errorToMessage : Types.ErrorToMessage
-errorToMessage locale field error =
+errorToMessage code field error =
     case error of
         Types.RequiredError ->
             "Field is required"
@@ -102,7 +111,7 @@ errorToMessage locale field error =
             "Invalid option"
 
         Types.InvalidMobilePhoneNumber ->
-            Phone.mobileErrorToMessage locale field
+            Phone.mobileErrorToMessage code field
 
         Types.InvalidPhoneNumber ->
             "Invalid phone number"

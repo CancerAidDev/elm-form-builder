@@ -31,6 +31,7 @@ import Form.Field.Required as Required
 import Form.Fields as Fields
 import Form.Format.ForSubmission as ForSubmission
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Validate.StringField as ValidateStringField
 import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
@@ -231,11 +232,11 @@ type Error
 
 
 {-| -}
-errorToMessage : Locale.Locale -> Error -> String
-errorToMessage locale error =
+errorToMessage : Maybe CountryCode.CountryCode -> Error -> String
+errorToMessage code error =
     case error of
         StringError_ field err ->
-            ValidateStringField.errorToMessage locale field err
+            ValidateStringField.errorToMessage code field err
 
         MultiStringError_ NoneSelectedError ->
             "At least one selection is required"

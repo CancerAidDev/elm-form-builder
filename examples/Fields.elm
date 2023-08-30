@@ -86,6 +86,14 @@ fields =
             |> FormField.phone
         )
     , \order ->
+        ( "phoneUniversal"
+        , FormField.phoneUniversalDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Phone Universal"
+            |> FormField.setOrder order
+            |> FormField.phoneUniversal
+        )
+    , \order ->
         ( "time"
         , FormField.timeDefault
             |> FormField.setIsRequired IsRequired.Yes

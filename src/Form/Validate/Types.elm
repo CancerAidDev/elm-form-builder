@@ -1,5 +1,5 @@
 module Form.Validate.Types exposing
-    ( Validator
+    ( ValidatorByLocale, ValidatorByCode
     , ErrorToMessage, StringFieldError(..)
     )
 
@@ -8,7 +8,7 @@ module Form.Validate.Types exposing
 
 # Validate
 
-@docs Validator
+@docs ValidatorByLocale, ValidatorByCode
 
 
 # Error Messages
@@ -19,6 +19,7 @@ module Form.Validate.Types exposing
 
 import Form.Field as Field
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 
 
 {-| Error messages that can be produced or displayed for a StringField
@@ -34,13 +35,19 @@ type StringFieldError
     | RegexIncongruence String
 
 
-{-| API for validating StringFields (already with just the value of the field)
+{-| API for validating StringFields by locale(already with just the value of the field)
 -}
-type alias Validator =
+type alias ValidatorByLocale =
     Locale.Locale -> Field.StringField -> Result StringFieldError Field.StringField
+
+
+{-| API for validating StringFields by country code (already with just the value of the field)
+-}
+type alias ValidatorByCode =
+    CountryCode.CountryCode -> Field.StringField -> Result StringFieldError Field.StringField
 
 
 {-| API for localised error messages
 -}
 type alias ErrorToMessage =
-    Locale.Locale -> Field.StringField -> StringFieldError -> String
+    Maybe CountryCode.CountryCode -> Field.StringField -> StringFieldError -> String

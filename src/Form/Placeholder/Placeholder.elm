@@ -6,6 +6,7 @@ module Form.Placeholder.Placeholder exposing (toPlaceholder)
 
 -}
 
+import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Locale.CountryCode as CountryCode
 import Form.Placeholder.Phone as Phone
@@ -13,14 +14,22 @@ import Form.Placeholder.Phone as Phone
 
 {-| Placeholder to render for the given field type.
 -}
-toPlaceholder : FieldType.FieldType -> Maybe CountryCode.CountryCode -> String
+toPlaceholder : Field.Field -> Maybe CountryCode.CountryCode -> String
 toPlaceholder fieldType code =
     case fieldType of
-        FieldType.StringType (FieldType.SimpleType FieldType.Email) ->
-            "your@email.com"
+        Field.StringField_ (Field.SimpleField { tipe }) ->
+            case tipe of
+                FieldType.Email ->
+                    "your@email.com"
 
-        FieldType.StringType (FieldType.SimpleType FieldType.Phone) ->
-            Phone.toMobilePlaceholder code
+                FieldType.Phone ->
+                    Phone.toMobilePlaceholder code
+
+                _ ->
+                    ""
+
+        Field.StringField_ (Field.PhoneUniversalField { selectedCountryCode }) ->
+            Phone.toMobilePlaceholder selectedCountryCode
 
         _ ->
             ""

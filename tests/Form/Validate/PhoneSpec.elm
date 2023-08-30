@@ -2,6 +2,7 @@ module Form.Validate.PhoneSpec exposing (suite)
 
 import Form.Field.FieldType as FieldType
 import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Validate.HelperSpec as HelperSpec
 import Form.Validate.Types as Types
 import Test
@@ -45,6 +46,23 @@ suite =
                     , { value = "23423400000", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "234234000", error = Types.InvalidMobilePhoneNumber, name = "< 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "Doesn't begin with 2" }
+                    ]
+                , locale = Locale.enUS
+                }
+            , HelperSpec.simpleFieldTest FieldType.PhoneUniversal
+                (HelperSpec.phoneUniversalField Nothing)
+                { valid = []
+                , invalid =
+                    [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Invalid without a locale" }
+                    ]
+                , locale = Locale.enAU
+                }
+            , HelperSpec.simpleFieldTest FieldType.PhoneUniversal
+                (HelperSpec.phoneUniversalField (Just CountryCode.ES))
+                { valid = [ { value = "123456789", name = "Correct format and length" } ]
+                , invalid =
+                    [ { value = "123", error = Types.InvalidMobilePhoneNumber, name = "<4 digits" }
+                    , { value = "1234567890123456", error = Types.InvalidMobilePhoneNumber, name = ">12 digits" }
                     ]
                 , locale = Locale.enUS
                 }

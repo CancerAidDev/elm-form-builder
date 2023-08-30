@@ -46,6 +46,14 @@ formatForSubmission (Locale.Locale _ code) field =
                 |> Maybe.map (Date.formatForSubmission code)
                 |> Maybe.withDefault (Field.getStringValue_ field)
 
+        Field.PhoneUniversalField _ ->
+            case Field.getPhoneUniversalCountryCode (Field.StringField_ field) of
+                Just c ->
+                    Phone.formatForSubmission c (Field.getStringValue_ field)
+
+                Nothing ->
+                    value
+
         Field.SelectField _ ->
             value
 

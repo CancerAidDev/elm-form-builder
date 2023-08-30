@@ -10,8 +10,10 @@ function getNumberLength(countryCode) {
       return 10;
     case "US":
       return 10;
-    default:
+    case "AU":
       return 9;
+    default:
+      return 12;
   }
 }
 
@@ -21,8 +23,10 @@ function getGroupRegex(countryCode) {
       return new RegExp(`(.{0,2})(.{0,3})(.{0,5})`);
     case "US":
       return new RegExp(`(.{0,3})(.{0,3})(.{0,4})`);
+    case "AU":
+      return new RegExp(`(.{0,3})(.{0,3})(.{0,4})`);
     default:
-      return new RegExp(`(.{0,3})(.{0,3})(.{0,3})`);
+      return new RegExp("(.*)");
   }
 }
 
@@ -46,12 +50,19 @@ function groupDigits(str, countryCode) {
 // function.
 export function groupDigitsListener(event, countryCode) {
   const target = event.target;
-  if (target.type === "tel") {
+  if (target.type === "tel" && target.id !== "phoneUniversal") {
+    let c = countryCode;
+    if (target.id.includes("phoneUniversal")) {
+      c = target.id.split("-")[1];
+    }
     const start = target.selectionStart ?? undefined;
     const before = target.value.slice(0, start);
     const after = target.value.slice(start);
-    const beforeGrouped = groupDigits(before, countryCode);
-    target.value = groupDigits(before + after, countryCode);
+    const beforeGrouped = groupDigits(before, c);
+    target.value = groupDigits(before + after, c);
     target.selectionStart = target.selectionEnd = beforeGrouped.length;
+  }
+  if (target.id === "phoneUniversal") {
+    target.value = trim(target.value);
   }
 }
