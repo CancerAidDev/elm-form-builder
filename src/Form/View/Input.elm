@@ -63,7 +63,10 @@ view time submitted locale fields key field =
 label : Field.Field -> Bool -> Bool -> Html.Html Msg.Msg
 label field disabled shown =
     HtmlExtra.viewIf (not (Field.isCheckbox field) && shown) <|
-        Html.label [ HtmlAttributes.class "label" ]
+        Html.label
+            [ HtmlAttributes.class "label"
+            , HtmlAttributes.for <| Field.getLabel field
+            ]
             [ Html.text (Field.getLabel field)
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
@@ -139,6 +142,7 @@ input time code key field =
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
+                , HtmlAttributes.id <| Field.getLabel field
                 ]
                 []
     in
@@ -190,6 +194,7 @@ textarea key field =
         , HtmlAttributes.required (field.required == Required.Yes)
         , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
+        , HtmlAttributes.id field.label
         ]
         []
 
