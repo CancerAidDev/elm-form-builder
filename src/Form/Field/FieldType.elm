@@ -81,6 +81,13 @@ type alias IntegerFieldType =
     { min : Maybe Int, max : Maybe Int }
 
 
+defaultInt : IntegerFieldType
+defaultInt =
+    { min = Nothing
+    , max = Nothing
+    }
+
+
 {-| -}
 type MultiStringFieldType
     = MultiSelect
@@ -206,6 +213,9 @@ fromString str =
 
         "tags" ->
             Just (MultiStringType Tags)
+
+        "integer" ->
+            Just (IntegerType defaultInt)
 
         _ ->
             Nothing
