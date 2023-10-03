@@ -1,8 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
-    , defaultInt
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt
     )
 
 {-| Field Type
@@ -20,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt
 
 -}
 
@@ -82,6 +81,7 @@ type alias IntegerFieldType =
     { min : Maybe Int, max : Maybe Int }
 
 
+{-| -}
 defaultInt : IntegerFieldType
 defaultInt =
     { min = Nothing
