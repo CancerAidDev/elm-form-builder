@@ -175,6 +175,7 @@ input time code key field =
                     (FieldType.toMin time (FieldType.IntegerType properties.tipe))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
                     (FieldType.toMax time (FieldType.IntegerType properties.tipe))
+                , HtmlAttributes.id <| Field.getLabel field
                 ]
                 []
 
