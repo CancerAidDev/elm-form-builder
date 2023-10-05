@@ -239,6 +239,17 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.MultiStringType FieldType.Tags))
+        , Test.test "Age Field Type" <|
+            \_ ->
+                let
+                    json =
+                        """ 
+                            "age"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.IntegerType FieldType.age))
         , Test.test "Integer Field Type" <|
             \_ ->
                 let
