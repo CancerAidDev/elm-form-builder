@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt, age
 
 -}
 
@@ -79,6 +79,22 @@ type SimpleFieldType
 {-| -}
 type alias IntegerFieldType =
     { min : Maybe Int, max : Maybe Int }
+
+
+{-| -}
+defaultInt : IntegerFieldType
+defaultInt =
+    { min = Nothing
+    , max = Nothing
+    }
+
+
+{-| -}
+age : IntegerFieldType
+age =
+    { min = Just 18
+    , max = Just 99
+    }
 
 
 {-| -}
@@ -206,6 +222,12 @@ fromString str =
 
         "tags" ->
             Just (MultiStringType Tags)
+
+        "age" ->
+            Just (IntegerType age)
+
+        "integer" ->
+            Just (IntegerType defaultInt)
 
         _ ->
             Nothing

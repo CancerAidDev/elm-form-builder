@@ -26,7 +26,7 @@ import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder, label } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -34,6 +34,7 @@ select key { value, required, options, disabled, hidden, placeholder, hasSelecta
                 , HtmlAttributes.required (required == Required.Yes)
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
+                , HtmlAttributes.id label
                 ]
                 (viewPlaceholder hasSelectablePlaceholder placeholder
                     :: List.map (viewOption value) options
@@ -71,7 +72,7 @@ searchableSelect key properties =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown } =
+dropdownTrigger key { placeholder, value, showDropdown, label } =
     let
         selectPlaceholder =
             if value == "" then
@@ -86,7 +87,8 @@ dropdownTrigger key { placeholder, value, showDropdown } =
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
-            , Aria.controls [ "dropdown-menu" ]
+            , Aria.label "dropdown-trigger"
+            , HtmlAttributes.id label
             ]
             [ Html.span [] [ Html.text selectPlaceholder ]
             , Dropdown.dropdownIcon showDropdown
@@ -106,6 +108,7 @@ searchableDropdownMenu key properties =
             [ HtmlAttributes.class "dropdown-menu"
             , HtmlAttributes.id "dropdown-menu"
             , Aria.roleDescription "menu"
+            , Aria.controls [ "dropdown-menu" ]
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
             [ Html.div [ HtmlAttributes.class "dropdown-content" ]
