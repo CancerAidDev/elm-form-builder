@@ -39,12 +39,13 @@ suite =
                 }
             , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
                 (HelperSpec.simpleField FieldType.Phone)
-                { valid = [ { value = "2342340000", name = "Correct format and length" } ]
+                { valid = [ { value = "2342340000", name = "Correct format and length (US number)" }, { value = "6475555678", name = "Correct format and length (Canadian number)" } ]
                 , invalid =
                     [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
                     , { value = "23423400000", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "234234000", error = Types.InvalidMobilePhoneNumber, name = "< 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "Doesn't begin with 2" }
+                    , { value = "9115555678", error = Types.InvalidMobilePhoneNumber, name = "Canadian service number" }
                     ]
                 , locale = Locale.enUS
                 }
