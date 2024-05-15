@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt, age
+    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateOfBirth, datePast, dateFuture, defaultInt, age
+@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
 
 -}
 
@@ -154,6 +154,14 @@ datePast =
 
 
 {-| -}
+dateDefault : DateFieldType
+dateDefault =
+    { min = Nothing
+    , max = Nothing
+    }
+
+
+{-| -}
 fromString : String -> Maybe FieldType
 fromString str =
     case str of
@@ -171,6 +179,9 @@ fromString str =
 
         "date_future" ->
             Just (StringType (DateType dateFuture))
+
+        "date" ->
+            Just (StringType (DateType dateDefault))
 
         "phone" ->
             Just (StringType (SimpleType Phone))

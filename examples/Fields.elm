@@ -133,6 +133,7 @@ fields =
     , \order ->
         ( "date"
         , FormField.dateDefault
+            |> FormField.setDateDefault
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Event Date"
             |> FormField.setOrder order
