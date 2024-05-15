@@ -74,7 +74,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.StringType (FieldType.DateType FieldType.dateAny)))
+                        (Ok (FieldType.StringType (FieldType.DateType FieldType.dateDefault)))
         , Test.test "Phone field type" <|
             \_ ->
                 let
