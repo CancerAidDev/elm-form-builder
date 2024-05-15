@@ -134,7 +134,7 @@ fields =
         ( "date"
         , FormField.dateDefault
             |> FormField.setDateDefault
-            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Event Date"
             |> FormField.setOrder order
             |> FormField.date

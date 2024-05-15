@@ -316,11 +316,15 @@ toMax time fieldType =
 defaultValue : Time.Posix -> FieldType -> Maybe String
 defaultValue time fieldType =
     case fieldType of
-        StringType (DateType _) ->
-            time
-                |> LibTime.offsetYear -40
-                |> LibTime.toDateString
-                |> Just
+        StringType (DateType { max, min }) ->
+            if max == Nothing && min == Nothing then
+                Nothing
+
+            else
+                time
+                    |> LibTime.offsetYear -40
+                    |> LibTime.toDateString
+                    |> Just
 
         _ ->
             Nothing
