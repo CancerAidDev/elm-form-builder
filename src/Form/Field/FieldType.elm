@@ -316,8 +316,8 @@ toMax time fieldType =
 defaultValue : Time.Posix -> FieldType -> Maybe String
 defaultValue time fieldType =
     case fieldType of
-        StringType (DateType { max, min }) ->
-            if max == Nothing && min == Nothing then
+        StringType (DateType properties) ->
+            if properties == dateDefault then
                 Nothing
 
             else
