@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+    , dateConfigToString, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs defaultValue, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+@docs dateConfigToString, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
 
 -}
 
@@ -107,7 +107,7 @@ type MultiStringFieldType
 
 {-| -}
 type alias DateFieldType =
-    { min : Maybe DateConfig, max : Maybe DateConfig }
+    { min : Maybe DateConfig, max : Maybe DateConfig, default : Maybe DateConfig }
 
 
 {-| -}
@@ -116,17 +116,18 @@ type DateConfig
     | DateOffset ( TimeExtra.Interval, Int )
 
 
+{-| -}
 dateConfigToString : Time.Posix -> DateConfig -> String
-dateConfigToString time config =
-    case config of
-        DateAbsolute maxDate ->
-            LibTime.toDateString maxDate
+dateConfigToString currentTime config =
+    LibTime.toDateString <|
+        case config of
+            DateAbsolute time ->
+                time
 
-        DateOffset ( offsetUnit, offset ) ->
-            time
-                |> TimeExtra.add offsetUnit offset Time.utc
-                |> TimeExtra.floor offsetUnit Time.utc
-                |> LibTime.toDateString
+            DateOffset ( offsetUnit, offset ) ->
+                currentTime
+                    |> TimeExtra.add offsetUnit offset Time.utc
+                    |> TimeExtra.floor offsetUnit Time.utc
 
 
 {-| -}
@@ -134,6 +135,7 @@ dateOfBirth : DateFieldType
 dateOfBirth =
     { min = Just (DateOffset ( TimeExtra.Year, -120 ))
     , max = Just (DateOffset ( TimeExtra.Year, 0 ))
+    , default = Just (DateOffset ( TimeExtra.Year, -40 ))
     }
 
 
@@ -142,6 +144,7 @@ dateFuture : DateFieldType
 dateFuture =
     { min = Just (DateOffset ( TimeExtra.Day, 1 ))
     , max = Just (DateOffset ( TimeExtra.Year, 10 ))
+    , default = Nothing
     }
 
 
@@ -150,6 +153,7 @@ datePast : DateFieldType
 datePast =
     { min = Just (DateOffset ( TimeExtra.Year, -120 ))
     , max = Just (DateOffset ( TimeExtra.Day, -1 ))
+    , default = Nothing
     }
 
 
@@ -158,6 +162,7 @@ dateDefault : DateFieldType
 dateDefault =
     { min = Nothing
     , max = Nothing
+    , default = Nothing
     }
 
 
@@ -307,20 +312,6 @@ toMax time fieldType =
 
         IntegerType { max } ->
             max |> Maybe.map String.fromInt
-
-        _ ->
-            Nothing
-
-
-{-| -}
-defaultValue : Time.Posix -> FieldType -> Maybe String
-defaultValue time fieldType =
-    case fieldType of
-        StringType (DateType _) ->
-            time
-                |> LibTime.offsetYear -40
-                |> LibTime.toDateString
-                |> Just
 
         _ ->
             Nothing

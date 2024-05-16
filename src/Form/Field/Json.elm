@@ -336,7 +336,7 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
+                    , value = ""
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -354,12 +354,7 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value =
-                        if value == "" then
-                            FieldType.defaultValue time (FieldType.StringType (FieldType.SimpleType tipe)) |> Maybe.withDefault ""
-
-                        else
-                            value
+                    , value = value
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
@@ -381,7 +376,7 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = FieldType.defaultValue time (FieldType.StringType (FieldType.DateType tipe)) |> Maybe.withDefault ""
+                    , value = tipe.default |> Maybe.map (FieldType.dateConfigToString time) |> Maybe.withDefault ""
                     , parsedDate = Nothing
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
