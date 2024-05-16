@@ -896,7 +896,7 @@ dateDefault =
     , disabled = False
     , hidden = False
     , unhiddenBy = Nothing
-    , tipe = { min = Nothing, max = Nothing }
+    , tipe = FieldType.dateDefault
     , value = ""
     , parsedDate = Nothing
     }
