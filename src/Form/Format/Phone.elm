@@ -28,7 +28,21 @@ import String.Extra as StringExtra
 -}
 mobileRegex : CountryCode.CountryCode -> Regex.Regex
 mobileRegex code =
-    -- Regex from: https://github.com/google/libphonenumber/blob/30db8f67a1c06b3ab052497477be1d9f18312387/resources/PhoneNumberMetadata.xml
+    {- Regex from: https://github.com/google/libphonenumber/blob/30db8f67a1c06b3ab052497477be1d9f18312387/resources/PhoneNumberMetadata.xml
+
+       Copyright (C) 2009 The Libphonenumber Authors
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+    -}
     case code of
         CountryCode.AU ->
             "^4(?:79[01]|83[0-389]|94[0-4])\\d{5}|4(?:[0-36]\\d|4[047-9]|5[0-25-9]|7[02-8]|8[0-24-9]|9[0-37-9])\\d{6}$"
