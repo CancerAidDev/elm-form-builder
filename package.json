@@ -19,6 +19,6 @@
     "parcel": "^2.8.3"
   },
   "resolutions": {
-    "cross-spawn": "^7.0.3"
+    "cross-spawn": "^7.0.6"
   }
 }
