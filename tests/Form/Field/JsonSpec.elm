@@ -466,6 +466,78 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
+            , Test.test "Http Searchable Select field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.httpSearchableSelect",
+                            "label": "Http Searchable Select",
+                            "type": "http_searchable_select",
+                            "width": "50%",
+                            "url": "httpSearchableSelect"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "metadata.httpSearchableSelect"
+                                , Field.StringField_
+                                    (Field.HttpSearchableSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , default = Nothing
+                                        , label = "Http Searchable Select"
+                                        , url = "httpSearchableSelect"
+                                        , options = RemoteData.NotAsked
+                                        , value = ""
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , showDropdown = False
+                                        , searchInput = ""
+                                        }
+                                    )
+                                )
+                            )
+            , Test.test "Http Searchable Select field decoder with incorrect field" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.httpSearchableSelect",
+                            "label": "Http Searchable Select",
+                            "type": "http_searchable_select",
+                            "width": "50%",
+                            "options": [
+                                { "value": "Dog" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ]
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
+            , Test.test "Http Searchable Select field decoder with missing field" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.httpSearchableSelect",
+                            "label": "Http Searchable Select",
+                            "type": "http_searchable_select",
+                            "width": "50%"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
             , Test.test "Checkbox field decoder" <|
                 \_ ->
                     let

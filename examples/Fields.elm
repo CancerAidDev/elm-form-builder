@@ -180,7 +180,7 @@ fields =
                 , { label = Just "Western Australia", value = "8" }
                 ]
             |> FormField.setPlaceholder "Searchable State With Labels"
-             |> FormField.setUnhiddenBy "hidesField"
+            |> FormField.setUnhiddenBy "hidesField"
             |> FormField.searchableSelect
         )
     , \order ->

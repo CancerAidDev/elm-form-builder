@@ -9,7 +9,7 @@ module Form.Field exposing
     , isCheckbox, isRequired
     , encode
     , metadataKey
-    , HttpSearchableSelectFieldProperties
+    , HttpSearchableSelectFieldProperties, httpSearchableSelectDefault
     )
 
 {-| Field type and helper functions
@@ -1141,6 +1141,45 @@ searchableSelectDefault =
     , value = ""
     , default = Nothing
     , options = []
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    , showDropdown = False
+    , searchInput = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = ""
+, url = ""
+, default = Nothing
+, options = RemoteData.NotAsked
+, placeholder = ""
+, hasSelectablePlaceholder = False
+, showDropdown = False
+, searchInput = ""
+}`
+-}
+httpSearchableSelectDefault : HttpSearchableSelectFieldProperties
+httpSearchableSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , url = ""
+    , default = Nothing
+    , options = RemoteData.NotAsked
     , placeholder = ""
     , hasSelectablePlaceholder = False
     , showDropdown = False
