@@ -1,4 +1,7 @@
-module Form.View.Select exposing (select, searchableSelect, httpSelect)
+module Form.View.Select exposing
+    ( select, searchableSelect, httpSelect
+    , httpSearchableSelect
+    )
 
 {-| View Select Fields
 

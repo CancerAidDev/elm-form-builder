@@ -9,6 +9,7 @@ module Form.Field exposing
     , isCheckbox, isRequired
     , encode
     , metadataKey
+    , HttpSearchableSelectFieldProperties
     )
 
 {-| Field type and helper functions
@@ -1292,6 +1293,7 @@ type StringField
     | SelectField (SelectFieldProperties {})
     | SearchableSelectField SearchableSelectFieldProperties
     | HttpSelectField HttpSelectFieldProperties
+    | HttpSearchableSelectField HttpSearchableSelectFieldProperties
     | RadioField RadioFieldProperties
 
 
@@ -1393,6 +1395,19 @@ type alias HttpSelectFieldProperties =
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         , placeholder : String
         , hasSelectablePlaceholder : Bool
+        }
+
+
+{-| -}
+type alias HttpSearchableSelectFieldProperties =
+    StringFieldProperties
+        { url : String
+        , default : Maybe String
+        , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        , placeholder : String
+        , hasSelectablePlaceholder : Bool
+        , showDropdown : Bool
+        , searchInput : String
         }
 
 
@@ -1560,6 +1575,18 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        HttpSearchableSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
         RadioField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
@@ -1661,6 +1688,9 @@ updateStringDisabled =
 
                 HttpSelectField properties ->
                     HttpSelectField { properties | disabled = value }
+
+                HttpSearchableSelectField properties ->
+                    HttpSearchableSelectField { properties | disabled = value }
 
                 RadioField properties ->
                     RadioField { properties | disabled = value }
@@ -1774,6 +1804,9 @@ resetValueToDefault field =
 
         StringField_ (SearchableSelectField properties) ->
             StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (RadioField properties) ->
             StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
@@ -1907,6 +1940,9 @@ updateStringValue_ value field =
 
         HttpSelectField properties ->
             HttpSelectField { properties | value = value }
+
+        HttpSearchableSelectField properties ->
+            HttpSearchableSelectField { properties | value = value }
 
         RadioField properties ->
             RadioField { properties | value = value }
@@ -2118,6 +2154,9 @@ getStringType field =
 
         HttpSelectField _ ->
             FieldType.HttpSelect
+
+        HttpSearchableSelectField _ ->
+            FieldType.HttpSearchableSelect
 
         RadioField _ ->
             FieldType.Radio
