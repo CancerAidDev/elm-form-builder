@@ -1,14 +1,11 @@
-module Form.View.Select exposing
-    ( select, searchableSelect, httpSelect
-    , httpSearchableSelect
-    )
+module Form.View.Select exposing (select, searchableSelect, httpSelect, httpSearchableSelect)
 
 {-| View Select Fields
 
 
 # Select
 
-@docs select, searchableSelect, httpSelect
+@docs select, searchableSelect, httpSelect, httpSearchableSelect
 
 -}
 
@@ -74,6 +71,7 @@ searchableSelect key properties =
         ]
 
 
+{-| -}
 httpSearchableSelect : String -> Field.HttpSearchableSelectFieldProperties -> Html.Html Msg.Msg
 httpSearchableSelect key properties =
     RemoteData.map
