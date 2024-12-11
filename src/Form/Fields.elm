@@ -259,5 +259,9 @@ getTriggersByValue key fields =
         Just (Field.BoolField_ (Field.CheckboxField { value })) ->
             Just value
 
+        Just field ->
+            Field.getStringValue field
+                |> Maybe.map (\value -> String.length value > 0)
+
         _ ->
             Nothing
