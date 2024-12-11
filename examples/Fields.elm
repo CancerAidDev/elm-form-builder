@@ -152,6 +152,38 @@ fields =
                 ]
         )
     , \order ->
+        ( "hidesField"
+        , FormField.selectDefault
+            |> FormField.setIsRequired IsRequired.No
+            |> FormField.setLabel "Hides a field"
+            |> FormField.setOrder order
+            |> FormField.setSelectablePlaceholder
+            |> FormField.select
+                [ { label = Nothing, value = "One" }
+                , { label = Nothing, value = "Two" }
+                ]
+        )
+    , \order ->
+        ( "searchableStateWithLabels"
+        , FormField.searchableSelectDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Searchable State"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                [ { label = Just "Australian Capital Territory", value = "1" }
+                , { label = Just "New South Wales", value = "2" }
+                , { label = Just "Northern Territory", value = "3" }
+                , { label = Just "Queensland", value = "4" }
+                , { label = Just "South Australian", value = "5" }
+                , { label = Just "Tasmania", value = "6" }
+                , { label = Just "Victorian", value = "7" }
+                , { label = Just "Western Australia", value = "8" }
+                ]
+            |> FormField.setPlaceholder "Searchable State With Labels"
+             |> FormField.setUnhiddenBy "hidesField"
+            |> FormField.searchableSelect
+        )
+    , \order ->
         ( "state"
         , let
             options =
