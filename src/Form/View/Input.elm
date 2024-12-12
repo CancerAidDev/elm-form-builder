@@ -52,7 +52,9 @@ view time submitted locale fields key field =
             , HtmlAttributes.disabled disabled
             , HtmlAttributes.id key
             ]
-            [ Html.div [ HtmlAttributes.class "field" ]
+            [ Html.div
+                [ HtmlAttributes.class "field"
+                ]
                 [ label field disabled shown
                 , control time locale key field
                 , error submitted locale fields field

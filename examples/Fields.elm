@@ -7,6 +7,7 @@ import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
 import Regex
+import RemoteData
 import Set
 
 
@@ -164,24 +165,26 @@ fields =
                 ]
         )
     , \order ->
-        ( "searchableStateWithLabels"
-        , FormField.searchableSelectDefault
-            |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "Searchable State"
+        ( "httpSearchableSelectField"
+        , FormField.httpSearchableSelectDefault
+            |> FormField.setIsRequired IsRequired.No
+            |> FormField.setLabel "HTTP Searchable State"
+            |> FormField.setWidth Width.HalfSize
             |> FormField.setOrder order
             |> FormField.setOptions
-                [ { label = Just "Australian Capital Territory", value = "1" }
-                , { label = Just "New South Wales", value = "2" }
-                , { label = Just "Northern Territory", value = "3" }
-                , { label = Just "Queensland", value = "4" }
-                , { label = Just "South Australian", value = "5" }
-                , { label = Just "Tasmania", value = "6" }
-                , { label = Just "Victorian", value = "7" }
-                , { label = Just "Western Australia", value = "8" }
-                ]
-            |> FormField.setPlaceholder "Searchable State With Labels"
+                (RemoteData.Success
+                    [ { label = Just "Australian Capital Territory Australian Capital Territory Australian Capital Territory", value = "1" }
+                    , { label = Just "New South Wales", value = "2" }
+                    , { label = Just "Northern Territory", value = "3" }
+                    , { label = Just "Queensland", value = "4" }
+                    , { label = Just "South Australian", value = "5" }
+                    , { label = Just "Tasmania", value = "6" }
+                    , { label = Just "Victorian", value = "7" }
+                    , { label = Just "Western Australia", value = "8" }
+                    ]
+                )
             |> FormField.setUnhiddenBy "hidesField"
-            |> FormField.searchableSelect
+            |> FormField.httpSearchableSelect "url"
         )
     , \order ->
         ( "state"
@@ -239,6 +242,25 @@ fields =
                 , { label = Nothing, value = "Western Australia" }
                 ]
             |> FormField.setPlaceholder "Searchable State"
+            |> FormField.searchableSelect
+        )
+    , \order ->
+        ( "searchableStateWithLabels"
+        , FormField.searchableSelectDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Searchable State"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                [ { label = Just "Australian Capital Territory", value = "1" }
+                , { label = Just "New South Wales", value = "2" }
+                , { label = Just "Northern Territory", value = "3" }
+                , { label = Just "Queensland", value = "4" }
+                , { label = Just "South Australian", value = "5" }
+                , { label = Just "Tasmania", value = "6" }
+                , { label = Just "Victorian", value = "7" }
+                , { label = Just "Western Australia", value = "8" }
+                ]
+            |> FormField.setPlaceholder "Searchable State With Labels"
             |> FormField.searchableSelect
         )
     , \order ->
