@@ -173,7 +173,7 @@ fields =
             |> FormField.setOrder order
             |> FormField.setOptions
                 (RemoteData.Success
-                    [ { label = Just "Australian Capital Territory Australian Capital Territory Australian Capital Territory", value = "1" }
+                    [ { label = Just "Australian Capital Territory", value = "1" }
                     , { label = Just "New South Wales", value = "2" }
                     , { label = Just "Northern Territory", value = "3" }
                     , { label = Just "Queensland", value = "4" }
