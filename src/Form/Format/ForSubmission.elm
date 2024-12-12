@@ -55,5 +55,8 @@ formatForSubmission (Locale.Locale _ code) field =
         Field.HttpSelectField _ ->
             value
 
+        Field.HttpSearchableSelectField _ ->
+            value
+
         Field.RadioField _ ->
             value

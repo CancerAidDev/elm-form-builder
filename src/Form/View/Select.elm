@@ -1,11 +1,11 @@
-module Form.View.Select exposing (select, searchableSelect, httpSelect)
+module Form.View.Select exposing (select, searchableSelect, httpSelect, httpSearchableSelect)
 
 {-| View Select Fields
 
 
 # Select
 
-@docs select, searchableSelect, httpSelect
+@docs select, searchableSelect, httpSelect, httpSearchableSelect
 
 -}
 
@@ -71,15 +71,46 @@ searchableSelect key properties =
         ]
 
 
+{-| -}
+httpSearchableSelect : String -> Field.HttpSearchableSelectFieldProperties -> Html.Html Msg.Msg
+httpSearchableSelect key properties =
+    RemoteData.map
+        (\options ->
+            searchableSelect
+                key
+                { value = properties.value
+                , required = properties.required
+                , default = properties.default
+                , options = options
+                , label = properties.label
+                , width = properties.width
+                , enabledBy = properties.enabledBy
+                , order = properties.order
+                , disabled = properties.disabled
+                , hidden = properties.hidden
+                , unhiddenBy = properties.unhiddenBy
+                , placeholder = properties.placeholder
+                , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
+                , showDropdown = properties.showDropdown
+                , searchInput = properties.searchInput
+                }
+        )
+        properties.options
+        |> RemoteData.withDefault HtmlExtra.nothing
+
+
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, label } =
+dropdownTrigger key { placeholder, value, showDropdown, label, options } =
     let
         selectPlaceholder =
             if value == "" then
                 placeholder
 
             else
-                value
+                List.filter (\option -> option.value == value) options
+                    |> List.head
+                    |> Maybe.andThen (\option -> option.label)
+                    |> Maybe.withDefault value
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
         [ Html.button

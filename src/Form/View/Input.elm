@@ -99,6 +99,9 @@ control time (Locale.Locale _ code) key field =
         Field.StringField_ (Field.HttpSelectField properties) ->
             Select.httpSelect key properties
 
+        Field.StringField_ (Field.HttpSearchableSelectField properties) ->
+            Select.httpSearchableSelect key properties
+
         Field.StringField_ (Field.RadioField properties) ->
             Radio.radio key properties
 
