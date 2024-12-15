@@ -1,7 +1,7 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
-    , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
+    , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
@@ -21,12 +21,12 @@ module Form.Field exposing
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
 
 
 # Default Properties
 
-@docs integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
@@ -1155,6 +1155,45 @@ searchableSelectDefault =
 , disabled = False
 , hidden = False
 , unhiddenBy = Nothing
+, value = ""
+, url = ""
+, default = Nothing
+, options = RemoteData.NotAsked
+, placeholder = ""
+, hasSelectablePlaceholder = False
+, showDropdown = False
+, searchInput = ""
+}`
+-}
+httpSearchableSelectDefault : HttpSearchableSelectFieldProperties
+httpSearchableSelectDefault =
+    { required = Required.No
+    , label = ""
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = ""
+    , url = ""
+    , default = Nothing
+    , options = RemoteData.NotAsked
+    , placeholder = ""
+    , hasSelectablePlaceholder = False
+    , showDropdown = False
+    , searchInput = ""
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
 , value = Set.empty
 , options = []
 , placeholder = ""
@@ -1292,6 +1331,7 @@ type StringField
     | SelectField (SelectFieldProperties {})
     | SearchableSelectField SearchableSelectFieldProperties
     | HttpSelectField HttpSelectFieldProperties
+    | HttpSearchableSelectField HttpSearchableSelectFieldProperties
     | RadioField RadioFieldProperties
 
 
@@ -1393,6 +1433,19 @@ type alias HttpSelectFieldProperties =
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         , placeholder : String
         , hasSelectablePlaceholder : Bool
+        }
+
+
+{-| -}
+type alias HttpSearchableSelectFieldProperties =
+    StringFieldProperties
+        { url : String
+        , default : Maybe String
+        , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        , placeholder : String
+        , hasSelectablePlaceholder : Bool
+        , showDropdown : Bool
+        , searchInput : String
         }
 
 
@@ -1560,6 +1613,18 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        HttpSearchableSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
         RadioField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
@@ -1661,6 +1726,9 @@ updateStringDisabled =
 
                 HttpSelectField properties ->
                     HttpSelectField { properties | disabled = value }
+
+                HttpSearchableSelectField properties ->
+                    HttpSearchableSelectField { properties | disabled = value }
 
                 RadioField properties ->
                     RadioField { properties | disabled = value }
@@ -1774,6 +1842,9 @@ resetValueToDefault field =
 
         StringField_ (SearchableSelectField properties) ->
             StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (RadioField properties) ->
             StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
@@ -1907,6 +1978,9 @@ updateStringValue_ value field =
 
         HttpSelectField properties ->
             HttpSelectField { properties | value = value }
+
+        HttpSearchableSelectField properties ->
+            HttpSearchableSelectField { properties | value = value }
 
         RadioField properties ->
             RadioField { properties | value = value }
@@ -2118,6 +2192,9 @@ getStringType field =
 
         HttpSelectField _ ->
             FieldType.HttpSelect
+
+        HttpSearchableSelectField _ ->
+            FieldType.HttpSearchableSelect
 
         RadioField _ ->
             FieldType.Radio

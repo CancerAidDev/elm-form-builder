@@ -45,6 +45,7 @@ type StringFieldType
     | Select
     | SearchableSelect
     | HttpSelect
+    | HttpSearchableSelect
     | Radio
 
 
@@ -223,6 +224,9 @@ fromString str =
 
         "http_select" ->
             Just (StringType HttpSelect)
+
+        "http_searchable_select" ->
+            Just (StringType HttpSearchableSelect)
 
         "multi_select" ->
             Just (MultiStringType MultiSelect)
