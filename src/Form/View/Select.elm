@@ -13,7 +13,7 @@ import Accessibility.Aria as Aria
 import Accessibility.Key as Key
 import Form.Field as Field
 import Form.Field.Option as Option
-import Form.Field.Required as Required
+import Form.Field.Required as IsRequired
 import Form.Msg as Msg
 import Form.View.Dropdown as Dropdown
 import Html
@@ -31,7 +31,7 @@ select key { value, required, options, disabled, hidden, placeholder, hasSelecta
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
                 [ HtmlAttributes.name key
-                , HtmlAttributes.required (required == Required.Yes)
+                , HtmlAttributes.required (required == IsRequired.Yes)
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributes.id label
@@ -100,7 +100,7 @@ httpSearchableSelect key properties =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, label, options } =
+dropdownTrigger key { placeholder, value, showDropdown, label, options, required } =
     let
         selectPlaceholder =
             if value == "" then
@@ -112,7 +112,7 @@ dropdownTrigger key { placeholder, value, showDropdown, label, options } =
                     |> Maybe.andThen (\option -> option.label)
                     |> Maybe.withDefault value
     in
-    Html.div [ HtmlAttributes.class "dropdown-trigger", HtmlAttributes.style "width" "100%" ]
+    Html.div [ HtmlAttributes.class "dropdown-trigger is-flex", HtmlAttributes.style "width" "100%" ]
         [ Html.button
             [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
@@ -124,6 +124,13 @@ dropdownTrigger key { placeholder, value, showDropdown, label, options } =
             [ Html.span [] [ Html.text selectPlaceholder ]
             , Dropdown.dropdownIcon showDropdown
             ]
+        , HtmlExtra.viewIf (required /= IsRequired.Yes)
+            (Html.button
+                [ HtmlAttributes.class "ml-2 button"
+                , HtmlEvents.onClick <| Msg.ResetField key
+                ]
+                [ Html.text "Reset" ]
+            )
         ]
 
 

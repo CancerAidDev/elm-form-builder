@@ -2,7 +2,7 @@ module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -31,7 +31,7 @@ module Form.Field exposing
 
 # Constructors
 
-@docs integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
@@ -462,6 +462,33 @@ Common builders:
 searchableSelect : SearchableSelectFieldProperties -> Field
 searchableSelect =
     StringField_ << SearchableSelectField
+
+
+{-| Makes a remotely fetched drop-down searchable select field.
+
+In addition to the common builders, the following are available:
+
+  - `setDefault String`
+  - `setOptions (RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option))`
+  - `setPlaceholder String`
+  - `setRemoteUrl String`
+  - `setSelectablePlaceholder`
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+httpSearchableSelect : String -> HttpSearchableSelectFieldProperties -> Field
+httpSearchableSelect url_ =
+    StringField_ << HttpSearchableSelectField << setRemoteUrl url_
 
 
 {-| Makes a multi select field from a list of options.
@@ -1754,6 +1781,10 @@ genericUpdateStringField f value field =
             StringField_ (f value (SearchableSelectField properties))
                 |> updateShowDropdown False
 
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ (f value (HttpSearchableSelectField properties))
+                |> updateShowDropdown False
+
         StringField_ stringField ->
             StringField_ <| f value stringField
 
@@ -1802,6 +1833,9 @@ updateSearchableSelectInput input_ field =
     case field of
         StringField_ (SearchableSelectField properties) ->
             StringField_ (SearchableSelectField { properties | searchInput = input_ })
+
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ (HttpSearchableSelectField { properties | searchInput = input_ })
 
         MultiStringField_ (SearchableMultiSelectField properties) ->
             MultiStringField_ (SearchableMultiSelectField { properties | searchInput = input_ })
@@ -1947,6 +1981,9 @@ updateShowDropdown showDropdown field =
         StringField_ (SearchableSelectField properties) ->
             StringField_ (SearchableSelectField { properties | showDropdown = showDropdown })
 
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ (HttpSearchableSelectField { properties | showDropdown = showDropdown })
+
         MultiStringField_ (MultiSelectField properties) ->
             MultiStringField_ (MultiSelectField { properties | showDropdown = showDropdown })
 
@@ -2066,6 +2103,9 @@ updateRemoteOptions options field =
     case field of
         StringField_ (HttpSelectField properties) ->
             StringField_ (HttpSelectField { properties | options = options })
+
+        StringField_ (HttpSearchableSelectField properties) ->
+            StringField_ (HttpSearchableSelectField { properties | options = options })
 
         _ ->
             field
@@ -2227,6 +2267,9 @@ getUrl : Field -> Maybe String
 getUrl field =
     case field of
         StringField_ (HttpSelectField properties) ->
+            Just properties.url
+
+        StringField_ (HttpSearchableSelectField properties) ->
             Just properties.url
 
         _ ->

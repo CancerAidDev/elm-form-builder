@@ -89,6 +89,7 @@ updateStringField : String -> String -> Fields -> Fields
 updateStringField key value =
     Dict.update key (Maybe.map (Field.updateStringValue value))
         >> updateEnabledByFields
+        >> updateHiddenByFields
 
 
 {-| -}
@@ -110,6 +111,7 @@ updateBoolField : String -> Bool -> Fields -> Fields
 updateBoolField key value =
     Dict.update key (Maybe.map (Field.updateBoolValue value))
         >> updateEnabledByFields
+        >> updateHiddenByFields
 
 
 {-| -}
@@ -124,6 +126,7 @@ updateRadioBoolField : String -> Bool -> Fields -> Fields
 updateRadioBoolField key value =
     Dict.update key (Maybe.map (Field.updateRadioBoolValue (Just value)))
         >> updateEnabledByFields
+        >> updateHiddenByFields
 
 
 {-| -}
@@ -137,6 +140,34 @@ updateEnabledByFields fields =
                 Dict.insert key (updateFieldRequired acc field) acc
             )
             Dict.empty
+
+
+{-| -}
+updateHiddenByFields : Fields -> Fields
+updateHiddenByFields fields =
+    let
+        updateHiddenField : Field.Field -> Field.Field
+        updateHiddenField field =
+            case Field.getUnhiddenBy field of
+                Just unHiddenByKey ->
+                    if
+                        getTriggersByValue unHiddenByKey fields
+                            |> Maybe.withDefault True
+                    then
+                        field
+
+                    else
+                        Field.resetValueToDefault field
+
+                Nothing ->
+                    field
+    in
+    Dict.toList fields
+        |> List.map
+            (\( key, field ) ->
+                ( key, updateHiddenField field )
+            )
+        |> Dict.fromList
 
 
 {-| -}
