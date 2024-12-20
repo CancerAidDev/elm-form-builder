@@ -65,11 +65,11 @@ module Form.Field exposing
 
 -}
 
+import Form.Field.DecoderForOptions as DecoderForOptions
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
-import Form.Field.RemoteOptionDecoder as RemoteOptionDecoder
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
@@ -1105,7 +1105,7 @@ httpSelectDefault =
     , options = RemoteData.NotAsked
     , placeholder = ""
     , hasSelectablePlaceholder = False
-    , decoderForOptions = RemoteOptionDecoder.default
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1212,7 +1212,7 @@ httpSearchableSelectDefault =
     , hasSelectablePlaceholder = False
     , showDropdown = False
     , searchInput = ""
-    , decoderForOptions = RemoteOptionDecoder.default
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1281,7 +1281,7 @@ multiHttpSelectDefault =
     , placeholder = ""
     , showDropdown = False
     , url = ""
-    , decoderForOptions = RemoteOptionDecoder.default
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1464,7 +1464,7 @@ type alias HttpSelectFieldProperties =
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         , placeholder : String
         , hasSelectablePlaceholder : Bool
-        , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+        , decoderForOptions : DecoderForOptions.DecoderForOptions
         }
 
 
@@ -1478,7 +1478,7 @@ type alias HttpSearchableSelectFieldProperties =
         , hasSelectablePlaceholder : Bool
         , showDropdown : Bool
         , searchInput : String
-        , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+        , decoderForOptions : DecoderForOptions.DecoderForOptions
         }
 
 
@@ -1512,7 +1512,7 @@ type alias MultiHttpSelectFieldProperties =
         , showDropdown : Bool
         , url : String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
-        , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+        , decoderForOptions : DecoderForOptions.DecoderForOptions
         }
 
 
@@ -2287,7 +2287,7 @@ getUrl field =
 
 
 {-| -}
-getDecoderForOptions : Field -> Maybe RemoteOptionDecoder.RemoteOptionDecoder
+getDecoderForOptions : Field -> Maybe DecoderForOptions.DecoderForOptions
 getDecoderForOptions field =
     case field of
         StringField_ (HttpSelectField properties) ->

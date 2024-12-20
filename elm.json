@@ -6,6 +6,7 @@
     "version": "21.0.0",
     "exposed-modules": [
         "Form.Field.Direction",
+        "Form.Field.DecoderForOptions",
         "Form.Field.FieldType",
         "Form.Field.Json",
         "Form.Field.Option",

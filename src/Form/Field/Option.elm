@@ -1,6 +1,6 @@
 module Form.Field.Option exposing (Option, decoder)
 
-{-| Field option tyope
+{-| Field option type
 
 
 # Option

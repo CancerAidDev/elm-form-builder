@@ -1,14 +1,14 @@
-module Form.Field.RemoteOptionDecoderSpec exposing (suite)
+module Form.Field.DecoderForOptionsSpec exposing (suite)
 
 import Expect
-import Form.Field.RemoteOptionDecoder as RemoteOptionDecoder
+import Form.Field.DecoderForOptions as DecoderForOptions
 import Json.Decode as Decode
 import Test
 
 
 suite : Test.Test
 suite =
-    Test.describe "Form.Field.RemoteOptionDecoder"
+    Test.describe "Form.Field.DecoderForOptions"
         [ Test.describe "decoder"
             [ Test.test "Valid remote option decoder" <|
                 \_ ->
@@ -19,7 +19,7 @@ suite =
                             "value": "value"
                         }"""
                     in
-                    Decode.decodeString RemoteOptionDecoder.decoder json
+                    Decode.decodeString DecoderForOptions.decoder json
                         |> Expect.equal
                             (Ok
                                 { label = "Label"
@@ -34,7 +34,7 @@ suite =
                             "value": "value"
                         }"""
                     in
-                    Decode.decodeString RemoteOptionDecoder.decoder json
+                    Decode.decodeString DecoderForOptions.decoder json
                         |> Expect.err
             , Test.test "Missing value field" <|
                 \_ ->
@@ -44,7 +44,7 @@ suite =
                             "label": "Label"
                         }"""
                     in
-                    Decode.decodeString RemoteOptionDecoder.decoder json
+                    Decode.decodeString DecoderForOptions.decoder json
                         |> Expect.err
             , Test.test "Incorrect field" <|
                 \_ ->
@@ -55,7 +55,7 @@ suite =
                             "name": "Name"
                         }"""
                     in
-                    Decode.decodeString RemoteOptionDecoder.decoder json
+                    Decode.decodeString DecoderForOptions.decoder json
                         |> Expect.err
             ]
         , Test.describe "remoteOptionDecoder"
@@ -68,7 +68,7 @@ suite =
                             "name": "Label"
                         }"""
                     in
-                    Decode.decodeString (RemoteOptionDecoder.remoteOptionDecoder RemoteOptionDecoder.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
                         |> Expect.equal
                             (Ok
                                 { label = Just "Label"
@@ -83,7 +83,7 @@ suite =
                             "uuid": "value"
                         }"""
                     in
-                    Decode.decodeString (RemoteOptionDecoder.remoteOptionDecoder RemoteOptionDecoder.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
                         |> Expect.err
             , Test.test "Missing uuid field" <|
                 \_ ->
@@ -93,7 +93,7 @@ suite =
                             "name": "label"
                         }"""
                     in
-                    Decode.decodeString (RemoteOptionDecoder.remoteOptionDecoder RemoteOptionDecoder.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
                         |> Expect.err
             ]
         ]

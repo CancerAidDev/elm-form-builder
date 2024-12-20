@@ -3,9 +3,9 @@ module Form.Field.JsonSpec exposing (suite)
 import Dict
 import Expect
 import Form.Field as Field
+import Form.Field.DecoderForOptions as DecoderForOptions
 import Form.Field.FieldType as FieldType
 import Form.Field.Json as Json
-import Form.Field.RemoteOptionDecoder as RemoteOptionDecoder
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
@@ -442,7 +442,7 @@ suite =
                                         , unhiddenBy = Nothing
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
-                                        , decoderForOptions = RemoteOptionDecoder.default
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
@@ -523,7 +523,7 @@ suite =
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
                                         , searchInput = ""
-                                        , decoderForOptions = RemoteOptionDecoder.default
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
@@ -967,7 +967,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
-                                            , decoderForOptions = RemoteOptionDecoder.default
+                                            , decoderForOptions = DecoderForOptions.default
                                             }
                                   )
                                 ]

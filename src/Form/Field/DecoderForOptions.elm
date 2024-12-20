@@ -1,14 +1,11 @@
-module Form.Field.RemoteOptionDecoder exposing
-    ( RemoteOptionDecoder, remoteOptionDecoder
-    , decoder, default
-    )
+module Form.Field.DecoderForOptions exposing (DecoderForOptions, remoteOptionDecoder, default, decoder)
 
-{-| Field remote option decorder type
+{-| Field decorder for options type
 
 
-# RemoteOptionDecoder
+# DecoderForOptions
 
-@docs RemoteOptionDecoder, remoteOptionDecoder
+@docs DecoderForOptions, remoteOptionDecoder, default, decoder
 
 -}
 
@@ -17,28 +14,31 @@ import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 
 
-type alias RemoteOptionDecoder =
+{-| -}
+type alias DecoderForOptions =
     { value : String
     , label : String
     }
 
 
-default : RemoteOptionDecoder
+{-| -}
+default : DecoderForOptions
 default =
     { value = "uuid"
     , label = "name"
     }
 
 
-decoder : Decode.Decoder RemoteOptionDecoder
+{-| -}
+decoder : Decode.Decoder DecoderForOptions
 decoder =
-    Decode.succeed RemoteOptionDecoder
+    Decode.succeed DecoderForOptions
         |> DecodePipeline.required "value" Decode.string
         |> DecodePipeline.required "label" Decode.string
 
 
 {-| -}
-remoteOptionDecoder : RemoteOptionDecoder -> Decode.Decoder Option.Option
+remoteOptionDecoder : DecoderForOptions -> Decode.Decoder Option.Option
 remoteOptionDecoder remoteOption =
     Decode.succeed Option.Option
         |> DecodePipeline.required remoteOption.value Decode.string

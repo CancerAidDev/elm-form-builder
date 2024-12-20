@@ -10,11 +10,11 @@ module Form.Field.Json exposing (decoder)
 -}
 
 import Form.Field as Field
+import Form.Field.DecoderForOptions as DecoderForOptions
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
-import Form.Field.RemoteOptionDecoder as RemoteOptionDecoder
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Format.Email as EmailFormat
@@ -149,7 +149,7 @@ type alias JsonHttpSelectFieldProperties =
     , unhiddenBy : Maybe String
     , placeholder : String
     , hasSelectablePlaceholder : Bool
-    , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+    , decoderForOptions : DecoderForOptions.DecoderForOptions
     }
 
 
@@ -168,7 +168,7 @@ type alias JsonHttpSearchableSelectFieldProperties =
     , hasSelectablePlaceholder : Bool
     , showDropdown : Bool
     , searchInput : String
-    , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+    , decoderForOptions : DecoderForOptions.DecoderForOptions
     }
 
 
@@ -216,7 +216,7 @@ type alias JsonMultiHttpSelectFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , decoderForOptions : RemoteOptionDecoder.RemoteOptionDecoder
+    , decoderForOptions : DecoderForOptions.DecoderForOptions
     }
 
 
@@ -775,7 +775,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
-        |> DecodePipeline.required "decoderForOptions" RemoteOptionDecoder.decoder
+        |> DecodePipeline.required "decoderForOptions" DecoderForOptions.decoder
 
 
 decoderHttpSearchableSelectJson : Decode.Decoder JsonHttpSearchableSelectFieldProperties
@@ -795,7 +795,7 @@ decoderHttpSearchableSelectJson =
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.hardcoded ""
-        |> DecodePipeline.required "decoderForOptions" RemoteOptionDecoder.decoder
+        |> DecodePipeline.required "decoderForOptions" DecoderForOptions.decoder
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties
@@ -846,7 +846,7 @@ decoderMultiHttpSelectJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.required "decoderForOptions" RemoteOptionDecoder.decoder
+        |> DecodePipeline.required "decoderForOptions" DecoderForOptions.decoder
 
 
 decoderRadioJson : Decode.Decoder JsonRadioFieldProperties
