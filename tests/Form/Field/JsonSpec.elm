@@ -5,6 +5,7 @@ import Expect
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Json as Json
+import Form.Field.RemoteOptionDecoder as RemoteOptionDecoder
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
@@ -359,7 +360,11 @@ suite =
                                 { "value": "Dog" },
                                 { "value": "Cat" },
                                 { "value": "Parrot" }
-                            ]
+                            ],
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -410,7 +415,11 @@ suite =
                             "label": "Tag",
                             "type": "httpSelect",
                             "width": "50%",
-                            "url": "tags"
+                            "url": "tags",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -433,6 +442,7 @@ suite =
                                         , unhiddenBy = Nothing
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
+                                        , decoderForOptions = RemoteOptionDecoder.default
                                         }
                                     )
                                 )
@@ -447,7 +457,11 @@ suite =
                             "label": "Tag",
                             "type": "select",
                             "width": "50%",
-                            "url": "tags"
+                            "url": "tags",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -461,7 +475,11 @@ suite =
                             "key": "metadata.tag",
                             "label": "Tag",
                             "type": "select",
-                            "width": "50%"
+                            "width": "50%",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -476,7 +494,11 @@ suite =
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
                             "width": "50%",
-                            "url": "httpSearchableSelect"
+                            "url": "httpSearchableSelect",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -501,6 +523,7 @@ suite =
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
                                         , searchInput = ""
+                                        , decoderForOptions = RemoteOptionDecoder.default
                                         }
                                     )
                                 )
@@ -519,7 +542,11 @@ suite =
                                 { "value": "Dog" },
                                 { "value": "Cat" },
                                 { "value": "Parrot" }
-                            ]
+                            ],
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -533,7 +560,11 @@ suite =
                             "key": "metadata.httpSearchableSelect",
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
-                            "width": "50%"
+                            "width": "50%",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -936,6 +967,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
+                                            , decoderForOptions = RemoteOptionDecoder.default
                                             }
                                   )
                                 ]
