@@ -1888,10 +1888,10 @@ resetValueToDefault field =
             StringField_ <| SelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (SearchableSelectField properties) ->
-            StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+            StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value, searchInput = searchableSelectDefault.searchInput }
 
         StringField_ (HttpSearchableSelectField properties) ->
-            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value, searchInput = httpSearchableSelectDefault.searchInput }
 
         StringField_ (RadioField properties) ->
             StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
