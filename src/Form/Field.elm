@@ -1105,7 +1105,7 @@ httpSelectDefault =
     , options = RemoteData.NotAsked
     , placeholder = ""
     , hasSelectablePlaceholder = False
-    , decoderForOptions = Nothing
+    , decoderForOptions = Just DecoderForOptions.default
     , decoderForPaginatedOptions = Nothing
     }
 
@@ -1213,7 +1213,7 @@ httpSearchableSelectDefault =
     , hasSelectablePlaceholder = False
     , showDropdown = False
     , searchInput = ""
-    , decoderForOptions = Nothing
+    , decoderForOptions = Just DecoderForOptions.default
     , decoderForPaginatedOptions = Nothing
     }
 
@@ -1283,7 +1283,7 @@ multiHttpSelectDefault =
     , placeholder = ""
     , showDropdown = False
     , url = ""
-    , decoderForOptions = Nothing
+    , decoderForOptions = Just DecoderForOptions.default
     , decoderForPaginatedOptions = Nothing
     }
 
