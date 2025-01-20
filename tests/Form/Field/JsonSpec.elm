@@ -442,8 +442,7 @@ suite =
                                         , unhiddenBy = Nothing
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
-                                        , decoderForOptions = Just DecoderForOptions.default
-                                        , decoderForPaginatedOptions = Nothing
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
@@ -462,74 +461,7 @@ suite =
                         }"""
                     in
                     Decode.decodeString decoder json
-                        |> Expect.equal
-                            (Ok
-                                ( "metadata.tag"
-                                , Field.StringField_
-                                    (Field.HttpSelectField
-                                        { required = Required.Yes
-                                        , width = Width.HalfSize
-                                        , enabledBy = Nothing
-                                        , default = Nothing
-                                        , label = "Tag"
-                                        , url = "tags"
-                                        , options = RemoteData.NotAsked
-                                        , value = ""
-                                        , order = order
-                                        , disabled = False
-                                        , hidden = False
-                                        , unhiddenBy = Nothing
-                                        , placeholder = ""
-                                        , hasSelectablePlaceholder = True
-                                        , decoderForOptions = Nothing
-                                        , decoderForPaginatedOptions = Nothing
-                                        }
-                                    )
-                                )
-                            )
-            , Test.test "Http Select field decoder - decoder for paginated options" <|
-                \_ ->
-                    let
-                        json =
-                            """{
-                            "required": true,
-                            "key": "metadata.tag",
-                            "label": "Tag",
-                            "type": "httpSelect",
-                            "width": "50%",
-                            "url": "tags",
-                            "decoderForPaginatedOptions": {
-                                "value": "uuid",
-                                "label": "name"
-                            }
-                        }"""
-                    in
-                    Decode.decodeString decoder json
-                        |> Expect.equal
-                            (Ok
-                                ( "metadata.tag"
-                                , Field.StringField_
-                                    (Field.HttpSelectField
-                                        { required = Required.Yes
-                                        , width = Width.HalfSize
-                                        , enabledBy = Nothing
-                                        , default = Nothing
-                                        , label = "Tag"
-                                        , url = "tags"
-                                        , options = RemoteData.NotAsked
-                                        , value = ""
-                                        , order = order
-                                        , disabled = False
-                                        , hidden = False
-                                        , unhiddenBy = Nothing
-                                        , placeholder = ""
-                                        , hasSelectablePlaceholder = True
-                                        , decoderForOptions = Nothing
-                                        , decoderForPaginatedOptions = Just DecoderForOptions.default
-                                        }
-                                    )
-                                )
-                            )
+                        |> Expect.err
             , Test.test "Http Select field decoder with select type" <|
                 \_ ->
                     let
@@ -606,8 +538,7 @@ suite =
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
                                         , searchInput = ""
-                                        , decoderForOptions = Just DecoderForOptions.default
-                                        , decoderForPaginatedOptions = Nothing
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
@@ -1051,8 +982,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
-                                            , decoderForOptions = Just DecoderForOptions.default
-                                            , decoderForPaginatedOptions = Nothing
+                                            , decoderForOptions = DecoderForOptions.default
                                             }
                                   )
                                 ]
