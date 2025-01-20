@@ -1,11 +1,11 @@
-module Form.Field.Option exposing (Option, decoder)
+module Form.Field.Option exposing (Option, decoder, remoteOptionDecoder)
 
 {-| Field option type
 
 
 # Option
 
-@docs Option, decoder
+@docs Option, decoder, remoteOptionDecoder
 
 -}
 
@@ -26,3 +26,11 @@ decoder =
     Decode.succeed Option
         |> DecodePipeline.required "value" Decode.string
         |> DecodePipeline.optional "label" (Decode.map Just Decode.string) Nothing
+
+
+{-| -}
+remoteOptionDecoder : Decode.Decoder Option
+remoteOptionDecoder =
+    Decode.succeed Option
+        |> DecodePipeline.required "id" Decode.string
+        |> DecodePipeline.required "name" (Decode.map Just Decode.string)

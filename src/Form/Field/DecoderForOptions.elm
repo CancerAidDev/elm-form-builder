@@ -1,11 +1,11 @@
-module Form.Field.DecoderForOptions exposing (DecoderForOptions, remoteOptionDecoder, default, decoder)
+module Form.Field.DecoderForOptions exposing (DecoderForOptions, remoteOptionsDecoder, default, decoder)
 
 {-| Field decorder for options type
 
 
 # DecoderForOptions
 
-@docs DecoderForOptions, remoteOptionDecoder, default, decoder
+@docs DecoderForOptions, remoteOptionsDecoder, default, decoder
 
 -}
 
@@ -38,8 +38,12 @@ decoder =
 
 
 {-| -}
-remoteOptionDecoder : DecoderForOptions -> Decode.Decoder Option.Option
-remoteOptionDecoder remoteOption =
-    Decode.succeed Option.Option
-        |> DecodePipeline.required remoteOption.value Decode.string
-        |> DecodePipeline.required remoteOption.label (Decode.map Just Decode.string)
+remoteOptionsDecoder : DecoderForOptions -> Decode.Decoder (List Option.Option)
+remoteOptionsDecoder remoteOption =
+    let
+        optionDecoder =
+            Decode.succeed Option.Option
+                |> DecodePipeline.required remoteOption.value Decode.string
+                |> DecodePipeline.required remoteOption.label (Decode.map Just Decode.string)
+    in
+    Decode.oneOf [ Decode.list optionDecoder, Decode.field "data" (Decode.list optionDecoder) ]

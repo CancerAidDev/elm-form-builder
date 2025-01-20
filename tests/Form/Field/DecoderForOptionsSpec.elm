@@ -58,42 +58,69 @@ suite =
                     Decode.decodeString DecoderForOptions.decoder json
                         |> Expect.err
             ]
-        , Test.describe "remoteOptionDecoder"
-            [ Test.test "Valid decoder" <|
+        , Test.describe "remoteOptionsDecoder"
+            [ Test.test "Valid decoder - list format" <|
                 \_ ->
                     let
                         json =
-                            """{ 
-                            "uuid": "12345",
-                            "name": "Label"
-                        }"""
+                            """
+                            [{ 
+                                "uuid": "12345",
+                                "name": "Label"
+                            }]
+                            """
                     in
-                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionsDecoder DecoderForOptions.default) json
                         |> Expect.equal
                             (Ok
-                                { label = Just "Label"
-                                , value = "12345"
-                                }
+                                [ { label = Just "Label"
+                                  , value = "12345"
+                                  }
+                                ]
+                            )
+            , Test.test "Valid decoder - paginated format" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "count": 1,
+                                "data": [{ 
+                                    "uuid": "12345",
+                                    "name": "Label"
+                                }]
+                            }"""
+                    in
+                    Decode.decodeString (DecoderForOptions.remoteOptionsDecoder DecoderForOptions.default) json
+                        |> Expect.equal
+                            (Ok
+                                [ { label = Just "Label"
+                                  , value = "12345"
+                                  }
+                                ]
                             )
             , Test.test "Missing name field" <|
                 \_ ->
                     let
                         json =
-                            """{ 
-                            "uuid": "value"
-                        }"""
+                            """
+                            [{ 
+                                "uuid": "12345"
+                            }]
+                            """
                     in
-                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionsDecoder DecoderForOptions.default) json
                         |> Expect.err
             , Test.test "Missing uuid field" <|
                 \_ ->
                     let
                         json =
-                            """{ 
-                            "name": "label"
-                        }"""
+                            """
+                            [{
+                                "name": "Label"
+                            }]
+                            """
                     in
-                    Decode.decodeString (DecoderForOptions.remoteOptionDecoder DecoderForOptions.default) json
+                    Decode.decodeString (DecoderForOptions.remoteOptionsDecoder DecoderForOptions.default) json
                         |> Expect.err
             ]
         ]
