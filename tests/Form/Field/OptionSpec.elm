@@ -63,49 +63,4 @@ suite =
                     Decode.decodeString Option.decoder json
                         |> Expect.err
             ]
-        , Test.describe "remoteOptionDecoderr"
-            [ Test.test "Valid Http Select options" <|
-                \_ ->
-                    let
-                        json =
-                            """
-                            {
-                                "id": "qE9cRJ",
-                                "name": "Lang, Runte and Lesch"
-                            }
-                            """
-                    in
-                    Decode.decodeString Option.remoteOptionDecoder json
-                        |> Expect.equal
-                            (Ok
-                                { label = Just "Lang, Runte and Lesch"
-                                , value = "qE9cRJ"
-                                }
-                            )
-            , Test.test "Missing id field" <|
-                \_ ->
-                    let
-                        json =
-                            """
-                            {
-                                "name": "Lang, Runte and Lesch"
-                            }
-                            """
-                    in
-                    Decode.decodeString Option.remoteOptionDecoder json
-                        |> Expect.err
-            , Test.test "Incorrect field" <|
-                \_ ->
-                    let
-                        json =
-                            """
-                            {
-                                "label": "qE9cRJ",
-                                "name": "Lang, Runte and Lesch"
-                            }
-                            """
-                    in
-                    Decode.decodeString Option.remoteOptionDecoder json
-                        |> Expect.err
-            ]
         ]

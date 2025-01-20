@@ -3,6 +3,7 @@ module Form.Field.JsonSpec exposing (suite)
 import Dict
 import Expect
 import Form.Field as Field
+import Form.Field.DecoderForOptions as DecoderForOptions
 import Form.Field.FieldType as FieldType
 import Form.Field.Json as Json
 import Form.Field.Required as Required
@@ -359,7 +360,11 @@ suite =
                                 { "value": "Dog" },
                                 { "value": "Cat" },
                                 { "value": "Parrot" }
-                            ]
+                            ],
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -410,7 +415,11 @@ suite =
                             "label": "Tag",
                             "type": "httpSelect",
                             "width": "50%",
-                            "url": "tags"
+                            "url": "tags",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -433,10 +442,26 @@ suite =
                                         , unhiddenBy = Nothing
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
                             )
+            , Test.test "Http Select field decoder - no decoder for options" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "metadata.tag",
+                            "label": "Tag",
+                            "type": "httpSelect",
+                            "width": "50%",
+                            "url": "tags"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
             , Test.test "Http Select field decoder with select type" <|
                 \_ ->
                     let
@@ -447,7 +472,11 @@ suite =
                             "label": "Tag",
                             "type": "select",
                             "width": "50%",
-                            "url": "tags"
+                            "url": "tags",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -461,7 +490,11 @@ suite =
                             "key": "metadata.tag",
                             "label": "Tag",
                             "type": "select",
-                            "width": "50%"
+                            "width": "50%",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -476,7 +509,11 @@ suite =
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
                             "width": "50%",
-                            "url": "httpSearchableSelect"
+                            "url": "httpSearchableSelect",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -501,6 +538,7 @@ suite =
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
                                         , searchInput = ""
+                                        , decoderForOptions = DecoderForOptions.default
                                         }
                                     )
                                 )
@@ -519,7 +557,11 @@ suite =
                                 { "value": "Dog" },
                                 { "value": "Cat" },
                                 { "value": "Parrot" }
-                            ]
+                            ],
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -533,7 +575,11 @@ suite =
                             "key": "metadata.httpSearchableSelect",
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
-                            "width": "50%"
+                            "width": "50%",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            }
                         }"""
                     in
                     Decode.decodeString decoder json
@@ -936,6 +982,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
+                                            , decoderForOptions = DecoderForOptions.default
                                             }
                                   )
                                 ]

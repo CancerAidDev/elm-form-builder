@@ -4,7 +4,7 @@ module Form.Field exposing
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired
     , encode
@@ -41,7 +41,7 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
 
 
 # Setters
@@ -65,6 +65,7 @@ module Form.Field exposing
 
 -}
 
+import Form.Field.DecoderForOptions as DecoderForOptions exposing (DecoderForOptions)
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
 import Form.Field.Option as Option
@@ -1104,6 +1105,7 @@ httpSelectDefault =
     , options = RemoteData.NotAsked
     , placeholder = ""
     , hasSelectablePlaceholder = False
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1210,6 +1212,7 @@ httpSearchableSelectDefault =
     , hasSelectablePlaceholder = False
     , showDropdown = False
     , searchInput = ""
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1278,6 +1281,7 @@ multiHttpSelectDefault =
     , placeholder = ""
     , showDropdown = False
     , url = ""
+    , decoderForOptions = DecoderForOptions.default
     }
 
 
@@ -1460,6 +1464,7 @@ type alias HttpSelectFieldProperties =
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
         , placeholder : String
         , hasSelectablePlaceholder : Bool
+        , decoderForOptions : DecoderForOptions
         }
 
 
@@ -1473,6 +1478,7 @@ type alias HttpSearchableSelectFieldProperties =
         , hasSelectablePlaceholder : Bool
         , showDropdown : Bool
         , searchInput : String
+        , decoderForOptions : DecoderForOptions
         }
 
 
@@ -1506,6 +1512,7 @@ type alias MultiHttpSelectFieldProperties =
         , showDropdown : Bool
         , url : String
         , options : RemoteData.RemoteData (HttpDetailed.Error String) (List Option.Option)
+        , decoderForOptions : DecoderForOptions
         }
 
 
@@ -1875,10 +1882,10 @@ resetValueToDefault field =
             StringField_ <| SelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
 
         StringField_ (SearchableSelectField properties) ->
-            StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+            StringField_ <| SearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value, searchInput = searchableSelectDefault.searchInput }
 
         StringField_ (HttpSearchableSelectField properties) ->
-            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value }
+            StringField_ <| HttpSearchableSelectField { properties | value = properties.default |> Maybe.withDefault selectDefault.value, searchInput = httpSearchableSelectDefault.searchInput }
 
         StringField_ (RadioField properties) ->
             StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
@@ -2271,6 +2278,26 @@ getUrl field =
 
         StringField_ (HttpSearchableSelectField properties) ->
             Just properties.url
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            Just properties.url
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getDecoderForOptions : Field -> Maybe DecoderForOptions.DecoderForOptions
+getDecoderForOptions field =
+    case field of
+        StringField_ (HttpSelectField properties) ->
+            Just properties.decoderForOptions
+
+        StringField_ (HttpSearchableSelectField properties) ->
+            Just properties.decoderForOptions
+
+        MultiStringField_ (MultiHttpSelectField properties) ->
+            Just properties.decoderForOptions
 
         _ ->
             Nothing
