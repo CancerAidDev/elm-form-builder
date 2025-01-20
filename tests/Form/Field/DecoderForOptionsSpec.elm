@@ -24,6 +24,25 @@ suite =
                             (Ok
                                 { label = "Label"
                                 , value = "value"
+                                , at = []
+                                }
+                            )
+            , Test.test "Valid remote option decoder with optional at" <|
+                \_ ->
+                    let
+                        json =
+                            """{ 
+                            "label": "Label", 
+                            "value": "value",
+                            "at": ["data"]
+                        }"""
+                    in
+                    Decode.decodeString DecoderForOptions.decoder json
+                        |> Expect.equal
+                            (Ok
+                                { label = "Label"
+                                , value = "value"
+                                , at = [ "data" ]
                                 }
                             )
             , Test.test "Missing label field" <|
@@ -90,7 +109,14 @@ suite =
                                 }]
                             }"""
                     in
-                    Decode.decodeString (DecoderForOptions.remoteOptionsDecoder DecoderForOptions.default) json
+                    Decode.decodeString
+                        (DecoderForOptions.remoteOptionsDecoder
+                            { value = "uuid"
+                            , label = "name"
+                            , at = [ "data" ]
+                            }
+                        )
+                        json
                         |> Expect.equal
                             (Ok
                                 [ { label = Just "Label"

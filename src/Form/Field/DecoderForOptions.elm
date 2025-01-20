@@ -18,6 +18,7 @@ import Json.Decode.Pipeline as DecodePipeline
 type alias DecoderForOptions =
     { value : String
     , label : String
+    , at : List String
     }
 
 
@@ -26,6 +27,7 @@ default : DecoderForOptions
 default =
     { value = "uuid"
     , label = "name"
+    , at = []
     }
 
 
@@ -35,6 +37,7 @@ decoder =
     Decode.succeed DecoderForOptions
         |> DecodePipeline.required "value" Decode.string
         |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.optional "at" (Decode.list Decode.string) []
 
 
 {-| -}
@@ -46,4 +49,4 @@ remoteOptionsDecoder remoteOption =
                 |> DecodePipeline.required remoteOption.value Decode.string
                 |> DecodePipeline.required remoteOption.label (Decode.map Just Decode.string)
     in
-    Decode.oneOf [ Decode.list optionDecoder, Decode.field "data" (Decode.list optionDecoder) ]
+    Decode.at remoteOption.at (Decode.list optionDecoder)
