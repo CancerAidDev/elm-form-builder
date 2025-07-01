@@ -57,6 +57,7 @@ fields =
         ( "email"
           -- forbid emails from bigcompany.com or bigorganisation.org
         , FormField.emailDefault
+            |> FormField.setWidth Width.HalfSize
             |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Email Address"
             |> FormField.setOrder order
@@ -73,8 +74,9 @@ fields =
     , \order ->
         ( "secondaryEmail"
         , FormField.emailDefault
+            |> FormField.setWidth Width.HalfSize
             |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "Secondary Email Address"
+            |> FormField.setLabel "Very long label for email field that will wrap"
             |> FormField.setOrder order
             |> FormField.email
         )

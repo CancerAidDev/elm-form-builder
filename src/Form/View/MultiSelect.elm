@@ -70,7 +70,7 @@ dropdownMenu key properties =
         [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id "dropdown-menu"
+            , HtmlAttributes.id key
             , Aria.roleDescription "menu"
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
@@ -106,7 +106,7 @@ searchableDropdownMenu key properties =
         [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id "dropdown-menu"
+            , HtmlAttributes.id key
             , Aria.roleDescription "menu"
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]

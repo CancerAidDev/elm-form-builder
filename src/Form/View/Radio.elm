@@ -25,17 +25,17 @@ import Html.Extra as HtmlExtra
 {-| -}
 radio : String -> Field.RadioFieldProperties -> Html.Html Msg.Msg
 radio key properties =
-    radioContainer (List.map (viewRadioOption key properties) properties.options)
+    radioContainer properties.direction (List.map (viewRadioOption key properties) properties.options)
 
 
 viewRadioOption : String -> Field.RadioFieldProperties -> Option.Option -> Html.Html Msg.Msg
-viewRadioOption key { default, direction, value, disabled, hidden } option =
+viewRadioOption key { default, value, disabled, hidden } option =
     let
         checked =
             (value == "" && default == Just option.value) || (value == option.value)
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel direction
+        optionLabel
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
@@ -53,7 +53,7 @@ viewRadioOption key { default, direction, value, disabled, hidden } option =
 {-| -}
 radioBool : String -> Field.RadioBoolFieldProperties -> Html.Html Msg.Msg
 radioBool key properties =
-    radioContainer (List.map (viewRadioBoolOption key properties) [ True, False ])
+    radioContainer Direction.Column (List.map (viewRadioBoolOption key properties) [ True, False ])
 
 
 viewRadioBoolOption : String -> Field.RadioBoolFieldProperties -> Bool -> Html.Html Msg.Msg
@@ -63,7 +63,7 @@ viewRadioBoolOption key { value, disabled, hidden } option =
             value == Just option
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel Direction.Column
+        optionLabel
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
@@ -81,7 +81,7 @@ viewRadioBoolOption key { value, disabled, hidden } option =
 {-| -}
 radioEnum : String -> Field.RadioEnumFieldProperties -> Html.Html Msg.Msg
 radioEnum key properties =
-    radioContainer (List.map (viewRadioEnumOption key properties) properties.options)
+    radioContainer Direction.Column (List.map (viewRadioEnumOption key properties) properties.options)
 
 
 viewRadioEnumOption : String -> Field.RadioEnumFieldProperties -> RadioEnum.Value -> Html.Html Msg.Msg
@@ -91,7 +91,7 @@ viewRadioEnumOption key { default, value, disabled, hidden } option =
             (value == Nothing && default == Just option) || (value == Just option)
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel Direction.Column
+        optionLabel
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
@@ -106,19 +106,18 @@ viewRadioEnumOption key { default, value, disabled, hidden } option =
             ]
 
 
-radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
-radioContainer children =
-    Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline m-0" ]
-        children
+radioContainer : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
+radioContainer direction children =
+    case direction of
+        Direction.Column ->
+            Html.div [ HtmlAttributes.class "fixed-grid has-3-cols" ]
+                [ Html.div [ HtmlAttributes.class "control grid" ] children ]
+
+        Direction.Row ->
+            Html.div [ HtmlAttributes.class "control is-flex is-flex-direction-column is-align-content-start" ]
+                children
 
 
-optionLabel : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
-optionLabel direction =
-    Html.label
-        [ HtmlAttributes.class "radio my-2"
-        , HtmlAttributes.classList
-            [ ( "column", True )
-            , ( "is-12", direction == Direction.Row )
-            , ( "is-4", direction == Direction.Column )
-            ]
-        ]
+optionLabel : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
+optionLabel =
+    Html.label [ HtmlAttributes.class "radio cell my-2" ]
