@@ -143,8 +143,8 @@ fields =
             |> FormField.setLabel "This is a very long field label that will wrap over two lines"
             |> FormField.setOrder order
             |> FormField.setRegexValidation
-                [ { pattern = Regex.fromString "[A-Z][a-z]*" |> Maybe.withDefault Regex.never
-                  , message = "This is a very long multiline error message that says that only letters are allowed in this field"
+                [ { pattern = Regex.fromString "[A-Za-z\\s]+" |> Maybe.withDefault Regex.never
+                  , message = "This is a very long multiline error message that says that only letters and spaces are allowed in this field"
                   }
                 ]
             |> FormField.text
