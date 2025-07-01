@@ -26,7 +26,7 @@ import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder, label } =
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -100,7 +100,7 @@ httpSearchableSelect key properties =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, label, options, required } =
+dropdownTrigger key { placeholder, value, showDropdown, options, required } =
     let
         selectPlaceholder =
             if value == "" then
