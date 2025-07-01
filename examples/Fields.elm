@@ -31,33 +31,21 @@ fields =
         )
     , \order ->
         ( "name"
-        , case Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" of
-            Nothing ->
-                FormField.textDefault
-                    |> FormField.setIsRequired IsRequired.Yes
-                    |> FormField.setLabel "Full Name"
-                    |> FormField.setOrder order
-                    |> FormField.setValue "Regex does not compile"
-                    |> FormField.setDisabled
-                    |> FormField.text
-
-            Just regex ->
-                FormField.textDefault
-                    |> FormField.setIsRequired IsRequired.Yes
-                    |> FormField.setLabel "Full Name"
-                    |> FormField.setOrder order
-                    |> FormField.setRegexValidation
-                        [ { pattern = regex
-                          , message = "Please enter your full name"
-                          }
-                        ]
-                    |> FormField.text
+        , FormField.textDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Full Name"
+            |> FormField.setOrder order
+            |> FormField.setRegexValidation
+                [ { pattern = Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" |> Maybe.withDefault Regex.never
+                  , message = "Please enter your full name"
+                  }
+                ]
+            |> FormField.text
         )
     , \order ->
         ( "email"
           -- forbid emails from bigcompany.com or bigorganisation.org
         , FormField.emailDefault
-            |> FormField.setWidth Width.HalfSize
             |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Email Address"
             |> FormField.setOrder order
@@ -69,15 +57,6 @@ fields =
                   , message = "Please don't use the organisation email address"
                   }
                 ]
-            |> FormField.email
-        )
-    , \order ->
-        ( "secondaryEmail"
-        , FormField.emailDefault
-            |> FormField.setWidth Width.HalfSize
-            |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "Very long label for email field that will wrap"
-            |> FormField.setOrder order
             |> FormField.email
         )
     , \order ->
@@ -141,6 +120,34 @@ fields =
             |> FormField.setLabel "Event Date"
             |> FormField.setOrder order
             |> FormField.date
+        )
+    , \order ->
+        ( "shortField"
+        , FormField.textDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setWidth Width.HalfSize
+            |> FormField.setLabel "Short Label"
+            |> FormField.setOrder order
+            |> FormField.setRegexValidation
+                [ { pattern = Regex.fromString "\\b[A-Z][a-z]* [A-Z][a-z]*( [A-Z])?\\b" |> Maybe.withDefault Regex.never
+                  , message = "Please enter your full name"
+                  }
+                ]
+            |> FormField.text
+        )
+    , \order ->
+        ( "longField"
+        , FormField.textDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setWidth Width.HalfSize
+            |> FormField.setLabel "This is a very long field label that will wrap over two lines"
+            |> FormField.setOrder order
+            |> FormField.setRegexValidation
+                [ { pattern = Regex.fromString "[A-Z][a-z]*" |> Maybe.withDefault Regex.never
+                  , message = "This is a very long multiline error message that says that only letters are allowed in this field"
+                  }
+                ]
+            |> FormField.text
         )
     , \order ->
         ( "something"
