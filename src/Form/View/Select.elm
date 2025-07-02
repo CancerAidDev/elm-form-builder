@@ -26,7 +26,7 @@ import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder, label } =
+select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -34,7 +34,7 @@ select key { value, required, options, disabled, hidden, placeholder, hasSelecta
                 , HtmlAttributes.required (required == IsRequired.Yes)
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
-                , HtmlAttributes.id label
+                , HtmlAttributes.id key
                 ]
                 (viewPlaceholder hasSelectablePlaceholder placeholder
                     :: List.map (viewOption value) options
@@ -100,7 +100,7 @@ httpSearchableSelect key properties =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, label, options, required } =
+dropdownTrigger key { placeholder, value, showDropdown, options, required } =
     let
         selectPlaceholder =
             if value == "" then
@@ -119,7 +119,7 @@ dropdownTrigger key { placeholder, value, showDropdown, label, options, required
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
             , Aria.label "dropdown-trigger"
-            , HtmlAttributes.id label
+            , HtmlAttributes.id key
             ]
             [ Html.span [] [ Html.text selectPlaceholder ]
             , Dropdown.dropdownIcon showDropdown
@@ -144,7 +144,7 @@ searchableDropdownMenu key properties =
         [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id "dropdown-menu"
+            , HtmlAttributes.id key
             , Aria.roleDescription "menu"
             , Aria.controls [ "dropdown-menu" ]
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]

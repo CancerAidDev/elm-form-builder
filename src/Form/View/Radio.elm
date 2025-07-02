@@ -107,18 +107,19 @@ viewRadioEnumOption key { default, value, disabled, hidden } option =
 
 
 radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
-radioContainer children =
+radioContainer =
     Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline m-0" ]
-        children
 
 
 optionLabel : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
 optionLabel direction =
     Html.label
-        [ HtmlAttributes.class "radio my-2"
-        , HtmlAttributes.classList
-            [ ( "column", True )
-            , ( "is-12", direction == Direction.Row )
-            , ( "is-4", direction == Direction.Column )
-            ]
+        [ HtmlAttributes.class "radio column my-2"
+        , HtmlAttributes.class <|
+            case direction of
+                Direction.Row ->
+                    "is-12"
+
+                Direction.Column ->
+                    "is-4"
         ]

@@ -46,28 +46,23 @@ view time submitted locale fields key field =
             Fields.isShown fields field
     in
     HtmlExtra.viewIf shown <|
-        Html.fieldset
-            [ HtmlAttributes.class "column"
-            , HtmlAttributes.class <| Width.toStyle (Field.getProperties field).width
-            , HtmlAttributes.disabled disabled
+        Html.div
+            [ HtmlAttributes.class "form-input control"
+            , HtmlAttributes.class (Width.toStyle (Field.getProperties field).width)
             , HtmlAttributes.id key
             ]
-            [ Html.div
-                [ HtmlAttributes.class "field"
-                ]
-                [ label field disabled shown
-                , control time locale key field
-                , error submitted locale fields field
-                ]
+            [ label key field disabled
+            , control time locale disabled key field
+            , error submitted locale fields field
             ]
 
 
-label : Field.Field -> Bool -> Bool -> Html.Html Msg.Msg
-label field disabled shown =
-    HtmlExtra.viewIf (not (Field.isCheckbox field) && shown) <|
+label : String -> Field.Field -> Bool -> Html.Html Msg.Msg
+label key field disabled =
+    HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
         Html.label
             [ HtmlAttributes.class "label"
-            , HtmlAttributes.for <| Field.getLabel field
+            , HtmlAttributes.for key
             ]
             [ Html.text (Field.getLabel field)
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
@@ -75,22 +70,22 @@ label field disabled shown =
             ]
 
 
-control : Time.Posix -> Locale.Locale -> String -> Field.Field -> Html.Html Msg.Msg
-control time (Locale.Locale _ code) key field =
+control : Time.Posix -> Locale.Locale -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+control time (Locale.Locale _ code) disabled key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
                 FieldType.Phone ->
-                    phone time code key field
+                    phone time code disabled key field
 
                 FieldType.TextArea ->
                     textarea key properties
 
                 _ ->
-                    input time (Just code) key field
+                    input time (Just code) disabled key field
 
         Field.StringField_ (Field.DateField _) ->
-            input time (Just code) key field
+            input time (Just code) disabled key field
 
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties
@@ -117,7 +112,7 @@ control time (Locale.Locale _ code) key field =
             MultiSelect.multiHttpSelect key properties
 
         Field.MultiStringField_ (Field.TagField _) ->
-            input time Nothing key field
+            input time Nothing disabled key field
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties
@@ -129,15 +124,16 @@ control time (Locale.Locale _ code) key field =
             Radio.radioEnum key properties
 
         Field.IntegerField_ (Field.IntegerField _) ->
-            input time Nothing key field
+            input time Nothing disabled key field
 
 
-input : Time.Posix -> Maybe CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
-input time code key field =
+input : Time.Posix -> Maybe CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+input time code disabled key field =
     let
         renderInput fieldType properties =
             Html.input
                 [ HtmlAttributes.name key
+                , HtmlAttributes.disabled disabled
                 , HtmlAttributes.class (FieldType.toClass fieldType)
                 , HtmlAttributes.type_ (FieldType.toType fieldType)
                 , HtmlAttributes.value properties.value
@@ -147,7 +143,7 @@ input time code key field =
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
-                , HtmlAttributes.id <| Field.getLabel field
+                , HtmlAttributes.id key
                 ]
                 []
     in
@@ -180,7 +176,7 @@ input time code key field =
                     (FieldType.toMin time (FieldType.IntegerType properties.tipe))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
                     (FieldType.toMax time (FieldType.IntegerType properties.tipe))
-                , HtmlAttributes.id <| Field.getLabel field
+                , HtmlAttributes.id key
                 ]
                 []
 
@@ -200,7 +196,7 @@ textarea key field =
         , HtmlAttributes.required (field.required == Required.Yes)
         , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
-        , HtmlAttributes.id field.label
+        , HtmlAttributes.id key
         ]
         []
 
@@ -255,13 +251,13 @@ viewTags key tags =
         )
 
 
-phone : Time.Posix -> CountryCode.CountryCode -> String -> Field.Field -> Html.Html Msg.Msg
-phone time code key field =
+phone : Time.Posix -> CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+phone time code disabled key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
             [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
-            [ input time (Just code) key field ]
+            [ input time (Just code) disabled key field ]
         ]
 
 

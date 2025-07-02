@@ -1,0 +1,36 @@
+.form-container {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+}
+
+.form-input {
+  display: grid;
+  gap: 0;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+}
+
+.form-input > label {
+  align-self: end;
+}
+
+.form-input.is-col-span-1 {
+  grid-column: span 1;
+}
+
+.form-input.is-col-span-2 {
+  grid-column: span 2;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .form-container {
+    display: block;
+  }
+
+  .form-input {
+    padding: 0.5rem 0;
+  }
+}

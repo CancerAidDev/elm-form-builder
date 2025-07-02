@@ -23,8 +23,9 @@ import Time
 {-| -}
 view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> Html.Html Msg.Msg
 view time submitted locale fields =
-    fields
-        |> Dict.toList
-        |> List.sortBy (\( _, field ) -> Field.getOrder field)
-        |> List.map (\( k, v ) -> Input.view time submitted locale fields k v)
-        |> Html.div [ HtmlAttributes.class "m-0 columns is-multiline input-field" ]
+    Html.div [ HtmlAttributes.class "form-container" ]
+        (fields
+            |> Dict.toList
+            |> List.sortBy (\( _, field ) -> Field.getOrder field)
+            |> List.map (\( k, v ) -> Input.view time submitted locale fields k v)
+        )
