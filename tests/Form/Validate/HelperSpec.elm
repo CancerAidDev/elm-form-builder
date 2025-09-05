@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, phoneFieldWithCustomRegex, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -9,6 +9,7 @@ import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
+import Regex
 import Test
 
 
@@ -134,6 +135,30 @@ regexNonEmployeeEmailField { required, value } =
                       , message = "Please don't use the company email"
                       }
                     ]
+        }
+
+
+phoneFieldWithCustomRegex : NewStringField
+phoneFieldWithCustomRegex { required, value } =
+    Field.SimpleField
+        { required = required
+        , label = "Field"
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , tipe = FieldType.Phone
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , regexValidation =
+            [ { pattern =
+                    "^[34679]\\d{7,8}$"
+                        |> Regex.fromString
+                        |> Maybe.withDefault Regex.never
+              , message = "Invalid landline number (example: 3, 4, 6, 7, 9 XXX XXX [XX])"
+              }
+            ]
         }
 
 
