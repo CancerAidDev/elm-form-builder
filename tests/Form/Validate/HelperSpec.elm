@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (NewStringField, dateField, phoneFieldWithCustomRegex, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (NewStringField, dateField, phoneFieldWithRegex, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -138,8 +138,8 @@ regexNonEmployeeEmailField { required, value } =
         }
 
 
-phoneFieldWithCustomRegex : NewStringField
-phoneFieldWithCustomRegex { required, value } =
+phoneFieldWithRegex : NewStringField
+phoneFieldWithRegex { required, value } =
     Field.SimpleField
         { required = required
         , label = "Field"

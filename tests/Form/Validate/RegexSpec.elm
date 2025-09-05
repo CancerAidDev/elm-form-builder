@@ -28,7 +28,7 @@ suite =
             ]
         , Test.describe "validate phone number field containing custom regex"
             [ HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
-                HelperSpec.phoneFieldWithCustomRegex
+                HelperSpec.phoneFieldWithRegex
                 { valid =
                     [ { value = "312345123", name = "Valid NZ 9-digit landline" }
                     , { value = "91245632", name = "Valid NZ 8-digit landline" }
