@@ -52,27 +52,48 @@ validate locale field =
                     let
                         simpleFieldValidator : Field.StringField -> Result Types.StringFieldError Field.StringField
                         simpleFieldValidator valField =
+                            let
+                                getStringValue =
+                                    Field.getStringValue_
+                            in
                             case tipe of
                                 FieldType.Email ->
                                     Email.emailValidator locale valField
+                                        |> Result.andThen (RegexValidator.regexValidator getStringValue regexValidation)
 
                                 FieldType.Phone ->
-                                    Phone.phoneValidator locale valField
+                                    let
+                                        phoneValidationResult =
+                                            Phone.phoneValidator locale valField
+                                    in
+                                    case phoneValidationResult of
+                                        Ok okField ->
+                                            Ok okField
+
+                                        Err _ ->
+                                            if not (List.isEmpty regexValidation) then
+                                                RegexValidator.regexValidator (\f -> Field.getStringValue_ f |> String.trim |> String.words |> String.concat) regexValidation valField
+
+                                            else
+                                                phoneValidationResult
 
                                 FieldType.Url ->
                                     UrlValidator.urlValidator locale valField
+                                        |> Result.andThen (RegexValidator.regexValidator getStringValue regexValidation)
 
                                 FieldType.Text ->
                                     Ok valField
+                                        |> Result.andThen (RegexValidator.regexValidator getStringValue regexValidation)
 
                                 FieldType.TextArea ->
                                     Ok valField
+                                        |> Result.andThen (RegexValidator.regexValidator getStringValue regexValidation)
 
                                 FieldType.Time ->
                                     Ok valField
+                                        |> Result.andThen (RegexValidator.regexValidator getStringValue regexValidation)
                     in
                     simpleFieldValidator field
-                        |> Result.andThen (RegexValidator.regexValidator regexValidation)
 
                 Field.DateField _ ->
                     Date.dateValidator locale field
