@@ -8,12 +8,12 @@ import Regex
 
 regexValidator : (Field.StringField -> String) -> List RegexValidation.RegexValidation -> Field.StringField -> Result ValidatorTypes.StringFieldError Field.StringField
 regexValidator getValue regexValidation field =
-    let
-        value =
-            getValue field
-    in
     case regexValidation of
         { pattern, message } :: xs ->
+            let
+                value =
+                    getValue field
+            in
             if Regex.contains pattern value then
                 regexValidator getValue xs field
 
