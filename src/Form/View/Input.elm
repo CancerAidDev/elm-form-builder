@@ -80,7 +80,7 @@ control time (Locale.Locale _ code) disabled key field =
                     phone time code disabled key field
 
                 FieldType.TextArea ->
-                    textarea key properties
+                    textarea key properties disabled
 
                 _ ->
                     input time (Just code) disabled key field
@@ -89,34 +89,34 @@ control time (Locale.Locale _ code) disabled key field =
             input time (Just code) disabled key field
 
         Field.StringField_ (Field.SelectField properties) ->
-            Select.select key properties
+            Select.select key properties disabled
 
         Field.StringField_ (Field.SearchableSelectField properties) ->
-            Select.searchableSelect key properties
+            Select.searchableSelect key properties disabled
 
         Field.StringField_ (Field.HttpSelectField properties) ->
-            Select.httpSelect key properties
+            Select.httpSelect key properties disabled
 
         Field.StringField_ (Field.HttpSearchableSelectField properties) ->
-            Select.httpSearchableSelect key properties
+            Select.httpSearchableSelect key properties disabled
 
         Field.StringField_ (Field.RadioField properties) ->
             Radio.radio key properties disabled
 
         Field.MultiStringField_ (Field.MultiSelectField properties) ->
-            MultiSelect.multiSelect key properties
+            MultiSelect.multiSelect key properties disabled
 
         Field.MultiStringField_ (Field.SearchableMultiSelectField properties) ->
-            MultiSelect.searchableMultiSelect key properties
+            MultiSelect.searchableMultiSelect key properties disabled
 
         Field.MultiStringField_ (Field.MultiHttpSelectField properties) ->
-            MultiSelect.multiHttpSelect key properties
+            MultiSelect.multiHttpSelect key properties disabled
 
         Field.MultiStringField_ (Field.TagField _) ->
             input time Nothing disabled key field
 
         Field.BoolField_ (Field.CheckboxField properties) ->
-            checkbox key properties
+            checkbox key properties disabled
 
         Field.BoolField_ (Field.RadioBoolField properties) ->
             Radio.radioBool key properties disabled
@@ -166,6 +166,7 @@ input time code disabled key field =
         Field.IntegerField_ (Field.IntegerField properties) ->
             Html.input
                 [ HtmlAttributes.name key
+                , HtmlAttributes.disabled disabled
                 , HtmlAttributes.class "input"
                 , HtmlAttributes.type_ "number"
                 , HtmlAttributes.pattern "\\d*"
@@ -182,16 +183,17 @@ input time code disabled key field =
                 []
 
         Field.MultiStringField_ (Field.TagField properties) ->
-            tag key properties
+            tag key properties disabled
 
         _ ->
             HtmlExtra.nothing
 
 
-textarea : String -> Field.SimpleFieldProperties -> Html.Html Msg.Msg
-textarea key field =
+textarea : String -> Field.SimpleFieldProperties -> Bool -> Html.Html Msg.Msg
+textarea key field disabled =
     Html.textarea
         [ HtmlAttributes.name key
+        , HtmlAttributes.disabled disabled
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
@@ -202,8 +204,8 @@ textarea key field =
         []
 
 
-tag : String -> Field.TagFieldProperties -> Html.Html Msg.Msg
-tag key field =
+tag : String -> Field.TagFieldProperties -> Bool -> Html.Html Msg.Msg
+tag key field disabled =
     let
         addMsg : Msg.Msg
         addMsg =
@@ -214,6 +216,7 @@ tag key field =
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
                     [ HtmlAttributes.name key
+                    , HtmlAttributes.disabled disabled
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
                     , HtmlEvents.onInput (Msg.UpdateTagInput key)
@@ -223,8 +226,9 @@ tag key field =
                     []
                 ]
             , Html.p [ HtmlAttributes.class "control" ]
-                [ Html.a
+                [ Html.button
                     [ HtmlAttributes.class "button is-link"
+                    , HtmlAttributes.disabled disabled
                     , HtmlEvents.onClick addMsg
                     ]
                     [ Html.text "Add" ]
@@ -262,8 +266,8 @@ phone time code disabled key field =
         ]
 
 
-checkbox : String -> Field.BoolFieldProperties a -> Html.Html Msg.Msg
-checkbox key field =
+checkbox : String -> Field.BoolFieldProperties a -> Bool -> Html.Html Msg.Msg
+checkbox key field disabled =
     let
         toggledValue =
             not field.value
@@ -272,6 +276,7 @@ checkbox key field =
         [ Html.label [ HtmlAttributes.class "checkbox" ]
             [ Html.input
                 [ HtmlAttributes.class "mr-3"
+                , HtmlAttributes.disabled disabled
                 , HtmlAttributes.type_ "checkbox"
                 , HtmlAttributes.checked field.value
                 , HtmlEvents.onClick <| Msg.UpdateBoolField key toggledValue

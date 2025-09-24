@@ -25,8 +25,8 @@ import Set
 
 
 {-| -}
-select : String -> Field.SelectFieldProperties {} -> Html.Html Msg.Msg
-select key { value, required, options, disabled, hidden, placeholder, hasSelectablePlaceholder } =
+select : String -> Field.SelectFieldProperties {} -> Bool -> Html.Html Msg.Msg
+select key { value, required, options, hidden, placeholder, hasSelectablePlaceholder } disabled =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -63,17 +63,17 @@ viewOption selectedValue option =
 
 
 {-| -}
-searchableSelect : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-searchableSelect key properties =
+searchableSelect : String -> Field.SearchableSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+searchableSelect key properties disabled =
     Html.div [ HtmlAttributes.class "dropdown is-active is-flex is-fullwidth" ]
-        [ dropdownTrigger key properties
+        [ dropdownTrigger key properties disabled
         , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
         ]
 
 
 {-| -}
-httpSearchableSelect : String -> Field.HttpSearchableSelectFieldProperties -> Html.Html Msg.Msg
-httpSearchableSelect key properties =
+httpSearchableSelect : String -> Field.HttpSearchableSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+httpSearchableSelect key properties disabled =
     RemoteData.map
         (\options ->
             searchableSelect
@@ -94,13 +94,14 @@ httpSearchableSelect key properties =
                 , showDropdown = properties.showDropdown
                 , searchInput = properties.searchInput
                 }
+                disabled
         )
         properties.options
         |> RemoteData.withDefault HtmlExtra.nothing
 
 
-dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, options, required } =
+dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+dropdownTrigger key { placeholder, value, showDropdown, options, required } disabled =
     let
         selectPlaceholder =
             if value == "" then
@@ -114,7 +115,8 @@ dropdownTrigger key { placeholder, value, showDropdown, options, required } =
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger is-flex", HtmlAttributes.style "width" "100%" ]
         [ Html.button
-            [ HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
+            [ HtmlAttributes.disabled disabled
+            , HtmlAttributes.class "button pl-4 pr-0 is-fullwidth is-justify-content-space-between"
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
@@ -126,7 +128,8 @@ dropdownTrigger key { placeholder, value, showDropdown, options, required } =
             ]
         , HtmlExtra.viewIf (required /= IsRequired.Yes)
             (Html.button
-                [ HtmlAttributes.class "ml-2 button"
+                [ HtmlAttributes.disabled disabled
+                , HtmlAttributes.class "ml-2 button"
                 , HtmlEvents.onClick <| Msg.ResetField key
                 ]
                 [ Html.text "Reset" ]
@@ -171,8 +174,8 @@ viewSearchableOption key properties option =
 
 
 {-| -}
-httpSelect : String -> Field.HttpSelectFieldProperties -> Html.Html Msg.Msg
-httpSelect key properties =
+httpSelect : String -> Field.HttpSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+httpSelect key properties disabled =
     RemoteData.map
         (\options ->
             select
@@ -191,6 +194,7 @@ httpSelect key properties =
                 , placeholder = properties.placeholder
                 , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
                 }
+                disabled
         )
         properties.options
         |> RemoteData.withDefault HtmlExtra.nothing

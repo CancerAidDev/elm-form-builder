@@ -15,28 +15,29 @@ import Set
 
 
 {-| -}
-multiSelect : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
-multiSelect key properties =
+multiSelect : String -> Field.MultiSelectFieldProperties {} -> Bool -> Html.Html Msg.Msg
+multiSelect key properties disabled =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
-        [ dropdownTrigger key properties
-        , HtmlExtra.viewIf properties.showDropdown <| dropdownMenu key properties
+        [ dropdownTrigger key properties disabled
+        , HtmlExtra.viewIf properties.showDropdown <| dropdownMenu key properties disabled
         ]
 
 
 {-| -}
-searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
-searchableMultiSelect key properties =
+searchableMultiSelect : String -> Field.SearchableMultiSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+searchableMultiSelect key properties disabled =
     Html.div [ HtmlAttributes.class "dropdown is-active" ]
-        [ dropdownTrigger key properties
-        , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties
+        [ dropdownTrigger key properties disabled
+        , HtmlExtra.viewIf properties.showDropdown <| searchableDropdownMenu key properties disabled
         ]
 
 
-dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown } =
+dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Bool -> Html.Html Msg.Msg
+dropdownTrigger key { placeholder, value, showDropdown } disabled =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
-            [ HtmlAttributes.class "button pl-4 pr-0"
+            [ HtmlAttributes.disabled disabled
+            , HtmlAttributes.class "button pl-4 pr-0"
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
@@ -53,19 +54,20 @@ dropdownTrigger key { placeholder, value, showDropdown } =
         ]
 
 
-multiSelectReset : String -> Int -> List (Html.Html Msg.Msg)
-multiSelectReset key selected =
+multiSelectReset : String -> Int -> Bool -> List (Html.Html Msg.Msg)
+multiSelectReset key selected disabled =
     [ Html.div [] [ Html.text <| String.fromInt selected ++ " Selected" ]
     , Html.button
-        [ HtmlAttributes.class "button is-small"
+        [ HtmlAttributes.disabled disabled
+        , HtmlAttributes.class "button is-small"
         , HtmlEvents.onClick <| Msg.ResetField key
         ]
         [ Html.text "Reset" ]
     ]
 
 
-dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Html.Html Msg.Msg
-dropdownMenu key properties =
+dropdownMenu : String -> Field.MultiSelectFieldProperties {} -> Bool -> Html.Html Msg.Msg
+dropdownMenu key properties disabled =
     Html.div []
         [ Dropdown.overlay key
         , Html.div
@@ -78,8 +80,7 @@ dropdownMenu key properties =
                 [ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                   <|
-                    multiSelectReset key <|
-                        Set.size properties.value
+                    multiSelectReset key (Set.size properties.value) disabled
                 , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                 , Html.div [ HtmlAttributes.class "dropdown-items" ]
                     (List.map (\option -> viewCheckbox key properties option) properties.options)
@@ -88,8 +89,8 @@ dropdownMenu key properties =
         ]
 
 
-searchableDropdownMenu : String -> Field.SearchableMultiSelectFieldProperties -> Html.Html Msg.Msg
-searchableDropdownMenu key properties =
+searchableDropdownMenu : String -> Field.SearchableMultiSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+searchableDropdownMenu key properties disabled =
     let
         optionSection : List Option.Option -> List (Html.Html Msg.Msg)
         optionSection options =
@@ -114,8 +115,9 @@ searchableDropdownMenu key properties =
                 ([ Html.div
                     [ HtmlAttributes.class "dropdown-item is-flex is-align-items-center is-justify-content-space-between" ]
                    <|
-                    multiSelectReset key <|
-                        Set.size properties.value
+                    multiSelectReset key
+                        (Set.size properties.value)
+                        disabled
                  , Html.hr [ HtmlAttributes.class "dropdown-divider" ] []
                  , Dropdown.searchBar key properties.searchInput properties.value filteredOptions
                  ]
@@ -145,8 +147,8 @@ viewCheckbox key properties option =
 
 
 {-| -}
-multiHttpSelect : String -> Field.MultiHttpSelectFieldProperties -> Html.Html Msg.Msg
-multiHttpSelect key properties =
+multiHttpSelect : String -> Field.MultiHttpSelectFieldProperties -> Bool -> Html.Html Msg.Msg
+multiHttpSelect key properties disabled =
     RemoteData.map
         (\options ->
             multiSelect key
@@ -163,6 +165,7 @@ multiHttpSelect key properties =
                 , hidden = properties.hidden
                 , unhiddenBy = properties.unhiddenBy
                 }
+                disabled
         )
         properties.options
         |> RemoteData.withDefault HtmlExtra.nothing
