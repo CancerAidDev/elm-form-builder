@@ -48,6 +48,7 @@ view time submitted locale fields key field =
     HtmlExtra.viewIf shown <|
         Html.div
             [ HtmlAttributes.class "form-input control"
+            , HtmlAttributes.classList [ ( "is-disabled", disabled ) ]
             , HtmlAttributes.class (Width.toStyle (Field.getProperties field).width)
             , HtmlAttributes.id key
             ]
@@ -100,7 +101,7 @@ control time (Locale.Locale _ code) disabled key field =
             Select.httpSearchableSelect key properties
 
         Field.StringField_ (Field.RadioField properties) ->
-            Radio.radio key properties
+            Radio.radio key properties disabled
 
         Field.MultiStringField_ (Field.MultiSelectField properties) ->
             MultiSelect.multiSelect key properties
@@ -118,10 +119,10 @@ control time (Locale.Locale _ code) disabled key field =
             checkbox key properties
 
         Field.BoolField_ (Field.RadioBoolField properties) ->
-            Radio.radioBool key properties
+            Radio.radioBool key properties disabled
 
         Field.BoolField_ (Field.RadioEnumField properties) ->
-            Radio.radioEnum key properties
+            Radio.radioEnum key properties disabled
 
         Field.IntegerField_ (Field.IntegerField _) ->
             input time Nothing disabled key field

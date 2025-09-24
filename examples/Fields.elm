@@ -317,12 +317,21 @@ fields =
             |> FormField.radioBool
         )
     , \order ->
+        ( "newsletterPromotions"
+        , FormField.radioBoolDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Would you like to receive promotional offers?"
+            |> FormField.setOrder order
+            |> FormField.setEnabledBy "newsletter"
+            |> FormField.radioBool
+        )
+    , \order ->
         ( "newsletterFreq"
         , FormField.radioBoolDefault
             |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "How often would you like to receive our newsletter?"
+            |> FormField.setLabel "How often would you like to receive promotional offers?"
             |> FormField.setOrder order
-            |> FormField.setUnhiddenBy "newsletter"
+            |> FormField.setUnhiddenBy "newsletterPromotions"
             |> FormField.radioBool
         )
     , \order ->
