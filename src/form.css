@@ -24,6 +24,11 @@
   grid-column: span 2;
 }
 
+.is-disabled,
+.is-disabled  > .label {
+  color: #dbdbdb;
+}
+
 /* Mobile layout */
 @media (max-width: 768px) {
   .form-container {

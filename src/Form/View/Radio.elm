@@ -23,13 +23,13 @@ import Html.Extra as HtmlExtra
 
 
 {-| -}
-radio : String -> Field.RadioFieldProperties -> Html.Html Msg.Msg
-radio key properties =
-    radioContainer (List.map (viewRadioOption key properties) properties.options)
+radio : String -> Field.RadioFieldProperties -> Bool -> Html.Html Msg.Msg
+radio key properties disabled =
+    radioContainer (List.map (viewRadioOption key properties disabled) properties.options)
 
 
-viewRadioOption : String -> Field.RadioFieldProperties -> Option.Option -> Html.Html Msg.Msg
-viewRadioOption key { default, direction, value, disabled, hidden } option =
+viewRadioOption : String -> Field.RadioFieldProperties -> Bool -> Option.Option -> Html.Html Msg.Msg
+viewRadioOption key { default, direction, value, disabled, hidden } enabledByDisabled option =
     let
         checked =
             (value == "" && default == Just option.value) || (value == option.value)
@@ -39,7 +39,7 @@ viewRadioOption key { default, direction, value, disabled, hidden } option =
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
-                , HtmlAttributes.disabled disabled
+                , HtmlAttributes.disabled (disabled || enabledByDisabled)
                 , HtmlAttributes.id (key ++ "_" ++ option.value)
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioStringField key option
@@ -51,13 +51,13 @@ viewRadioOption key { default, direction, value, disabled, hidden } option =
 
 
 {-| -}
-radioBool : String -> Field.RadioBoolFieldProperties -> Html.Html Msg.Msg
-radioBool key properties =
-    radioContainer (List.map (viewRadioBoolOption key properties) [ True, False ])
+radioBool : String -> Field.RadioBoolFieldProperties -> Bool -> Html.Html Msg.Msg
+radioBool key properties disabled =
+    radioContainer (List.map (viewRadioBoolOption key properties disabled) [ True, False ])
 
 
-viewRadioBoolOption : String -> Field.RadioBoolFieldProperties -> Bool -> Html.Html Msg.Msg
-viewRadioBoolOption key { value, disabled, hidden } option =
+viewRadioBoolOption : String -> Field.RadioBoolFieldProperties -> Bool -> Bool -> Html.Html Msg.Msg
+viewRadioBoolOption key { value, disabled, hidden } enabledByDisabled option =
     let
         checked =
             value == Just option
@@ -67,7 +67,7 @@ viewRadioBoolOption key { value, disabled, hidden } option =
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
-                , HtmlAttributes.disabled disabled
+                , HtmlAttributes.disabled (disabled || enabledByDisabled)
                 , HtmlAttributes.id (key ++ "_" ++ RadioBool.toString option)
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioBoolField key option
@@ -79,13 +79,13 @@ viewRadioBoolOption key { value, disabled, hidden } option =
 
 
 {-| -}
-radioEnum : String -> Field.RadioEnumFieldProperties -> Html.Html Msg.Msg
-radioEnum key properties =
-    radioContainer (List.map (viewRadioEnumOption key properties) properties.options)
+radioEnum : String -> Field.RadioEnumFieldProperties -> Bool -> Html.Html Msg.Msg
+radioEnum key properties disabled =
+    radioContainer (List.map (viewRadioEnumOption key properties disabled) properties.options)
 
 
-viewRadioEnumOption : String -> Field.RadioEnumFieldProperties -> RadioEnum.Value -> Html.Html Msg.Msg
-viewRadioEnumOption key { default, value, disabled, hidden } option =
+viewRadioEnumOption : String -> Field.RadioEnumFieldProperties -> Bool -> RadioEnum.Value -> Html.Html Msg.Msg
+viewRadioEnumOption key { default, value, disabled, hidden } enabledByDisabled option =
     let
         checked =
             (value == Nothing && default == Just option) || (value == Just option)
@@ -95,7 +95,7 @@ viewRadioEnumOption key { default, value, disabled, hidden } option =
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
-                , HtmlAttributes.disabled disabled
+                , HtmlAttributes.disabled (disabled || enabledByDisabled)
                 , HtmlAttributes.id (key ++ "_" ++ RadioEnum.toString option)
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioEnumField key option
@@ -108,7 +108,9 @@ viewRadioEnumOption key { default, value, disabled, hidden } option =
 
 radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
 radioContainer =
-    Html.div [ HtmlAttributes.class "control columns is-gapless is-multiline m-0" ]
+    Html.div
+        [ HtmlAttributes.class "control columns is-gapless is-multiline m-0"
+        ]
 
 
 optionLabel : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
