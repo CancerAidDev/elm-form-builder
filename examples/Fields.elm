@@ -23,7 +23,6 @@ Do you use any of the following modes of transport:
 - Bus
 - Train
             """
-
     in
     [ \order ->
         ( "Uneditable"
@@ -328,7 +327,7 @@ Do you use any of the following modes of transport:
             |> FormField.setOrder order
             |> FormField.radioBool
         )
-     , \order ->
+    , \order ->
         ( "travel"
         , FormField.radioBoolDefault
             |> FormField.setIsRequired IsRequired.Yes
