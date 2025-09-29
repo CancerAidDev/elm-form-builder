@@ -20,6 +20,7 @@ import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
+import Markdown
 import RemoteData
 import Set
 
@@ -59,7 +60,7 @@ viewOption selectedValue option =
         [ HtmlAttributes.value option.value
         , HtmlAttributes.selected <| option.value == selectedValue
         ]
-        [ Html.text (option.label |> Maybe.withDefault option.value) ]
+        [ Markdown.toHtml [] (option.label |> Maybe.withDefault option.value) ]
 
 
 {-| -}
@@ -169,7 +170,7 @@ viewSearchableOption key properties option =
             [ HtmlAttributes.class "dropdown-item mr-2"
             , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
             ]
-            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
+            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Markdown.toHtml [] (option.label |> Maybe.withDefault option.value) ]
             ]
 
 

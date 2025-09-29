@@ -30,6 +30,7 @@ import Html.Attributes as HtmlAttributes
 import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
+import Markdown
 import Result.Extra as ResultExtra
 import Set
 import Time
@@ -65,7 +66,7 @@ label key field disabled =
             [ HtmlAttributes.class "label"
             , HtmlAttributes.for key
             ]
-            [ Html.text (Field.getLabel field)
+            [ Markdown.toHtml [] (Field.getLabel field)
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
             ]
@@ -282,7 +283,7 @@ checkbox key field disabled =
                 , HtmlEvents.onClick <| Msg.UpdateBoolField key toggledValue
                 ]
                 []
-            , Html.text field.label
+            , Markdown.toHtml [] field.label
             ]
         ]
 

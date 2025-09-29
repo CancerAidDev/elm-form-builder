@@ -10,6 +10,7 @@ import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
+import Markdown
 import RemoteData
 import Set
 
@@ -141,7 +142,7 @@ viewCheckbox key properties option =
                     , HtmlEvents.onCheck <| Msg.UpdateMultiStringField key option
                     ]
                     []
-                , Html.text (option.label |> Maybe.withDefault option.value)
+                , Markdown.toHtml [] (option.label |> Maybe.withDefault option.value)
                 ]
             ]
 

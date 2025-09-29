@@ -13,6 +13,18 @@ import Set
 
 fields : FormFields.Fields
 fields =
+    let
+        markdownLabel : String
+        markdownLabel =
+            """
+Do you use any of the following modes of transport:
+- Car
+- Bike
+- Bus
+- Train
+            """
+
+    in
     [ \order ->
         ( "Uneditable"
         , FormField.textDefault
@@ -313,6 +325,14 @@ fields =
         , FormField.radioBoolDefault
             |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Would you like to sign up to our newsletter?"
+            |> FormField.setOrder order
+            |> FormField.radioBool
+        )
+     , \order ->
+        ( "travel"
+        , FormField.radioBoolDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel markdownLabel
             |> FormField.setOrder order
             |> FormField.radioBool
         )
