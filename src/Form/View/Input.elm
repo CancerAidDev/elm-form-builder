@@ -14,6 +14,7 @@ import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
+import Form.Format.Markdown as Markdown
 import Form.Lib.Events as LibEvents
 import Form.Lib.String as LibString
 import Form.Locale as Locale
@@ -53,6 +54,7 @@ view time submitted locale fields key field =
             , HtmlAttributes.id key
             ]
             [ label key field disabled
+            , labelExtraContent field
             , control time locale disabled key field
             , error submitted locale fields field
             ]
@@ -69,6 +71,18 @@ label key field disabled =
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
             ]
+
+
+labelExtraContent : Field.Field -> Html.Html Msg.Msg
+labelExtraContent field =
+    HtmlExtra.viewMaybe
+        (\text ->
+            Html.div
+                [ HtmlAttributes.class "pb-2"
+                ]
+                (Markdown.toHtml text)
+        )
+        (Field.getLabelExtraContent field)
 
 
 control : Time.Posix -> Locale.Locale -> Bool -> String -> Field.Field -> Html.Html Msg.Msg

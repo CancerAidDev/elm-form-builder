@@ -158,6 +158,7 @@ multiHttpSelect key properties disabled =
                 , placeholder = properties.placeholder
                 , showDropdown = properties.showDropdown
                 , label = properties.label
+                , labelExtraContent = properties.labelExtraContent
                 , width = properties.width
                 , enabledBy = properties.enabledBy
                 , order = properties.order

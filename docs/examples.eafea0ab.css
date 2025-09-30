@@ -1,0 +1,2 @@
+.form-container{grid-template-rows:auto auto auto;grid-template-columns:1fr 1fr;gap:1rem;display:grid}.form-input{grid-template-rows:subgrid;grid-row:span 3;gap:0;display:grid}.form-input>label{align-self:end}.form-input.is-col-span-1{grid-column:span 1}.form-input.is-col-span-2{grid-column:span 2}.is-disabled,.is-disabled>.label{color:#dbdbdb}ul{margin-left:1.5em;padding-left:0;list-style-type:disc}@media (width<=768px){.form-container{display:block}.form-input{padding:.5rem 0}}
+/*# sourceMappingURL=examples.eafea0ab.css.map */

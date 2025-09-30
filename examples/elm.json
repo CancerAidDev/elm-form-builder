@@ -9,6 +9,7 @@
         "direct": {
             "NoRedInk/elm-json-decode-pipeline": "1.0.1",
             "canceraiddev/elm-dialog": "1.0.1",
+            "dillonkearns/elm-markdown": "7.0.1",
             "elm/browser": "1.0.2",
             "elm/core": "1.0.5",
             "elm/html": "1.0.0",
@@ -23,6 +24,7 @@
             "elm-community/maybe-extra": "5.3.0",
             "elm-community/result-extra": "2.4.0",
             "elm-community/string-extra": "4.0.1",
+            "fredcy/elm-parseint": "2.0.1",
             "ianmackenzie/elm-units": "2.9.0",
             "justinmimbs/date": "4.0.1",
             "justinmimbs/time-extra": "1.1.1",
@@ -30,19 +32,20 @@
             "krisajenkins/remotedata": "6.0.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
             "samhstn/time-format": "1.0.0",
-            "tesk9/accessible-html": "5.0.0",
-            "fredcy/elm-parseint": "2.0.1"
+            "tesk9/accessible-html": "5.0.0"
         },
         "indirect": {
             "elm/bytes": "1.0.8",
             "elm/file": "1.0.5",
             "elm/parser": "1.1.0",
-            "elm/svg": "1.0.1",
-            "elm/virtual-dom": "1.0.3"
+            "elm/virtual-dom": "1.0.3",
+            "rtfeldman/elm-hex": "1.0.0"
         }
     },
     "test-dependencies": {
         "direct": {},
-        "indirect": {}
+        "indirect": {
+            "elm/svg": "1.0.1"
+        }
     }
 }
