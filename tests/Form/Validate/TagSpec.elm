@@ -17,6 +17,7 @@ suite =
                 Field.TagField
                     { required = Required.Yes
                     , label = "Full Name"
+                    , labelExtraContent = Nothing
                     , width = Width.HalfSize
                     , enabledBy = Nothing
                     , order = 1
@@ -36,6 +37,7 @@ suite =
                     , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
+                            , labelExtraContent = Nothing
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing
@@ -57,6 +59,7 @@ suite =
                     , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
+                            , labelExtraContent = Nothing
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing
@@ -78,6 +81,7 @@ suite =
                     , Field.MultiStringField_ <|
                         Field.TagField
                             { label = "Full Name"
+                            , labelExtraContent = Nothing
                             , required = Required.Yes
                             , width = Width.HalfSize
                             , enabledBy = Nothing

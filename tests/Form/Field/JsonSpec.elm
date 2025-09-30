@@ -55,6 +55,7 @@ suite =
                                     Field.SimpleField
                                         { tipe = FieldType.Text
                                         , label = "Full Name"
+                                        , labelExtraContent = Nothing
                                         , required = Required.Yes
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
@@ -90,6 +91,7 @@ suite =
                                             Field.SimpleField
                                                 { tipe = FieldType.Text
                                                 , label = "Full Name"
+                                                , labelExtraContent = Nothing
                                                 , required = Required.Yes
                                                 , width = Width.HalfSize
                                                 , enabledBy = Nothing
@@ -128,6 +130,7 @@ suite =
                                             Field.SimpleField
                                                 { tipe = FieldType.Email
                                                 , label = "Personal Email"
+                                                , labelExtraContent = Nothing
                                                 , required = Required.Yes
                                                 , width = Width.HalfSize
                                                 , enabledBy = Nothing
@@ -270,6 +273,7 @@ suite =
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , label = "Pet"
+                                        , labelExtraContent = Nothing
                                         , default = Just "Dog"
                                         , options =
                                             [ { label = Nothing
@@ -321,6 +325,7 @@ suite =
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , label = "Pet"
+                                        , labelExtraContent = Nothing
                                         , default = Just "Dog"
                                         , options =
                                             [ { label = Nothing
@@ -413,6 +418,7 @@ suite =
                             "required": true,
                             "key": "metadata.tag",
                             "label": "Tag",
+                            "labelExtraContent": "metadata",
                             "type": "httpSelect",
                             "width": "50%",
                             "url": "tags",
@@ -433,6 +439,7 @@ suite =
                                         , enabledBy = Nothing
                                         , default = Nothing
                                         , label = "Tag"
+                                        , labelExtraContent = Just "metadata"
                                         , url = "tags"
                                         , options = RemoteData.NotAsked
                                         , value = ""
@@ -527,6 +534,7 @@ suite =
                                         , enabledBy = Nothing
                                         , default = Nothing
                                         , label = "Http Searchable Select"
+                                        , labelExtraContent = Nothing
                                         , url = "httpSearchableSelect"
                                         , options = RemoteData.NotAsked
                                         , value = ""
@@ -606,6 +614,7 @@ suite =
                                         , width = Width.FullSize
                                         , enabledBy = Nothing
                                         , label = "Foo?"
+                                        , labelExtraContent = Nothing
                                         , tipe = FieldType.Checkbox
                                         , order = order
                                         , value = False
@@ -652,6 +661,7 @@ suite =
                                         , width = Width.FullSize
                                         , enabledBy = Nothing
                                         , label = "I agree"
+                                        , labelExtraContent = Nothing
                                         , order = order
                                         , value = False
                                         , disabled = False
@@ -716,6 +726,7 @@ suite =
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , label = "Pet"
+                                        , labelExtraContent = Nothing
                                         , options =
                                             [ { label = Just "Doggo"
                                               , value = "Dog"
@@ -771,6 +782,7 @@ suite =
                                         , width = Width.HalfSize
                                         , enabledBy = Nothing
                                         , label = "Pet"
+                                        , labelExtraContent = Nothing
                                         , options =
                                             [ { label = Just "Doggo"
                                               , value = "Dog"
@@ -814,6 +826,7 @@ suite =
                                         Field.SimpleField
                                             { required = Required.Yes
                                             , label = "Full Name"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.Text
@@ -840,6 +853,7 @@ suite =
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -866,6 +880,7 @@ suite =
                                         Field.SimpleField
                                             { required = Required.Yes
                                             , label = "Tag"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.Text
@@ -892,6 +907,7 @@ suite =
                                         Field.SelectField
                                             { required = Required.Yes
                                             , label = "Pet"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -930,6 +946,7 @@ suite =
                                         Field.SearchableSelectField
                                             { required = Required.Yes
                                             , label = "Pet"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -970,6 +987,7 @@ suite =
                                         Field.HttpSelectField
                                             { required = Required.Yes
                                             , label = "Tag"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -1000,6 +1018,7 @@ suite =
                                         Field.MultiSelectField
                                             { required = Required.Yes
                                             , label = "Pet"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -1042,6 +1061,7 @@ suite =
                                         Field.MultiSelectField
                                             { required = Required.Yes
                                             , label = "Pet"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -1084,6 +1104,7 @@ suite =
                                         Field.SearchableMultiSelectField
                                             { required = Required.Yes
                                             , label = "Pet"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order
@@ -1133,6 +1154,7 @@ suite =
                                         Field.DateField
                                             { required = Required.Yes
                                             , label = "Date"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.dateDefault
@@ -1149,6 +1171,7 @@ suite =
                                         Field.DateField
                                             { required = Required.Yes
                                             , label = "Date"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.dateFuture
@@ -1165,6 +1188,7 @@ suite =
                                         Field.SimpleField
                                             { required = Required.Yes
                                             , label = "Email"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.Email
@@ -1181,6 +1205,7 @@ suite =
                                         Field.SimpleField
                                             { required = Required.Yes
                                             , label = "Name"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.Text
@@ -1197,6 +1222,7 @@ suite =
                                         Field.TagField
                                             { required = Required.Yes
                                             , label = "Full Name"
+                                            , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , order = order

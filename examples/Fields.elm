@@ -14,10 +14,9 @@ import Set
 fields : FormFields.Fields
 fields =
     let
-        markdownLabel : String
-        markdownLabel =
+        markdownLabelExtraContent : String
+        markdownLabelExtraContent =
             """
-Do you use any of the following modes of transport:
 - Car
 - Bike
 - Bus
@@ -331,7 +330,8 @@ Do you use any of the following modes of transport:
         ( "travel"
         , FormField.radioBoolDefault
             |> FormField.setIsRequired IsRequired.Yes
-            |> FormField.setLabel markdownLabel
+            |> FormField.setLabel "Do you use any of the following modes of transport: "
+            |> FormField.setLabelExtraContent markdownLabelExtraContent
             |> FormField.setOrder order
             |> FormField.radioBool
         )

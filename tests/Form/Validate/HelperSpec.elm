@@ -98,6 +98,7 @@ simpleField tipe { required, value } =
     Field.SimpleField
         { required = required
         , label = "Field"
+        , labelExtraContent = Nothing
         , width = Width.FullSize
         , enabledBy = Nothing
         , order = 1
@@ -115,6 +116,7 @@ regexNonEmployeeEmailField { required, value } =
     Field.SimpleField
         { required = required
         , label = "Field"
+        , labelExtraContent = Nothing
         , width = Width.FullSize
         , enabledBy = Nothing
         , order = 1
@@ -142,6 +144,7 @@ dateField tipe { required, value } =
     Field.DateField
         { required = required
         , label = "Field"
+        , labelExtraContent = Nothing
         , width = Width.FullSize
         , enabledBy = Nothing
         , order = 1
