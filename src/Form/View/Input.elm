@@ -80,7 +80,7 @@ labelExtraContent field =
             Html.div
                 [ HtmlAttributes.class "pb-2"
                 ]
-                [ Markdown.toHtml text ]
+                (Markdown.toHtml text)
         )
         (Field.getLabelExtraContent field)
 

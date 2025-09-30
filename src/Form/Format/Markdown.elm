@@ -30,7 +30,7 @@ linkRenderer link content =
                 content
 
 
-toHtml : String -> Html.Html msg
+toHtml : String -> List (Html.Html msg)
 toHtml markdown =
     case
         markdown
@@ -39,7 +39,7 @@ toHtml markdown =
             |> Result.andThen (MarkdownRenderer.render { defaultHtmlRenderer | link = linkRenderer })
     of
         Ok rendered ->
-            Html.div [] rendered
+            rendered
 
         Err errors ->
-            Html.text errors
+            [ Html.text errors ]
