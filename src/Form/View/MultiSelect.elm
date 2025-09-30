@@ -10,7 +10,6 @@ import Html
 import Html.Attributes as HtmlAttributes
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
-import Markdown
 import RemoteData
 import Set
 
@@ -142,7 +141,7 @@ viewCheckbox key properties option =
                     , HtmlEvents.onCheck <| Msg.UpdateMultiStringField key option
                     ]
                     []
-                , Markdown.toHtml [] (option.label |> Maybe.withDefault option.value)
+                , Html.text (option.label |> Maybe.withDefault option.value)
                 ]
             ]
 
@@ -159,6 +158,7 @@ multiHttpSelect key properties disabled =
                 , placeholder = properties.placeholder
                 , showDropdown = properties.showDropdown
                 , label = properties.label
+                , labelExtraContent = properties.labelExtraContent
                 , width = properties.width
                 , enabledBy = properties.enabledBy
                 , order = properties.order

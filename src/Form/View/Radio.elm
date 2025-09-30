@@ -20,7 +20,6 @@ import Html.Attributes as HtmlAttributes
 import Html.Attributes.Extra as HtmlAttributesExtra
 import Html.Events as HtmlEvents
 import Html.Extra as HtmlExtra
-import Markdown
 
 
 {-| -}
@@ -47,7 +46,7 @@ viewRadioOption key { default, direction, value, disabled, hidden } enabledByDis
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
                 ]
                 []
-            , Markdown.toHtml [] (Maybe.withDefault option.value option.label)
+            , Html.text (Maybe.withDefault option.value option.label)
             ]
 
 
@@ -75,7 +74,7 @@ viewRadioBoolOption key { value, disabled, hidden } enabledByDisabled option =
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
                 ]
                 []
-            , Markdown.toHtml [] (RadioBool.toString option)
+            , Html.text (RadioBool.toString option)
             ]
 
 
@@ -103,7 +102,7 @@ viewRadioEnumOption key { default, value, disabled, hidden } enabledByDisabled o
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
                 ]
                 []
-            , Markdown.toHtml [] (RadioEnum.toString option)
+            , Html.text (RadioEnum.toString option)
             ]
 
 

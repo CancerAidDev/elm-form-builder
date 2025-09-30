@@ -3,8 +3,8 @@ module Form.Field exposing
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired
     , encode
@@ -36,12 +36,12 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
 
 
 # Setters
@@ -97,6 +97,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -120,6 +121,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -143,6 +145,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -166,6 +169,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -189,6 +193,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -212,6 +217,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -239,6 +245,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -258,6 +265,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -282,6 +290,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -301,6 +310,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -328,6 +338,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -347,6 +358,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -371,6 +383,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -399,6 +412,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -426,6 +440,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -452,6 +467,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -479,6 +495,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -505,6 +522,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -530,6 +548,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -555,6 +574,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
+  - `setLabelExtraContent String`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -582,6 +602,12 @@ setIsRequired required field =
 setLabel : String -> FieldProperties a -> FieldProperties a
 setLabel label field =
     { field | label = label }
+
+
+{-| -}
+setLabelExtraContent : String -> FieldProperties a -> FieldProperties a
+setLabelExtraContent labelExtraContent field =
+    { field | labelExtraContent = Just labelExtraContent }
 
 
 {-| -}
@@ -781,6 +807,7 @@ simpleDefault : SimpleFieldProperties
 simpleDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -795,6 +822,7 @@ simpleDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -811,8 +839,9 @@ textDefault =
     simpleDefault
 
 
-{-| `{ required = Required.No
+{-| \`{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -822,7 +851,7 @@ textDefault =
 , regexValidation = []
 , tipe = FieldType.Email
 , value = ""
-}`
+}\`
 -}
 emailDefault : SimpleFieldProperties
 emailDefault =
@@ -831,6 +860,7 @@ emailDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -849,6 +879,7 @@ urlDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -867,6 +898,7 @@ phoneDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -885,6 +917,7 @@ timeDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -903,6 +936,7 @@ textAreaDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -918,6 +952,7 @@ dateDefault : DateFieldProperties
 dateDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -932,6 +967,7 @@ dateDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -947,6 +983,7 @@ tagDefault : TagFieldProperties
 tagDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -961,6 +998,7 @@ tagDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -975,6 +1013,7 @@ checkboxDefault : CheckboxFieldProperties
 checkboxDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -988,6 +1027,7 @@ checkboxDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1001,6 +1041,7 @@ radioBoolDefault : RadioBoolFieldProperties
 radioBoolDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1013,6 +1054,7 @@ radioBoolDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1028,6 +1070,7 @@ radioEnumDefault : RadioEnumFieldProperties
 radioEnumDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1042,6 +1085,7 @@ radioEnumDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1059,6 +1103,7 @@ selectDefault : SelectFieldProperties {}
 selectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1075,6 +1120,7 @@ selectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1093,6 +1139,7 @@ httpSelectDefault : HttpSelectFieldProperties
 httpSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1111,6 +1158,7 @@ httpSelectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1127,6 +1175,7 @@ multiSelectDefault : MultiSelectFieldProperties {}
 multiSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1142,6 +1191,7 @@ multiSelectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1160,6 +1210,7 @@ searchableSelectDefault : SearchableSelectFieldProperties
 searchableSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1178,6 +1229,7 @@ searchableSelectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1198,6 +1250,7 @@ httpSearchableSelectDefault : HttpSearchableSelectFieldProperties
 httpSearchableSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1218,6 +1271,7 @@ httpSearchableSelectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1236,6 +1290,7 @@ searchableMultiSelectDefault : SearchableMultiSelectFieldProperties
 searchableMultiSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1251,8 +1306,9 @@ searchableMultiSelectDefault =
     }
 
 
-{-| `{ required = Required.No
+{-| \`{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1264,12 +1320,13 @@ searchableMultiSelectDefault =
 , placeholder = ""
 , showDropdown = False
 , url = ""
-}`
+}\`
 -}
 multiHttpSelectDefault : MultiHttpSelectFieldProperties
 multiHttpSelectDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1287,6 +1344,7 @@ multiHttpSelectDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , order = 0
@@ -1303,6 +1361,7 @@ radioDefault : RadioFieldProperties
 radioDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , order = 0
@@ -1318,6 +1377,7 @@ radioDefault =
 
 {-| `{ required = Required.No
 , label = ""
+, labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
 , tipe = { min = Nothing, max = Nothing }
@@ -1332,6 +1392,7 @@ integerDefault : IntegerFieldProperties
 integerDefault =
     { required = Required.No
     , label = ""
+    , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
     , tipe = { min = Nothing, max = Nothing }
@@ -1391,6 +1452,7 @@ type alias FieldProperties a =
     { a
         | required : Required.IsRequired
         , label : String
+        , labelExtraContent : Maybe String
         , width : Width.Width
         , enabledBy : Maybe String
         , order : Int
@@ -1572,9 +1634,10 @@ getProperties field =
 
 
 getCommonProperties : FieldProperties a -> CommonFieldProperties
-getCommonProperties { required, label, width, enabledBy, order, disabled, hidden, unhiddenBy } =
+getCommonProperties { required, label, labelExtraContent, width, enabledBy, order, disabled, hidden, unhiddenBy } =
     { required = required
     , label = label
+    , labelExtraContent = labelExtraContent
     , width = width
     , enabledBy = enabledBy
     , order = order
@@ -1587,9 +1650,10 @@ getCommonProperties { required, label, width, enabledBy, order, disabled, hidden
 getStringProperties : StringField -> FieldProperties { value : String }
 getStringProperties field =
     case field of
-        HttpSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        HttpSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1599,9 +1663,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        SimpleField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        SimpleField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1611,9 +1676,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        DateField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        DateField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1623,9 +1689,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        SelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        SelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1635,9 +1702,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        SearchableSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        SearchableSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1647,9 +1715,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        HttpSearchableSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        HttpSearchableSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1659,9 +1728,10 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        RadioField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        RadioField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1676,9 +1746,10 @@ getStringProperties field =
 getMultiStringProperties : MultiStringField -> FieldProperties { value : Set.Set String }
 getMultiStringProperties field =
     case field of
-        MultiHttpSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        MultiHttpSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1688,9 +1759,10 @@ getMultiStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        MultiSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        MultiSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1700,9 +1772,10 @@ getMultiStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        SearchableMultiSelectField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        SearchableMultiSelectField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -1712,9 +1785,10 @@ getMultiStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
-        TagField { required, label, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+        TagField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
             { required = required
             , label = label
+            , labelExtraContent = labelExtraContent
             , width = width
             , enabledBy = enabledBy
             , order = order
@@ -2122,6 +2196,12 @@ updateRemoteOptions options field =
 getLabel : Field -> String
 getLabel =
     getProperties >> .label
+
+
+{-| -}
+getLabelExtraContent : Field -> Maybe String
+getLabelExtraContent =
+    getProperties >> .labelExtraContent
 
 
 {-| -}
