@@ -11,12 +11,12 @@
     "postinstall": "elm-tooling install"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.7.2",
-    "@parcel/transformer-elm": "^2.15.4",
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@parcel/transformer-elm": "^2.16.0",
     "bulma": "^1.0.4",
-    "elm-review": "^2.13.2",
+    "elm-review": "^2.13.4",
     "elm-tooling": "^1.16.0",
-    "parcel": "^2.15.4",
+    "parcel": "^2.16.0",
     "prettier": "^3.6.2"
   },
   "resolutions": {
