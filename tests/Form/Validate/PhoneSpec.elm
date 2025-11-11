@@ -31,6 +31,7 @@ suite =
                     ]
                 , invalid =
                     [ { value = "12345678", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2" }
+                    , { value = "021700000", error = Types.InvalidMobilePhoneNumber, name = "Leading 0" }
                     , { value = "234567", error = Types.InvalidMobilePhoneNumber, name = "< 8 digits" }
                     , { value = "23456789012", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
