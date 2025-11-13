@@ -16,6 +16,7 @@ suite =
                 { valid = [ { value = "432432432", name = "Correct format and length" } ]
                 , invalid =
                     [ { value = "123456789", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 4" }
+                    , { value = "0432432432", error = Types.InvalidPhoneNumber, name = "Leading 0" }
                     , { value = "4234567890", error = Types.InvalidPhoneNumber, name = "> 9 digits" }
                     , { value = "42345678", error = Types.InvalidPhoneNumber, name = "< 9 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
@@ -31,6 +32,7 @@ suite =
                     ]
                 , invalid =
                     [ { value = "12345678", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2" }
+                    , { value = "021700000", error = Types.InvalidMobilePhoneNumber, name = "Leading 0" }
                     , { value = "234567", error = Types.InvalidMobilePhoneNumber, name = "< 8 digits" }
                     , { value = "23456789012", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
@@ -39,13 +41,17 @@ suite =
                 }
             , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
                 (HelperSpec.simpleField FieldType.Phone)
-                { valid = [ { value = "2342340000", name = "Correct format and length (US number)" }, { value = "6475555678", name = "Correct format and length (Canadian number)" } ]
+                { valid =
+                    [ { value = "2342340000", name = "Correct format and length (US number)" }
+                    , { value = "6475555678", name = "Correct format and length (Canadian number)" }
+                    ]
                 , invalid =
                     [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
+                    , { value = "02342340000", error = Types.InvalidMobilePhoneNumber, name = "Leading 0" }
                     , { value = "23423400000", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
                     , { value = "234234000", error = Types.InvalidMobilePhoneNumber, name = "< 10 digits" }
-                    , { value = "asdf", error = Types.InvalidPhoneNumber, name = "Doesn't begin with 2" }
                     , { value = "9115555678", error = Types.InvalidMobilePhoneNumber, name = "Canadian service number" }
+                    , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
                     ]
                 , locale = Locale.enUS
                 }
