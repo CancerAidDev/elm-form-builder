@@ -16,6 +16,9 @@ toMobilePlaceholder code =
         Just CountryCode.US ->
             "212 200 0000"
 
+        Just CountryCode.CA ->
+            "416 200 0000"
+
         Just CountryCode.NZ ->
             "20 000 0000"
 

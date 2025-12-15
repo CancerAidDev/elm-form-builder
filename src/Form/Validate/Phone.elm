@@ -73,5 +73,8 @@ mobileErrorToMessage (Locale.Locale _ country) field =
         CountryCode.US ->
             "Invalid mobile number (example: 212 2XX XXXX)"
 
+        CountryCode.CA ->
+            "Invalid mobile number (example: 416 2XX XXXX)"
+
         _ ->
             "Invalid mobile number"
