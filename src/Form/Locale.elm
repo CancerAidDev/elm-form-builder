@@ -1,8 +1,7 @@
 module Form.Locale exposing
     ( Locale(..)
     , fromString, toString, decoder, encode, urlParser, toCountryCodeString
-    , enAU, enNZ, enUS
-    , enCA
+    , enAU, enNZ, enUS, enCA
     )
 
 {-| Locale data type
@@ -20,7 +19,7 @@ module Form.Locale exposing
 
 # Locales
 
-@docs enAU, enNZ, enUS
+@docs enAU, enNZ, enUS, enCA
 
 -}
 
