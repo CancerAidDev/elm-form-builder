@@ -55,5 +55,21 @@ suite =
                     ]
                 , locale = Locale.enUS
                 }
+            , HelperSpec.simpleFieldTest (FieldType.SimpleType FieldType.Phone)
+                (HelperSpec.simpleField FieldType.Phone)
+                { valid =
+                    [ { value = "6475555678", name = "Valid Canadian number (Toronto)" }
+                    , { value = "6045551234", name = "Valid Canadian number (Vancouver)" }
+                    ]
+                , invalid =
+                    [ { value = "123123000", error = Types.InvalidMobilePhoneNumber, name = "Doesn't begin with 2-9" }
+                    , { value = "06475555678", error = Types.InvalidMobilePhoneNumber, name = "Leading 0" }
+                    , { value = "647555567", error = Types.InvalidMobilePhoneNumber, name = "< 10 digits" }
+                    , { value = "64755556789", error = Types.InvalidMobilePhoneNumber, name = "> 10 digits" }
+                    , { value = "9115555678", error = Types.InvalidMobilePhoneNumber, name = "Canadian service number" }
+                    , { value = "asdf", error = Types.InvalidPhoneNumber, name = "not digits" }
+                    ]
+                , locale = Locale.enCA
+                }
             ]
         ]
