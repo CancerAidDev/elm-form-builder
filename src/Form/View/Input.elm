@@ -283,7 +283,7 @@ phone : Time.Posix -> CountryCode.CountryCode -> Bool -> String -> Field.Field -
 phone time code disabled key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
-            [ Html.a [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
+            [ Html.span [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
             [ input time (Just code) disabled key field ]
         ]
