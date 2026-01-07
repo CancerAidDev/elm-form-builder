@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , dateConfigToString, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+    , dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs dateConfigToString, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+@docs dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
 
 -}
 
@@ -280,6 +280,20 @@ toType fieldType =
 
         _ ->
             ""
+
+
+{-| -}
+toAutoComplete : FieldType -> Maybe String
+toAutoComplete fieldType =
+    case fieldType of
+        StringType (SimpleType Email) ->
+            Just "email"
+
+        StringType (SimpleType Phone) ->
+            Just "tel"
+
+        _ ->
+            Nothing
 
 
 {-| -}

@@ -6,7 +6,7 @@ module Form.Field exposing
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
-    , isCheckbox, isRequired
+    , isCheckbox, isRequired, isSpanLabel
     , encode
     , metadataKey
     )
@@ -51,7 +51,7 @@ module Form.Field exposing
 
 # Predicates
 
-@docs isCheckbox, isRequired
+@docs isCheckbox, isRequired, isSpanLabel
 
 
 # Encode
@@ -2272,6 +2272,23 @@ isCheckbox : Field -> Bool
 isCheckbox field =
     case field of
         BoolField_ (CheckboxField _) ->
+            True
+
+        _ ->
+            False
+
+
+{-| -}
+isSpanLabel : Field -> Bool
+isSpanLabel field =
+    case field of
+        StringField_ (RadioField _) ->
+            True
+
+        BoolField_ (RadioEnumField _) ->
+            True
+
+        BoolField_ (RadioBoolField _) ->
             True
 
         _ ->

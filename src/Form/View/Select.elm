@@ -30,11 +30,11 @@ select key { value, required, options, hidden, placeholder, hasSelectablePlaceho
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
-                [ HtmlAttributes.name key
+                [ HtmlAttributes.id key
+                , HtmlAttributes.name key
                 , HtmlAttributes.required (required == IsRequired.Yes)
                 , HtmlAttributes.disabled disabled
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
-                , HtmlAttributes.id key
                 ]
                 (viewPlaceholder hasSelectablePlaceholder placeholder
                     :: List.map (viewOption value) options
@@ -102,17 +102,27 @@ httpSearchableSelect key properties disabled =
 
 
 dropdownTrigger : String -> Field.SearchableSelectFieldProperties -> Bool -> Html.Html Msg.Msg
-dropdownTrigger key { placeholder, value, showDropdown, options, required } disabled =
+dropdownTrigger key ({ placeholder, value, showDropdown, options, required } as field) disabled =
     let
+        valueLabel =
+            List.filter (\option -> option.value == value) options
+                |> List.head
+                |> Maybe.andThen (\option -> option.label)
+                |> Maybe.withDefault value
+
         selectPlaceholder =
             if value == "" then
                 placeholder
 
             else
-                List.filter (\option -> option.value == value) options
-                    |> List.head
-                    |> Maybe.andThen (\option -> option.label)
-                    |> Maybe.withDefault value
+                valueLabel
+
+        selectLabel =
+            if value == "" then
+                field.label
+
+            else
+                valueLabel ++ ", " ++ field.label
     in
     Html.div [ HtmlAttributes.class "dropdown-trigger is-flex", HtmlAttributes.style "width" "100%" ]
         [ Html.button
@@ -121,10 +131,11 @@ dropdownTrigger key { placeholder, value, showDropdown, options, required } disa
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             , Aria.hasMenuPopUp
-            , Aria.label "dropdown-trigger"
+            , Aria.expanded showDropdown
+            , Aria.label selectLabel
             , HtmlAttributes.id key
             ]
-            [ Html.span [] [ Html.text selectPlaceholder ]
+            [ Html.span [ HtmlAttributes.id <| key ++ "_value" ] [ Html.text selectPlaceholder ]
             , Dropdown.dropdownIcon showDropdown
             ]
         , HtmlExtra.viewIf (required /= IsRequired.Yes)
@@ -168,9 +179,11 @@ viewSearchableOption key properties option =
     HtmlExtra.viewIf (not properties.hidden) <|
         Html.div
             [ HtmlAttributes.class "dropdown-item mr-2"
-            , HtmlEvents.onClick <| Msg.UpdateStringField key option.value
+            , HtmlEvents.onClick <| Msg.UpdateSearchableSelectField key option.value
+            , Key.onKeyDown <| List.map (\k -> k <| Msg.UpdateSearchableSelectField key option.value) [ Key.enter, Key.space ]
             ]
-            [ Html.p [ HtmlAttributes.class "is-clickable" ] [ Html.text (option.label |> Maybe.withDefault option.value) ]
+            [ Html.p [ HtmlAttributes.class "is-clickable", HtmlAttributes.attribute "role" "option", HtmlAttributes.tabindex 0 ]
+                [ Html.text (option.label |> Maybe.withDefault option.value) ]
             ]
 
 

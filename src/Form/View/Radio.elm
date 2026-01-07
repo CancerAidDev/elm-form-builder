@@ -9,6 +9,7 @@ module Form.View.Radio exposing (radio, radioBool, radioEnum)
 
 -}
 
+import Accessibility.Aria as Aria
 import Form.Field as Field
 import Form.Field.Direction as Direction
 import Form.Field.Option as Option
@@ -33,20 +34,25 @@ viewRadioOption key { default, direction, value, disabled, hidden } enabledByDis
     let
         checked =
             (value == "" && default == Just option.value) || (value == option.value)
+
+        id =
+            key ++ "_" ++ option.value
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel direction
+        optionDiv
+            direction
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
                 , HtmlAttributes.disabled (disabled || enabledByDisabled)
-                , HtmlAttributes.id (key ++ "_" ++ option.value)
+                , HtmlAttributes.id id
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioStringField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
+                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
-            , Html.text (Maybe.withDefault option.value option.label)
+            , optionLabel id (Maybe.withDefault option.value option.label)
             ]
 
 
@@ -61,20 +67,25 @@ viewRadioBoolOption key { value, disabled, hidden } enabledByDisabled option =
     let
         checked =
             value == Just option
+
+        id =
+            key ++ "_" ++ RadioBool.toString option
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel Direction.Column
+        optionDiv
+            Direction.Column
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
                 , HtmlAttributes.disabled (disabled || enabledByDisabled)
-                , HtmlAttributes.id (key ++ "_" ++ RadioBool.toString option)
+                , HtmlAttributes.id id
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioBoolField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
+                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
-            , Html.text (RadioBool.toString option)
+            , optionLabel id (RadioBool.toString option)
             ]
 
 
@@ -89,20 +100,25 @@ viewRadioEnumOption key { default, value, disabled, hidden } enabledByDisabled o
     let
         checked =
             (value == Nothing && default == Just option) || (value == Just option)
+
+        id =
+            key ++ "_" ++ RadioEnum.toString option
     in
     HtmlExtra.viewIf (not hidden) <|
-        optionLabel Direction.Column
+        optionDiv
+            Direction.Column
             [ Html.input
                 [ HtmlAttributes.class "mx-2"
                 , HtmlAttributes.type_ "radio"
                 , HtmlAttributes.disabled (disabled || enabledByDisabled)
-                , HtmlAttributes.id (key ++ "_" ++ RadioEnum.toString option)
+                , HtmlAttributes.id id
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioEnumField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
+                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
-            , Html.text (RadioEnum.toString option)
+            , optionLabel id (RadioEnum.toString option)
             ]
 
 
@@ -110,12 +126,13 @@ radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
 radioContainer =
     Html.div
         [ HtmlAttributes.class "control columns is-gapless is-multiline m-0"
+        , HtmlAttributes.attribute "role" "radiogroup"
         ]
 
 
-optionLabel : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
-optionLabel direction =
-    Html.label
+optionDiv : Direction.Direction -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
+optionDiv direction =
+    Html.div
         [ HtmlAttributes.class "radio column my-2"
         , HtmlAttributes.class <|
             case direction of
@@ -125,3 +142,12 @@ optionLabel direction =
                 Direction.Column ->
                     "is-4"
         ]
+
+
+optionLabel : String -> String -> Html.Html Msg.Msg
+optionLabel id value =
+    Html.label
+        [ HtmlAttributes.id id
+        , HtmlAttributes.for id
+        ]
+        [ Html.text value ]

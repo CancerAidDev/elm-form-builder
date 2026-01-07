@@ -15,7 +15,9 @@ import Form.Field.RadioEnum as RadioEnum
 
 {-| -}
 type Msg
-    = UpdateStringField String String
+    = NoOp
+    | UpdateStringField String String
+    | UpdateSearchableSelectField String String
     | UpdateMultiStringField String Option.Option Bool
     | UpdateRadioStringField String Option.Option
     | UpdateBoolField String Bool

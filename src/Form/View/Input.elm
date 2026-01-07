@@ -51,7 +51,6 @@ view time submitted locale fields key field =
             [ HtmlAttributes.class "form-input control"
             , HtmlAttributes.classList [ ( "is-disabled", disabled ) ]
             , HtmlAttributes.class (Width.toStyle (Field.getProperties field).width)
-            , HtmlAttributes.id key
             ]
             [ label key field disabled
             , labelExtraContent field
@@ -63,10 +62,18 @@ view time submitted locale fields key field =
 label : String -> Field.Field -> Bool -> Html.Html Msg.Msg
 label key field disabled =
     HtmlExtra.viewIf (not (Field.isCheckbox field)) <|
-        Html.label
-            [ HtmlAttributes.class "label"
-            , HtmlAttributes.for key
-            ]
+        (if Field.isSpanLabel field then
+            Html.span
+                [ HtmlAttributes.class "label"
+                , HtmlAttributes.id key
+                ]
+
+         else
+            Html.label
+                [ HtmlAttributes.class "label"
+                , HtmlAttributes.for key
+                ]
+        )
             [ Html.text (Field.getLabel field)
             , HtmlExtra.viewIf (not (Field.isRequired field == Required.Yes) && not disabled) <|
                 Html.em [] [ Html.text " - optional" ]
@@ -147,7 +154,8 @@ input time code disabled key field =
     let
         renderInput fieldType properties =
             Html.input
-                [ HtmlAttributes.name key
+                [ HtmlAttributes.id key
+                , HtmlAttributes.name key
                 , HtmlAttributes.disabled disabled
                 , HtmlAttributes.class (FieldType.toClass fieldType)
                 , HtmlAttributes.type_ (FieldType.toType fieldType)
@@ -155,10 +163,10 @@ input time code disabled key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
+                , HtmlAttributesExtra.attributeMaybe (HtmlAttributes.attribute "autocomplete") (FieldType.toAutoComplete fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
-                , HtmlAttributes.id key
                 ]
                 []
     in
@@ -179,7 +187,8 @@ input time code disabled key field =
 
         Field.IntegerField_ (Field.IntegerField properties) ->
             Html.input
-                [ HtmlAttributes.name key
+                [ HtmlAttributes.id key
+                , HtmlAttributes.name key
                 , HtmlAttributes.disabled disabled
                 , HtmlAttributes.class "input"
                 , HtmlAttributes.type_ "number"
@@ -192,7 +201,6 @@ input time code disabled key field =
                     (FieldType.toMin time (FieldType.IntegerType properties.tipe))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
                     (FieldType.toMax time (FieldType.IntegerType properties.tipe))
-                , HtmlAttributes.id key
                 ]
                 []
 
@@ -206,14 +214,14 @@ input time code disabled key field =
 textarea : String -> Field.SimpleFieldProperties -> Bool -> Html.Html Msg.Msg
 textarea key field disabled =
     Html.textarea
-        [ HtmlAttributes.name key
+        [ HtmlAttributes.id key
+        , HtmlAttributes.name key
         , HtmlAttributes.disabled disabled
         , HtmlAttributes.class "textarea"
         , HtmlAttributes.value field.value
         , HtmlAttributes.required (field.required == Required.Yes)
         , HtmlAttributes.placeholder (Placeholder.toPlaceholder (FieldType.StringType (FieldType.SimpleType field.tipe)) Nothing)
         , HtmlEvents.onInput <| Msg.UpdateStringField key
-        , HtmlAttributes.id key
         ]
         []
 
@@ -229,7 +237,8 @@ tag key field disabled =
         [ Html.div [ HtmlAttributes.class "field has-addons" ]
             [ Html.p [ HtmlAttributes.class "control is-expanded" ]
                 [ Html.input
-                    [ HtmlAttributes.name key
+                    [ HtmlAttributes.id key
+                    , HtmlAttributes.name key
                     , HtmlAttributes.disabled disabled
                     , HtmlAttributes.class "input"
                     , HtmlAttributes.placeholder (Maybe.withDefault "" field.placeholder)
