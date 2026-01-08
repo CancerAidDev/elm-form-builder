@@ -9,16 +9,28 @@ module Form.Update exposing (update)
 
 -}
 
+import Browser.Dom as BrowserDom
 import Form.Fields as Fields
 import Form.Msg as Msg
+import Task
 
 
 {-| -}
 update : Msg.Msg -> Fields.Fields -> ( Fields.Fields, Cmd Msg.Msg )
 update msg fields =
     case msg of
+        Msg.NoOp ->
+            ( fields, Cmd.none )
+
         Msg.UpdateStringField key value ->
-            ( Fields.updateStringField key value fields, Cmd.none )
+            ( Fields.updateStringField key value fields
+            , Cmd.none
+            )
+
+        Msg.UpdateSearchableSelectField key value ->
+            ( Fields.updateStringField key value fields
+            , Task.attempt (\_ -> Msg.NoOp) (BrowserDom.focus key)
+            )
 
         Msg.UpdateMultiStringField key value checked ->
             ( Fields.updateMultiStringOptionField key value checked fields, Cmd.none )
@@ -42,7 +54,9 @@ update msg fields =
             ( Fields.resetValueToDefault key fields, Cmd.none )
 
         Msg.UpdateShowDropdown key showDropdown ->
-            ( Fields.updateShowDropdown key showDropdown fields, Cmd.none )
+            ( Fields.updateShowDropdown key showDropdown fields
+            , Cmd.none
+            )
 
         Msg.UpdateSearchbar key value ->
             ( Fields.updateSearchbar key value fields, Cmd.none )

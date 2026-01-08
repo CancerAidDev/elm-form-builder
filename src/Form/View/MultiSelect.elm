@@ -36,7 +36,8 @@ dropdownTrigger : String -> Field.MultiSelectFieldProperties a -> Bool -> Html.H
 dropdownTrigger key { placeholder, value, showDropdown } disabled =
     Html.div [ HtmlAttributes.class "dropdown-trigger" ]
         [ Html.button
-            [ HtmlAttributes.disabled disabled
+            [ HtmlAttributes.id key
+            , HtmlAttributes.disabled disabled
             , HtmlAttributes.class "button pl-4 pr-0"
             , HtmlEvents.onClick <| Msg.UpdateShowDropdown key (not showDropdown)
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
@@ -72,7 +73,6 @@ dropdownMenu key properties disabled =
         [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id key
             , Aria.roleDescription "menu"
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]
@@ -107,7 +107,6 @@ searchableDropdownMenu key properties disabled =
         [ Dropdown.overlay key
         , Html.div
             [ HtmlAttributes.class "dropdown-menu"
-            , HtmlAttributes.id key
             , Aria.roleDescription "menu"
             , Key.onKeyDown [ Key.escape <| Msg.UpdateShowDropdown key False ]
             ]

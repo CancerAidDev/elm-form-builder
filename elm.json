@@ -3,7 +3,7 @@
     "name": "canceraiddev/elm-form-builder",
     "summary": "Form widgets and validation used for internal projects.",
     "license": "Apache-2.0",
-    "version": "24.1.0",
+    "version": "25.0.0",
     "exposed-modules": [
         "Form.Field.Direction",
         "Form.Field.DecoderForOptions",
@@ -42,6 +42,7 @@
     "dependencies": {
         "NoRedInk/elm-json-decode-pipeline": "1.0.1 <= v < 2.0.0",
         "dillonkearns/elm-markdown": "7.0.1 <= v < 8.0.0",
+        "elm/browser": "1.0.2 <= v < 2.0.0",
         "elm/core": "1.0.0 <= v < 2.0.0",
         "elm/html": "1.0.0 <= v < 2.0.0",
         "elm/json": "1.1.3 <= v < 2.0.0",
