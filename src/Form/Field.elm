@@ -2278,7 +2278,9 @@ isCheckbox field =
             False
 
 
-{-| -}
+{-| Span label for fields were the label describes a group of inputs.
+Labels can only reference labelable elements e.g. inputs, not divs.
+-}
 isSpanLabel : Field -> Bool
 isSpanLabel field =
     case field of

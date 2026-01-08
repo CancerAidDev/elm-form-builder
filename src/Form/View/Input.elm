@@ -9,6 +9,7 @@ module Form.View.Input exposing (view)
 
 -}
 
+import Accessibility.Aria as Aria
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
@@ -270,6 +271,7 @@ viewTags key tags =
                     [ Html.text t
                     , Html.button
                         [ HtmlAttributes.class "delete is-small"
+                        , Aria.label <| "Delete " ++ t ++ " Tag"
                         , HtmlEvents.onClick (Msg.UpdateTags key t False)
                         ]
                         []

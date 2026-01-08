@@ -26,7 +26,7 @@ import Html.Extra as HtmlExtra
 {-| -}
 radio : String -> Field.RadioFieldProperties -> Bool -> Html.Html Msg.Msg
 radio key properties disabled =
-    radioContainer (List.map (viewRadioOption key properties disabled) properties.options)
+    radioContainer key (List.map (viewRadioOption key properties disabled) properties.options)
 
 
 viewRadioOption : String -> Field.RadioFieldProperties -> Bool -> Option.Option -> Html.Html Msg.Msg
@@ -49,7 +49,6 @@ viewRadioOption key { default, direction, value, disabled, hidden } enabledByDis
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioStringField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
-                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
             , optionLabel id (Maybe.withDefault option.value option.label)
@@ -59,7 +58,7 @@ viewRadioOption key { default, direction, value, disabled, hidden } enabledByDis
 {-| -}
 radioBool : String -> Field.RadioBoolFieldProperties -> Bool -> Html.Html Msg.Msg
 radioBool key properties disabled =
-    radioContainer (List.map (viewRadioBoolOption key properties disabled) [ True, False ])
+    radioContainer key (List.map (viewRadioBoolOption key properties disabled) [ True, False ])
 
 
 viewRadioBoolOption : String -> Field.RadioBoolFieldProperties -> Bool -> Bool -> Html.Html Msg.Msg
@@ -82,7 +81,6 @@ viewRadioBoolOption key { value, disabled, hidden } enabledByDisabled option =
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioBoolField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
-                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
             , optionLabel id (RadioBool.toString option)
@@ -92,7 +90,7 @@ viewRadioBoolOption key { value, disabled, hidden } enabledByDisabled option =
 {-| -}
 radioEnum : String -> Field.RadioEnumFieldProperties -> Bool -> Html.Html Msg.Msg
 radioEnum key properties disabled =
-    radioContainer (List.map (viewRadioEnumOption key properties disabled) properties.options)
+    radioContainer key (List.map (viewRadioEnumOption key properties disabled) properties.options)
 
 
 viewRadioEnumOption : String -> Field.RadioEnumFieldProperties -> Bool -> RadioEnum.Value -> Html.Html Msg.Msg
@@ -115,18 +113,18 @@ viewRadioEnumOption key { default, value, disabled, hidden } enabledByDisabled o
                 , HtmlAttributes.name key
                 , HtmlEvents.onClick <| Msg.UpdateRadioEnumField key option
                 , HtmlAttributesExtra.attributeIf checked (HtmlAttributes.checked True)
-                , Aria.labelledBy (key ++ " " ++ id)
                 ]
                 []
             , optionLabel id (RadioEnum.toString option)
             ]
 
 
-radioContainer : List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
-radioContainer =
+radioContainer : String -> List (Html.Html Msg.Msg) -> Html.Html Msg.Msg
+radioContainer key =
     Html.div
         [ HtmlAttributes.class "control columns is-gapless is-multiline m-0"
         , HtmlAttributes.attribute "role" "radiogroup"
+        , Aria.labelledBy key
         ]
 
 
@@ -147,7 +145,6 @@ optionDiv direction =
 optionLabel : String -> String -> Html.Html Msg.Msg
 optionLabel id value =
     Html.label
-        [ HtmlAttributes.id id
-        , HtmlAttributes.for id
+        [ HtmlAttributes.for id
         ]
         [ Html.text value ]

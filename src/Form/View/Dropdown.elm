@@ -44,6 +44,7 @@ searchBar key searchInput values options =
             [ Html.span [ HtmlAttributes.class "control" ]
                 [ Html.input
                     ([ HtmlAttributes.class "input is-small"
+                     , HtmlAttributes.name "Search"
                      , HtmlAttributes.placeholder "Search"
                      , HtmlEvents.onInput <| Msg.UpdateSearchbar key
                      , HtmlAttributes.value <| searchInput
