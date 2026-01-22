@@ -298,16 +298,16 @@ checkbox key field disabled =
             not field.value
     in
     Html.div [ HtmlAttributes.class "control" ]
-        [ Html.label [ HtmlAttributes.class "checkbox" ]
+        [ Html.label [ HtmlAttributes.class "checkbox is-flex is-align-items-start" ]
             [ Html.input
-                [ HtmlAttributes.class "mr-3"
+                [ HtmlAttributes.class "mt-1 mr-3"
                 , HtmlAttributes.disabled disabled
                 , HtmlAttributes.type_ "checkbox"
                 , HtmlAttributes.checked field.value
                 , HtmlEvents.onClick <| Msg.UpdateBoolField key toggledValue
                 ]
                 []
-            , Html.text field.label
+            , Html.div [] (Markdown.toHtml field.label)
             ]
         ]
 
