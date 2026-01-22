@@ -363,6 +363,22 @@ fields =
             |> FormField.setValue (Set.fromList [ "Hello", "Goodbye", "Beta" ])
             |> FormField.tag
         )
+    , \order ->
+        ( "Checkbox"
+        , FormField.checkboxDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "By checking this box, I confirm that we have the above person's consent for the above personal information to be shared and to be contacted for the purposes of a Program, and to be processed."
+            |> FormField.setOrder order
+            |> FormField.checkbox
+        )
+    , \order ->
+        ( "Checkbox with link"
+        , FormField.checkboxDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "By checking this box, I confirm that we have the above person's consent for the above personal information to be shared and to be contacted for the purposes of a Program, and to be processed in accordance with [Link](google.com)."
+            |> FormField.setOrder order
+            |> FormField.checkbox
+        )
     ]
         |> List.indexedMap (\index field -> field index)
         |> Dict.fromList
