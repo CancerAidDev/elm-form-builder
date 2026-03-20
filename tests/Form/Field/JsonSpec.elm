@@ -1261,7 +1261,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             }
                                   )
-                                , ( "metadata.email"
+                                , ( "customDict.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
@@ -1278,7 +1278,7 @@ suite =
                                             , regexValidation = []
                                             }
                                   )
-                                , ( "customerProperties.name"
+                                , ( "metadata.name"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
@@ -1295,28 +1295,28 @@ suite =
                                             , regexValidation = []
                                             }
                                   )
-                                , ( "customerProperties.groupNumber"
+                                , ( "customDict.customField"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
-                                            , label = "Group Number"
+                                            , label = "Custom Field"
                                             , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
                                             , tipe = FieldType.Text
                                             , order = 2
-                                            , value = "123456"
+                                            , value = "Foo Bar"
                                             , disabled = False
                                             , hidden = False
                                             , unhiddenBy = Nothing
                                             , regexValidation = []
                                             }
                                   )
-                                , ( "normal"
+                                , ( "normalField"
                                   , Field.MultiStringField_ <|
                                         Field.TagField
                                             { required = Required.Yes
-                                            , label = "Test"
+                                            , label = "Field"
                                             , labelExtraContent = Nothing
                                             , width = Width.HalfSize
                                             , enabledBy = Nothing
@@ -1333,6 +1333,6 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"customerProperties":{"groupNumber":"123456","name":"Foo Bar"},"metadata":{"date":"2022-01-01","email":"foo@example.com"},"normal":[]}"""
+                            """{"customDict":{"customField":"Foo Bar","email":"foo@example.com"},"metadata":{"date":"2022-01-01","name":"Foo Bar"},"normalField":[]}"""
             ]
         ]
