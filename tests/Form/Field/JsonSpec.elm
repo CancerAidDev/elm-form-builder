@@ -251,7 +251,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "type": "select",
                             "width": "50%",
@@ -266,7 +266,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.pet"
+                                ( "customDict1.pet"
                                 , Field.StringField_
                                     (Field.SelectField
                                         { required = Required.Yes
@@ -303,7 +303,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "type": "searchable_select",
                             "width": "50%",
@@ -318,7 +318,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.pet"
+                                ( "customDict1.pet"
                                 , Field.StringField_
                                     (Field.SearchableSelectField
                                         { required = Required.Yes
@@ -357,7 +357,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "type": "httpSelect",
                             "width": "50%",
@@ -380,7 +380,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "width": "50%",
                             "options": [
@@ -398,7 +398,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "type": "searchable_select",
                             "label": "Pet",
                             "options": [
@@ -416,9 +416,9 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.tag",
+                            "key": "customDict1.tag",
                             "label": "Tag",
-                            "labelExtraContent": "metadata",
+                            "labelExtraContent": "customDict1",
                             "type": "httpSelect",
                             "width": "50%",
                             "url": "tags",
@@ -431,7 +431,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.tag"
+                                ( "customDict1.tag"
                                 , Field.StringField_
                                     (Field.HttpSelectField
                                         { required = Required.Yes
@@ -439,7 +439,7 @@ suite =
                                         , enabledBy = Nothing
                                         , default = Nothing
                                         , label = "Tag"
-                                        , labelExtraContent = Just "metadata"
+                                        , labelExtraContent = Just "customDict1"
                                         , url = "tags"
                                         , options = RemoteData.NotAsked
                                         , value = ""
@@ -460,7 +460,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.tag",
+                            "key": "customDict1.tag",
                             "label": "Tag",
                             "type": "httpSelect",
                             "width": "50%",
@@ -475,7 +475,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.tag",
+                            "key": "customDict1.tag",
                             "label": "Tag",
                             "type": "select",
                             "width": "50%",
@@ -494,7 +494,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.tag",
+                            "key": "customDict1.tag",
                             "label": "Tag",
                             "type": "select",
                             "width": "50%",
@@ -512,7 +512,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.httpSearchableSelect",
+                            "key": "customDict1.httpSearchableSelect",
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
                             "width": "50%",
@@ -526,7 +526,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.httpSearchableSelect"
+                                ( "customDict1.httpSearchableSelect"
                                 , Field.StringField_
                                     (Field.HttpSearchableSelectField
                                         { required = Required.Yes
@@ -557,7 +557,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.httpSearchableSelect",
+                            "key": "customDict1.httpSearchableSelect",
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
                             "width": "50%",
@@ -580,7 +580,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.httpSearchableSelect",
+                            "key": "customDict1.httpSearchableSelect",
                             "label": "Http Searchable Select",
                             "type": "http_searchable_select",
                             "width": "50%",
@@ -703,7 +703,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "type": "multi_select",
                             "width": "50%",
@@ -719,7 +719,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.pet"
+                                ( "customDict1.pet"
                                 , Field.MultiStringField_
                                     (Field.MultiSelectField
                                         { required = Required.Yes
@@ -755,7 +755,7 @@ suite =
                         json =
                             """{
                             "required": true,
-                            "key": "metadata.pet",
+                            "key": "customDict1.pet",
                             "label": "Pet",
                             "type": "searchable_multi_select",
                             "width": "50%",
@@ -775,7 +775,7 @@ suite =
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "metadata.pet"
+                                ( "customDict1.pet"
                                 , Field.MultiStringField_
                                     (Field.SearchableMultiSelectField
                                         { required = Required.Yes
@@ -816,7 +816,7 @@ suite =
                             )
             ]
         , Test.describe "Encoding Fields"
-            [ Test.test "Metadata encoding without metadata form elements" <|
+            [ Test.test "Dictonary field encoding without any dictionary field form elements" <|
                 \_ ->
                     let
                         testDict =
@@ -843,7 +843,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":"Foo Bar"}"""
-            , Test.test "Metadata encoding with a list form element" <|
+            , Test.test "Dictonary field encoding with a list form element" <|
                 \_ ->
                     let
                         testDict =
@@ -870,12 +870,12 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":[]}"""
-            , Test.test "Metadata encoding with a metadata simple form element" <|
+            , Test.test "Dictonary field encoding with a dictionary key for a field form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.tag"
+                                [ ( "customDict1.tag"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
@@ -896,13 +896,13 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"tag":"bar"}}"""
-            , Test.test "Metadata encoding with a metadata select form element" <|
+                            """{"customDict1":{"tag":"bar"}}"""
+            , Test.test "Dictonary field encoding with a dictionary key for a select form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.pet"
+                                [ ( "customDict1.pet"
                                   , Field.StringField_ <|
                                         Field.SelectField
                                             { required = Required.Yes
@@ -935,13 +935,13 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"pet":"Dog"}}"""
-            , Test.test "Metadata encoding with a metadata searchable select form element" <|
+                            """{"customDict1":{"pet":"Dog"}}"""
+            , Test.test "Dictonary field encoding with a dictionary key for a searchable select form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.pet"
+                                [ ( "customDict1.pet"
                                   , Field.StringField_ <|
                                         Field.SearchableSelectField
                                             { required = Required.Yes
@@ -976,13 +976,13 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"pet":"Dog"}}"""
-            , Test.test "Metadata encoding with a metadata httpSelect form element" <|
+                            """{"customDict1":{"pet":"Dog"}}"""
+            , Test.test "Dictonary field encoding with a dictionary key for a httpSelect form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.tag"
+                                [ ( "customDict1.tag"
                                   , Field.StringField_ <|
                                         Field.HttpSelectField
                                             { required = Required.Yes
@@ -1007,13 +1007,13 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"tag":"foo"}}"""
-            , Test.test "Metadata encoding with a metadata multi-select form element" <|
+                            """{"customDict1":{"tag":"foo"}}"""
+            , Test.test "Dictionary field encoding with a dictionary key for a multi-select form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.pet"
+                                [ ( "customDict1.pet"
                                   , Field.MultiStringField_ <|
                                         Field.MultiSelectField
                                             { required = Required.Yes
@@ -1051,12 +1051,12 @@ suite =
                     , String.contains "Dog" encodedStr
                     )
                         |> Expect.equal ( True, True )
-            , Test.test "Metadata encoding with a metadata multi-select form element with invalid field" <|
+            , Test.test "Dictionary field encoding with a dictionary key for a multi-select form element with invalid field" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.pet"
+                                [ ( "customDict1.pet"
                                   , Field.MultiStringField_ <|
                                         Field.MultiSelectField
                                             { required = Required.Yes
@@ -1094,12 +1094,12 @@ suite =
                     , String.contains "Dog" encodedStr
                     )
                         |> Expect.equal ( False, True )
-            , Test.test "Metadata encoding with a metadata searchable-multi-select form element" <|
+            , Test.test "Dictionary field encoding with a dictionary key for a searchable-multi-select form element" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.pet"
+                                [ ( "customDict1.pet"
                                   , Field.MultiStringField_ <|
                                         Field.SearchableMultiSelectField
                                             { required = Required.Yes
@@ -1144,12 +1144,12 @@ suite =
                     , String.contains "Lion" encodedStr
                     )
                         |> Expect.equal ( False, True, True )
-            , Test.test "Metadata encoding with multiple metadata form element" <|
+            , Test.test "Dictionary field encoding with multiple dictionary keys for form elements" <|
                 \_ ->
                     let
                         testDict =
                             Dict.fromList
-                                [ ( "metadata.date"
+                                [ ( "customDict1.date"
                                   , Field.StringField_ <|
                                         Field.DateField
                                             { required = Required.Yes
@@ -1166,7 +1166,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             }
                                   )
-                                , ( "metadata.dateFuture"
+                                , ( "customDict1.dateFuture"
                                   , Field.StringField_ <|
                                         Field.DateField
                                             { required = Required.Yes
@@ -1183,7 +1183,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             }
                                   )
-                                , ( "metadata.email"
+                                , ( "customDict1.email"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
@@ -1200,7 +1200,7 @@ suite =
                                             , regexValidation = []
                                             }
                                   )
-                                , ( "metadata.name"
+                                , ( "customDict1.name"
                                   , Field.StringField_ <|
                                         Field.SimpleField
                                             { required = Required.Yes
@@ -1238,6 +1238,101 @@ suite =
                     in
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
-                            """{"metadata":{"date":"2022-01-01","dateFuture":"2023-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
+                            """{"customDict1":{"date":"2022-01-01","dateFuture":"2023-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
+            , Test.test "Dictionary field encoding with multiple unique dictionary keys" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "customDict1.date"
+                                  , Field.StringField_ <|
+                                        Field.DateField
+                                            { required = Required.Yes
+                                            , label = "Date"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.dateDefault
+                                            , order = 1
+                                            , value = "2022-01-01"
+                                            , parsedDate = Nothing
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            }
+                                  )
+                                , ( "customDict2.email"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Email"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Email
+                                            , order = order
+                                            , value = "foo@example.com"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "customDict1.name"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Name"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Text
+                                            , order = 2
+                                            , value = "Foo Bar"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "customDict2.customField"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Custom Field"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Text
+                                            , order = 2
+                                            , value = "Foo Bar"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "normalField"
+                                  , Field.MultiStringField_ <|
+                                        Field.TagField
+                                            { required = Required.Yes
+                                            , label = "Field"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , inputBar = "Foo Bar"
+                                            , value = Set.empty
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , placeholder = Nothing
+                                            }
+                                  )
+                                ]
+                    in
+                    Encode.encode 0 (encode testDict)
+                        |> Expect.equal
+                            """{"customDict1":{"date":"2022-01-01","name":"Foo Bar"},"customDict2":{"customField":"Foo Bar","email":"foo@example.com"},"normalField":[]}"""
             ]
         ]

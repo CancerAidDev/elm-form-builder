@@ -8,7 +8,7 @@ module Form.Field exposing
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired, isSpanLabel
     , encode
-    , metadataKey
+    , dictFieldKey
     )
 
 {-| Field type and helper functions
@@ -59,9 +59,9 @@ module Form.Field exposing
 @docs encode
 
 
-# Metadata
+# Dictionary Fields
 
-@docs metadataKey
+@docs dictFieldKey
 
 -}
 
@@ -2437,11 +2437,11 @@ encode field =
 
 
 {-| -}
-metadataKey : String -> Maybe String
-metadataKey string =
-    case String.split "." string of
-        [ "metadata", key ] ->
-            Just key
+dictFieldKey : String -> Maybe ( String, String )
+dictFieldKey fieldKey =
+    case String.split "." fieldKey of
+        [ newFieldKey, key ] ->
+            Just ( newFieldKey, key )
 
         _ ->
             Nothing
