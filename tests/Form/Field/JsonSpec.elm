@@ -816,7 +816,7 @@ suite =
                             )
             ]
         , Test.describe "Encoding Fields"
-            [ Test.test "Metadata encoding without metadata form elements" <|
+            [ Test.test "Dictonary field encoding without any dictionary field form elements" <|
                 \_ ->
                     let
                         testDict =
@@ -843,7 +843,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":"Foo Bar"}"""
-            , Test.test "Metadata encoding with a list form element" <|
+            , Test.test "Dictonary field encoding with a list form element" <|
                 \_ ->
                     let
                         testDict =
@@ -870,7 +870,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"name":[]}"""
-            , Test.test "Metadata encoding with a metadata simple form element" <|
+            , Test.test "Dictonary field encoding with a dictionary key for a field form element" <|
                 \_ ->
                     let
                         testDict =
@@ -897,7 +897,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"tag":"bar"}}"""
-            , Test.test "Metadata encoding with a metadata select form element" <|
+            , Test.test "Dictonary field encoding with a dictionary key for a select form element" <|
                 \_ ->
                     let
                         testDict =
@@ -936,7 +936,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"pet":"Dog"}}"""
-            , Test.test "Metadata encoding with a metadata searchable select form element" <|
+            , Test.test "Dictonary field encoding with a dictionary key for a searchable select form element" <|
                 \_ ->
                     let
                         testDict =
@@ -977,7 +977,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"pet":"Dog"}}"""
-            , Test.test "Metadata encoding with a metadata httpSelect form element" <|
+            , Test.test "Dictonary field encoding with a dictionary key for a httpSelect form element" <|
                 \_ ->
                     let
                         testDict =
@@ -1008,7 +1008,7 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"tag":"foo"}}"""
-            , Test.test "Metadata encoding with a metadata multi-select form element" <|
+            , Test.test "Dictionary field encoding with a dictionary key for a multi-select form element" <|
                 \_ ->
                     let
                         testDict =
@@ -1051,7 +1051,7 @@ suite =
                     , String.contains "Dog" encodedStr
                     )
                         |> Expect.equal ( True, True )
-            , Test.test "Metadata encoding with a metadata multi-select form element with invalid field" <|
+            , Test.test "Dictionary field encoding with a dictionary key for a multi-select form element with invalid field" <|
                 \_ ->
                     let
                         testDict =
@@ -1094,7 +1094,7 @@ suite =
                     , String.contains "Dog" encodedStr
                     )
                         |> Expect.equal ( False, True )
-            , Test.test "Metadata encoding with a metadata searchable-multi-select form element" <|
+            , Test.test "Dictionary field encoding with a dictionary key for a searchable-multi-select form element" <|
                 \_ ->
                     let
                         testDict =
@@ -1144,7 +1144,7 @@ suite =
                     , String.contains "Lion" encodedStr
                     )
                         |> Expect.equal ( False, True, True )
-            , Test.test "Metadata encoding with multiple metadata form element" <|
+            , Test.test "Dictionary field encoding with multiple dictionary keys for form elements" <|
                 \_ ->
                     let
                         testDict =
@@ -1239,5 +1239,100 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"metadata":{"date":"2022-01-01","dateFuture":"2023-01-01","email":"foo@example.com","name":"Foo Bar"},"name":[]}"""
+            , Test.test "Dictionary field encoding with multiple unique dictionary keys" <|
+                \_ ->
+                    let
+                        testDict =
+                            Dict.fromList
+                                [ ( "metadata.date"
+                                  , Field.StringField_ <|
+                                        Field.DateField
+                                            { required = Required.Yes
+                                            , label = "Date"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.dateDefault
+                                            , order = 1
+                                            , value = "2022-01-01"
+                                            , parsedDate = Nothing
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            }
+                                  )
+                                , ( "metadata.email"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Email"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Email
+                                            , order = order
+                                            , value = "foo@example.com"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "customerProperties.name"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Name"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Text
+                                            , order = 2
+                                            , value = "Foo Bar"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "customerProperties.groupNumber"
+                                  , Field.StringField_ <|
+                                        Field.SimpleField
+                                            { required = Required.Yes
+                                            , label = "Group Number"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , tipe = FieldType.Text
+                                            , order = 2
+                                            , value = "123456"
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , regexValidation = []
+                                            }
+                                  )
+                                , ( "normal"
+                                  , Field.MultiStringField_ <|
+                                        Field.TagField
+                                            { required = Required.Yes
+                                            , label = "Test"
+                                            , labelExtraContent = Nothing
+                                            , width = Width.HalfSize
+                                            , enabledBy = Nothing
+                                            , order = order
+                                            , inputBar = "Foo Bar"
+                                            , value = Set.empty
+                                            , disabled = False
+                                            , hidden = False
+                                            , unhiddenBy = Nothing
+                                            , placeholder = Nothing
+                                            }
+                                  )
+                                ]
+                    in
+                    Encode.encode 0 (encode testDict)
+                        |> Expect.equal
+                            """{"customerProperties":{"groupNumber":"123456","name":"Foo Bar"},"metadata":{"date":"2022-01-01","email":"foo@example.com"},"normal":[]}"""
             ]
         ]

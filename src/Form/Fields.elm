@@ -59,21 +59,32 @@ decoder time =
 encode : Fields -> Dict.Dict String Encode.Value
 encode =
     Dict.foldl
-        (\key field ( dict, metadataDict ) ->
-            case Field.metadataKey key of
-                Just metadataKey ->
-                    ( dict, Dict.insert metadataKey (Field.encode field) metadataDict )
+        (\key field ( dict, fieldDict ) ->
+            case Field.dictFieldKey key of
+                Just ( fieldKey, dictFieldKey ) ->
+                    ( dict
+                    , Dict.update fieldKey
+                        (\maybeF ->
+                            case maybeF of
+                                Nothing ->
+                                    Just <| Dict.singleton dictFieldKey (Field.encode field)
+
+                                Just f ->
+                                    Just <| Dict.insert dictFieldKey (Field.encode field) f
+                        )
+                        fieldDict
+                    )
 
                 Nothing ->
-                    ( Dict.insert key (Field.encode field) dict, metadataDict )
+                    ( Dict.insert key (Field.encode field) dict, fieldDict )
         )
         ( Dict.empty, Dict.empty )
-        >> (\( dict, metadataDict ) ->
-                if Dict.isEmpty metadataDict then
+        >> (\( dict, fieldDict ) ->
+                if Dict.isEmpty fieldDict then
                     dict
 
                 else
-                    Dict.insert "metadata" (Encode.dict identity identity metadataDict) dict
+                    Dict.union dict (Dict.map (\_ -> Encode.dict identity identity) fieldDict)
            )
 
 
