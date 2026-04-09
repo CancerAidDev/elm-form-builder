@@ -26,7 +26,7 @@ import Set
 
 {-| -}
 select : String -> Field.SelectFieldProperties {} -> Bool -> Html.Html Msg.Msg
-select key { value, required, options, hidden, placeholder, hasSelectablePlaceholder } disabled =
+select key { value, required, options, hidden, placeholder, hasSelectablePlaceholder, nullableOptionLabel } disabled =
     HtmlExtra.viewIf (not hidden) <|
         Html.div [ HtmlAttributes.class "select is-fullwidth" ]
             [ Html.select
@@ -37,9 +37,19 @@ select key { value, required, options, hidden, placeholder, hasSelectablePlaceho
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 ]
                 (viewPlaceholder hasSelectablePlaceholder placeholder
-                    :: List.map (viewOption value) options
+                    :: List.map (viewOption value) (options ++ nullableOption nullableOptionLabel)
                 )
             ]
+
+
+nullableOption : Maybe String -> List Option.Option
+nullableOption maybeLabel =
+    case maybeLabel of
+        Just label ->
+            [ { value = Field.nullableOptionValue, label = Just label } ]
+
+        Nothing ->
+            []
 
 
 viewPlaceholder : Bool -> String -> Html.Html Msg.Msg
@@ -94,6 +104,7 @@ httpSearchableSelect key properties disabled =
                 , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
                 , showDropdown = properties.showDropdown
                 , searchInput = properties.searchInput
+                , nullableOptionLabel = properties.nullableOptionLabel
                 }
                 disabled
         )
@@ -153,7 +164,7 @@ searchableDropdownMenu : String -> Field.SearchableSelectFieldProperties -> Html
 searchableDropdownMenu key properties =
     let
         filteredOptions =
-            Dropdown.filteredOptions properties.searchInput properties.options
+            Dropdown.filteredOptions properties.searchInput (properties.options ++ nullableOption properties.nullableOptionLabel)
     in
     Html.div []
         [ Dropdown.overlay key
@@ -208,6 +219,7 @@ httpSelect key properties disabled =
                 , unhiddenBy = properties.unhiddenBy
                 , placeholder = properties.placeholder
                 , hasSelectablePlaceholder = properties.hasSelectablePlaceholder
+                , nullableOptionLabel = properties.nullableOptionLabel
                 }
                 disabled
         )

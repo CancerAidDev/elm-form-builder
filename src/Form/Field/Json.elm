@@ -121,6 +121,7 @@ type alias JsonSelectFieldProperties =
     , unhiddenBy : Maybe String
     , placeholder : String
     , hasSelectablePlaceholder : Bool
+    , nullableOptionLabel : Maybe String
     }
 
 
@@ -140,6 +141,7 @@ type alias JsonSearchableSelectFieldProperties =
     , hasSelectablePlaceholder : Bool
     , showDropdown : Bool
     , searchInput : String
+    , nullableOptionLabel : Maybe String
     }
 
 
@@ -179,6 +181,7 @@ type alias JsonHttpSearchableSelectFieldProperties =
     , showDropdown : Bool
     , searchInput : String
     , decoderForOptions : DecoderForOptions.DecoderForOptions
+    , nullableOptionLabel : Maybe String
     }
 
 
@@ -449,7 +452,7 @@ toField time order field =
                     }
             )
 
-        JsonSelectField { required, key, label, labelExtraContent, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder } ->
+        JsonSelectField { required, key, label, labelExtraContent, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, nullableOptionLabel } ->
             ( key
             , Field.StringField_ <|
                 Field.SelectField
@@ -467,10 +470,11 @@ toField time order field =
                     , unhiddenBy = unhiddenBy
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
+                    , nullableOptionLabel = nullableOptionLabel
                     }
             )
 
-        JsonSearchableSelectField { required, key, label, labelExtraContent, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput } ->
+        JsonSearchableSelectField { required, key, label, labelExtraContent, width, default, enabledBy, options, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput, nullableOptionLabel } ->
             ( key
             , Field.StringField_ <|
                 Field.SearchableSelectField
@@ -490,6 +494,7 @@ toField time order field =
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
                     , showDropdown = showDropdown
                     , searchInput = searchInput
+                    , nullableOptionLabel = nullableOptionLabel
                     }
             )
 
@@ -517,7 +522,7 @@ toField time order field =
                     }
             )
 
-        JsonHttpSearchableSelectField { required, key, label, labelExtraContent, width, default, url, enabledBy, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput, decoderForOptions } ->
+        JsonHttpSearchableSelectField { required, key, label, labelExtraContent, width, default, url, enabledBy, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, showDropdown, searchInput, decoderForOptions, nullableOptionLabel } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSearchableSelectField
@@ -539,6 +544,7 @@ toField time order field =
                     , showDropdown = showDropdown
                     , searchInput = searchInput
                     , decoderForOptions = decoderForOptions
+                    , nullableOptionLabel = nullableOptionLabel
                     }
             )
 
@@ -779,6 +785,7 @@ decoderSelectJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
+        |> DecodePipeline.optional "nullableOptionLabel" (Decode.map Just Decode.string) Nothing
 
 
 decoderSearchableSelectJson : Decode.Decoder JsonSearchableSelectFieldProperties
@@ -799,6 +806,7 @@ decoderSearchableSelectJson =
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.hardcoded ""
+        |> DecodePipeline.optional "nullableOptionLabel" (Decode.map Just Decode.string) Nothing
 
 
 decoderHttpSelectJson : Decode.Decoder JsonHttpSelectFieldProperties
@@ -840,6 +848,7 @@ decoderHttpSearchableSelectJson =
         |> DecodePipeline.hardcoded False
         |> DecodePipeline.hardcoded ""
         |> DecodePipeline.required "decoderForOptions" DecoderForOptions.decoder
+        |> DecodePipeline.optional "nullableOptionLabel" (Decode.map Just Decode.string) Nothing
 
 
 decoderMultiSelectJson : Decode.Decoder JsonMultiSelectFieldProperties

@@ -14,7 +14,10 @@ optionsValidator options _ field =
         value =
             Field.getStringValue_ field
     in
-    if List.map .value options |> List.member value then
+    if value == Field.nullableOptionValue then
+        Ok field
+
+    else if List.map .value options |> List.member value then
         Ok field
 
     else
@@ -25,5 +28,9 @@ optionsValidator options _ field =
 -}
 remoteOptionsValidator : RemoteData.RemoteData err (List Option.Option) -> Types.Validator
 remoteOptionsValidator remoteOptions locale field =
-    RemoteData.map (\o -> optionsValidator o locale field) remoteOptions
-        |> RemoteData.withDefault (Err Types.InvalidOption)
+    if Field.getStringValue_ field == Field.nullableOptionValue then
+        Ok field
+
+    else
+        RemoteData.map (\o -> optionsValidator o locale field) remoteOptions
+            |> RemoteData.withDefault (Err Types.InvalidOption)

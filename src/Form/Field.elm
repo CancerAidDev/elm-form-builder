@@ -1133,6 +1133,7 @@ selectDefault =
     , options = []
     , placeholder = ""
     , hasSelectablePlaceholder = False
+    , nullableOptionLabel = Nothing
     }
 
 
@@ -1243,6 +1244,7 @@ searchableSelectDefault =
     , hasSelectablePlaceholder = False
     , showDropdown = False
     , searchInput = ""
+    , nullableOptionLabel = Nothing
     }
 
 
@@ -1285,6 +1287,7 @@ httpSearchableSelectDefault =
     , showDropdown = False
     , searchInput = ""
     , decoderForOptions = DecoderForOptions.default
+    , nullableOptionLabel = Nothing
     }
 
 
@@ -1526,6 +1529,7 @@ type alias SelectFieldProperties a =
             , options : List Option.Option
             , placeholder : String
             , hasSelectablePlaceholder : Bool
+            , nullableOptionLabel : Maybe String
         }
 
 
@@ -1561,6 +1565,7 @@ type alias HttpSearchableSelectFieldProperties =
         , showDropdown : Bool
         , searchInput : String
         , decoderForOptions : DecoderForOptions
+        , nullableOptionLabel : Maybe String
         }
 
 
@@ -2203,16 +2208,7 @@ updateRemoteOptions : RemoteData.RemoteData (HttpDetailed.Error String) (List Op
 updateRemoteOptions options field =
     case field of
         StringField_ (HttpSelectField properties) ->
-            let
-                optionsWithNullable =
-                    case properties.nullableOptionLabel of
-                        Just label ->
-                            RemoteData.map (\opts -> opts ++ [ { value = nullableOptionValue, label = Just label } ]) options
-
-                        Nothing ->
-                            options
-            in
-            StringField_ (HttpSelectField { properties | options = optionsWithNullable })
+            StringField_ (HttpSelectField { properties | options = options })
 
         StringField_ (HttpSearchableSelectField properties) ->
             StringField_ (HttpSearchableSelectField { properties | options = options })
