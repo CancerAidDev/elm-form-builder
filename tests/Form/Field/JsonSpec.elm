@@ -293,6 +293,7 @@ suite =
                                         , unhiddenBy = Nothing
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
+                                        , nullableOptionLabel = Nothing
                                         }
                                     )
                                 )
@@ -347,6 +348,7 @@ suite =
                                         , hasSelectablePlaceholder = True
                                         , showDropdown = False
                                         , searchInput = ""
+                                        , nullableOptionLabel = Nothing
                                         }
                                     )
                                 )
@@ -418,7 +420,9 @@ suite =
                             "required": true,
                             "key": "customDict1.tag",
                             "label": "Tag",
-                            "labelExtraContent": "customDict1",
+                            "labelExtraContent": {
+                                "content": "customDict1"
+                            },
                             "type": "httpSelect",
                             "width": "50%",
                             "url": "tags",
@@ -439,7 +443,7 @@ suite =
                                         , enabledBy = Nothing
                                         , default = Nothing
                                         , label = "Tag"
-                                        , labelExtraContent = Just "customDict1"
+                                        , labelExtraContent = Just { content = "customDict1", classes = Nothing }
                                         , url = "tags"
                                         , options = RemoteData.NotAsked
                                         , value = ""
@@ -450,6 +454,7 @@ suite =
                                         , placeholder = ""
                                         , hasSelectablePlaceholder = True
                                         , decoderForOptions = DecoderForOptions.default
+                                        , nullableOptionLabel = Nothing
                                         }
                                     )
                                 )
@@ -547,6 +552,7 @@ suite =
                                         , showDropdown = False
                                         , searchInput = ""
                                         , decoderForOptions = DecoderForOptions.default
+                                        , nullableOptionLabel = Nothing
                                         }
                                     )
                                 )
@@ -929,6 +935,7 @@ suite =
                                             , unhiddenBy = Nothing
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
+                                            , nullableOptionLabel = Nothing
                                             }
                                   )
                                 ]
@@ -970,6 +977,7 @@ suite =
                                             , hasSelectablePlaceholder = True
                                             , showDropdown = False
                                             , searchInput = ""
+                                            , nullableOptionLabel = Nothing
                                             }
                                   )
                                 ]
@@ -1001,6 +1009,7 @@ suite =
                                             , placeholder = ""
                                             , hasSelectablePlaceholder = True
                                             , decoderForOptions = DecoderForOptions.default
+                                            , nullableOptionLabel = Nothing
                                             }
                                   )
                                 ]
@@ -1334,5 +1343,207 @@ suite =
                     Encode.encode 0 (encode testDict)
                         |> Expect.equal
                             """{"customDict1":{"date":"2022-01-01","name":"Foo Bar"},"customDict2":{"customField":"Foo Bar","email":"foo@example.com"},"normalField":[]}"""
+            , Test.test "Select field decoder with nullable option" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "customDict1.pet",
+                            "label": "Pet",
+                            "type": "select",
+                            "width": "50%",
+                            "default": "Dog",
+                            "options": [
+                                { "value": "Dog" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ],
+                            "nullableOptionLabel": "Other"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "customDict1.pet"
+                                , Field.StringField_
+                                    (Field.SelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , label = "Pet"
+                                        , labelExtraContent = Nothing
+                                        , default = Just "Dog"
+                                        , options =
+                                            [ { label = Nothing
+                                              , value = "Dog"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Cat"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Parrot"
+                                              }
+                                            ]
+                                        , value = "Dog"
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , nullableOptionLabel = Just "Other"
+                                        }
+                                    )
+                                )
+                            )
+            , Test.test "Searchable select field decoder with nullable option" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "customDict1.pet",
+                            "label": "Pet",
+                            "type": "searchable_select",
+                            "width": "50%",
+                            "default": "Dog",
+                            "options": [
+                                { "value": "Dog" },
+                                { "value": "Cat" },
+                                { "value": "Parrot" }
+                            ],
+                            "nullableOptionLabel": "Other"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "customDict1.pet"
+                                , Field.StringField_
+                                    (Field.SearchableSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , label = "Pet"
+                                        , labelExtraContent = Nothing
+                                        , default = Just "Dog"
+                                        , options =
+                                            [ { label = Nothing
+                                              , value = "Dog"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Cat"
+                                              }
+                                            , { label = Nothing
+                                              , value = "Parrot"
+                                              }
+                                            ]
+                                        , value = "Dog"
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , showDropdown = False
+                                        , searchInput = ""
+                                        , nullableOptionLabel = Just "Other"
+                                        }
+                                    )
+                                )
+                            )
+            , Test.test "Http Select field decoder with nullable option" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "customDict1.tag",
+                            "label": "Tag",
+                            "type": "httpSelect",
+                            "width": "50%",
+                            "url": "tags",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            },
+                            "nullableOptionLabel": "Other"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "customDict1.tag"
+                                , Field.StringField_
+                                    (Field.HttpSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , default = Nothing
+                                        , label = "Tag"
+                                        , labelExtraContent = Nothing
+                                        , url = "tags"
+                                        , options = RemoteData.NotAsked
+                                        , value = ""
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , decoderForOptions = DecoderForOptions.default
+                                        , nullableOptionLabel = Just "Other"
+                                        }
+                                    )
+                                )
+                            )
+            , Test.test "Http Searchable Select field decoder with nullable option" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                            "required": true,
+                            "key": "customDict1.httpSearchableSelect",
+                            "label": "Http Searchable Select",
+                            "type": "http_searchable_select",
+                            "width": "50%",
+                            "url": "httpSearchableSelect",
+                            "decoderForOptions": {
+                                "value": "uuid",
+                                "label": "name"
+                            },
+                            "nullableOptionLabel": "Other"
+                        }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "customDict1.httpSearchableSelect"
+                                , Field.StringField_
+                                    (Field.HttpSearchableSelectField
+                                        { required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , default = Nothing
+                                        , label = "Http Searchable Select"
+                                        , labelExtraContent = Nothing
+                                        , url = "httpSearchableSelect"
+                                        , options = RemoteData.NotAsked
+                                        , value = ""
+                                        , order = order
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , placeholder = ""
+                                        , hasSelectablePlaceholder = True
+                                        , showDropdown = False
+                                        , searchInput = ""
+                                        , decoderForOptions = DecoderForOptions.default
+                                        , nullableOptionLabel = Just "Other"
+                                        }
+                                    )
+                                )
+                            )
             ]
         ]

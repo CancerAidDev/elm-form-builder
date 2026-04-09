@@ -331,7 +331,7 @@ fields =
         , FormField.radioBoolDefault
             |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Do you use any of the following modes of transport: "
-            |> FormField.setLabelExtraContent markdownLabelExtraContent
+            |> FormField.setLabelExtraContent { content = markdownLabelExtraContent, classes = Nothing }
             |> FormField.setOrder order
             |> FormField.radioBool
         )
@@ -378,6 +378,43 @@ fields =
             |> FormField.setLabel "By checking this box, I confirm that we have the above person's consent for the above personal information to be shared and to be contacted for the purposes of a Program, and to be processed in accordance with [Link](google.com)."
             |> FormField.setOrder order
             |> FormField.checkbox
+        )
+    , \order ->
+        ( "httpSelectWithNullableOption"
+        , FormField.httpSelectDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "HTTP Select with Nullable Option"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                (RemoteData.Success
+                    [ { label = Just "Australian Capital Territory", value = "1" }
+                    , { label = Just "New South Wales", value = "2" }
+                    , { label = Just "Northern Territory", value = "3" }
+                    , { label = Just "Queensland", value = "4" }
+                    , { label = Just "South Australian", value = "5" }
+                    , { label = Just "Tasmania", value = "6" }
+                    , { label = Just "Victorian", value = "7" }
+                    , { label = Just "Western Australia", value = "8" }
+                    ]
+                )
+            |> FormField.setNullableOptionLabel "Other"
+            |> FormField.setLabelExtraContent { content = "Instructions for the input below", classes = Just "is-size-7" }
+            |> FormField.httpSelect ""
+        )
+    , \order ->
+        ( "unhiddenByHttpSelect"
+        , FormField.httpSelectDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setUnhiddenBy "httpSelectWithNullableOption"
+            |> FormField.setLabel "Unhidden by HTTP Select with Nullable Option"
+            |> FormField.setOrder order
+            |> FormField.setOptions
+                (RemoteData.Success
+                    [ { label = Just "One", value = "1" }
+                    , { label = Just "Two", value = "2" }
+                    ]
+                )
+            |> FormField.httpSelect ""
         )
     ]
         |> List.indexedMap (\index field -> field index)

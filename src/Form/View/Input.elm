@@ -12,6 +12,7 @@ module Form.View.Input exposing (view)
 import Accessibility.Aria as Aria
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
+import Form.Field.LabelExtraContent as LabelExtraContent
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
@@ -46,6 +47,9 @@ view time submitted locale fields key field =
 
         shown =
             Fields.isShown fields field
+
+        maybeLabelExtraContent =
+            Field.getLabelExtraContent field
     in
     HtmlExtra.viewIf shown <|
         Html.div
@@ -54,7 +58,7 @@ view time submitted locale fields key field =
             , HtmlAttributes.class (Width.toStyle (Field.getProperties field).width)
             ]
             [ label key field disabled
-            , labelExtraContent field
+            , HtmlExtra.viewMaybe labelExtraContent maybeLabelExtraContent
             , control time locale disabled key field
             , error submitted locale fields field
             ]
@@ -81,16 +85,12 @@ label key field disabled =
             ]
 
 
-labelExtraContent : Field.Field -> Html.Html Msg.Msg
-labelExtraContent field =
-    HtmlExtra.viewMaybe
-        (\text ->
-            Html.div
-                [ HtmlAttributes.class "pb-2"
-                ]
-                (Markdown.toHtml text)
-        )
-        (Field.getLabelExtraContent field)
+labelExtraContent : LabelExtraContent.LabelExtraContent -> Html.Html Msg.Msg
+labelExtraContent { content, classes } =
+    Html.div
+        [ HtmlAttributes.class <| "pb-2 " ++ Maybe.withDefault "" classes
+        ]
+        (Markdown.toHtml content)
 
 
 control : Time.Posix -> Locale.Locale -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
