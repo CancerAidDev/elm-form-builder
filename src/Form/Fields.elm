@@ -299,7 +299,7 @@ getTriggersByValue key fields =
 
         Just field ->
             Field.getStringValue field
-                |> Maybe.map (\value -> String.length value > 0)
+                |> Maybe.map (\value -> String.length value > 0 && value /= Field.nullableOptionValue)
 
         _ ->
             Nothing

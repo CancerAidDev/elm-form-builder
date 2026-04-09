@@ -13,6 +13,7 @@ import Form.Field as Field
 import Form.Field.DecoderForOptions as DecoderForOptions
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
+import Form.Field.LabelExtraContent as LabelExtraContent
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
@@ -49,7 +50,7 @@ type alias JsonTagFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , disabled : Maybe Bool
@@ -65,7 +66,7 @@ type alias JsonSimpleFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.SimpleFieldType
@@ -80,7 +81,7 @@ type alias JsonEmailFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.SimpleFieldType
@@ -96,7 +97,7 @@ type alias JsonDateFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.DateFieldType
@@ -110,7 +111,7 @@ type alias JsonSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe String
@@ -127,7 +128,7 @@ type alias JsonSearchableSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe String
@@ -146,7 +147,7 @@ type alias JsonHttpSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe String
@@ -157,6 +158,7 @@ type alias JsonHttpSelectFieldProperties =
     , placeholder : String
     , hasSelectablePlaceholder : Bool
     , decoderForOptions : DecoderForOptions.DecoderForOptions
+    , nullableOptionLabel : Maybe String
     }
 
 
@@ -164,7 +166,7 @@ type alias JsonHttpSearchableSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe String
@@ -184,7 +186,7 @@ type alias JsonMultiSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , placeholder : String
@@ -200,7 +202,7 @@ type alias JsonSearchableMultiSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , placeholder : String
@@ -218,7 +220,7 @@ type alias JsonMultiHttpSelectFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , placeholder : String
@@ -235,7 +237,7 @@ type alias JsonCheckboxFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.CheckboxFieldType
@@ -249,7 +251,7 @@ type alias JsonRadioFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe String
@@ -265,7 +267,7 @@ type alias JsonRadioBoolFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , disabled : Maybe Bool
@@ -278,7 +280,7 @@ type alias JsonRadioEnumFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , default : Maybe RadioEnum.Value
@@ -293,7 +295,7 @@ type alias JsonIntegerFieldProperties =
     { required : Required.IsRequired
     , key : String
     , label : String
-    , labelExtraContent : Maybe String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
     , tipe : FieldType.IntegerFieldType
@@ -491,7 +493,7 @@ toField time order field =
                     }
             )
 
-        JsonHttpSelectField { required, key, label, labelExtraContent, width, default, enabledBy, url, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, decoderForOptions } ->
+        JsonHttpSelectField { required, key, label, labelExtraContent, width, default, enabledBy, url, disabled, hidden, unhiddenBy, placeholder, hasSelectablePlaceholder, decoderForOptions, nullableOptionLabel } ->
             ( key
             , Field.StringField_ <|
                 Field.HttpSelectField
@@ -511,6 +513,7 @@ toField time order field =
                     , placeholder = placeholder
                     , hasSelectablePlaceholder = hasSelectablePlaceholder
                     , decoderForOptions = decoderForOptions
+                    , nullableOptionLabel = nullableOptionLabel
                     }
             )
 
@@ -703,7 +706,7 @@ decoderSimpleJson tipe =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
@@ -719,7 +722,7 @@ decoderEmailJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded FieldType.Email
@@ -736,7 +739,7 @@ decoderDateJson tipe =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
@@ -751,7 +754,7 @@ decoderCheckboxJson tipe =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
@@ -766,7 +769,7 @@ decoderSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
@@ -784,7 +787,7 @@ decoderSearchableSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
@@ -804,7 +807,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
@@ -815,6 +818,7 @@ decoderHttpSelectJson =
         |> DecodePipeline.optional "placeholder" Decode.string ""
         |> DecodePipeline.optional "hasSelectablePlaceholder" Decode.bool True
         |> DecodePipeline.required "decoderForOptions" DecoderForOptions.decoder
+        |> DecodePipeline.optional "nullableOptionLabel" (Decode.map Just Decode.string) Nothing
 
 
 decoderHttpSearchableSelectJson : Decode.Decoder JsonHttpSearchableSelectFieldProperties
@@ -823,7 +827,7 @@ decoderHttpSearchableSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
@@ -844,7 +848,7 @@ decoderMultiSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.required "placeholder" Decode.string
@@ -861,7 +865,7 @@ decoderSearchableMultiSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.required "placeholder" Decode.string
@@ -880,7 +884,7 @@ decoderMultiHttpSelectJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.required "placeholder" Decode.string
@@ -898,7 +902,7 @@ decoderRadioJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe Decode.string) Nothing
@@ -915,7 +919,7 @@ decoderRadioBoolJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
@@ -929,7 +933,7 @@ decoderRadioEnumJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "default" (Decode.maybe RadioEnum.decoder) Nothing
@@ -945,7 +949,7 @@ decoderIntegerJson tipe =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.hardcoded tipe
@@ -960,7 +964,7 @@ decoderTagJson =
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
         |> DecodePipeline.required "label" Decode.string
-        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing

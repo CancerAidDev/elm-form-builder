@@ -3,7 +3,8 @@ module Form.Field exposing
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
     , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired, isSpanLabel
@@ -36,7 +37,9 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+
+@docs nullableOptionValue
 
 
 # Getters
@@ -68,6 +71,7 @@ module Form.Field exposing
 import Form.Field.DecoderForOptions as DecoderForOptions exposing (DecoderForOptions)
 import Form.Field.Direction as Direction
 import Form.Field.FieldType as FieldType
+import Form.Field.LabelExtraContent as LabelExtraContent
 import Form.Field.Option as Option
 import Form.Field.RadioEnum as RadioEnum
 import Form.Field.Required as Required
@@ -97,7 +101,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -121,7 +125,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -145,7 +149,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -169,7 +173,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -193,7 +197,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -217,7 +221,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -245,7 +249,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -265,7 +269,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -290,7 +294,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -310,7 +314,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -338,7 +342,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -358,7 +362,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -383,7 +387,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -412,7 +416,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -440,7 +444,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -467,7 +471,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -495,7 +499,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -522,7 +526,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -548,7 +552,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -574,7 +578,7 @@ Common builders:
 
   - `setIsRequired Required.IsRequired`
   - `setLabel String`
-  - `setLabelExtraContent String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
   - `setWidth Width.Width`
   - `setEnabledBy String`
   - `setOrder Int`
@@ -605,7 +609,7 @@ setLabel label field =
 
 
 {-| -}
-setLabelExtraContent : String -> FieldProperties a -> FieldProperties a
+setLabelExtraContent : LabelExtraContent.LabelExtraContent -> FieldProperties a -> FieldProperties a
 setLabelExtraContent labelExtraContent field =
     { field | labelExtraContent = Just labelExtraContent }
 
@@ -705,6 +709,20 @@ setPlaceholder placeholder field =
 setSelectablePlaceholder : FieldProperties { a | hasSelectablePlaceholder : Bool } -> FieldProperties { a | hasSelectablePlaceholder : Bool }
 setSelectablePlaceholder field =
     { field | hasSelectablePlaceholder = True }
+
+
+{-| Sentinel value used to represent the nullable option in an HttpSelectField.
+When this value is selected, `encode` will produce `null` rather than a string.
+-}
+nullableOptionValue : String
+nullableOptionValue =
+    "__nullable__"
+
+
+{-| -}
+setNullableOptionLabel : String -> FieldProperties { a | nullableOptionLabel : Maybe String } -> FieldProperties { a | nullableOptionLabel : Maybe String }
+setNullableOptionLabel label field =
+    { field | nullableOptionLabel = Just label }
 
 
 {-| -}
@@ -1153,6 +1171,7 @@ httpSelectDefault =
     , placeholder = ""
     , hasSelectablePlaceholder = False
     , decoderForOptions = DecoderForOptions.default
+    , nullableOptionLabel = Nothing
     }
 
 
@@ -1452,7 +1471,7 @@ type alias FieldProperties a =
     { a
         | required : Required.IsRequired
         , label : String
-        , labelExtraContent : Maybe String
+        , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
         , width : Width.Width
         , enabledBy : Maybe String
         , order : Int
@@ -1527,6 +1546,7 @@ type alias HttpSelectFieldProperties =
         , placeholder : String
         , hasSelectablePlaceholder : Bool
         , decoderForOptions : DecoderForOptions
+        , nullableOptionLabel : Maybe String
         }
 
 
@@ -2183,7 +2203,16 @@ updateRemoteOptions : RemoteData.RemoteData (HttpDetailed.Error String) (List Op
 updateRemoteOptions options field =
     case field of
         StringField_ (HttpSelectField properties) ->
-            StringField_ (HttpSelectField { properties | options = options })
+            let
+                optionsWithNullable =
+                    case properties.nullableOptionLabel of
+                        Just label ->
+                            RemoteData.map (\opts -> opts ++ [ { value = nullableOptionValue, label = Just label } ]) options
+
+                        Nothing ->
+                            options
+            in
+            StringField_ (HttpSelectField { properties | options = optionsWithNullable })
 
         StringField_ (HttpSearchableSelectField properties) ->
             StringField_ (HttpSearchableSelectField { properties | options = options })
@@ -2199,7 +2228,7 @@ getLabel =
 
 
 {-| -}
-getLabelExtraContent : Field -> Maybe String
+getLabelExtraContent : Field -> Maybe LabelExtraContent.LabelExtraContent
 getLabelExtraContent =
     getProperties >> .labelExtraContent
 
@@ -2412,6 +2441,9 @@ encode field =
                     String.trim (getStringValue_ stringField)
             in
             if String.isEmpty trimmed && isRequired field == Required.Nullable then
+                Encode.null
+
+            else if getStringValue_ stringField == nullableOptionValue then
                 Encode.null
 
             else
