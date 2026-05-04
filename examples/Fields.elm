@@ -96,6 +96,16 @@ fields =
             |> FormField.integer
         )
     , \order ->
+        ( "ratingScale"
+        , FormField.ratingScaleDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Rating Scale"
+            |> FormField.setMinRange 1
+            |> FormField.setMaxRange 5
+            |> FormField.setOrder order
+            |> FormField.ratingScale
+        )
+    , \order ->
         ( "dateOfBirth"
         , FormField.dateDefault
             |> FormField.setDateOfBirth

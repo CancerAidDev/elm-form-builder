@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), IntegerFieldTipe, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
     , dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
@@ -9,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, IntegerFieldTipe, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
 
 
 # Decoder
@@ -78,12 +78,18 @@ type SimpleFieldType
 
 
 {-| -}
-type alias IntegerFieldType =
+type IntegerFieldType
+    = SimpleInteger IntegerFieldTipe
+    | RatingScale
+
+
+{-| -}
+type alias IntegerFieldTipe =
     { min : Maybe Int, max : Maybe Int }
 
 
 {-| -}
-defaultInt : IntegerFieldType
+defaultInt : IntegerFieldTipe
 defaultInt =
     { min = Nothing
     , max = Nothing
@@ -91,7 +97,7 @@ defaultInt =
 
 
 {-| -}
-age : IntegerFieldType
+age : IntegerFieldTipe
 age =
     { min = Just 18
     , max = Just 99
@@ -244,10 +250,13 @@ fromString str =
             Just (MultiStringType Tags)
 
         "age" ->
-            Just (IntegerType age)
+            Just (IntegerType (SimpleInteger age))
 
         "integer" ->
-            Just (IntegerType defaultInt)
+            Just (IntegerType (SimpleInteger defaultInt))
+
+        "rating_scale" ->
+            Just (IntegerType RatingScale)
 
         _ ->
             Nothing
@@ -314,7 +323,7 @@ toMin time fieldType =
         StringType (DateType { min }) ->
             min |> Maybe.map (dateConfigToString time)
 
-        IntegerType { min } ->
+        IntegerType (SimpleInteger { min }) ->
             min |> Maybe.map String.fromInt
 
         _ ->
@@ -328,7 +337,7 @@ toMax time fieldType =
         StringType (DateType { max }) ->
             max |> Maybe.map (dateConfigToString time)
 
-        IntegerType { max } ->
+        IntegerType (SimpleInteger { max }) ->
             max |> Maybe.map String.fromInt
 
         _ ->

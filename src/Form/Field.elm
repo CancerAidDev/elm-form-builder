@@ -1,9 +1,9 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
-    , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, RatingScaleFieldProperties
+    , integerDefault, ratingScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , integer, ratingScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinRange, setMaxRange, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -22,22 +22,22 @@ module Form.Field exposing
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, RatingScaleFieldProperties
 
 
 # Default Properties
 
-@docs integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs integerDefault, ratingScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, ratingScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinRange, setMaxRange, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
@@ -278,9 +278,29 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-integer : IntegerFieldProperties -> Field
+integer : SimpleIntegerFieldProperties -> Field
 integer =
-    IntegerField_ << IntegerField
+    IntegerField_ << SimpleIntegerField
+
+
+{-| Makes a rating scale input field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+ratingScale : RatingScaleFieldProperties -> Field
+ratingScale =
+    IntegerField_ << RatingScaleField
 
 
 {-| Makes a tag field.
@@ -799,16 +819,44 @@ setMinDateOffset offset ({ tipe } as field) =
 
 {-| Sets the max integer value.
 -}
-setMax : Int -> IntegerFieldProperties -> IntegerFieldProperties
+setMax : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
 setMax max ({ tipe } as field) =
     setTipe { tipe | max = Just max } field
 
 
 {-| Sets the min integer value.
 -}
-setMin : Int -> IntegerFieldProperties -> IntegerFieldProperties
+setMin : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
 setMin min ({ tipe } as field) =
     setTipe { tipe | min = Just min } field
+
+
+{-| Sets the min range value.
+-}
+setMinRange : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setMinRange min field =
+    { field | minValue = min }
+
+
+{-| Sets the min range value.
+-}
+setMaxRange : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setMaxRange max field =
+    { field | maxValue = max }
+
+
+{-| Sets the left label value.
+-}
+setLeftLabel : String -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setLeftLabel leftLabel field =
+    { field | leftLabel = Just leftLabel }
+
+
+{-| Sets the right label value.
+-}
+setRightLabel : String -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setRightLabel rightLabel field =
+    { field | rightLabel = Just rightLabel }
 
 
 {-| -}
@@ -1410,7 +1458,7 @@ radioDefault =
 , value = Nothing
 }`
 -}
-integerDefault : IntegerFieldProperties
+integerDefault : SimpleIntegerFieldProperties
 integerDefault =
     { required = Required.No
     , label = ""
@@ -1423,6 +1471,41 @@ integerDefault =
     , hidden = False
     , unhiddenBy = Nothing
     , value = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, labelExtraContent = Nothing
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, minValue = 1
+, maxValue = 5
+, leftLabel = Nothing
+, rightLabel = Nothing
+}`
+-}
+ratingScaleDefault : RatingScaleFieldProperties
+ratingScaleDefault =
+    { required = Required.No
+    , label = ""
+    , labelExtraContent = Nothing
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , minValue = 1
+    , maxValue = 5
+    , leftLabel = Nothing
+    , rightLabel = Nothing
     }
 
 
@@ -1458,7 +1541,8 @@ type BoolField
 
 {-| -}
 type IntegerField
-    = IntegerField IntegerFieldProperties
+    = SimpleIntegerField SimpleIntegerFieldProperties
+    | RatingScaleField RatingScaleFieldProperties
 
 
 {-| -}
@@ -1629,8 +1713,20 @@ type alias RadioBoolFieldProperties =
 
 
 {-| -}
-type alias IntegerFieldProperties =
-    FieldProperties { tipe : FieldType.IntegerFieldType, value : Maybe Int }
+type alias IntegerFieldProperties a =
+    FieldProperties
+        { a
+            | value : Maybe Int
+        }
+
+
+{-| -}
+type alias SimpleIntegerFieldProperties =
+    IntegerFieldProperties { tipe : FieldType.IntegerFieldTipe }
+
+
+type alias RatingScaleFieldProperties =
+    IntegerFieldProperties { minValue : Int, maxValue : Int, leftLabel : Maybe String, rightLabel : Maybe String }
 
 
 {-| -}
@@ -1654,7 +1750,10 @@ getProperties field =
         BoolField_ (RadioEnumField properties) ->
             getCommonProperties properties
 
-        IntegerField_ (IntegerField properties) ->
+        IntegerField_ (SimpleIntegerField properties) ->
+            getCommonProperties properties
+
+        IntegerField_ (RatingScaleField properties) ->
             getCommonProperties properties
 
 
@@ -2010,8 +2109,11 @@ resetValueToDefault field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
-        IntegerField_ (IntegerField properties) ->
-            IntegerField_ (IntegerField { properties | value = integerDefault.value })
+        IntegerField_ (SimpleIntegerField properties) ->
+            IntegerField_ (SimpleIntegerField { properties | value = integerDefault.value })
+
+        IntegerField_ (RatingScaleField properties) ->
+            IntegerField_ (RatingScaleField { properties | value = ratingScaleDefault.value })
 
 
 {-| -}
@@ -2181,8 +2283,13 @@ updateRadioEnumValue_ value field =
 
 {-| -}
 updateIntegerValue_ : Maybe Int -> IntegerField -> IntegerField
-updateIntegerValue_ value (IntegerField properties) =
-    IntegerField { properties | value = value }
+updateIntegerValue_ value field =
+    case field of
+        SimpleIntegerField properties ->
+            SimpleIntegerField { properties | value = value }
+
+        RatingScaleField properties ->
+            RatingScaleField { properties | value = value }
 
 
 {-| -}
@@ -2279,7 +2386,10 @@ getStringValue field =
 getIntegerValue : Field -> Maybe Int
 getIntegerValue field =
     case field of
-        IntegerField_ (IntegerField { value }) ->
+        IntegerField_ (SimpleIntegerField { value }) ->
+            value
+
+        IntegerField_ (RatingScaleField { value }) ->
             value
 
         _ ->
@@ -2341,8 +2451,11 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        IntegerField_ (IntegerField { tipe }) ->
-            FieldType.IntegerType tipe
+        IntegerField_ (SimpleIntegerField { tipe }) ->
+            FieldType.IntegerType (FieldType.SimpleInteger tipe)
+
+        IntegerField_ (RatingScaleField _) ->
+            FieldType.IntegerType FieldType.RatingScale
 
 
 {-| -}
@@ -2460,7 +2573,10 @@ encode field =
         BoolField_ (RadioBoolField { value }) ->
             EncodeExtra.maybe Encode.bool value
 
-        IntegerField_ (IntegerField { value }) ->
+        IntegerField_ (SimpleIntegerField { value }) ->
+            EncodeExtra.maybe Encode.int value
+
+        IntegerField_ (RatingScaleField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

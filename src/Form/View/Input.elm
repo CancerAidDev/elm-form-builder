@@ -146,7 +146,10 @@ control time (Locale.Locale _ code) disabled key field =
         Field.BoolField_ (Field.RadioEnumField properties) ->
             Radio.radioEnum key properties disabled
 
-        Field.IntegerField_ (Field.IntegerField _) ->
+        Field.IntegerField_ (Field.SimpleIntegerField _) ->
+            input time Nothing disabled key field
+
+        Field.IntegerField_ (Field.RatingScaleField _) ->
             input time Nothing disabled key field
 
 
@@ -186,7 +189,7 @@ input time code disabled key field =
             in
             renderInput fieldType properties
 
-        Field.IntegerField_ (Field.IntegerField properties) ->
+        Field.IntegerField_ (Field.SimpleIntegerField properties) ->
             Html.input
                 [ HtmlAttributes.id key
                 , HtmlAttributes.name key
@@ -199,17 +202,45 @@ input time code disabled key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateIntegerField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.IntegerType properties.tipe))
+                    (FieldType.toMin time (FieldType.IntegerType (FieldType.SimpleInteger properties.tipe)))
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time (FieldType.IntegerType properties.tipe))
+                    (FieldType.toMax time (FieldType.IntegerType (FieldType.SimpleInteger properties.tipe)))
                 ]
                 []
+
+        Field.IntegerField_ (Field.RatingScaleField properties) ->
+            ratingScale key properties disabled
 
         Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties disabled
 
         _ ->
             HtmlExtra.nothing
+
+
+ratingScale : String -> Field.RatingScaleFieldProperties -> Bool -> Html.Html Msg.Msg
+ratingScale key field disabled =
+    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "rating-scale" ]
+        [ HtmlExtra.viewMaybe (\text -> Html.div [] [ Html.text text ]) field.leftLabel
+        , Html.div []
+            (List.map
+                (\v ->
+                    Html.div []
+                        [ Html.p [] [ Html.text <| String.fromInt v ]
+                        , Html.input
+                            [ HtmlAttributes.class "mx-2"
+                            , HtmlAttributes.type_ "radio"
+                            , HtmlAttributes.disabled disabled
+                            , HtmlAttributesExtra.attributeIf (field.value == Just v) (HtmlAttributes.checked True)
+                            , HtmlEvents.onClick <| Msg.UpdateIntegerField key (String.fromInt v)
+                            ]
+                            []
+                        ]
+                )
+                (List.range field.minValue field.maxValue)
+            )
+        , HtmlExtra.viewMaybe (\text -> Html.div [] [ Html.text text ]) field.rightLabel
+        ]
 
 
 textarea : String -> Field.SimpleFieldProperties -> Bool -> Html.Html Msg.Msg

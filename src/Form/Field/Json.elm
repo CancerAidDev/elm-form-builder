@@ -43,6 +43,7 @@ type JsonField
     | JsonRadioBoolField JsonRadioBoolFieldProperties
     | JsonRadioEnumField JsonRadioEnumFieldProperties
     | JsonIntegerField JsonIntegerFieldProperties
+    | JsonRatingScaleField JsonRatingScaleFieldProperties
     | JsonTagField JsonTagFieldProperties
 
 
@@ -301,10 +302,27 @@ type alias JsonIntegerFieldProperties =
     , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
-    , tipe : FieldType.IntegerFieldType
+    , tipe : FieldType.IntegerFieldTipe
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    }
+
+
+type alias JsonRatingScaleFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , minValue : Int
+    , maxValue : Int
+    , leftLabel : Maybe String
+    , rightLabel : Maybe String
     }
 
 
@@ -366,8 +384,11 @@ decoderForType fieldType =
         FieldType.BoolType FieldType.RadioEnum ->
             Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-        FieldType.IntegerType integerType ->
-            Decode.map JsonIntegerField (decoderIntegerJson integerType)
+        FieldType.IntegerType (FieldType.SimpleInteger integerFieldType) ->
+            Decode.map JsonIntegerField (decoderIntegerJson integerFieldType)
+
+        FieldType.IntegerType FieldType.RatingScale ->
+            Decode.map JsonRatingScaleField decoderRatingScaleJson
 
 
 toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
@@ -571,7 +592,7 @@ toField time order field =
         JsonIntegerField { required, key, label, labelExtraContent, width, enabledBy, tipe, disabled, hidden, unhiddenBy } ->
             ( key
             , Field.IntegerField_ <|
-                Field.IntegerField
+                Field.SimpleIntegerField
                     { required = required
                     , label = label
                     , labelExtraContent = labelExtraContent
@@ -583,6 +604,27 @@ toField time order field =
                     , tipe = tipe
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    }
+            )
+
+        JsonRatingScaleField { required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, minValue, maxValue, leftLabel, rightLabel } ->
+            ( key
+            , Field.IntegerField_ <|
+                Field.RatingScaleField
+                    { required = required
+                    , label = label
+                    , labelExtraContent = labelExtraContent
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = Nothing
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , minValue = minValue
+                    , maxValue = maxValue
+                    , leftLabel = leftLabel
+                    , rightLabel = rightLabel
                     }
             )
 
@@ -952,7 +994,7 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
-decoderIntegerJson : FieldType.IntegerFieldType -> Decode.Decoder JsonIntegerFieldProperties
+decoderIntegerJson : FieldType.IntegerFieldTipe -> Decode.Decoder JsonIntegerFieldProperties
 decoderIntegerJson tipe =
     Decode.succeed JsonIntegerFieldProperties
         |> DecodePipeline.required "required" Required.decoder
@@ -965,6 +1007,24 @@ decoderIntegerJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderRatingScaleJson : Decode.Decoder JsonRatingScaleFieldProperties
+decoderRatingScaleJson =
+    Decode.succeed JsonRatingScaleFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "minValue" Decode.int
+        |> DecodePipeline.required "maxValue" Decode.int
+        |> DecodePipeline.optional "leftLabel" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "rightLabel" (Decode.map Just Decode.string) Nothing
 
 
 decoderTagJson : Decode.Decoder JsonTagFieldProperties
