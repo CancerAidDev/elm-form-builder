@@ -108,7 +108,7 @@ fields =
         ( "ratingScaleLarge"
         , FormField.ratingScaleDefault
             |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "Rating Scale (NPS)"
+            |> FormField.setLabel "Rating Scale (large)"
             |> FormField.setOrder order
             |> FormField.setMinScale 0
             |> FormField.setMaxScale 10
