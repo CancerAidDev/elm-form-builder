@@ -51,6 +51,13 @@ suite =
                                 , { label = Nothing, value = option2 }
                                 ]
                         )
+        , Test.fuzz Fuzz.int "updateIntegerValue RatingScaleField" <|
+            \v ->
+                Field.ratingScaleDefault
+                    |> Field.ratingScale
+                    |> Field.updateIntegerValue (String.fromInt v)
+                    |> Field.getIntegerValue
+                    |> Expect.equal (Just v)
         , Test.fuzz2 Fuzz.string Fuzz.string "Maybe Update Radio " <|
             \option1 option2 ->
                 let

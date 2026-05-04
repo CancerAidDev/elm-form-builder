@@ -820,6 +820,75 @@ suite =
                                     )
                                 )
                             )
+            , Test.test "Rating scale field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "rating",
+                                "label": "Rating",
+                                "type": "rating_scale",
+                                "width": "100%",
+                                "scaleValues": { "min": 1, "max": 5 }
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "rating"
+                                , Field.IntegerField_ <|
+                                    Field.RatingScaleField
+                                        { required = Required.Yes
+                                        , label = "Rating"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , scaleValues = { min = 1, max = 5 }
+                                        , scaleLabels = Nothing
+                                        }
+                                )
+                            )
+            , Test.test "Rating scale field decoder with scale labels" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": false,
+                                "key": "difficulty",
+                                "label": "Difficulty",
+                                "type": "rating_scale",
+                                "width": "100%",
+                                "scaleValues": { "min": 1, "max": 10 },
+                                "scaleLabels": { "left": "Easy", "right": "Hard" }
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "difficulty"
+                                , Field.IntegerField_ <|
+                                    Field.RatingScaleField
+                                        { required = Required.No
+                                        , label = "Difficulty"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , scaleValues = { min = 1, max = 10 }
+                                        , scaleLabels = Just { left = "Easy", right = "Hard" }
+                                        }
+                                )
+                            )
             ]
         , Test.describe "Encoding Fields"
             [ Test.test "Dictonary field encoding without any dictionary field form elements" <|
