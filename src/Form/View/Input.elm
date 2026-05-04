@@ -218,31 +218,6 @@ input time code disabled key field =
             HtmlExtra.nothing
 
 
-ratingScale : String -> Field.RatingScaleFieldProperties -> Bool -> Html.Html Msg.Msg
-ratingScale key field disabled =
-    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "rating-scale" ]
-        [ HtmlExtra.viewMaybe (\text -> Html.div [] [ Html.text text ]) field.leftLabel
-        , Html.div []
-            (List.map
-                (\v ->
-                    Html.div []
-                        [ Html.p [] [ Html.text <| String.fromInt v ]
-                        , Html.input
-                            [ HtmlAttributes.class "mx-2"
-                            , HtmlAttributes.type_ "radio"
-                            , HtmlAttributes.disabled disabled
-                            , HtmlAttributesExtra.attributeIf (field.value == Just v) (HtmlAttributes.checked True)
-                            , HtmlEvents.onClick <| Msg.UpdateIntegerField key (String.fromInt v)
-                            ]
-                            []
-                        ]
-                )
-                (List.range field.minValue field.maxValue)
-            )
-        , HtmlExtra.viewMaybe (\text -> Html.div [] [ Html.text text ]) field.rightLabel
-        ]
-
-
 textarea : String -> Field.SimpleFieldProperties -> Bool -> Html.Html Msg.Msg
 textarea key field disabled =
     Html.textarea
@@ -256,6 +231,40 @@ textarea key field disabled =
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
+
+
+ratingScale : String -> Field.RatingScaleFieldProperties -> Bool -> Html.Html Msg.Msg
+ratingScale key field disabled =
+    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "rating-scale is-flex-tablet is-align-items-end is-justify-content-space-between" ]
+        (HtmlExtra.viewMaybe (\{ left } -> Html.p [ HtmlAttributes.class "mb-1" ] [ Html.text left ]) field.scaleLabels
+            :: (List.map
+                    (\v ->
+                        let
+                            id : String
+                            id =
+                                key ++ "_" ++ String.fromInt v
+                        in
+                        Html.div [ HtmlAttributes.class "radio is-flex-mobile has-text-centered mb-1" ]
+                            [ Html.label
+                                [ HtmlAttributes.class "p-2 is-block is-clickable"
+                                , HtmlAttributes.for id
+                                ]
+                                [ Html.text <| String.fromInt v ]
+                            , Html.input
+                                [ HtmlAttributes.id id
+                                , HtmlAttributes.class "mx-2"
+                                , HtmlAttributes.type_ "radio"
+                                , HtmlAttributes.disabled disabled
+                                , HtmlAttributesExtra.attributeIf (field.value == Just v) (HtmlAttributes.checked True)
+                                , HtmlEvents.onClick <| Msg.UpdateIntegerField key (String.fromInt v)
+                                ]
+                                []
+                            ]
+                    )
+                    (List.range field.scaleValues.min field.scaleValues.max)
+                    ++ [ HtmlExtra.viewMaybe (\{ right } -> Html.p [] [ Html.text right ]) field.scaleLabels ]
+               )
+        )
 
 
 tag : String -> Field.TagFieldProperties -> Bool -> Html.Html Msg.Msg

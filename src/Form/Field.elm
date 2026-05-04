@@ -3,7 +3,7 @@ module Form.Field exposing
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, RatingScaleFieldProperties
     , integerDefault, ratingScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, ratingScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinRange, setMaxRange, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setScaleLabels, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -37,7 +37,7 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinRange, setMaxRange, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setScaleLabels, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
@@ -702,6 +702,12 @@ setTipe tipe field =
 
 
 {-| -}
+setScaleValues : r -> FieldProperties { a | scaleValues : r } -> FieldProperties { a | scaleValues : r }
+setScaleValues scaleValues field =
+    { field | scaleValues = scaleValues }
+
+
+{-| -}
 setValue : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
 setValue value field =
     { field | value = value }
@@ -831,32 +837,24 @@ setMin min ({ tipe } as field) =
     setTipe { tipe | min = Just min } field
 
 
-{-| Sets the min range value.
+{-| Sets the min scale value
 -}
-setMinRange : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setMinRange min field =
-    { field | minValue = min }
+setMinScale : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setMinScale min ({ scaleValues } as field) =
+    setScaleValues { scaleValues | min = min } field
 
 
-{-| Sets the min range value.
+{-| Sets the max scale value
 -}
-setMaxRange : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setMaxRange max field =
-    { field | maxValue = max }
+setMaxScale : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setMaxScale max ({ scaleValues } as field) =
+    setScaleValues { scaleValues | max = max } field
 
 
-{-| Sets the left label value.
--}
-setLeftLabel : String -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setLeftLabel leftLabel field =
-    { field | leftLabel = Just leftLabel }
-
-
-{-| Sets the right label value.
--}
-setRightLabel : String -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setRightLabel rightLabel field =
-    { field | rightLabel = Just rightLabel }
+{-| -}
+setScaleLabels : FieldType.ScaleLabels -> RatingScaleFieldProperties -> RatingScaleFieldProperties
+setScaleLabels scaleLabels field =
+    { field | scaleLabels = Just scaleLabels }
 
 
 {-| -}
@@ -1502,10 +1500,8 @@ ratingScaleDefault =
     , hidden = False
     , unhiddenBy = Nothing
     , value = Nothing
-    , minValue = 1
-    , maxValue = 5
-    , leftLabel = Nothing
-    , rightLabel = Nothing
+    , scaleValues = { min = 1, max = 5 }
+    , scaleLabels = Nothing
     }
 
 
@@ -1725,8 +1721,9 @@ type alias SimpleIntegerFieldProperties =
     IntegerFieldProperties { tipe : FieldType.IntegerFieldTipe }
 
 
+{-| -}
 type alias RatingScaleFieldProperties =
-    IntegerFieldProperties { minValue : Int, maxValue : Int, leftLabel : Maybe String, rightLabel : Maybe String }
+    IntegerFieldProperties { scaleValues : FieldType.ScaleValues, scaleLabels : Maybe FieldType.ScaleLabels }
 
 
 {-| -}

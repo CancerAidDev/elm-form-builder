@@ -319,10 +319,8 @@ type alias JsonRatingScaleFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
-    , minValue : Int
-    , maxValue : Int
-    , leftLabel : Maybe String
-    , rightLabel : Maybe String
+    , scaleValues : FieldType.ScaleValues
+    , scaleLabels : Maybe FieldType.ScaleLabels
     }
 
 
@@ -607,7 +605,7 @@ toField time order field =
                     }
             )
 
-        JsonRatingScaleField { required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, minValue, maxValue, leftLabel, rightLabel } ->
+        JsonRatingScaleField { required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, scaleValues, scaleLabels } ->
             ( key
             , Field.IntegerField_ <|
                 Field.RatingScaleField
@@ -621,10 +619,8 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
-                    , minValue = minValue
-                    , maxValue = maxValue
-                    , leftLabel = leftLabel
-                    , rightLabel = rightLabel
+                    , scaleValues = scaleValues
+                    , scaleLabels = scaleLabels
                     }
             )
 
@@ -1021,10 +1017,22 @@ decoderRatingScaleJson =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.required "minValue" Decode.int
-        |> DecodePipeline.required "maxValue" Decode.int
-        |> DecodePipeline.optional "leftLabel" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.optional "rightLabel" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.required "scaleValues" decoderScaleValues
+        |> DecodePipeline.optional "scaleLabels" (Decode.map Just decoderScaleLabels) Nothing
+
+
+decoderScaleValues : Decode.Decoder FieldType.ScaleValues
+decoderScaleValues =
+    Decode.succeed FieldType.ScaleValues
+        |> DecodePipeline.required "min" Decode.int
+        |> DecodePipeline.required "max" Decode.int
+
+
+decoderScaleLabels : Decode.Decoder FieldType.ScaleLabels
+decoderScaleLabels =
+    Decode.succeed FieldType.ScaleLabels
+        |> DecodePipeline.required "left" Decode.string
+        |> DecodePipeline.required "right" Decode.string
 
 
 decoderTagJson : Decode.Decoder JsonTagFieldProperties

@@ -98,10 +98,29 @@ fields =
     , \order ->
         ( "ratingScale"
         , FormField.ratingScaleDefault
-            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setIsRequired IsRequired.Yes
             |> FormField.setLabel "Rating Scale"
-            |> FormField.setMinRange 1
-            |> FormField.setMaxRange 5
+            |> FormField.setOrder order
+            |> FormField.setScaleLabels { left = "Very Easy", right = "Very Difficult" }
+            |> FormField.ratingScale
+        )
+    , \order ->
+        ( "ratingScaleLarge"
+        , FormField.ratingScaleDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Rating Scale (NPS)"
+            |> FormField.setOrder order
+            |> FormField.setMinScale 0
+            |> FormField.setMaxScale 10
+            |> FormField.setScaleLabels { left = "Very Easy", right = "Very Difficult" }
+            |> FormField.ratingScale
+        )
+    , \order ->
+        ( "ratingScaleNoLabels"
+        , FormField.ratingScaleDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setEnabledBy "ratingScaleLarge"
+            |> FormField.setLabel "Rating Scale (No labels)"
             |> FormField.setOrder order
             |> FormField.ratingScale
         )

@@ -1,5 +1,5 @@
 module Form.Validate exposing
-    ( validate, validateField, Error
+    ( validate, validateField, validateIntegerField, Error, IntegerError(..)
     , isValid
     , errorToMessage
     )
@@ -9,7 +9,7 @@ module Form.Validate exposing
 
 # Validate
 
-@docs validate, validateField, Error
+@docs validate, validateField, validateIntegerField, Error, IntegerError
 
 
 # Predicates
@@ -151,6 +151,8 @@ validateRadioEnumField properties =
         Ok properties.value
 
 
+{-| Validator API for an IntegerField being valid.
+-}
 validateIntegerField : Field.IntegerField -> Result IntegerError (Maybe Int)
 validateIntegerField field =
     case Field.getIntegerValue (Field.IntegerField_ field) of
@@ -163,7 +165,7 @@ validateIntegerField field =
                             ( properties.tipe.min, properties.tipe.max )
 
                         Field.RatingScaleField properties ->
-                            ( Just properties.minValue, Just properties.maxValue )
+                            ( Just properties.scaleValues.min, Just properties.scaleValues.max )
             in
             case valueRange of
                 ( Just min, Just max ) ->
@@ -225,6 +227,7 @@ type BoolError
     | EmptyBoolError
 
 
+{-| -}
 type IntegerError
     = GreaterThanMax Int
     | LessThanMin Int

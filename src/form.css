@@ -9,7 +9,7 @@
   display: grid;
   gap: 0;
   grid-template-rows: subgrid;
-  grid-row: span 3;
+  grid-row: span 4;
 }
 
 .form-input > label {
@@ -44,4 +44,8 @@ ul {
   .form-input {
     padding: 0.5rem 0;
   }
+}
+
+.rating-scale {
+  gap: 1rem;
 }
