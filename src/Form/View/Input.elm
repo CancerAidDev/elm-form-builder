@@ -236,7 +236,7 @@ textarea key field disabled =
 ratingScale : String -> Field.RatingScaleFieldProperties -> Bool -> Html.Html Msg.Msg
 ratingScale key field disabled =
     Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "rating-scale is-flex-tablet is-align-items-end is-justify-content-space-between" ]
-        (HtmlExtra.viewMaybe (\{ left } -> Html.p [ HtmlAttributes.class "mb-1" ] [ Html.text left ]) field.scaleLabels
+        (HtmlExtra.viewMaybe (\{ left } -> Html.p [] [ Html.text left ]) field.scaleLabels
             :: (List.map
                     (\v ->
                         let
@@ -244,7 +244,7 @@ ratingScale key field disabled =
                             id =
                                 key ++ "_" ++ String.fromInt v
                         in
-                        Html.div [ HtmlAttributes.class "radio is-flex-mobile has-text-centered mb-1" ]
+                        Html.div [ HtmlAttributes.class "radio is-flex-mobile has-text-centered my-1" ]
                             [ Html.label
                                 [ HtmlAttributes.class "p-2 is-block is-clickable"
                                 , HtmlAttributes.for id
