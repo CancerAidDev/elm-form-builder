@@ -38,9 +38,9 @@ suite =
                 , { value = Just 100, error = Validate.GreaterThanMaxOrLessThanMin 18 99, name = "above max" }
                 ]
             ]
-        , Test.describe "RatingScaleField"
+        , Test.describe "LinearScaleField"
             [ HelperSpec.integerFieldTest "default scale (1-5)"
-                (HelperSpec.ratingScaleField { min = 1, max = 5 })
+                (HelperSpec.linearScaleField { min = 1, max = 5 })
                 [ { value = Just 1, name = "at min" }
                 , { value = Just 5, name = "at max" }
                 , { value = Just 3, name = "middle" }
@@ -49,7 +49,7 @@ suite =
                 , { value = Just 6, error = Validate.GreaterThanMaxOrLessThanMin 1 5, name = "above max" }
                 ]
             , HelperSpec.integerFieldTest "large scale (1-10)"
-                (HelperSpec.ratingScaleField { min = 1, max = 10 })
+                (HelperSpec.linearScaleField { min = 1, max = 10 })
                 [ { value = Just 1, name = "at min" }
                 , { value = Just 10, name = "at max" }
                 ]

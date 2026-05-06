@@ -96,33 +96,35 @@ fields =
             |> FormField.integer
         )
     , \order ->
-        ( "ratingScale"
-        , FormField.ratingScaleDefault
+        ( "linearScale"
+        , FormField.linearScaleDefault
             |> FormField.setIsRequired IsRequired.Yes
-            |> FormField.setLabel "Rating Scale"
+            |> FormField.setLabel "Linear Scale"
             |> FormField.setOrder order
-            |> FormField.setScaleLabels { left = "Very Easy", right = "Very Difficult" }
-            |> FormField.ratingScale
+            |> FormField.setLeftLabel "Very Easy"
+            |> FormField.setRightLabel "Very Difficult"
+            |> FormField.linearScale
         )
     , \order ->
-        ( "ratingScaleLarge"
-        , FormField.ratingScaleDefault
+        ( "linearScaleLarge"
+        , FormField.linearScaleDefault
             |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setLabel "Rating Scale (large)"
+            |> FormField.setLabel "Linear Scale (large)"
             |> FormField.setOrder order
             |> FormField.setMinScale 0
             |> FormField.setMaxScale 10
-            |> FormField.setScaleLabels { left = "Very Easy", right = "Very Difficult" }
-            |> FormField.ratingScale
+            |> FormField.setLeftLabel "Very Easy"
+            |> FormField.setRightLabel "Very Difficult"
+            |> FormField.linearScale
         )
     , \order ->
-        ( "ratingScaleNoLabels"
-        , FormField.ratingScaleDefault
+        ( "linearScaleNoLabels"
+        , FormField.linearScaleDefault
             |> FormField.setIsRequired IsRequired.Nullable
-            |> FormField.setEnabledBy "ratingScaleLarge"
-            |> FormField.setLabel "Rating Scale (No labels)"
+            |> FormField.setEnabledBy "linearScaleLarge"
+            |> FormField.setLabel "Linear Scale (No labels)"
             |> FormField.setOrder order
-            |> FormField.ratingScale
+            |> FormField.linearScale
         )
     , \order ->
         ( "dateOfBirth"

@@ -820,27 +820,28 @@ suite =
                                     )
                                 )
                             )
-            , Test.test "Rating scale field decoder" <|
+            , Test.test "Linear scale field decoder" <|
                 \_ ->
                     let
                         json =
                             """{
                                 "required": true,
-                                "key": "rating",
-                                "label": "Rating",
-                                "type": "rating_scale",
+                                "key": "linearScale",
+                                "label": "Linear Scale",
+                                "type": "linear_scale",
                                 "width": "100%",
-                                "scaleValues": { "min": 1, "max": 5 }
+                                "min": 1,
+                                "max": 5
                             }"""
                     in
                     Decode.decodeString decoder json
                         |> Expect.equal
                             (Ok
-                                ( "rating"
+                                ( "linearScale"
                                 , Field.IntegerField_ <|
-                                    Field.RatingScaleField
+                                    Field.LinearScaleField
                                         { required = Required.Yes
-                                        , label = "Rating"
+                                        , label = "Linear Scale"
                                         , labelExtraContent = Nothing
                                         , width = Width.FullSize
                                         , enabledBy = Nothing
@@ -849,12 +850,14 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , scaleValues = { min = 1, max = 5 }
-                                        , scaleLabels = Nothing
+                                        , min = 1
+                                        , max = 5
+                                        , leftLabel = Nothing
+                                        , rightLabel = Nothing
                                         }
                                 )
                             )
-            , Test.test "Rating scale field decoder with scale labels" <|
+            , Test.test "Linear scale field decoder with labels" <|
                 \_ ->
                     let
                         json =
@@ -862,10 +865,12 @@ suite =
                                 "required": false,
                                 "key": "difficulty",
                                 "label": "Difficulty",
-                                "type": "rating_scale",
+                                "type": "linear_scale",
                                 "width": "100%",
-                                "scaleValues": { "min": 1, "max": 10 },
-                                "scaleLabels": { "left": "Easy", "right": "Hard" }
+                                "min": 1,
+                                "max": 10,
+                                "leftLabel": "Easy",
+                                "rightLabel": "Hard"
                             }"""
                     in
                     Decode.decodeString decoder json
@@ -873,7 +878,7 @@ suite =
                             (Ok
                                 ( "difficulty"
                                 , Field.IntegerField_ <|
-                                    Field.RatingScaleField
+                                    Field.LinearScaleField
                                         { required = Required.No
                                         , label = "Difficulty"
                                         , labelExtraContent = Nothing
@@ -884,8 +889,10 @@ suite =
                                         , disabled = False
                                         , hidden = False
                                         , unhiddenBy = Nothing
-                                        , scaleValues = { min = 1, max = 10 }
-                                        , scaleLabels = Just { left = "Easy", right = "Hard" }
+                                        , min = 1
+                                        , max = 10
+                                        , leftLabel = Just "Easy"
+                                        , rightLabel = Just "Hard"
                                         }
                                 )
                             )

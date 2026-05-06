@@ -51,10 +51,10 @@ suite =
                                 , { label = Nothing, value = option2 }
                                 ]
                         )
-        , Test.fuzz Fuzz.int "updateIntegerValue RatingScaleField" <|
+        , Test.fuzz Fuzz.int "updateIntegerValue LinearScaleField" <|
             \v ->
-                Field.ratingScaleDefault
-                    |> Field.ratingScale
+                Field.linearScaleDefault
+                    |> Field.linearScale
                     |> Field.updateIntegerValue (String.fromInt v)
                     |> Field.getIntegerValue
                     |> Expect.equal (Just v)

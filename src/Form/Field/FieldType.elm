@@ -1,5 +1,5 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), IntegerFieldTipe, ScaleLabels, ScaleValues, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), IntegerFieldTipe, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
     , dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
     )
@@ -9,7 +9,7 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, IntegerFieldTipe, ScaleLabels, ScaleValues, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, IntegerFieldTipe, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
 
 
 # Decoder
@@ -80,17 +80,7 @@ type SimpleFieldType
 {-| -}
 type IntegerFieldType
     = SimpleInteger IntegerFieldTipe
-    | RatingScale
-
-
-{-| -}
-type alias ScaleValues =
-    { min : Int, max : Int }
-
-
-{-| -}
-type alias ScaleLabels =
-    { left : String, right : String }
+    | LinearScale
 
 
 {-| -}
@@ -265,8 +255,8 @@ fromString str =
         "integer" ->
             Just (IntegerType (SimpleInteger defaultInt))
 
-        "rating_scale" ->
-            Just (IntegerType RatingScale)
+        "linear_scale" ->
+            Just (IntegerType LinearScale)
 
         _ ->
             Nothing

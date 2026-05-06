@@ -283,15 +283,15 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.IntegerType (FieldType.SimpleInteger FieldType.defaultInt)))
-        , Test.test "Rating Scale Field Type" <|
+        , Test.test "Linear Scale Field Type" <|
             \_ ->
                 let
                     json =
                         """
-                            "rating_scale"
+                            "linear_scale"
                         """
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType FieldType.RatingScale))
+                        (Ok (FieldType.IntegerType FieldType.LinearScale))
         ]

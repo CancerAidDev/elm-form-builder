@@ -1,9 +1,9 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, RatingScaleFieldProperties
-    , integerDefault, ratingScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , integer, ratingScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setScaleLabels, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
+    , integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -22,22 +22,22 @@ module Form.Field exposing
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, RatingScaleFieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
 
 
 # Default Properties
 
-@docs integerDefault, ratingScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs integer, ratingScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setScaleLabels, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
@@ -283,7 +283,7 @@ integer =
     IntegerField_ << SimpleIntegerField
 
 
-{-| Makes a rating scale input field.
+{-| Makes a linear scale input field.
 
 Common builders:
 
@@ -298,9 +298,9 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-ratingScale : RatingScaleFieldProperties -> Field
-ratingScale =
-    IntegerField_ << RatingScaleField
+linearScale : LinearScaleFieldProperties -> Field
+linearScale =
+    IntegerField_ << LinearScaleField
 
 
 {-| Makes a tag field.
@@ -702,12 +702,6 @@ setTipe tipe field =
 
 
 {-| -}
-setScaleValues : r -> FieldProperties { a | scaleValues : r } -> FieldProperties { a | scaleValues : r }
-setScaleValues scaleValues field =
-    { field | scaleValues = scaleValues }
-
-
-{-| -}
 setValue : v -> FieldProperties { a | value : v } -> FieldProperties { a | value : v }
 setValue value field =
     { field | value = value }
@@ -839,22 +833,30 @@ setMin min ({ tipe } as field) =
 
 {-| Sets the min scale value
 -}
-setMinScale : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setMinScale min ({ scaleValues } as field) =
-    setScaleValues { scaleValues | min = min } field
+setMinScale : Int -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setMinScale min field =
+    { field | min = min }
 
 
 {-| Sets the max scale value
 -}
-setMaxScale : Int -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setMaxScale max ({ scaleValues } as field) =
-    setScaleValues { scaleValues | max = max } field
+setMaxScale : Int -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setMaxScale max field =
+    { field | max = max }
 
 
-{-| -}
-setScaleLabels : FieldType.ScaleLabels -> RatingScaleFieldProperties -> RatingScaleFieldProperties
-setScaleLabels scaleLabels field =
-    { field | scaleLabels = Just scaleLabels }
+{-| Sets left label labels
+-}
+setLeftLabel : String -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setLeftLabel leftLabel field =
+    { field | leftLabel = Just leftLabel }
+
+
+{-| Sets right label labels
+-}
+setRightLabel : String -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setRightLabel rightLabel field =
+    { field | rightLabel = Just rightLabel }
 
 
 {-| -}
@@ -1488,8 +1490,8 @@ integerDefault =
 , rightLabel = Nothing
 }`
 -}
-ratingScaleDefault : RatingScaleFieldProperties
-ratingScaleDefault =
+linearScaleDefault : LinearScaleFieldProperties
+linearScaleDefault =
     { required = Required.No
     , label = ""
     , labelExtraContent = Nothing
@@ -1500,8 +1502,10 @@ ratingScaleDefault =
     , hidden = False
     , unhiddenBy = Nothing
     , value = Nothing
-    , scaleValues = { min = 1, max = 5 }
-    , scaleLabels = Nothing
+    , min = 1
+    , max = 5
+    , leftLabel = Nothing
+    , rightLabel = Nothing
     }
 
 
@@ -1538,7 +1542,7 @@ type BoolField
 {-| -}
 type IntegerField
     = SimpleIntegerField SimpleIntegerFieldProperties
-    | RatingScaleField RatingScaleFieldProperties
+    | LinearScaleField LinearScaleFieldProperties
 
 
 {-| -}
@@ -1722,8 +1726,8 @@ type alias SimpleIntegerFieldProperties =
 
 
 {-| -}
-type alias RatingScaleFieldProperties =
-    IntegerFieldProperties { scaleValues : FieldType.ScaleValues, scaleLabels : Maybe FieldType.ScaleLabels }
+type alias LinearScaleFieldProperties =
+    IntegerFieldProperties { min : Int, max : Int, leftLabel : Maybe String, rightLabel : Maybe String }
 
 
 {-| -}
@@ -1750,7 +1754,7 @@ getProperties field =
         IntegerField_ (SimpleIntegerField properties) ->
             getCommonProperties properties
 
-        IntegerField_ (RatingScaleField properties) ->
+        IntegerField_ (LinearScaleField properties) ->
             getCommonProperties properties
 
 
@@ -2109,8 +2113,8 @@ resetValueToDefault field =
         IntegerField_ (SimpleIntegerField properties) ->
             IntegerField_ (SimpleIntegerField { properties | value = integerDefault.value })
 
-        IntegerField_ (RatingScaleField properties) ->
-            IntegerField_ (RatingScaleField { properties | value = ratingScaleDefault.value })
+        IntegerField_ (LinearScaleField properties) ->
+            IntegerField_ (LinearScaleField { properties | value = linearScaleDefault.value })
 
 
 {-| -}
@@ -2285,8 +2289,8 @@ updateIntegerValue_ value field =
         SimpleIntegerField properties ->
             SimpleIntegerField { properties | value = value }
 
-        RatingScaleField properties ->
-            RatingScaleField { properties | value = value }
+        LinearScaleField properties ->
+            LinearScaleField { properties | value = value }
 
 
 {-| -}
@@ -2386,7 +2390,7 @@ getIntegerValue field =
         IntegerField_ (SimpleIntegerField { value }) ->
             value
 
-        IntegerField_ (RatingScaleField { value }) ->
+        IntegerField_ (LinearScaleField { value }) ->
             value
 
         _ ->
@@ -2451,8 +2455,8 @@ getType field =
         IntegerField_ (SimpleIntegerField { tipe }) ->
             FieldType.IntegerType (FieldType.SimpleInteger tipe)
 
-        IntegerField_ (RatingScaleField _) ->
-            FieldType.IntegerType FieldType.RatingScale
+        IntegerField_ (LinearScaleField _) ->
+            FieldType.IntegerType FieldType.LinearScale
 
 
 {-| -}
@@ -2573,7 +2577,7 @@ encode field =
         IntegerField_ (SimpleIntegerField { value }) ->
             EncodeExtra.maybe Encode.int value
 
-        IntegerField_ (RatingScaleField { value }) ->
+        IntegerField_ (LinearScaleField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

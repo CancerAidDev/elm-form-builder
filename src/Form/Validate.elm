@@ -164,8 +164,8 @@ validateIntegerField field =
                         Field.SimpleIntegerField properties ->
                             ( properties.tipe.min, properties.tipe.max )
 
-                        Field.RatingScaleField properties ->
-                            ( Just properties.scaleValues.min, Just properties.scaleValues.max )
+                        Field.LinearScaleField properties ->
+                            ( Just properties.min, Just properties.max )
             in
             case valueRange of
                 ( Just min, Just max ) ->

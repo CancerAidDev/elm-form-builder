@@ -149,7 +149,7 @@ control time (Locale.Locale _ code) disabled key field =
         Field.IntegerField_ (Field.SimpleIntegerField _) ->
             input time Nothing disabled key field
 
-        Field.IntegerField_ (Field.RatingScaleField _) ->
+        Field.IntegerField_ (Field.LinearScaleField _) ->
             input time Nothing disabled key field
 
 
@@ -208,8 +208,8 @@ input time code disabled key field =
                 ]
                 []
 
-        Field.IntegerField_ (Field.RatingScaleField properties) ->
-            ratingScale key properties disabled
+        Field.IntegerField_ (Field.LinearScaleField properties) ->
+            linearScale key properties disabled
 
         Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties disabled
@@ -233,10 +233,10 @@ textarea key field disabled =
         []
 
 
-ratingScale : String -> Field.RatingScaleFieldProperties -> Bool -> Html.Html Msg.Msg
-ratingScale key field disabled =
-    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "rating-scale is-flex-tablet is-align-items-end is-justify-content-space-between" ]
-        (HtmlExtra.viewMaybe (\{ left } -> Html.p [] [ Html.text left ]) field.scaleLabels
+linearScale : String -> Field.LinearScaleFieldProperties -> Bool -> Html.Html Msg.Msg
+linearScale key field disabled =
+    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "linear-scale is-flex-tablet is-align-items-end is-justify-content-space-between" ]
+        (HtmlExtra.viewMaybe (\left -> Html.p [] [ Html.text left ]) field.leftLabel
             :: (List.map
                     (\v ->
                         let
@@ -261,8 +261,8 @@ ratingScale key field disabled =
                                 []
                             ]
                     )
-                    (List.range field.scaleValues.min field.scaleValues.max)
-                    ++ [ HtmlExtra.viewMaybe (\{ right } -> Html.p [] [ Html.text right ]) field.scaleLabels ]
+                    (List.range field.min field.max)
+                    ++ [ HtmlExtra.viewMaybe (\right -> Html.p [] [ Html.text right ]) field.rightLabel ]
                )
         )
 

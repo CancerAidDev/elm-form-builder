@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (IntegerField, NewStringField, dateField, integerField, integerFieldTest, ratingScaleField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (IntegerField, NewStringField, dateField, integerField, integerFieldTest, linearScaleField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -179,9 +179,9 @@ integerField tipe { required, value } =
         }
 
 
-ratingScaleField : FieldType.ScaleValues -> IntegerField
-ratingScaleField scaleValues { required, value } =
-    Field.RatingScaleField
+linearScaleField : { min : Int, max : Int } -> IntegerField
+linearScaleField { min, max } { required, value } =
+    Field.LinearScaleField
         { required = required
         , label = "Field"
         , labelExtraContent = Nothing
@@ -189,8 +189,10 @@ ratingScaleField scaleValues { required, value } =
         , enabledBy = Nothing
         , order = 1
         , value = value
-        , scaleValues = scaleValues
-        , scaleLabels = Nothing
+        , min = min
+        , max = max
+        , leftLabel = Nothing
+        , rightLabel = Nothing
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
