@@ -271,7 +271,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType (FieldType.SimpleInteger FieldType.age)))
+                        (Ok (FieldType.IntegerType FieldType.SimpleInteger))
         , Test.test "Integer Field Type" <|
             \_ ->
                 let
@@ -282,7 +282,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType (FieldType.SimpleInteger FieldType.defaultInt)))
+                        (Ok (FieldType.IntegerType FieldType.SimpleInteger))
         , Test.test "Linear Scale Field Type" <|
             \_ ->
                 let

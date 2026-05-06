@@ -168,8 +168,8 @@ input time code disabled key field =
                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe (HtmlAttributes.attribute "autocomplete") (FieldType.toAutoComplete fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (Field.getMin time field)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (Field.getMax time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
                 ]
                 []
@@ -202,9 +202,9 @@ input time code disabled key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateIntegerField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.IntegerType (FieldType.SimpleInteger properties.tipe)))
+                    (Field.getMin time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time (FieldType.IntegerType (FieldType.SimpleInteger properties.tipe)))
+                    (Field.getMax time field)
                 ]
                 []
 

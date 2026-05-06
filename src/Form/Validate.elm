@@ -162,7 +162,7 @@ validateIntegerField field =
                 valueRange =
                     case field of
                         Field.SimpleIntegerField properties ->
-                            ( properties.tipe.min, properties.tipe.max )
+                            ( properties.min, properties.max )
 
                         Field.LinearScaleField properties ->
                             ( Just properties.min, Just properties.max )

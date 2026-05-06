@@ -302,10 +302,11 @@ type alias JsonIntegerFieldProperties =
     , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
     , width : Width.Width
     , enabledBy : Maybe String
-    , tipe : FieldType.IntegerFieldTipe
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    , min : Maybe Int
+    , max : Maybe Int
     }
 
 
@@ -384,8 +385,8 @@ decoderForType fieldType =
         FieldType.BoolType FieldType.RadioEnum ->
             Decode.map JsonRadioEnumField decoderRadioEnumJson
 
-        FieldType.IntegerType (FieldType.SimpleInteger integerFieldType) ->
-            Decode.map JsonIntegerField (decoderIntegerJson integerFieldType)
+        FieldType.IntegerType FieldType.SimpleInteger ->
+            Decode.map JsonIntegerField decoderIntegerJson
 
         FieldType.IntegerType FieldType.LinearScale ->
             Decode.map JsonLinearScaleField decoderLinearScaleJson
@@ -589,7 +590,7 @@ toField time order field =
                     }
             )
 
-        JsonIntegerField { required, key, label, labelExtraContent, width, enabledBy, tipe, disabled, hidden, unhiddenBy } ->
+        JsonIntegerField { required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, min, max } ->
             ( key
             , Field.IntegerField_ <|
                 Field.SimpleIntegerField
@@ -601,9 +602,10 @@ toField time order field =
                     , order = order
                     , value = Nothing
                     , disabled = Maybe.withDefault False disabled
-                    , tipe = tipe
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    , min = min
+                    , max = max
                     }
             )
 
@@ -994,8 +996,8 @@ decoderRadioEnumJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
 
 
-decoderIntegerJson : FieldType.IntegerFieldTipe -> Decode.Decoder JsonIntegerFieldProperties
-decoderIntegerJson tipe =
+decoderIntegerJson : Decode.Decoder JsonIntegerFieldProperties
+decoderIntegerJson =
     Decode.succeed JsonIntegerFieldProperties
         |> DecodePipeline.required "required" Required.decoder
         |> DecodePipeline.required "key" Decode.string
@@ -1003,10 +1005,11 @@ decoderIntegerJson tipe =
         |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.hardcoded tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "min" (Decode.map Just Decode.int) Nothing
+        |> DecodePipeline.optional "max" (Decode.map Just Decode.int) Nothing
 
 
 decoderLinearScaleJson : Decode.Decoder JsonLinearScaleFieldProperties

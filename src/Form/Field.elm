@@ -5,7 +5,7 @@ module Form.Field exposing
     , integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired, isSpanLabel
     , encode
@@ -44,7 +44,7 @@ module Form.Field exposing
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
 
 
 # Setters
@@ -820,15 +820,15 @@ setMinDateOffset offset ({ tipe } as field) =
 {-| Sets the max integer value.
 -}
 setMax : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
-setMax max ({ tipe } as field) =
-    setTipe { tipe | max = Just max } field
+setMax max field =
+    { field | max = Just max }
 
 
 {-| Sets the min integer value.
 -}
 setMin : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
-setMin min ({ tipe } as field) =
-    setTipe { tipe | min = Just min } field
+setMin min field =
+    { field | min = Just min }
 
 
 {-| Sets the min scale value
@@ -1465,12 +1465,13 @@ integerDefault =
     , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
-    , tipe = { min = Nothing, max = Nothing }
     , order = 0
     , disabled = False
     , hidden = False
     , unhiddenBy = Nothing
     , value = Nothing
+    , min = Nothing
+    , max = Nothing
     }
 
 
@@ -1722,7 +1723,7 @@ type alias IntegerFieldProperties a =
 
 {-| -}
 type alias SimpleIntegerFieldProperties =
-    IntegerFieldProperties { tipe : FieldType.IntegerFieldTipe }
+    IntegerFieldProperties { min : Maybe Int, max : Maybe Int }
 
 
 {-| -}
@@ -2452,8 +2453,8 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        IntegerField_ (SimpleIntegerField { tipe }) ->
-            FieldType.IntegerType (FieldType.SimpleInteger tipe)
+        IntegerField_ (SimpleIntegerField _) ->
+            FieldType.IntegerType FieldType.SimpleInteger
 
         IntegerField_ (LinearScaleField _) ->
             FieldType.IntegerType FieldType.LinearScale
@@ -2519,6 +2520,34 @@ getUrl field =
 
         MultiStringField_ (MultiHttpSelectField properties) ->
             Just properties.url
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getMin : Time.Posix -> Field -> Maybe String
+getMin t field =
+    case field of
+        StringField_ (DateField { tipe }) ->
+            tipe.min |> Maybe.map (FieldType.dateConfigToString t)
+
+        IntegerField_ (SimpleIntegerField { min }) ->
+            min |> Maybe.map String.fromInt
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getMax : Time.Posix -> Field -> Maybe String
+getMax t field =
+    case field of
+        StringField_ (DateField { tipe }) ->
+            tipe.max |> Maybe.map (FieldType.dateConfigToString t)
+
+        IntegerField_ (SimpleIntegerField { max }) ->
+            max |> Maybe.map String.fromInt
 
         _ ->
             Nothing

@@ -162,8 +162,8 @@ type alias IntegerField =
     { required : Required.IsRequired, value : Maybe Int } -> Field.IntegerField
 
 
-integerField : FieldType.IntegerFieldTipe -> IntegerField
-integerField tipe { required, value } =
+integerField : Maybe Int -> Maybe Int -> IntegerField
+integerField min max { required, value } =
     Field.SimpleIntegerField
         { required = required
         , label = "Field"
@@ -172,15 +172,16 @@ integerField tipe { required, value } =
         , enabledBy = Nothing
         , order = 1
         , value = value
-        , tipe = tipe
         , disabled = False
         , hidden = False
         , unhiddenBy = Nothing
+        , min = min
+        , max = max
         }
 
 
-linearScaleField : { min : Int, max : Int } -> IntegerField
-linearScaleField { min, max } { required, value } =
+linearScaleField : IntegerField
+linearScaleField { required, value } =
     Field.LinearScaleField
         { required = required
         , label = "Field"
@@ -189,8 +190,8 @@ linearScaleField { min, max } { required, value } =
         , enabledBy = Nothing
         , order = 1
         , value = value
-        , min = min
-        , max = max
+        , min = 1
+        , max = 5
         , leftLabel = Nothing
         , rightLabel = Nothing
         , disabled = False
