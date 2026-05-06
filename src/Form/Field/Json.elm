@@ -388,6 +388,9 @@ decoderForType fieldType =
         FieldType.IntegerType FieldType.SimpleInteger ->
             Decode.map JsonIntegerField decoderIntegerJson
 
+        FieldType.IntegerType FieldType.Age ->
+            Decode.map JsonIntegerField decoderAgeJson
+
         FieldType.IntegerType FieldType.LinearScale ->
             Decode.map JsonLinearScaleField decoderLinearScaleJson
 
@@ -1010,6 +1013,22 @@ decoderIntegerJson =
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
         |> DecodePipeline.optional "min" (Decode.map Just Decode.int) Nothing
         |> DecodePipeline.optional "max" (Decode.map Just Decode.int) Nothing
+
+
+decoderAgeJson : Decode.Decoder JsonIntegerFieldProperties
+decoderAgeJson =
+    Decode.succeed JsonIntegerFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "min" (Decode.map Just Decode.int) FieldType.minAgeDefault
+        |> DecodePipeline.optional "max" (Decode.map Just Decode.int) FieldType.maxAgeDefault
 
 
 decoderLinearScaleJson : Decode.Decoder JsonLinearScaleFieldProperties

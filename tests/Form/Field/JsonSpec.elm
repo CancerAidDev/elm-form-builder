@@ -820,6 +820,74 @@ suite =
                                     )
                                 )
                             )
+            , Test.test "Age field decoder uses default min/max" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "age",
+                                "label": "Age",
+                                "type": "age",
+                                "width": "100%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "age"
+                                , Field.IntegerField_ <|
+                                    Field.SimpleIntegerField
+                                        { required = Required.Yes
+                                        , label = "Age"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = Just 18
+                                        , max = Just 99
+                                        }
+                                )
+                            )
+            , Test.test "Age field decoder overrides default min/max" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": false,
+                                "key": "age",
+                                "label": "Age",
+                                "type": "age",
+                                "width": "100%",
+                                "min": 0,
+                                "max": 100
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "age"
+                                , Field.IntegerField_ <|
+                                    Field.SimpleIntegerField
+                                        { required = Required.No
+                                        , label = "Age"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = Just 0
+                                        , max = Just 100
+                                        }
+                                )
+                            )
             , Test.test "Linear scale field decoder" <|
                 \_ ->
                     let

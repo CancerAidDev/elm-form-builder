@@ -1,7 +1,7 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
     , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
-    , integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
     , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
@@ -27,7 +27,7 @@ module Form.Field exposing
 
 # Default Properties
 
-@docs integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
@@ -1450,12 +1450,13 @@ radioDefault =
 , labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
-, tipe = { min = Nothing, max = Nothing }
 , order = 0
 , disabled = False
 , hidden = False
 , unhiddenBy = Nothing
 , value = Nothing
+, min = Nothing
+, max = Nothing
 }`
 -}
 integerDefault : SimpleIntegerFieldProperties
@@ -1472,6 +1473,37 @@ integerDefault =
     , value = Nothing
     , min = Nothing
     , max = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, labelExtraContent = Nothing
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, min = Just 18
+, max = Just 99
+}`
+-}
+ageDefault : SimpleIntegerFieldProperties
+ageDefault =
+    { required = Required.No
+    , label = ""
+    , labelExtraContent = Nothing
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , min = FieldType.minAgeDefault
+    , max = FieldType.maxAgeDefault
     }
 
 

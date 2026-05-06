@@ -271,7 +271,7 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType FieldType.SimpleInteger))
+                        (Ok (FieldType.IntegerType FieldType.Age))
         , Test.test "Integer Field Type" <|
             \_ ->
                 let

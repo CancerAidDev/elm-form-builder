@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
     ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture
+    , dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture, minAgeDefault, maxAgeDefault
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture
+@docs dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture, minAgeDefault, maxAgeDefault
 
 -}
 
@@ -80,6 +80,7 @@ type SimpleFieldType
 {-| -}
 type IntegerFieldType
     = SimpleInteger
+    | Age
     | LinearScale
 
 
@@ -150,6 +151,18 @@ dateDefault =
     , max = Nothing
     , default = Nothing
     }
+
+
+{-| -}
+minAgeDefault : Maybe Int
+minAgeDefault =
+    Just 18
+
+
+{-| -}
+maxAgeDefault : Maybe Int
+maxAgeDefault =
+    Just 99
 
 
 {-| -}
@@ -229,7 +242,7 @@ fromString str =
             Just (MultiStringType Tags)
 
         "age" ->
-            Just (IntegerType SimpleInteger)
+            Just (IntegerType Age)
 
         "integer" ->
             Just (IntegerType SimpleInteger)
