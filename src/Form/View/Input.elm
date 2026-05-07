@@ -146,7 +146,10 @@ control time (Locale.Locale _ code) disabled key field =
         Field.BoolField_ (Field.RadioEnumField properties) ->
             Radio.radioEnum key properties disabled
 
-        Field.IntegerField_ (Field.IntegerField _) ->
+        Field.IntegerField_ (Field.SimpleIntegerField _) ->
+            input time Nothing disabled key field
+
+        Field.IntegerField_ (Field.LinearScaleField _) ->
             input time Nothing disabled key field
 
 
@@ -165,8 +168,8 @@ input time code disabled key field =
                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe (HtmlAttributes.attribute "autocomplete") (FieldType.toAutoComplete fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (FieldType.toMin time fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (FieldType.toMax time fieldType)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (Field.getMin time field)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (Field.getMax time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
                 ]
                 []
@@ -186,7 +189,7 @@ input time code disabled key field =
             in
             renderInput fieldType properties
 
-        Field.IntegerField_ (Field.IntegerField properties) ->
+        Field.IntegerField_ (Field.SimpleIntegerField properties) ->
             Html.input
                 [ HtmlAttributes.id key
                 , HtmlAttributes.name key
@@ -199,11 +202,14 @@ input time code disabled key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateIntegerField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (FieldType.toMin time (FieldType.IntegerType properties.tipe))
+                    (Field.getMin time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (FieldType.toMax time (FieldType.IntegerType properties.tipe))
+                    (Field.getMax time field)
                 ]
                 []
+
+        Field.IntegerField_ (Field.LinearScaleField properties) ->
+            linearScale key properties disabled
 
         Field.MultiStringField_ (Field.TagField properties) ->
             tag key properties disabled
@@ -225,6 +231,40 @@ textarea key field disabled =
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
+
+
+linearScale : String -> Field.LinearScaleFieldProperties -> Bool -> Html.Html Msg.Msg
+linearScale key field disabled =
+    Html.div [ HtmlAttributes.id key, HtmlAttributes.name key, HtmlAttributes.class "linear-scale is-flex-tablet is-align-items-end is-justify-content-space-between" ]
+        (HtmlExtra.viewMaybe (\left -> Html.p [] [ Html.text left ]) field.leftLabel
+            :: (List.map
+                    (\v ->
+                        let
+                            id : String
+                            id =
+                                key ++ "_" ++ String.fromInt v
+                        in
+                        Html.div [ HtmlAttributes.class "radio is-flex-mobile has-text-centered my-1" ]
+                            [ Html.label
+                                [ HtmlAttributes.class "p-2 is-block is-clickable"
+                                , HtmlAttributes.for id
+                                ]
+                                [ Html.text <| String.fromInt v ]
+                            , Html.input
+                                [ HtmlAttributes.id id
+                                , HtmlAttributes.class "mx-2"
+                                , HtmlAttributes.type_ "radio"
+                                , HtmlAttributes.disabled disabled
+                                , HtmlAttributesExtra.attributeIf (field.value == Just v) (HtmlAttributes.checked True)
+                                , HtmlEvents.onClick <| Msg.UpdateIntegerField key (String.fromInt v)
+                                ]
+                                []
+                            ]
+                    )
+                    (List.range field.min field.max)
+                    ++ [ HtmlExtra.viewMaybe (\right -> Html.p [] [ Html.text right ]) field.rightLabel ]
+               )
+        )
 
 
 tag : String -> Field.TagFieldProperties -> Bool -> Html.Html Msg.Msg

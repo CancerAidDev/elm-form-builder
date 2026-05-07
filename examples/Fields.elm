@@ -96,6 +96,37 @@ fields =
             |> FormField.integer
         )
     , \order ->
+        ( "linearScale"
+        , FormField.linearScaleDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Linear Scale"
+            |> FormField.setOrder order
+            |> FormField.setLeftLabel "Very Easy"
+            |> FormField.setRightLabel "Very Difficult"
+            |> FormField.linearScale
+        )
+    , \order ->
+        ( "linearScaleLarge"
+        , FormField.linearScaleDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Linear Scale (large)"
+            |> FormField.setOrder order
+            |> FormField.setMinScale 0
+            |> FormField.setMaxScale 10
+            |> FormField.setLeftLabel "Very Easy"
+            |> FormField.setRightLabel "Very Difficult"
+            |> FormField.linearScale
+        )
+    , \order ->
+        ( "linearScaleNoLabels"
+        , FormField.linearScaleDefault
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setEnabledBy "linearScaleLarge"
+            |> FormField.setLabel "Linear Scale (No labels)"
+            |> FormField.setOrder order
+            |> FormField.linearScale
+        )
+    , \order ->
         ( "dateOfBirth"
         , FormField.dateDefault
             |> FormField.setDateOfBirth

@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (NewStringField, dateField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (IntegerField, NewStringField, dateField, integerField, integerFieldTest, linearScaleField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -7,6 +7,7 @@ import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Lib.RegexValidation as RegexValidation
 import Form.Locale as Locale
+import Form.Validate as Validate
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
 import Test
@@ -155,3 +156,96 @@ dateField tipe { required, value } =
         , hidden = False
         , unhiddenBy = Nothing
         }
+
+
+type alias IntegerField =
+    { required : Required.IsRequired, value : Maybe Int } -> Field.IntegerField
+
+
+integerField : Maybe Int -> Maybe Int -> IntegerField
+integerField min max { required, value } =
+    Field.SimpleIntegerField
+        { required = required
+        , label = "Field"
+        , labelExtraContent = Nothing
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , min = min
+        , max = max
+        }
+
+
+linearScaleField : IntegerField
+linearScaleField { required, value } =
+    Field.LinearScaleField
+        { required = required
+        , label = "Field"
+        , labelExtraContent = Nothing
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , min = 1
+        , max = 5
+        , leftLabel = Nothing
+        , rightLabel = Nothing
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        }
+
+
+integerFieldTest : String -> IntegerField -> List { value : Maybe Int, name : String } -> List { value : Maybe Int, error : Validate.IntegerError, name : String } -> Test.Test
+integerFieldTest label field valid invalid =
+    let
+        validTests : Required.IsRequired -> List Test.Test
+        validTests required =
+            List.map
+                (\{ value, name } ->
+                    Test.test name <|
+                        \_ ->
+                            field { required = required, value = value }
+                                |> Validate.validateIntegerField
+                                |> Expect.ok
+                )
+                valid
+
+        invalidTests : Required.IsRequired -> List Test.Test
+        invalidTests required =
+            List.map
+                (\{ value, error, name } ->
+                    Test.test name <|
+                        \_ ->
+                            field { required = required, value = value }
+                                |> Validate.validateIntegerField
+                                |> Expect.equal (Err error)
+                )
+                invalid
+    in
+    Test.describe label
+        [ Test.describe "required"
+            ((Test.test "empty" <|
+                \_ ->
+                    field { required = Required.Yes, value = Nothing }
+                        |> Validate.validateIntegerField
+                        |> Expect.equal (Err Validate.EmptyIntegerError)
+             )
+                :: validTests Required.Yes
+                ++ invalidTests Required.Yes
+            )
+        , Test.describe "optional"
+            ((Test.test "empty" <|
+                \_ ->
+                    field { required = Required.No, value = Nothing }
+                        |> Validate.validateIntegerField
+                        |> Expect.ok
+             )
+                :: validTests Required.No
+                ++ invalidTests Required.No
+            )
+        ]

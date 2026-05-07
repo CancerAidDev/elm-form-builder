@@ -1,5 +1,5 @@
 module Form.Validate exposing
-    ( validate, validateField, Error
+    ( validate, validateField, validateIntegerField, Error, IntegerError(..)
     , isValid
     , errorToMessage
     )
@@ -9,7 +9,7 @@ module Form.Validate exposing
 
 # Validate
 
-@docs validate, validateField, Error
+@docs validate, validateField, validateIntegerField, Error, IntegerError
 
 
 # Predicates
@@ -93,11 +93,11 @@ validateField locale fields field =
                     )
                 |> Result.mapError BoolError_
 
-        Field.IntegerField_ properties ->
-            validateIntegerField properties
+        Field.IntegerField_ integerField ->
+            validateIntegerField integerField
                 |> Result.map
                     (\updatedValue ->
-                        Field.IntegerField_ (Field.updateIntegerValue_ updatedValue properties)
+                        Field.IntegerField_ (Field.updateIntegerValue_ updatedValue integerField)
                     )
                 |> Result.mapError IntegerError_
 
@@ -151,41 +151,53 @@ validateRadioEnumField properties =
         Ok properties.value
 
 
+{-| Validator API for an IntegerField being valid.
+-}
 validateIntegerField : Field.IntegerField -> Result IntegerError (Maybe Int)
-validateIntegerField (Field.IntegerField properties) =
-    case properties.value of
+validateIntegerField field =
+    case Field.getIntegerValue (Field.IntegerField_ field) of
         Just value ->
-            case ( properties.tipe.min, properties.tipe.max ) of
+            let
+                valueRange : ( Maybe Int, Maybe Int )
+                valueRange =
+                    case field of
+                        Field.SimpleIntegerField properties ->
+                            ( properties.min, properties.max )
+
+                        Field.LinearScaleField properties ->
+                            ( Just properties.min, Just properties.max )
+            in
+            case valueRange of
                 ( Just min, Just max ) ->
                     if min <= value && value <= max then
-                        Ok properties.value
+                        Ok (Just value)
 
                     else
                         Err (GreaterThanMaxOrLessThanMin min max)
 
                 ( Just min, Nothing ) ->
                     if min <= value then
-                        Ok properties.value
+                        Ok (Just value)
 
                     else
                         Err (LessThanMin min)
 
                 ( Nothing, Just max ) ->
                     if value <= max then
-                        Ok properties.value
+                        Ok (Just value)
 
                     else
                         Err (GreaterThanMax max)
 
                 ( Nothing, Nothing ) ->
-                    Ok properties.value
+                    Ok (Just value)
 
-        Nothing ->
-            if properties.required == Required.Yes then
+        _ ->
+            if Field.isRequired (Field.IntegerField_ field) == Required.Yes then
                 Err EmptyIntegerError
 
             else
-                Ok properties.value
+                Ok Nothing
 
 
 {-| -}
@@ -215,6 +227,7 @@ type BoolError
     | EmptyBoolError
 
 
+{-| -}
 type IntegerError
     = GreaterThanMax Int
     | LessThanMin Int

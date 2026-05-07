@@ -1,11 +1,11 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
-    , integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
+    , ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
-    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+    , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
     , isCheckbox, isRequired, isSpanLabel
     , encode
@@ -22,29 +22,29 @@ module Form.Field exposing
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties
+@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
 
 
 # Default Properties
 
-@docs integerDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs integer, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
 
 # Getters
 
-@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getDecoderForOptions
+@docs getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
 
 
 # Setters
@@ -278,9 +278,29 @@ Common builders:
   - `setUnhiddenBy String`
 
 -}
-integer : IntegerFieldProperties -> Field
+integer : SimpleIntegerFieldProperties -> Field
 integer =
-    IntegerField_ << IntegerField
+    IntegerField_ << SimpleIntegerField
+
+
+{-| Makes a linear scale input field.
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+linearScale : LinearScaleFieldProperties -> Field
+linearScale =
+    IntegerField_ << LinearScaleField
 
 
 {-| Makes a tag field.
@@ -799,16 +819,44 @@ setMinDateOffset offset ({ tipe } as field) =
 
 {-| Sets the max integer value.
 -}
-setMax : Int -> IntegerFieldProperties -> IntegerFieldProperties
-setMax max ({ tipe } as field) =
-    setTipe { tipe | max = Just max } field
+setMax : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
+setMax max field =
+    { field | max = Just max }
 
 
 {-| Sets the min integer value.
 -}
-setMin : Int -> IntegerFieldProperties -> IntegerFieldProperties
-setMin min ({ tipe } as field) =
-    setTipe { tipe | min = Just min } field
+setMin : Int -> SimpleIntegerFieldProperties -> SimpleIntegerFieldProperties
+setMin min field =
+    { field | min = Just min }
+
+
+{-| Sets the min scale value
+-}
+setMinScale : Int -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setMinScale min field =
+    { field | min = min }
+
+
+{-| Sets the max scale value
+-}
+setMaxScale : Int -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setMaxScale max field =
+    { field | max = max }
+
+
+{-| Sets left label labels
+-}
+setLeftLabel : String -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setLeftLabel leftLabel field =
+    { field | leftLabel = Just leftLabel }
+
+
+{-| Sets right label labels
+-}
+setRightLabel : String -> LinearScaleFieldProperties -> LinearScaleFieldProperties
+setRightLabel rightLabel field =
+    { field | rightLabel = Just rightLabel }
 
 
 {-| -}
@@ -1402,27 +1450,95 @@ radioDefault =
 , labelExtraContent = Nothing
 , width = Width.FullSize
 , enabledBy = Nothing
-, tipe = { min = Nothing, max = Nothing }
 , order = 0
 , disabled = False
 , hidden = False
 , unhiddenBy = Nothing
 , value = Nothing
+, min = Nothing
+, max = Nothing
 }`
 -}
-integerDefault : IntegerFieldProperties
+integerDefault : SimpleIntegerFieldProperties
 integerDefault =
     { required = Required.No
     , label = ""
     , labelExtraContent = Nothing
     , width = Width.FullSize
     , enabledBy = Nothing
-    , tipe = { min = Nothing, max = Nothing }
     , order = 0
     , disabled = False
     , hidden = False
     , unhiddenBy = Nothing
     , value = Nothing
+    , min = Nothing
+    , max = Nothing
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, labelExtraContent = Nothing
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, min = Just 18
+, max = Just 99
+}`
+-}
+ageDefault : SimpleIntegerFieldProperties
+ageDefault =
+    { required = Required.No
+    , label = ""
+    , labelExtraContent = Nothing
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , min = FieldType.minAgeDefault
+    , max = FieldType.maxAgeDefault
+    }
+
+
+{-| `{ required = Required.No
+, label = ""
+, labelExtraContent = Nothing
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = Nothing
+, minValue = 1
+, maxValue = 5
+, leftLabel = Nothing
+, rightLabel = Nothing
+}`
+-}
+linearScaleDefault : LinearScaleFieldProperties
+linearScaleDefault =
+    { required = Required.No
+    , label = ""
+    , labelExtraContent = Nothing
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = Nothing
+    , min = 1
+    , max = 5
+    , leftLabel = Nothing
+    , rightLabel = Nothing
     }
 
 
@@ -1458,7 +1574,8 @@ type BoolField
 
 {-| -}
 type IntegerField
-    = IntegerField IntegerFieldProperties
+    = SimpleIntegerField SimpleIntegerFieldProperties
+    | LinearScaleField LinearScaleFieldProperties
 
 
 {-| -}
@@ -1629,8 +1746,21 @@ type alias RadioBoolFieldProperties =
 
 
 {-| -}
-type alias IntegerFieldProperties =
-    FieldProperties { tipe : FieldType.IntegerFieldType, value : Maybe Int }
+type alias IntegerFieldProperties a =
+    FieldProperties
+        { a
+            | value : Maybe Int
+        }
+
+
+{-| -}
+type alias SimpleIntegerFieldProperties =
+    IntegerFieldProperties { min : Maybe Int, max : Maybe Int }
+
+
+{-| -}
+type alias LinearScaleFieldProperties =
+    IntegerFieldProperties { min : Int, max : Int, leftLabel : Maybe String, rightLabel : Maybe String }
 
 
 {-| -}
@@ -1654,7 +1784,10 @@ getProperties field =
         BoolField_ (RadioEnumField properties) ->
             getCommonProperties properties
 
-        IntegerField_ (IntegerField properties) ->
+        IntegerField_ (SimpleIntegerField properties) ->
+            getCommonProperties properties
+
+        IntegerField_ (LinearScaleField properties) ->
             getCommonProperties properties
 
 
@@ -2010,8 +2143,11 @@ resetValueToDefault field =
         BoolField_ (RadioEnumField properties) ->
             BoolField_ (RadioEnumField { properties | value = radioEnumDefault.value })
 
-        IntegerField_ (IntegerField properties) ->
-            IntegerField_ (IntegerField { properties | value = integerDefault.value })
+        IntegerField_ (SimpleIntegerField properties) ->
+            IntegerField_ (SimpleIntegerField { properties | value = integerDefault.value })
+
+        IntegerField_ (LinearScaleField properties) ->
+            IntegerField_ (LinearScaleField { properties | value = linearScaleDefault.value })
 
 
 {-| -}
@@ -2181,8 +2317,13 @@ updateRadioEnumValue_ value field =
 
 {-| -}
 updateIntegerValue_ : Maybe Int -> IntegerField -> IntegerField
-updateIntegerValue_ value (IntegerField properties) =
-    IntegerField { properties | value = value }
+updateIntegerValue_ value field =
+    case field of
+        SimpleIntegerField properties ->
+            SimpleIntegerField { properties | value = value }
+
+        LinearScaleField properties ->
+            LinearScaleField { properties | value = value }
 
 
 {-| -}
@@ -2279,7 +2420,10 @@ getStringValue field =
 getIntegerValue : Field -> Maybe Int
 getIntegerValue field =
     case field of
-        IntegerField_ (IntegerField { value }) ->
+        IntegerField_ (SimpleIntegerField { value }) ->
+            value
+
+        IntegerField_ (LinearScaleField { value }) ->
             value
 
         _ ->
@@ -2341,8 +2485,11 @@ getType field =
         BoolField_ (RadioEnumField _) ->
             FieldType.BoolType FieldType.RadioEnum
 
-        IntegerField_ (IntegerField { tipe }) ->
-            FieldType.IntegerType tipe
+        IntegerField_ (SimpleIntegerField _) ->
+            FieldType.IntegerType FieldType.SimpleInteger
+
+        IntegerField_ (LinearScaleField _) ->
+            FieldType.IntegerType FieldType.LinearScale
 
 
 {-| -}
@@ -2411,6 +2558,34 @@ getUrl field =
 
 
 {-| -}
+getMin : Time.Posix -> Field -> Maybe String
+getMin t field =
+    case field of
+        StringField_ (DateField { tipe }) ->
+            tipe.min |> Maybe.map (FieldType.dateConfigToString t)
+
+        IntegerField_ (SimpleIntegerField { min }) ->
+            min |> Maybe.map String.fromInt
+
+        _ ->
+            Nothing
+
+
+{-| -}
+getMax : Time.Posix -> Field -> Maybe String
+getMax t field =
+    case field of
+        StringField_ (DateField { tipe }) ->
+            tipe.max |> Maybe.map (FieldType.dateConfigToString t)
+
+        IntegerField_ (SimpleIntegerField { max }) ->
+            max |> Maybe.map String.fromInt
+
+        _ ->
+            Nothing
+
+
+{-| -}
 getDecoderForOptions : Field -> Maybe DecoderForOptions.DecoderForOptions
 getDecoderForOptions field =
     case field of
@@ -2460,7 +2635,10 @@ encode field =
         BoolField_ (RadioBoolField { value }) ->
             EncodeExtra.maybe Encode.bool value
 
-        IntegerField_ (IntegerField { value }) ->
+        IntegerField_ (SimpleIntegerField { value }) ->
+            EncodeExtra.maybe Encode.int value
+
+        IntegerField_ (LinearScaleField { value }) ->
             EncodeExtra.maybe Encode.int value
 
 

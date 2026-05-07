@@ -1,7 +1,7 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType, MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
     , decoder
-    , dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+    , dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture, minAgeDefault, maxAgeDefault
     )
 
 {-| Field Type
@@ -19,7 +19,7 @@ module Form.Field.FieldType exposing
 
 # Helpers
 
-@docs dateConfigToString, toAutoComplete, toClass, toMax, toMaxLength, toMin, toType, dateDefault, dateOfBirth, datePast, dateFuture, defaultInt, age
+@docs dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture, minAgeDefault, maxAgeDefault
 
 -}
 
@@ -78,24 +78,10 @@ type SimpleFieldType
 
 
 {-| -}
-type alias IntegerFieldType =
-    { min : Maybe Int, max : Maybe Int }
-
-
-{-| -}
-defaultInt : IntegerFieldType
-defaultInt =
-    { min = Nothing
-    , max = Nothing
-    }
-
-
-{-| -}
-age : IntegerFieldType
-age =
-    { min = Just 18
-    , max = Just 99
-    }
+type IntegerFieldType
+    = SimpleInteger
+    | Age
+    | LinearScale
 
 
 {-| -}
@@ -165,6 +151,18 @@ dateDefault =
     , max = Nothing
     , default = Nothing
     }
+
+
+{-| -}
+minAgeDefault : Maybe Int
+minAgeDefault =
+    Just 18
+
+
+{-| -}
+maxAgeDefault : Maybe Int
+maxAgeDefault =
+    Just 99
 
 
 {-| -}
@@ -244,10 +242,13 @@ fromString str =
             Just (MultiStringType Tags)
 
         "age" ->
-            Just (IntegerType age)
+            Just (IntegerType Age)
 
         "integer" ->
-            Just (IntegerType defaultInt)
+            Just (IntegerType SimpleInteger)
+
+        "linear_scale" ->
+            Just (IntegerType LinearScale)
 
         _ ->
             Nothing
@@ -302,34 +303,6 @@ toMaxLength fieldType =
     case fieldType of
         StringType (DateType _) ->
             Just 10
-
-        _ ->
-            Nothing
-
-
-{-| -}
-toMin : Time.Posix -> FieldType -> Maybe String
-toMin time fieldType =
-    case fieldType of
-        StringType (DateType { min }) ->
-            min |> Maybe.map (dateConfigToString time)
-
-        IntegerType { min } ->
-            min |> Maybe.map String.fromInt
-
-        _ ->
-            Nothing
-
-
-{-| -}
-toMax : Time.Posix -> FieldType -> Maybe String
-toMax time fieldType =
-    case fieldType of
-        StringType (DateType { max }) ->
-            max |> Maybe.map (dateConfigToString time)
-
-        IntegerType { max } ->
-            max |> Maybe.map String.fromInt
 
         _ ->
             Nothing

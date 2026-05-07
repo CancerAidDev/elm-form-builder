@@ -820,6 +820,150 @@ suite =
                                     )
                                 )
                             )
+            , Test.test "Age field decoder uses default min/max" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "age",
+                                "label": "Age",
+                                "type": "age",
+                                "width": "100%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "age"
+                                , Field.IntegerField_ <|
+                                    Field.SimpleIntegerField
+                                        { required = Required.Yes
+                                        , label = "Age"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = Just 18
+                                        , max = Just 99
+                                        }
+                                )
+                            )
+            , Test.test "Age field decoder overrides default min/max" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": false,
+                                "key": "age",
+                                "label": "Age",
+                                "type": "age",
+                                "width": "100%",
+                                "min": 0,
+                                "max": 100
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "age"
+                                , Field.IntegerField_ <|
+                                    Field.SimpleIntegerField
+                                        { required = Required.No
+                                        , label = "Age"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = Just 0
+                                        , max = Just 100
+                                        }
+                                )
+                            )
+            , Test.test "Linear scale field decoder" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "linearScale",
+                                "label": "Linear Scale",
+                                "type": "linear_scale",
+                                "width": "100%",
+                                "min": 1,
+                                "max": 5
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "linearScale"
+                                , Field.IntegerField_ <|
+                                    Field.LinearScaleField
+                                        { required = Required.Yes
+                                        , label = "Linear Scale"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = 1
+                                        , max = 5
+                                        , leftLabel = Nothing
+                                        , rightLabel = Nothing
+                                        }
+                                )
+                            )
+            , Test.test "Linear scale field decoder with labels" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": false,
+                                "key": "difficulty",
+                                "label": "Difficulty",
+                                "type": "linear_scale",
+                                "width": "100%",
+                                "min": 1,
+                                "max": 10,
+                                "leftLabel": "Easy",
+                                "rightLabel": "Hard"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "difficulty"
+                                , Field.IntegerField_ <|
+                                    Field.LinearScaleField
+                                        { required = Required.No
+                                        , label = "Difficulty"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , min = 1
+                                        , max = 10
+                                        , leftLabel = Just "Easy"
+                                        , rightLabel = Just "Hard"
+                                        }
+                                )
+                            )
             ]
         , Test.describe "Encoding Fields"
             [ Test.test "Dictonary field encoding without any dictionary field form elements" <|

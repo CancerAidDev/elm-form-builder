@@ -39,6 +39,7 @@ import Http.Detailed as HttpDetailed
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Json.Encode as Encode
+import Maybe.Extra as MaybeExtra
 import RemoteData
 import Time
 
@@ -296,6 +297,10 @@ getTriggersByValue key fields =
 
         Just (Field.BoolField_ (Field.CheckboxField { value })) ->
             Just value
+
+        Just (Field.IntegerField_ field) ->
+            Just
+                (Field.getIntegerValue (Field.IntegerField_ field) |> MaybeExtra.isJust)
 
         Just field ->
             Field.getStringValue field

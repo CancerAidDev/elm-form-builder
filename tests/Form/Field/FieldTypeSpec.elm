@@ -271,16 +271,27 @@ suite =
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType FieldType.age))
+                        (Ok (FieldType.IntegerType FieldType.Age))
         , Test.test "Integer Field Type" <|
             \_ ->
                 let
                     json =
-                        """ 
+                        """
                             "integer"
                         """
                 in
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
-                        (Ok (FieldType.IntegerType FieldType.defaultInt))
+                        (Ok (FieldType.IntegerType FieldType.SimpleInteger))
+        , Test.test "Linear Scale Field Type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "linear_scale"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.IntegerType FieldType.LinearScale))
         ]
