@@ -108,6 +108,28 @@ suite =
                 Decode.decodeString FieldType.decoder json
                     |> Expect.equal
                         (Ok (FieldType.StringType (FieldType.SimpleType FieldType.TextArea)))
+        , Test.test "Time field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "time"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.StringType (FieldType.SimpleType FieldType.Time)))
+        , Test.test "Color field type" <|
+            \_ ->
+                let
+                    json =
+                        """
+                            "color"
+                        """
+                in
+                Decode.decodeString FieldType.decoder json
+                    |> Expect.equal
+                        (Ok (FieldType.StringType FieldType.Color))
         , Test.test "Select field type" <|
             \_ ->
                 let

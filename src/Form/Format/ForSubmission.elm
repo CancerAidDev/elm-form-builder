@@ -60,3 +60,6 @@ formatForSubmission (Locale.Locale _ code) field =
 
         Field.RadioField _ ->
             value
+
+        Field.ColorField _ ->
+            value

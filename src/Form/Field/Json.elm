@@ -45,6 +45,7 @@ type JsonField
     | JsonIntegerField JsonIntegerFieldProperties
     | JsonLinearScaleField JsonLinearScaleFieldProperties
     | JsonTagField JsonTagFieldProperties
+    | JsonColorField JsonColorFieldProperties
 
 
 type alias JsonTagFieldProperties =
@@ -105,6 +106,21 @@ type alias JsonDateFieldProperties =
     , disabled : Maybe Bool
     , hidden : Maybe Bool
     , unhiddenBy : Maybe String
+    }
+
+
+type alias JsonColorFieldProperties =
+    { required : Required.IsRequired
+    , key : String
+    , label : String
+    , labelExtraContent : Maybe LabelExtraContent.LabelExtraContent
+    , width : Width.Width
+    , enabledBy : Maybe String
+    , disabled : Maybe Bool
+    , hidden : Maybe Bool
+    , unhiddenBy : Maybe String
+    , value : String
+    , showHexValue : Bool
     }
 
 
@@ -376,6 +392,9 @@ decoderForType fieldType =
         FieldType.StringType FieldType.Radio ->
             Decode.map JsonRadioField decoderRadioJson
 
+        FieldType.StringType FieldType.Color ->
+            Decode.map JsonColorField decoderColorJson
+
         FieldType.BoolType (FieldType.CheckboxType checkboxFieldType) ->
             Decode.map JsonCheckboxField (decoderCheckboxJson checkboxFieldType)
 
@@ -456,6 +475,24 @@ toField time order field =
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
                     , unhiddenBy = unhiddenBy
+                    }
+            )
+
+        JsonColorField { required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, value, showHexValue } ->
+            ( key
+            , Field.StringField_ <|
+                Field.ColorField
+                    { required = required
+                    , label = label
+                    , labelExtraContent = labelExtraContent
+                    , width = width
+                    , enabledBy = enabledBy
+                    , order = order
+                    , value = value
+                    , disabled = Maybe.withDefault False disabled
+                    , hidden = Maybe.withDefault False hidden
+                    , unhiddenBy = unhiddenBy
+                    , showHexValue = showHexValue
                     }
             )
 
@@ -799,6 +836,22 @@ decoderDateJson tipe =
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+
+
+decoderColorJson : Decode.Decoder JsonColorFieldProperties
+decoderColorJson =
+    Decode.succeed JsonColorFieldProperties
+        |> DecodePipeline.required "required" Required.decoder
+        |> DecodePipeline.required "key" Decode.string
+        |> DecodePipeline.required "label" Decode.string
+        |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
+        |> DecodePipeline.required "width" Width.decoder
+        |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
+        |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing
+        |> DecodePipeline.optional "value" Decode.string "#000000"
+        |> DecodePipeline.optional "show_hex" Decode.bool False
 
 
 decoderCheckboxJson : FieldType.CheckboxFieldType -> Decode.Decoder JsonCheckboxFieldProperties

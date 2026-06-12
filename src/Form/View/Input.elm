@@ -107,6 +107,9 @@ control time (Locale.Locale _ code) disabled key field =
                 _ ->
                     input time (Just code) disabled key field
 
+        Field.StringField_ (Field.ColorField properties) ->
+            color key properties disabled
+
         Field.StringField_ (Field.DateField _) ->
             input time (Just code) disabled key field
 
@@ -231,6 +234,26 @@ textarea key field disabled =
         , HtmlEvents.onInput <| Msg.UpdateStringField key
         ]
         []
+
+
+color : String -> Field.ColorFieldProperties -> Bool -> Html.Html Msg.Msg
+color key field disabled =
+    Html.div [ HtmlAttributes.class "is-flex is-align-items-center" ]
+        [ Html.input
+            [ HtmlAttributes.id key
+            , HtmlAttributes.name key
+            , HtmlAttributes.disabled disabled
+            , HtmlAttributes.class "input"
+            , HtmlAttributes.style "width" "4em"
+            , HtmlAttributes.type_ "color"
+            , HtmlAttributes.value field.value
+            , HtmlAttributes.required (field.required == Required.Yes)
+            , HtmlEvents.onInput <| Msg.UpdateStringField key
+            ]
+            []
+        , HtmlExtra.viewIf field.showHexValue <|
+            Html.span [ HtmlAttributes.class "ml-2 is-family-monospace" ] [ Html.text field.value ]
+        ]
 
 
 linearScale : String -> Field.LinearScaleFieldProperties -> Bool -> Html.Html Msg.Msg

@@ -86,6 +86,16 @@ fields =
             |> FormField.time
         )
     , \order ->
+        ( "color"
+        , FormField.colorDefault
+            |> FormField.setIsRequired IsRequired.Yes
+            |> FormField.setLabel "Favourite Colour"
+            |> FormField.setValue "#3273dc"
+            |> FormField.setShowHexValue
+            |> FormField.setOrder order
+            |> FormField.color
+        )
+    , \order ->
         ( "age"
         , FormField.integerDefault
             |> FormField.setIsRequired IsRequired.Nullable
