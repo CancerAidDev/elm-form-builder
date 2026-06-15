@@ -1,9 +1,9 @@
 module Form.Field exposing
     ( Field(..), StringField(..), MultiStringField(..), BoolField(..), IntegerField(..)
-    , CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
-    , ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
-    , integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , CommonFieldProperties, ColorFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
+    , ageDefault, integerDefault, linearScaleDefault, checkboxDefault, colorDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+    , integer, linearScale, checkbox, color, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -22,22 +22,22 @@ module Form.Field exposing
 
 # Properties
 
-@docs CommonFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
+@docs CommonFieldProperties, ColorFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
 
 
 # Default Properties
 
-@docs ageDefault, integerDefault, linearScaleDefault, checkboxDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
+@docs ageDefault, integerDefault, linearScaleDefault, checkboxDefault, colorDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
 
 
 # Constructors
 
-@docs integer, linearScale, checkbox, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
+@docs integer, linearScale, checkbox, color, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
 
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
@@ -161,6 +161,30 @@ Common builders:
 time : SimpleFieldProperties -> Field
 time =
     StringField_ << SimpleField << setTipe FieldType.Time
+
+
+{-| Makes a browser native colour picker field. The value is a `#rrggbb` hex string.
+
+In addition to the common builders, the following are available:
+
+  - `setShowHexValue` (renders the hex value next to the picker)
+
+Common builders:
+
+  - `setIsRequired Required.IsRequired`
+  - `setLabel String`
+  - `setLabelExtraContent LabelExtraContent.LabelExtraContent`
+  - `setWidth Width.Width`
+  - `setEnabledBy String`
+  - `setOrder Int`
+  - `setDisabled`
+  - `setHidden`
+  - `setUnhiddenBy String`
+
+-}
+color : ColorFieldProperties -> Field
+color =
+    StringField_ << ColorField
 
 
 {-| Makes a phone field.
@@ -707,6 +731,13 @@ setValue value field =
     { field | value = value }
 
 
+{-| Renders the selected hex value as a label next to the colour picker.
+-}
+setShowHexValue : ColorFieldProperties -> ColorFieldProperties
+setShowHexValue field =
+    { field | showHexValue = True }
+
+
 {-| -}
 setDefault : d -> FieldProperties { a | default : Maybe d } -> FieldProperties { a | default : Maybe d }
 setDefault default field =
@@ -979,6 +1010,35 @@ phoneDefault =
 timeDefault : SimpleFieldProperties
 timeDefault =
     setTipe FieldType.Time <| simpleDefault
+
+
+{-| `{ required = Required.No
+, label = ""
+, labelExtraContent = Nothing
+, width = Width.FullSize
+, enabledBy = Nothing
+, order = 0
+, disabled = False
+, hidden = False
+, unhiddenBy = Nothing
+, value = "#000000"
+, showHexValue = False
+}`
+-}
+colorDefault : ColorFieldProperties
+colorDefault =
+    { required = Required.No
+    , label = ""
+    , labelExtraContent = Nothing
+    , width = Width.FullSize
+    , enabledBy = Nothing
+    , order = 0
+    , disabled = False
+    , hidden = False
+    , unhiddenBy = Nothing
+    , value = "#000000"
+    , showHexValue = False
+    }
 
 
 {-| `{ required = Required.No
@@ -1563,6 +1623,7 @@ type StringField
     | HttpSelectField HttpSelectFieldProperties
     | HttpSearchableSelectField HttpSearchableSelectFieldProperties
     | RadioField RadioFieldProperties
+    | ColorField ColorFieldProperties
 
 
 {-| -}
@@ -1627,6 +1688,13 @@ type alias SimpleFieldProperties =
     StringFieldProperties
         { tipe : FieldType.SimpleFieldType
         , regexValidation : List RegexValidation.RegexValidation
+        }
+
+
+{-| -}
+type alias ColorFieldProperties =
+    StringFieldProperties
+        { showHexValue : Bool
         }
 
 
@@ -1899,6 +1967,19 @@ getStringProperties field =
             , unhiddenBy = unhiddenBy
             }
 
+        ColorField { required, label, labelExtraContent, width, enabledBy, order, value, disabled, hidden, unhiddenBy } ->
+            { required = required
+            , label = label
+            , labelExtraContent = labelExtraContent
+            , width = width
+            , enabledBy = enabledBy
+            , order = order
+            , value = value
+            , disabled = disabled
+            , hidden = hidden
+            , unhiddenBy = unhiddenBy
+            }
+
 
 {-| -}
 getMultiStringProperties : MultiStringField -> FieldProperties { value : Set.Set String }
@@ -1998,6 +2079,9 @@ updateStringDisabled =
 
                 RadioField properties ->
                     RadioField { properties | disabled = value }
+
+                ColorField properties ->
+                    ColorField { properties | disabled = value }
     in
     genericUpdateStringField updateStringDisabled_
 
@@ -2121,6 +2205,9 @@ resetValueToDefault field =
 
         StringField_ (RadioField properties) ->
             StringField_ <| RadioField { properties | value = properties.default |> Maybe.withDefault radioDefault.value }
+
+        StringField_ (ColorField properties) ->
+            StringField_ <| ColorField { properties | value = colorDefault.value }
 
         MultiStringField_ (MultiHttpSelectField properties) ->
             MultiStringField_ <| MultiHttpSelectField { properties | value = multiHttpSelectDefault.value }
@@ -2263,6 +2350,9 @@ updateStringValue_ value field =
 
         RadioField properties ->
             RadioField { properties | value = value }
+
+        ColorField properties ->
+            ColorField { properties | value = value }
 
 
 {-| -}
@@ -2516,6 +2606,9 @@ getStringType field =
 
         RadioField _ ->
             FieldType.Radio
+
+        ColorField _ ->
+            FieldType.Color
 
 
 getMultiStringType : MultiStringField -> FieldType.MultiStringFieldType

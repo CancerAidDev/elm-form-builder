@@ -1,4 +1,4 @@
-module Form.Validate.HelperSpec exposing (IntegerField, NewStringField, dateField, integerField, integerFieldTest, linearScaleField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
+module Form.Validate.HelperSpec exposing (IntegerField, NewStringField, colorField, dateField, integerField, integerFieldTest, linearScaleField, regexNonEmployeeEmailField, simpleField, simpleFieldTest)
 
 import Expect
 import Form.Field as Field
@@ -109,6 +109,23 @@ simpleField tipe { required, value } =
         , hidden = False
         , unhiddenBy = Nothing
         , regexValidation = []
+        }
+
+
+colorField : NewStringField
+colorField { required, value } =
+    Field.ColorField
+        { required = required
+        , label = "Field"
+        , labelExtraContent = Nothing
+        , width = Width.FullSize
+        , enabledBy = Nothing
+        , order = 1
+        , value = value
+        , disabled = False
+        , hidden = False
+        , unhiddenBy = Nothing
+        , showHexValue = False
         }
 
 

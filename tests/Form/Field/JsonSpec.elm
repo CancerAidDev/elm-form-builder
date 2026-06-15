@@ -174,6 +174,72 @@ suite =
                     in
                     Decode.decodeString decoder json
                         |> Expect.err
+            , Test.test "Simple field decoder with color type" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "favourite_colour",
+                                "label": "Favourite Colour",
+                                "type": "color",
+                                "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "favourite_colour"
+                                , Field.StringField_ <|
+                                    Field.ColorField
+                                        { label = "Favourite Colour"
+                                        , labelExtraContent = Nothing
+                                        , required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = "#000000"
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , showHexValue = False
+                                        }
+                                )
+                            )
+            , Test.test "Color field decoder with value and show_hex" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "favourite_colour",
+                                "label": "Favourite Colour",
+                                "type": "color",
+                                "width": "50%",
+                                "value": "#3273dc",
+                                "show_hex": true
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "favourite_colour"
+                                , Field.StringField_ <|
+                                    Field.ColorField
+                                        { label = "Favourite Colour"
+                                        , labelExtraContent = Nothing
+                                        , required = Required.Yes
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = "#3273dc"
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        , showHexValue = True
+                                        }
+                                )
+                            )
             , Test.test "Simple field decoder with incorrect simple type" <|
                 \_ ->
                     let
@@ -182,7 +248,7 @@ suite =
                                 "required": true,
                                 "key": "name",
                                 "label": "Full Name",
-                                "type": "color",
+                                "type": "not_a_real_type",
                                 "width": "50%"
                             }"""
                     in

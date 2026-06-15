@@ -92,6 +92,9 @@ validate locale field =
                 Field.RadioField { options } ->
                     Options.optionsValidator options locale field
 
+                Field.ColorField _ ->
+                    Ok field
+
 
 {-| Localised error message API for a StringField error.
 -}

@@ -47,6 +47,7 @@ type StringFieldType
     | HttpSelect
     | HttpSearchableSelect
     | Radio
+    | Color
 
 
 {-| -}
@@ -193,6 +194,9 @@ fromString str =
         "time" ->
             Just (StringType (SimpleType Time))
 
+        "color" ->
+            Just (StringType Color)
+
         "url" ->
             Just (StringType (SimpleType Url))
 
@@ -269,6 +273,9 @@ toType fieldType =
 
         StringType (SimpleType Time) ->
             "time"
+
+        StringType Color ->
+            "color"
 
         StringType (SimpleType Url) ->
             "url"
