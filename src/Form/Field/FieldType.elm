@@ -123,7 +123,7 @@ dateOfBirth : DateFieldType
 dateOfBirth =
     { min = Just (DateOffset ( TimeExtra.Year, -120 ))
     , max = Just (DateOffset ( TimeExtra.Year, 0 ))
-    , default = Just (DateOffset ( TimeExtra.Year, -40 ))
+    , default = Nothing
     }
 
 

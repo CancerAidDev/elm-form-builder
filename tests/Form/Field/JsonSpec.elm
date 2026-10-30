@@ -954,6 +954,39 @@ suite =
                                         }
                                 )
                             )
+            , Test.test "Date of birth field decoder has no default value" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "dob",
+                                "label": "Date of Birth",
+                                "type": "date_birth",
+                                "width": "100%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "dob"
+                                , Field.StringField_ <|
+                                    Field.DateField
+                                        { required = Required.Yes
+                                        , label = "Date of Birth"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.FullSize
+                                        , tipe = FieldType.dateOfBirth
+                                        , enabledBy = Nothing
+                                        , order = order
+                                        , value = ""
+                                        , parsedDate = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        }
+                                )
+                            )
             , Test.test "Linear scale field decoder" <|
                 \_ ->
                     let
