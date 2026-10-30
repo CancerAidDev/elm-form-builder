@@ -21,11 +21,11 @@ import Time
 
 
 {-| -}
-view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> Html.Html Msg.Msg
-view time submitted locale fields =
+view : Time.Zone -> Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> Html.Html Msg.Msg
+view zone time submitted locale fields =
     Html.div [ HtmlAttributes.class "form-container" ]
         (fields
             |> Dict.toList
             |> List.sortBy (\( _, field ) -> Field.getOrder field)
-            |> List.map (\( k, v ) -> Input.view time submitted locale fields k v)
+            |> List.map (\( k, v ) -> Input.view zone time submitted locale fields k v)
         )

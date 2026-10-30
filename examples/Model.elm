@@ -9,6 +9,7 @@ import Time
 
 type alias Model =
     { startTime : Time.Posix
+    , zone : Time.Zone
     , dialog : Dialog.Model String Msg.Msg
     , locale : Locale.Locale
     , form : FormFields.Fields

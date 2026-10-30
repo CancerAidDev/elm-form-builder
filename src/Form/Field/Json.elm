@@ -24,7 +24,6 @@ import Json.Decode as Decode
 import Json.Decode.Pipeline as DecodePipeline
 import RemoteData
 import Set
-import Time
 
 
 type JsonField
@@ -344,11 +343,11 @@ type alias JsonLinearScaleFieldProperties =
 
 
 {-| -}
-decoder : Time.Posix -> Int -> Decode.Decoder ( String, Field.Field )
-decoder time order =
+decoder : Int -> Decode.Decoder ( String, Field.Field )
+decoder order =
     Decode.field "type" FieldType.decoder
         |> Decode.andThen decoderForType
-        |> Decode.map (toField time order)
+        |> Decode.map (toField order)
 
 
 decoderForType : FieldType.FieldType -> Decode.Decoder JsonField
@@ -414,8 +413,8 @@ decoderForType fieldType =
             Decode.map JsonLinearScaleField decoderLinearScaleJson
 
 
-toField : Time.Posix -> Int -> JsonField -> ( String, Field.Field )
-toField time order field =
+toField : Int -> JsonField -> ( String, Field.Field )
+toField order field =
     case field of
         JsonSimpleField { tipe, required, key, label, labelExtraContent, width, enabledBy, disabled, hidden, unhiddenBy, regexValidation } ->
             ( key
@@ -470,7 +469,7 @@ toField time order field =
                     , tipe = tipe
                     , enabledBy = enabledBy
                     , order = order
-                    , value = tipe.default |> Maybe.map (FieldType.dateConfigToString time) |> Maybe.withDefault ""
+                    , value = ""
                     , parsedDate = Nothing
                     , disabled = Maybe.withDefault False disabled
                     , hidden = Maybe.withDefault False hidden
@@ -832,7 +831,7 @@ decoderDateJson tipe =
         |> DecodePipeline.optional "labelExtraContent" (Decode.map Just LabelExtraContent.decoder) Nothing
         |> DecodePipeline.required "width" Width.decoder
         |> DecodePipeline.optional "enabledBy" (Decode.map Just Decode.string) Nothing
-        |> DecodePipeline.hardcoded tipe
+        |> DecodePipeline.optional "input" (Decode.map (\input -> { tipe | input = input }) FieldType.dateInputDecoder) tipe
         |> DecodePipeline.optional "disabled" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "hidden" (Decode.map Just Decode.bool) Nothing
         |> DecodePipeline.optional "unhiddenBy" (Decode.map Just Decode.string) Nothing

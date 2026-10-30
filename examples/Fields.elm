@@ -3,6 +3,7 @@ module Fields exposing (..)
 import Dict
 import Form.Field as FormField
 import Form.Field.Direction as Direction
+import Form.Field.FieldType as FieldType
 import Form.Field.Required as IsRequired
 import Form.Field.Width as Width
 import Form.Fields as FormFields
@@ -151,6 +152,16 @@ fields =
             |> FormField.setDatePast
             |> FormField.setIsRequired IsRequired.Nullable
             |> FormField.setLabel "Claim Started"
+            |> FormField.setOrder order
+            |> FormField.date
+        )
+    , \order ->
+        ( "diagnosisDate"
+        , FormField.dateDefault
+            |> FormField.setDatePast
+            |> FormField.setDateInput FieldType.Masked
+            |> FormField.setIsRequired IsRequired.Nullable
+            |> FormField.setLabel "Diagnosis Date"
             |> FormField.setOrder order
             |> FormField.date
         )

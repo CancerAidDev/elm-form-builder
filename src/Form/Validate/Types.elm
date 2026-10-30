@@ -30,6 +30,8 @@ type StringFieldError
     | InvalidPhoneNumber
     | InvalidEmail
     | InvalidDate
+    | DateTooEarly String
+    | DateTooLate String
     | InvalidUrl
     | RegexIncongruence String
 

@@ -20,6 +20,9 @@ update msg model =
             FormUpdate.update subMsg model.form
                 |> updateWith (\updatedForm -> { model | form = updatedForm }) Msg.FormMsg
 
+        Msg.GotZone zone ->
+            ( { model | zone = zone }, Cmd.none )
+
         Msg.SubmitForm ->
             let
                 newDialog =
@@ -29,7 +32,7 @@ update msg model =
                         }
             in
             model.form
-                |> Validate.validate model.locale
+                |> Validate.validate model.zone model.startTime model.locale
                 |> Maybe.map (\fields -> ( { model | dialog = Just newDialog, form = fields }, Cmd.none ))
                 |> Maybe.withDefault ( { model | submitted = True }, Cmd.none )
 

@@ -11,6 +11,14 @@ import Form.Validate as Validate
 import Form.Validate.StringField as StringField
 import Form.Validate.Types as Types
 import Test
+import Time
+
+
+{-| 2024-06-01T00:00:00Z, the current time for date ranges (in UTC).
+-}
+time : Time.Posix
+time =
+    Time.millisToPosix 1717200000000
 
 
 type alias NewStringField =
@@ -34,7 +42,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                     Test.test ("valid - " ++ name) <|
                         \_ ->
                             field { required = required, value = value }
-                                |> StringField.validate locale
+                                |> StringField.validate Time.utc time locale
                                 |> Expect.ok
                 )
                 valid
@@ -46,7 +54,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                     Test.test ("invalid - " ++ name ++ " " ++ Debug.toString error) <|
                         \_ ->
                             field { required = required, value = value }
-                                |> StringField.validate locale
+                                |> StringField.validate Time.utc time locale
                                 |> Expect.equal (Err error)
                 )
                 invalid
@@ -67,7 +75,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                 [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
-                            |> StringField.validate Locale.enAU
+                            |> StringField.validate Time.utc time Locale.enAU
                             |> Expect.equal (Err Types.RequiredError)
                 , nonemptyTest { required = required }
                 ]
@@ -83,7 +91,7 @@ simpleFieldTest tipe field { valid, invalid, locale } =
                 [ Test.test "empty" <|
                     \_ ->
                         field { required = required, value = "" }
-                            |> StringField.validate Locale.enAU
+                            |> StringField.validate Time.utc time Locale.enAU
                             |> Expect.ok
                 , nonemptyTest { required = required }
                 ]

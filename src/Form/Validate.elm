@@ -35,14 +35,16 @@ import Form.Validate.StringField as ValidateStringField
 import Form.Validate.Types as StringFieldTypes
 import Maybe.Extra as MaybeExtra
 import Set
+import Time
 
 
-{-| -}
-validateField : Locale.Locale -> Fields.Fields -> Field.Field -> Result Error Field.Field
-validateField locale fields field =
+{-| The current time and zone are used for date ranges.
+-}
+validateField : Time.Zone -> Time.Posix -> Locale.Locale -> Fields.Fields -> Field.Field -> Result Error Field.Field
+validateField zone time locale fields field =
     case field of
         Field.StringField_ stringField ->
-            ValidateStringField.validate locale stringField
+            ValidateStringField.validate zone time locale (withoutRangeUnlessEditable fields field stringField)
                 |> Result.map
                     (\validField ->
                         Field.StringField_ (Field.updateStringValue_ (ForSubmission.formatForSubmission locale validField) stringField)
@@ -100,6 +102,22 @@ validateField locale fields field =
                         Field.IntegerField_ (Field.updateIntegerValue_ updatedValue integerField)
                     )
                 |> Result.mapError IntegerError_
+
+
+{-| Date ranges are only checked on fields the user can see and edit, so a stored date that's since gone out of range doesn't block the form.
+-}
+withoutRangeUnlessEditable : Fields.Fields -> Field.Field -> Field.StringField -> Field.StringField
+withoutRangeUnlessEditable fields field stringField =
+    case stringField of
+        Field.DateField ({ tipe } as properties) ->
+            if Fields.isShown fields field && Fields.isEnabled fields field then
+                stringField
+
+            else
+                Field.DateField { properties | tipe = { tipe | min = Nothing, max = Nothing } }
+
+        _ ->
+            stringField
 
 
 validateMultiStringField : Field.MultiStringField -> Result MultiStringError (Set.Set String)
@@ -200,22 +218,24 @@ validateIntegerField field =
                 Ok Nothing
 
 
-{-| -}
-validate : Locale.Locale -> Fields.Fields -> Maybe Fields.Fields
-validate locale fields =
+{-| The current time and zone are used for date ranges.
+-}
+validate : Time.Zone -> Time.Posix -> Locale.Locale -> Fields.Fields -> Maybe Fields.Fields
+validate zone time locale fields =
     fields
         |> Dict.foldl
             (\key field acc ->
-                Result.toMaybe (validateField locale fields field)
+                Result.toMaybe (validateField zone time locale fields field)
                     |> Maybe.andThen (\value -> Maybe.map (Dict.insert key value) acc)
             )
             (Just Dict.empty)
 
 
-{-| -}
-isValid : Locale.Locale -> Fields.Fields -> Bool
-isValid locale =
-    validate locale >> MaybeExtra.isJust
+{-| The current time and zone are used for date ranges.
+-}
+isValid : Time.Zone -> Time.Posix -> Locale.Locale -> Fields.Fields -> Bool
+isValid zone time locale =
+    validate zone time locale >> MaybeExtra.isJust
 
 
 type MultiStringError

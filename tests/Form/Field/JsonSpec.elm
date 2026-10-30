@@ -15,20 +15,16 @@ import Regex
 import RemoteData
 import Set
 import Test
-import Time
 
 
 suite : Test.Test
 suite =
     let
-        time =
-            Time.millisToPosix 0
-
         order =
             0
 
         decoder =
-            Json.decoder time order
+            Json.decoder order
 
         encode =
             Encode.dict identity identity << Fields.encode
@@ -240,6 +236,91 @@ suite =
                                         }
                                 )
                             )
+            , Test.test "Date field decoder uses the type's date input" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "diagnosis_date",
+                                "label": "Diagnosis Date",
+                                "type": "date_past",
+                                "width": "50%"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "diagnosis_date"
+                                , Field.StringField_ <|
+                                    Field.DateField
+                                        { required = Required.Yes
+                                        , label = "Diagnosis Date"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , tipe = FieldType.datePast
+                                        , order = order
+                                        , value = ""
+                                        , parsedDate = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        }
+                                )
+                            )
+            , Test.test "Date field decoder with masked input" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "diagnosis_date",
+                                "label": "Diagnosis Date",
+                                "type": "date_past",
+                                "width": "50%",
+                                "input": "masked"
+                            }"""
+
+                        datePast =
+                            FieldType.datePast
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.equal
+                            (Ok
+                                ( "diagnosis_date"
+                                , Field.StringField_ <|
+                                    Field.DateField
+                                        { required = Required.Yes
+                                        , label = "Diagnosis Date"
+                                        , labelExtraContent = Nothing
+                                        , width = Width.HalfSize
+                                        , enabledBy = Nothing
+                                        , tipe = { datePast | input = FieldType.Masked }
+                                        , order = order
+                                        , value = ""
+                                        , parsedDate = Nothing
+                                        , disabled = False
+                                        , hidden = False
+                                        , unhiddenBy = Nothing
+                                        }
+                                )
+                            )
+            , Test.test "Date field decoder with incorrect input" <|
+                \_ ->
+                    let
+                        json =
+                            """{
+                                "required": true,
+                                "key": "diagnosis_date",
+                                "label": "Diagnosis Date",
+                                "type": "date_past",
+                                "width": "50%",
+                                "input": "wheel"
+                            }"""
+                    in
+                    Decode.decodeString decoder json
+                        |> Expect.err
             , Test.test "Simple field decoder with incorrect simple type" <|
                 \_ ->
                     let

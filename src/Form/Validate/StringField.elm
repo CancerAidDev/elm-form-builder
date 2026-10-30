@@ -20,6 +20,9 @@ module Form.Validate.StringField exposing
 import Form.Field as Field
 import Form.Field.FieldType as FieldType
 import Form.Field.Required as Required
+import Form.Format.Date as DateFormat
+import Form.Locale as Locale
+import Form.Locale.CountryCode as CountryCode
 import Form.Validate.Date as Date
 import Form.Validate.Email as Email
 import Form.Validate.Options as Options
@@ -28,12 +31,13 @@ import Form.Validate.Regex as RegexValidator
 import Form.Validate.Required as Required
 import Form.Validate.Types as Types
 import Form.Validate.UrlValidator as UrlValidator
+import Time
 
 
-{-| Validator API for a StringField being valid.
+{-| Validator API for a StringField being valid. The current time and zone are used for date ranges.
 -}
-validate : Types.Validator
-validate locale field =
+validate : Time.Zone -> Time.Posix -> Types.Validator
+validate zone time locale field =
     let
         requiredResult =
             Required.requiredValidator locale field
@@ -74,8 +78,8 @@ validate locale field =
                     simpleFieldValidator field
                         |> Result.andThen (RegexValidator.regexValidator regexValidation)
 
-                Field.DateField _ ->
-                    Date.dateValidator locale field
+                Field.DateField { tipe } ->
+                    Date.dateValidator zone time tipe locale field
 
                 Field.SelectField { options } ->
                     Options.optionsValidator options locale field
@@ -117,11 +121,47 @@ errorToMessage locale field error =
             "Invalid email address"
 
         Types.InvalidDate ->
-            -- Only old browsers without a date picker should trigger this error
-            "Date format should be YYYY-MM-DD"
+            "Enter a valid date (" ++ dateFormat locale field ++ ")"
+
+        Types.DateTooEarly earliest ->
+            "Date must be on or after " ++ formatDate locale field earliest
+
+        Types.DateTooLate latest ->
+            "Date must be on or before " ++ formatDate locale field latest
 
         Types.InvalidUrl ->
             "Invalid url"
 
         Types.RegexIncongruence msg ->
             msg
+
+
+{-| Masked date inputs show dates in the locale's date order, and date pickers take ISO 8601 dates.
+-}
+maskedDateCode : Locale.Locale -> Field.StringField -> Maybe CountryCode.CountryCode
+maskedDateCode (Locale.Locale _ code) field =
+    case Field.getStringType field of
+        FieldType.DateType { input } ->
+            case input of
+                FieldType.Masked ->
+                    Just code
+
+                FieldType.Calendar ->
+                    Nothing
+
+        _ ->
+            Nothing
+
+
+dateFormat : Locale.Locale -> Field.StringField -> String
+dateFormat locale field =
+    maskedDateCode locale field
+        |> Maybe.map (Just >> DateFormat.placeholder)
+        |> Maybe.withDefault "YYYY-MM-DD"
+
+
+formatDate : Locale.Locale -> Field.StringField -> String -> String
+formatDate locale field isoDate =
+    maskedDateCode locale field
+        |> Maybe.map (\code -> DateFormat.toDisplay (Just code) isoDate)
+        |> Maybe.withDefault isoDate

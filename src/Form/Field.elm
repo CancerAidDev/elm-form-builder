@@ -3,7 +3,7 @@ module Form.Field exposing
     , CommonFieldProperties, ColorFieldProperties, DateFieldProperties, SimpleFieldProperties, SelectFieldProperties, SearchableSelectFieldProperties, HttpSelectFieldProperties, HttpSearchableSelectFieldProperties, MultiSelectFieldProperties, SearchableMultiSelectFieldProperties, MultiHttpSelectFieldProperties, RadioFieldProperties, BoolFieldProperties, CheckboxFieldProperties, RadioBoolFieldProperties, RadioEnumFieldProperties, StringFieldProperties, TagFieldProperties, FieldProperties, IntegerFieldProperties, SimpleIntegerFieldProperties, LinearScaleFieldProperties
     , ageDefault, integerDefault, linearScaleDefault, checkboxDefault, colorDefault, dateDefault, emailDefault, httpSelectDefault, searchableSelectDefault, httpSearchableSelectDefault, multiHttpSelectDefault, multiSelectDefault, phoneDefault, timeDefault, radioBoolDefault, radioDefault, radioEnumDefault, searchableMultiSelectDefault, selectDefault, tagDefault, textAreaDefault, textDefault, urlDefault
     , integer, linearScale, checkbox, color, date, httpSelect, text, multiHttpSelect, multiSelect, radio, radioBool, radioEnum, searchableSelect, httpSearchableSelect, searchableMultiSelect, select, tag, url, phone, time, textArea, email
-    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+    , setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setDateInput, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
     , nullableOptionValue
     , getBoolProperties, getEnabledBy, getUnhiddenBy, getLabel, getLabelExtraContent, getIntegerValue, getOrder, getProperties, getStringType, getStringValue, getStringValue_, getParsedDateValue_, getMultiStringValue_, getType, getUrl, getMax, getMin, getDecoderForOptions
     , resetValueToDefault, updateBoolValue, updateCheckboxValue_, updateIntegerValue, updateIntegerValue_, updateRadioBoolValue, updateRadioBoolValue_, updateRadioEnumValue, updateRadioEnumValue_, updateRemoteOptions, updateStringValue, updateParsedDateValue, updateStringDisabled, updateMultiStringOption, updateStringValue_, updateMultiStringValue_, updateShowDropdown, maybeUpdateStringValue, updateTagsInputBarValue, updateTagsValue, updateTagsValue_, updateSearchableSelectInput
@@ -37,7 +37,7 @@ module Form.Field exposing
 
 # Construction Property Setters
 
-@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
+@docs setDateDefault, setDateFuture, setDateOfBirth, setDatePast, setDateInput, setMinDate, setMaxDate, setMinDateOffset, setMaxDateOffset, setMin, setMax, setMinScale, setMaxScale, setLeftLabel, setRightLabel, setDefault, setDirection, setDisabled, setEnabledBy, setForbiddenEmailDomains, setHidden, setIsRequired, setLabel, setLabelExtraContent, setNullableOptionLabel, setOptions, setOrder, setPlaceholder, setRegexValidation, setRemoteUrl, setSearchableOptions, setSelectablePlaceholder, setShowHexValue, setTagsInputBar, setUnhiddenBy, setValue, setWidth
 
 @docs nullableOptionValue
 
@@ -788,32 +788,44 @@ setSearchableOptions searchableOptions field =
     { field | searchableOptions = searchableOptions }
 
 
-{-| Sets the selectable date range to be the last 120 years.
+{-| Sets the field to a masked date of birth, up to 120 years ago and no later than today.
 -}
 setDateOfBirth : DateFieldProperties -> DateFieldProperties
 setDateOfBirth =
     setTipe FieldType.dateOfBirth
 
 
-{-| Sets the selectable date range to be the next 10 years.
+{-| Sets the selectable date range to be the next 10 years. Keeps the date input.
 -}
 setDateFuture : DateFieldProperties -> DateFieldProperties
 setDateFuture =
-    setTipe FieldType.dateFuture
+    setDateRange FieldType.dateFuture
 
 
-{-| Sets the selectable date range to be the last 120 years.
+{-| Sets the selectable date range to be the last 120 years. Keeps the date input.
 -}
 setDatePast : DateFieldProperties -> DateFieldProperties
 setDatePast =
-    setTipe FieldType.datePast
+    setDateRange FieldType.datePast
 
 
-{-| Sets the selectable date to be any range.
+{-| Sets the selectable date to be any range. Keeps the date input.
 -}
 setDateDefault : DateFieldProperties -> DateFieldProperties
 setDateDefault =
-    setTipe FieldType.dateDefault
+    setDateRange FieldType.dateDefault
+
+
+setDateRange : FieldType.DateFieldType -> DateFieldProperties -> DateFieldProperties
+setDateRange preset ({ tipe } as field) =
+    setTipe { preset | input = tipe.input } field
+
+
+{-| Sets how the date is entered: `Masked`, a text input that formats the date as it's typed in the locale's date order, or `Calendar`, the browser's date picker.
+-}
+setDateInput : FieldType.DateInput -> DateFieldProperties -> DateFieldProperties
+setDateInput input ({ tipe } as field) =
+    setTipe { tipe | input = input } field
 
 
 {-| Sets the max selectable date range to specified absolute date in POSIX time.
@@ -1069,7 +1081,7 @@ textAreaDefault =
 , disabled = False
 , hidden = False
 , unhiddenBy = Nothing
-, tipe = { min = Nothing, max = Nothing }
+, tipe = FieldType.dateDefault
 , value = ""
 , parsedDate = Nothing
 }`
@@ -2651,11 +2663,11 @@ getUrl field =
 
 
 {-| -}
-getMin : Time.Posix -> Field -> Maybe String
-getMin t field =
+getMin : Time.Zone -> Time.Posix -> Field -> Maybe String
+getMin zone t field =
     case field of
         StringField_ (DateField { tipe }) ->
-            tipe.min |> Maybe.map (FieldType.dateConfigToString t)
+            tipe.min |> Maybe.map (FieldType.dateConfigToString zone t)
 
         IntegerField_ (SimpleIntegerField { min }) ->
             min |> Maybe.map String.fromInt
@@ -2665,11 +2677,11 @@ getMin t field =
 
 
 {-| -}
-getMax : Time.Posix -> Field -> Maybe String
-getMax t field =
+getMax : Time.Zone -> Time.Posix -> Field -> Maybe String
+getMax zone t field =
     case field of
         StringField_ (DateField { tipe }) ->
-            tipe.max |> Maybe.map (FieldType.dateConfigToString t)
+            tipe.max |> Maybe.map (FieldType.dateConfigToString zone t)
 
         IntegerField_ (SimpleIntegerField { max }) ->
             max |> Maybe.map String.fromInt

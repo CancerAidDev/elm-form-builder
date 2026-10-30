@@ -41,7 +41,6 @@ import Json.Decode.Extra as DecodeExtra
 import Json.Encode as Encode
 import Maybe.Extra as MaybeExtra
 import RemoteData
-import Time
 
 
 {-| -}
@@ -50,9 +49,9 @@ type alias Fields =
 
 
 {-| -}
-decoder : Time.Posix -> Decode.Decoder (Dict.Dict String Field.Field)
-decoder time =
-    DecodeExtra.indexedList (FieldJson.decoder time)
+decoder : Decode.Decoder (Dict.Dict String Field.Field)
+decoder =
+    DecodeExtra.indexedList FieldJson.decoder
         |> Decode.map Dict.fromList
 
 

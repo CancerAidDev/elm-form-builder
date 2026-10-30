@@ -1,5 +1,5 @@
 module Form.Lib.Time exposing
-    ( toDateString
+    ( toDateString, toZonedDateString
     , offsetYear
     , offsetDay
     )
@@ -9,7 +9,7 @@ module Form.Lib.Time exposing
 
 # Time
 
-@docs toDateString
+@docs toDateString, toZonedDateString
 
 @docs offsetYear
 
@@ -27,6 +27,15 @@ import Time.Extra as TimeExtra
 toDateString : Time.Posix -> String
 toDateString =
     Iso8601.fromTime >> String.left 10
+
+
+{-| The "YYYY-MM-DD" date in the given zone.
+-}
+toZonedDateString : Time.Zone -> Time.Posix -> String
+toZonedDateString zone time =
+    (Time.posixToMillis time + TimeExtra.toOffset zone time * 60000)
+        |> Time.millisToPosix
+        |> toDateString
 
 
 {-| Offsets a time by the given number of years and returns a new time, floored to the start of the year.

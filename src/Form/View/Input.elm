@@ -16,6 +16,7 @@ import Form.Field.LabelExtraContent as LabelExtraContent
 import Form.Field.Required as Required
 import Form.Field.Width as Width
 import Form.Fields as Fields
+import Form.Format.Date as DateFormat
 import Form.Format.Markdown as Markdown
 import Form.Lib.Events as LibEvents
 import Form.Lib.String as LibString
@@ -39,8 +40,8 @@ import Time
 
 
 {-| -}
-view : Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
-view time submitted locale fields key field =
+view : Time.Zone -> Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> String -> Field.Field -> Html.Html Msg.Msg
+view zone time submitted locale fields key field =
     let
         disabled =
             not (Fields.isEnabled fields field)
@@ -59,8 +60,8 @@ view time submitted locale fields key field =
             ]
             [ label key field disabled
             , HtmlExtra.viewMaybe labelExtraContent maybeLabelExtraContent
-            , control time locale disabled key field
-            , error submitted locale fields field
+            , control zone time locale disabled key field
+            , error zone time submitted locale fields field
             ]
 
 
@@ -93,25 +94,30 @@ labelExtraContent { content, classes } =
         (Markdown.toHtml content)
 
 
-control : Time.Posix -> Locale.Locale -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
-control time (Locale.Locale _ code) disabled key field =
+control : Time.Zone -> Time.Posix -> Locale.Locale -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+control zone time (Locale.Locale _ code) disabled key field =
     case field of
         Field.StringField_ (Field.SimpleField properties) ->
             case properties.tipe of
                 FieldType.Phone ->
-                    phone time code disabled key field
+                    phone zone time code disabled key field
 
                 FieldType.TextArea ->
                     textarea key properties disabled
 
                 _ ->
-                    input time (Just code) disabled key field
+                    input zone time (Just code) disabled key field
 
         Field.StringField_ (Field.ColorField properties) ->
             color key properties disabled
 
-        Field.StringField_ (Field.DateField _) ->
-            input time (Just code) disabled key field
+        Field.StringField_ (Field.DateField properties) ->
+            case properties.tipe.input of
+                FieldType.Masked ->
+                    maskedDate (Just code) disabled key properties
+
+                FieldType.Calendar ->
+                    input zone time (Just code) disabled key field
 
         Field.StringField_ (Field.SelectField properties) ->
             Select.select key properties disabled
@@ -138,7 +144,7 @@ control time (Locale.Locale _ code) disabled key field =
             MultiSelect.multiHttpSelect key properties disabled
 
         Field.MultiStringField_ (Field.TagField _) ->
-            input time Nothing disabled key field
+            input zone time Nothing disabled key field
 
         Field.BoolField_ (Field.CheckboxField properties) ->
             checkbox key properties disabled
@@ -150,14 +156,14 @@ control time (Locale.Locale _ code) disabled key field =
             Radio.radioEnum key properties disabled
 
         Field.IntegerField_ (Field.SimpleIntegerField _) ->
-            input time Nothing disabled key field
+            input zone time Nothing disabled key field
 
         Field.IntegerField_ (Field.LinearScaleField _) ->
-            input time Nothing disabled key field
+            input zone time Nothing disabled key field
 
 
-input : Time.Posix -> Maybe CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
-input time code disabled key field =
+input : Time.Zone -> Time.Posix -> Maybe CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+input zone time code disabled key field =
     let
         renderInput fieldType properties =
             Html.input
@@ -171,8 +177,8 @@ input time code disabled key field =
                 , HtmlAttributes.placeholder (Placeholder.toPlaceholder fieldType code)
                 , HtmlEvents.onInput <| Msg.UpdateStringField key
                 , HtmlAttributesExtra.attributeMaybe (HtmlAttributes.attribute "autocomplete") (FieldType.toAutoComplete fieldType)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (Field.getMin time field)
-                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (Field.getMax time field)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min (Field.getMin zone time field)
+                , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max (Field.getMax zone time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.maxlength (FieldType.toMaxLength fieldType)
                 ]
                 []
@@ -205,9 +211,9 @@ input time code disabled key field =
                 , HtmlAttributes.required (properties.required == Required.Yes)
                 , HtmlEvents.onInput <| Msg.UpdateIntegerField key
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.min
-                    (Field.getMin time field)
+                    (Field.getMin zone time field)
                 , HtmlAttributesExtra.attributeMaybe HtmlAttributes.max
-                    (Field.getMax time field)
+                    (Field.getMax zone time field)
                 ]
                 []
 
@@ -219,6 +225,50 @@ input time code disabled key field =
 
         _ ->
             HtmlExtra.nothing
+
+
+{-| A text input that formats the date as it's typed, in a fixed width font. The placeholder is shown behind the input, which has a transparent background, so the part not yet typed over stays visible. Screen readers get the date order from a visually hidden description.
+-}
+maskedDate : Maybe CountryCode.CountryCode -> Bool -> String -> Field.DateFieldProperties -> Html.Html Msg.Msg
+maskedDate code disabled key properties =
+    let
+        inputValue =
+            DateFormat.toDisplay code properties.value
+    in
+    Html.div [ HtmlAttributes.style "display" "flex", HtmlAttributes.style "position" "relative" ]
+        [ Html.input
+            [ HtmlAttributes.class "input is-family-monospace"
+            , HtmlAttributes.disabled disabled
+            , HtmlAttributes.readonly True
+            , HtmlAttributes.tabindex -1
+            , Aria.hidden True
+            , HtmlAttributes.placeholder (DateFormat.placeholderWhileTyping code inputValue)
+            , HtmlAttributes.style "position" "absolute"
+            , HtmlAttributes.style "inset" "0"
+            , HtmlAttributes.style "height" "100%"
+            , HtmlAttributes.style "pointer-events" "none"
+            ]
+            []
+        , Html.input
+            [ HtmlAttributes.id key
+            , HtmlAttributes.name key
+            , HtmlAttributes.disabled disabled
+            , HtmlAttributes.class "input is-family-monospace"
+            , HtmlAttributes.type_ "text"
+            , HtmlAttributes.attribute "inputmode" "numeric"
+            , HtmlAttributes.value inputValue
+            , HtmlAttributes.required (properties.required == Required.Yes)
+            , HtmlAttributes.placeholder (DateFormat.placeholder code)
+            , Aria.describedBy [ key ++ "-format" ]
+            , HtmlEvents.onInput <| DateFormat.fromInput code properties.value >> Msg.UpdateStringField key
+            , HtmlEvents.onBlur <| Msg.UpdateStringField key (DateFormat.fromBlur code properties.value)
+            , HtmlAttributes.style "position" "relative"
+            , HtmlAttributes.style "background-color" "transparent"
+            ]
+            []
+        , Html.span [ HtmlAttributes.id (key ++ "-format"), HtmlAttributes.class "is-sr-only" ]
+            [ Html.text ("Enter the date as " ++ DateFormat.orderDescription code ++ ".") ]
+        ]
 
 
 textarea : String -> Field.SimpleFieldProperties -> Bool -> Html.Html Msg.Msg
@@ -344,13 +394,13 @@ viewTags key tags =
         )
 
 
-phone : Time.Posix -> CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
-phone time code disabled key field =
+phone : Time.Zone -> Time.Posix -> CountryCode.CountryCode -> Bool -> String -> Field.Field -> Html.Html Msg.Msg
+phone zone time code disabled key field =
     Html.div [ HtmlAttributes.class "field mb-0 has-addons" ]
         [ Html.p [ HtmlAttributes.class "control" ]
             [ Html.span [ HtmlAttributes.class "button is-static" ] [ Html.text (Phone.phonePrefix code) ] ]
         , Html.p [ HtmlAttributes.class "control is-expanded" ]
-            [ input time (Just code) disabled key field ]
+            [ input zone time (Just code) disabled key field ]
         ]
 
 
@@ -375,20 +425,20 @@ checkbox key field disabled =
         ]
 
 
-error : Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-error submitted locale fields field =
+error : Time.Zone -> Time.Posix -> Bool -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
+error zone time submitted locale fields field =
     Html.p [ HtmlAttributes.class "help is-danger" ]
         [ if submitted then
-            validateForm locale fields field
+            validateForm zone time locale fields field
 
           else
             HtmlExtra.nothing
         ]
 
 
-validateForm : Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
-validateForm locale fields field =
-    Validate.validateField locale fields field
+validateForm : Time.Zone -> Time.Posix -> Locale.Locale -> Fields.Fields -> Field.Field -> Html.Html Msg.Msg
+validateForm zone time locale fields field =
+    Validate.validateField zone time locale fields field
         |> ResultExtra.unpack
             (Html.text << Validate.errorToMessage locale)
             (always HtmlExtra.nothing)

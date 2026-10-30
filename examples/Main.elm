@@ -6,6 +6,7 @@ import Form.Locale as Locale
 import Iso8601
 import Model
 import Msg
+import Task
 import Time
 import Time.Extra as TimeExtra
 import Update
@@ -35,10 +36,11 @@ init { date } =
                         TimeExtra.Parts 2022 Time.Jan 1 0 0 0 0
             in
             Iso8601.toTime date |> Result.withDefault default
+      , zone = Time.utc
       , dialog = Nothing
       , locale = Locale.enAU
       , form = Fields.fields
       , submitted = False
       }
-    , Cmd.none
+    , Task.perform Msg.GotZone Time.here
     )

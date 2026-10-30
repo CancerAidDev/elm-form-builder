@@ -1,6 +1,6 @@
 module Form.Field.FieldType exposing
-    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), MultiStringFieldType(..), DateFieldType, DateConfig(..), ListStringFieldType(..)
-    , decoder
+    ( FieldType(..), StringFieldType(..), SimpleFieldType(..), BoolFieldType(..), CheckboxFieldType(..), IntegerFieldType(..), MultiStringFieldType(..), DateFieldType, DateInput(..), DateConfig(..), ListStringFieldType(..)
+    , decoder, dateInputDecoder
     , dateConfigToString, toAutoComplete, toClass, toMaxLength, toType, dateDefault, dateOfBirth, datePast, dateFuture, minAgeDefault, maxAgeDefault
     )
 
@@ -9,12 +9,12 @@ module Form.Field.FieldType exposing
 
 # FieldType
 
-@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, MultiStringFieldType, DateFieldType, DateConfig, ListStringFieldType
+@docs FieldType, StringFieldType, SimpleFieldType, BoolFieldType, CheckboxFieldType, IntegerFieldType, MultiStringFieldType, DateFieldType, DateInput, DateConfig, ListStringFieldType
 
 
 # Decoder
 
-@docs decoder
+@docs decoder, dateInputDecoder
 
 
 # Helpers
@@ -93,64 +93,96 @@ type MultiStringFieldType
     | Tags
 
 
-{-| -}
+{-| How a date field's date is entered, and the range of dates allowed.
+-}
 type alias DateFieldType =
-    { min : Maybe DateConfig, max : Maybe DateConfig, default : Maybe DateConfig }
+    { min : Maybe DateConfig, max : Maybe DateConfig, input : DateInput }
+
+
+{-| `Masked` dates are text inputs that format the date as it's typed, in the locale's date order. `Calendar` dates use the browser's date picker.
+-}
+type DateInput
+    = Masked
+    | Calendar
 
 
 {-| -}
+dateInputDecoder : Decode.Decoder DateInput
+dateInputDecoder =
+    Decode.string
+        |> Decode.andThen
+            (\input ->
+                case input of
+                    "masked" ->
+                        Decode.succeed Masked
+
+                    "calendar" ->
+                        Decode.succeed Calendar
+
+                    _ ->
+                        Decode.fail ("Invalid date input: " ++ input)
+            )
+
+
+{-| A date, or an offset from the current time.
+-}
 type DateConfig
     = DateAbsolute Time.Posix
     | DateOffset ( TimeExtra.Interval, Int )
 
 
-{-| -}
-dateConfigToString : Time.Posix -> DateConfig -> String
-dateConfigToString currentTime config =
-    LibTime.toDateString <|
-        case config of
-            DateAbsolute time ->
-                time
+{-| The "YYYY-MM-DD" date. Absolute dates are in UTC. Offsets are from today in the given zone, e.g. `( Year, -18 )` is the same day 18 years ago.
+-}
+dateConfigToString : Time.Zone -> Time.Posix -> DateConfig -> String
+dateConfigToString zone currentTime config =
+    case config of
+        DateAbsolute time ->
+            LibTime.toDateString time
 
-            DateOffset ( offsetUnit, offset ) ->
-                currentTime
-                    |> TimeExtra.add offsetUnit offset Time.utc
-                    |> TimeExtra.floor offsetUnit Time.utc
+        DateOffset ( offsetUnit, offset ) ->
+            currentTime
+                |> TimeExtra.add offsetUnit offset zone
+                |> TimeExtra.floor TimeExtra.Day zone
+                |> LibTime.toZonedDateString zone
 
 
-{-| -}
+{-| A masked date, up to 120 years ago and no later than today.
+-}
 dateOfBirth : DateFieldType
 dateOfBirth =
     { min = Just (DateOffset ( TimeExtra.Year, -120 ))
-    , max = Just (DateOffset ( TimeExtra.Year, 0 ))
-    , default = Just (DateOffset ( TimeExtra.Year, -40 ))
+    , max = Just (DateOffset ( TimeExtra.Day, 0 ))
+    , input = Masked
     }
 
 
-{-| -}
+{-| A date picker, from tomorrow up to 10 years from now.
+-}
 dateFuture : DateFieldType
 dateFuture =
     { min = Just (DateOffset ( TimeExtra.Day, 1 ))
     , max = Just (DateOffset ( TimeExtra.Year, 10 ))
-    , default = Nothing
+    , input = Calendar
     }
 
 
-{-| -}
+{-| A date picker, up to 120 years ago and no later than yesterday.
+-}
 datePast : DateFieldType
 datePast =
     { min = Just (DateOffset ( TimeExtra.Year, -120 ))
     , max = Just (DateOffset ( TimeExtra.Day, -1 ))
-    , default = Nothing
+    , input = Calendar
     }
 
 
-{-| -}
+{-| A date picker with any date allowed.
+-}
 dateDefault : DateFieldType
 dateDefault =
     { min = Nothing
     , max = Nothing
-    , default = Nothing
+    , input = Calendar
     }
 
 
@@ -283,8 +315,13 @@ toType fieldType =
         StringType (SimpleType TextArea) ->
             "textarea"
 
-        StringType (DateType _) ->
-            "date"
+        StringType (DateType { input }) ->
+            case input of
+                Masked ->
+                    "text"
+
+                Calendar ->
+                    "date"
 
         _ ->
             ""
